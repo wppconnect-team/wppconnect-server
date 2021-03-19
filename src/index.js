@@ -3,6 +3,9 @@ require('dotenv').config()
 const cors = require('cors');
 const express = require('express');
 const app = express();
+const saltRounds = 10;
+const secureToken = process.env.SECURE_TOKEN;
+const bcrypt = require('bcrypt');
 
 const options = {
     cors: true,
@@ -12,6 +15,10 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server, options);
 
 const PORT = 21465;
+
+bcrypt.hash("abner" + secureToken, saltRounds, function (err, hash) {
+    console.log(hash.replace(/\//g, "slash"))
+});
 
 app.use(cors());
 app.use(express.json())

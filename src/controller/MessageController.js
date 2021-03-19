@@ -1,7 +1,6 @@
 "use strict";
 const wppconnect = require('@wppconnect-team/wppconnect');
 const fs = require('fs');
-const encrypt = require('../config/encrypt')
 
 let clientsArray = [];
 let sessions = [];
@@ -61,23 +60,24 @@ async function start(req, res, client, session) {
     await client[session].onAnyMessage((message) => {
         console.log(`[${session}]: Mensagem Recebida: \nTelefone: ' ${message.from}, Mensagem: ${message.body}`)
         message.session = session
-        req.io.emit('received-message', { response: message })
+        req.io.emit('received-message', {response: message})
     });
+}
+
+function getSession(session) {
+    return session.split(":")[0]
 }
 
 module.exports = {
     // Session
     async startSession(req, res) {
-        const { session } = req.params
-        let tokenDec = session.split(":")[0];
-        let sessionDec = session.split(":")[0];
+        const {session} = req.params
 
-        encrypt.decryptSession(sessionDec, tokenDec)
-        opendata(req, res, session)
+        await opendata(req, res, getSession(session))
     },
     async closeSession(req, res) {
-        const { session } = req.params
-        await clientsArray[session].close();
+        const {session} = req.params
+        await clientsArray[getSession(session)].close();
 
         req.io.emit('whatsapp-status', false)
     },
@@ -85,13 +85,13 @@ module.exports = {
         res.status(200).json(sessions)
     },
     async checkSessionConnected(req, res) {
-        const { session } = req.params
+        const {session} = req.params
 
-        if (!session)
-            return res.status(401).send({ auth: false, message: 'Sessão não informada.' });
+        if (!getSession(session))
+            return res.status(401).send({auth: false, message: 'Sessão não informada.'});
 
         try {
-            const response = await clientsArray[session].isConnected();
+            const response = await clientsArray[getSession(session)].isConnected();
             return res.status(200).json({
                 response: response,
                 message: 'O Whatsapp está aberto.'
@@ -107,8 +107,8 @@ module.exports = {
 
     //Message
     async sendMessage(req, res) {
-        const { session } = req.params
-        const { phone, message, isGroup = false } = req.body
+        const {session} = req.params
+        const {phone, message, isGroup = false} = req.body
         try {
             if (isGroup) {
                 await clientsArray[session].sendText(phone + "@g.us", message);
@@ -120,30 +120,30 @@ module.exports = {
                 response: {
                     message: message,
                     contact: phone,
-                    session: session
+                    session: getSession(session)
                 },
             })
 
-            req.io.emit('mensagem-enviada', { message: message, to: phone });
+            req.io.emit('mensagem-enviada', {message: message, to: phone});
         } catch (error) {
             res.status(400).json({
                 response: {
                     message: 'Sua mensagem não foi enviada.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
         }
     },
     async sendImage(req, res) {
-        const { session } = req.params
-        const { phone, caption, path, isGroup = false } = req.body
+        const {session} = req.params
+        const {phone, caption, path, isGroup = false} = req.body
 
         if (!phone)
-            return res.status(401).send({ message: 'Telefone não informado.' });
+            return res.status(401).send({message: 'Telefone não informado.'});
 
-        if (!session)
-            return res.status(401).send({ message: 'Sessão não informada.' });
+        if (!getSession(session))
+            return res.status(401).send({message: 'Sessão não informada.'});
 
         if (!path)
             return res.status(401).send({
@@ -152,14 +152,14 @@ module.exports = {
 
         try {
             if (isGroup) {
-                await clientsArray[session].sendImage(
+                await clientsArray[getSession(session)].sendImage(
                     phone + "@g.us", //phone
                     path, //path
                     'image-api.jpg', //image name
                     caption //msg (caption)
                 );
             } else {
-                await clientsArray[session].sendImage(
+                await clientsArray[getSession(session)].sendImage(
                     phone + "@c.us", //phone
                     path, //path
                     'image-api.jpg', //image name
@@ -170,6 +170,7 @@ module.exports = {
             return res.status(201).json({
                 response: {
                     status: 'Mensagem enviada com sucesso.',
+                    session: getSession(session),
                     contact: phone,
                 },
             })
@@ -177,32 +178,32 @@ module.exports = {
             res.status(400).json({
                 response: {
                     message: 'Sua mensagem não foi enviada.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
         }
     },
     async sendFile(req, res) {
-        const { session } = req.params
-        const { path, phone, isGroup = false } = req.body
+        const {session} = req.params
+        const {path, phone, isGroup = false} = req.body
 
-        if (!session)
-            return res.status(401).send({ message: 'Sessão não informada.' });
+        if (!getSession(session))
+            return res.status(401).send({message: 'Sessão não informada.'});
 
-        if (!session)
-            return res.status(401).send({ message: 'O caminho do arquivo não foi informado.' });
+        if (!path)
+            return res.status(401).send({message: 'O caminho do arquivo não foi informado.'});
 
         try {
             if (isGroup) {
-                await clientsArray[session].sendFile(
+                await clientsArray[getSession(session)].sendFile(
                     phone + "@c.us", //phone
                     path, //path file
                     'My File', //Title File
                     'Look this file' //Caption
                 );
             } else {
-                await clientsArray[session].sendFile(
+                await clientsArray[getSession(session)].sendFile(
                     phone + "@g.us", //phone
                     path, //path file
                     'My File', //Title File
@@ -213,6 +214,7 @@ module.exports = {
             return res.status(200).json({
                 response: {
                     message: "Arquivo enviado com sucesso",
+                    session: getSession(session),
                     phone: phone + "@c.us",
                 },
             })
@@ -220,7 +222,7 @@ module.exports = {
             return res.status(400).json({
                 response: {
                     message: 'Sua mensagem não foi enviada.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
@@ -229,50 +231,52 @@ module.exports = {
 
     // Group Functions
     async createGroup(req, res) {
-        const { session } = req.params
-        const { groupname, phone } = req.body
+        const {session} = req.params
+        const {groupname, phone} = req.body
 
         if (!session)
-            return res.status(401).send({ message: 'Sessão não informada.' });
+            return res.status(401).send({message: 'Sessão não informada.'});
 
         if (!groupname)
-            return res.status(401).send({ message: 'O nome do grupo não foi informado.' });
+            return res.status(401).send({message: 'O nome do grupo não foi informado.'});
 
         if (!phone)
-            return res.status(401).send({ message: 'O Telefone não foi informado.' });
+            return res.status(401).send({message: 'O Telefone não foi informado.'});
 
         try {
-            await clientsArray[session].createGroup(groupname, phone);
+            await clientsArray[getSession(session)].createGroup(groupname, phone);
             res.status(200).json({
                 response: 'O grupo foi criado com sucesso',
                 groupname: groupname,
+                session: getSession(session),
                 phones: phone
             })
         } catch (error) {
             res.status(400).json({
                 response: {
                     message: 'O grupo não foi criado.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
         }
     },
     async joinGroupByCode(req, res) {
-        const { session } = req.params
-        const { inviteCode } = req.body
+        const {session} = req.params
+        const {inviteCode} = req.body
 
-        if (!session)
-            return res.status(401).send({ message: 'A Sessão não foi informada.' });
+        if (!getSession(session))
+            return res.status(401).send({message: 'A Sessão não foi informada.'});
 
         if (!inviteCode)
-            return res.status(401).send({ message: 'Informe o Codigo de Convite' });
+            return res.status(401).send({message: 'Informe o Codigo de Convite'});
 
         try {
-            await clientsArray[session].joinGroup(inviteCode);
+            await clientsArray[getSession(session)].joinGroup(inviteCode);
             res.status(201).json({
                 response: {
                     message: 'Você entrou no grupo com sucesso.',
+                    session: getSession(session),
                     inviteCode: inviteCode,
                 },
             })
@@ -280,7 +284,7 @@ module.exports = {
             res.status(400).json({
                 response: {
                     message: 'Você não entrou no grupo.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
@@ -289,14 +293,14 @@ module.exports = {
 
     // Device Functions
     async setProfileName(req, res) {
-        const { session } = req.params
-        const { name } = req.body
+        const {session} = req.params
+        const {name} = req.body
 
-        if (!session)
-            return res.status(401).send({ message: 'Sessão não informada.' });
+        if (!getSession(session))
+            return res.status(401).send({message: 'Sessão não informada.'});
 
         if (!name)
-            return res.status(401).send({ message: 'Digite um novo nome de perfil.' });
+            return res.status(401).send({message: 'Digite um novo nome de perfil.'});
 
         try {
             await clientsArray[session].setProfileName(name);
@@ -304,34 +308,35 @@ module.exports = {
                 response: {
                     status: true,
                     name: name,
-                    session: session
+                    session: getSession(session)
                 },
             })
         } catch (error) {
             res.status(400).json({
                 response: {
                     message: 'O nome de usuário de perfil não foi alterada.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
         }
     },
     async setProfileImage(req, res) {
-        const { session } = req.params
-        const { path } = req.body
+        const {session} = req.params
+        const {path} = req.body
 
-        if (!session)
-            return res.status(401).send({ message: 'Sessão não informada.' });
+        if (!getSession(session))
+            return res.status(401).send({message: 'Sessão não informada.'});
 
         if (!path)
-            return res.status(401).send({ message: 'Informe o caminho da imagem.' });
+            return res.status(401).send({message: 'Informe o caminho da imagem.'});
 
         try {
-            await clientsArray[session].setProfilePic(pathimage);
+            await clientsArray[getSession(session)].setProfilePic(pathimage);
             res.status(201).json({
                 response: {
                     message: msg,
+                    session: getSession(session),
                     path: path
                 },
             })
@@ -339,26 +344,28 @@ module.exports = {
             res.status(400).json({
                 response: {
                     message: 'A foto de perfil não foi alterada.',
-                    session: session,
+                    session: getSession(session),
                     log: error
                 },
             })
         }
     },
     async showAllContacts(req, res) {
-        const { session } = req.params
+        const {session} = req.params
 
-        if (!session)
-            return res.status(401).send({ auth: false, message: 'Sessão não informada.' });
+        if (!getSession(session))
+            return res.status(401).send({auth: false, message: 'Sessão não informada.'});
 
         try {
-            const contacts = await clientsArray[session].getAllContacts();
+            const contacts = await clientsArray[getSession(session)].getAllContacts();
             res.status(200).json({
-                response: contacts
+                response: contacts,
+                session: getSession(session),
             })
         } catch (error) {
             res.status(401).json({
-                response: 'O Whatsapp não está conectado'
+                response: 'O Whatsapp não está conectado',
+                session: getSession(session),
             })
         }
     },
