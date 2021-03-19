@@ -3,8 +3,6 @@ const EncryptController = require('../controller/EncryptController')
 const MessageController = require('../controller/MessageController')
 const auth = require('../middleware/auth')
 
-console.log(auth)
-
 const routes = new express.Router()
 
 //Generate Token
