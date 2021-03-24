@@ -1,13 +1,7 @@
 import {Router} from 'express';
 import {encryptSession} from '../controller/EncryptController';
 import {sendFile, sendImage, sendMessage} from '../controller/MessageController';
-import {
-    checkSessionConnected,
-    closeSession,
-    showAllSessions,
-    startAllSessions,
-    startSession
-} from '../controller/SessionController';
+import {closeSession, showAllSessions, startAllSessions, startSession} from '../controller/SessionController';
 import {createGroup, joinGroupByCode} from "../controller/GroupController";
 import {setProfileImage, setProfileName, showAllContacts} from "../controller/DeviceController";
 import verifyToken from '../middleware/auth';
@@ -22,7 +16,6 @@ routes.post('/api/:session/:secretkey/generate-token', encryptSession);
 routes.post('/api/:secretkey/start-all', startAllSessions);
 
 //Sessions
-routes.get('/api/:session/check-connection', verifyToken, statusConnection, checkSessionConnected);
 routes.get('/api/:session/show-all-sessions', verifyToken, statusConnection, showAllSessions);
 routes.get('/api/:session/start-session', verifyToken, startSession);
 routes.get('/api/:session/close-session', verifyToken, statusConnection, closeSession);
