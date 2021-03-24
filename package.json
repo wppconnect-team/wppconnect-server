@@ -11,9 +11,15 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "nodemon": "^2.0.7",
     "socket.io": "^4.0.0"
   },
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "dev": "nodemon -w src --exec \"babel-node src --presets env\""
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
   }
 }

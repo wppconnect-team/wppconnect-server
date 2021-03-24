@@ -1,0 +1,8 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/",
+    "tokens"
+  ]
+}

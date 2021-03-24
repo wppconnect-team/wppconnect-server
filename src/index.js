@@ -1,35 +1,34 @@
-'use strict';
-require('dotenv').config()
-const cors = require('cors');
-const express = require('express');
-const app = express();
-const saltRounds = 10;
-const secureToken = process.env.SECURE_TOKEN;
-const bcrypt = require('bcrypt');
+import {config} from 'dotenv';
+import cors from 'cors';
+import express from 'express';
+import {createServer} from 'http'
+import {Server as Socket} from "socket.io";
+import {routes} from './routes';
+import getAllTokens from './util/GetAllTokens'
 
+config(); // DotEnv
+const app = express();
+const PORT = process.env.PORT || 21465;
+//Caso sua aplicação fique em algum server
+//o process.env.PORT vai pegar automaticamente a porta recebida.
+
+//SocketIO
 const options = {
     cors: true,
     origins: ["*"],
 }
-const server = require('http').Server(app);
-const io = require('socket.io')(server, options);
+const server = createServer(app);
+const io = new Socket(server, options);
 
-const PORT = 21465;
-
-bcrypt.hash("abner" + secureToken, saltRounds, function (err, hash) {
-    console.log(hash.replace(/\//g, "slash"))
-});
-
-app.use(cors());
-app.use(express.json())
+app.use(cors()); //Aceita que nosso server seja acessado através de um website
+app.use(express.json()); //Aceita requisições via JSON
 
 app.use((req, res, next) => {
     req.io = io;
     next();
 });
 
-app.use(require('./routes'))
-
+//SocketIO
 io.on('connection', sock => {
     console.log(`ID: ${sock.id} entrou`)
 
@@ -41,6 +40,8 @@ io.on('connection', sock => {
         console.log(`ID: ${sock.id} saiu`)
     });
 });
+
+app.use(routes);
 
 server.listen(PORT);
 console.log(`O servidor está rodando na porta ${PORT}`)

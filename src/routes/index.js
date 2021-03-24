@@ -1,32 +1,41 @@
-const express = require('express')
-const EncryptController = require('../controller/EncryptController')
-const MessageController = require('../controller/MessageController')
-const auth = require('../middleware/auth')
+import {Router} from 'express';
+import {encryptSession} from '../controller/EncryptController';
+import {sendMessage, sendFile, sendImage} from '../controller/MessageController';
+import {
+    showAllSessions,
+    checkSessionConnected,
+    closeSession,
+    startSession,
+    startAllSessions
+} from '../controller/SessionController';
+import {createGroup, joinGroupByCode} from "../controller/GroupController";
+import {setProfileImage, setProfileName, showAllContacts} from "../controller/DeviceController";
+import verifyToken from '../middleware/auth';
 
-const routes = new express.Router()
+export const routes = new Router()
 
 //Generate Token
-routes.get('/api/:session/generate-token', EncryptController.encryptSession)
+routes.get('/api/:session/generate-token', encryptSession)
+
+//Start All Sessions
+routes.post('/api/start-all', startAllSessions)
 
 //Sessions
-routes.get('/api/:session/show-all-sessions', auth.verifyToken, MessageController.showAllSessions)
-routes.get('/api/:session/check-connection', auth.verifyToken, MessageController.checkSessionConnected)
-routes.post('/api/:session/start-session', auth.verifyToken, MessageController.startSession)
-routes.post('/api/:session/close-session', auth.verifyToken, MessageController.closeSession)
+routes.get('/api/:session/show-all-sessions', verifyToken, showAllSessions)
+routes.get('/api/:session/check-connection', verifyToken, checkSessionConnected)
+routes.get('/api/:session/start-session', verifyToken, startSession)
+routes.get('/api/:session/close-session', verifyToken, closeSession)
 
 //SendMessages
-routes.post('/api/:session/send-message', auth.verifyToken, MessageController.sendMessage)
-routes.post('/api/:session/send-image', auth.verifyToken, MessageController.sendImage)
-routes.post('/api/:session/send-file', auth.verifyToken, MessageController.sendFile)
+routes.post('/api/:session/send-message', verifyToken, sendMessage)
+routes.post('/api/:session/send-image', verifyToken, sendImage)
+routes.post('/api/:session/send-file', verifyToken, sendFile)
 
 // Group Functions
-routes.post('/api/:session/create-group', auth.verifyToken, MessageController.createGroup)
-routes.post('/api/:session/join-code', auth.verifyToken, MessageController.joinGroupByCode)
+routes.post('/api/:session/create-group', verifyToken, createGroup)
+routes.post('/api/:session/join-code', verifyToken, joinGroupByCode)
 
 // Device Functions
-routes.post('/api/:session/change-username', auth.verifyToken, MessageController.setProfileName)
-routes.post('/api/:session/change-profile-image', auth.verifyToken, MessageController.setProfileImage)
-routes.post('/api/:session/close-session', auth.verifyToken, MessageController.setProfileImage)
-routes.get('/api/:session/show-all-contacts', auth.verifyToken, MessageController.showAllContacts)
-
-module.exports = routes;
+routes.post('/api/:session/change-username', verifyToken, setProfileName)
+routes.post('/api/:session/change-profile-image', verifyToken, setProfileImage)
+routes.get('/api/:session/show-all-contacts', verifyToken, showAllContacts)
