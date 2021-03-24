@@ -9,7 +9,6 @@ function formatSession(session) {
 const verifyToken = (req, res, next) => {
     const {session} = req.params
 
-
     if (!session)
         return res.status(401).send({message: 'Sessão não informada.'});
 
