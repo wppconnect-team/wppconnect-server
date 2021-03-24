@@ -15,11 +15,14 @@
     "socket.io": "^4.0.0"
   },
   "scripts": {
-    "start": "node ./src/index.js",
-    "dev": "nodemon -w src --exec \"babel-node src --presets env\""
+    "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
+    "build": "rimraf dist && babel src -s -D -d dist --presets env",
+    "start": "node dist"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "rimraf": "^3.0.2"
   }
 }
