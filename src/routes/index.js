@@ -16,14 +16,14 @@ import statusConnection from '../middleware/statusConnection';
 export const routes = new Router();
 
 //Generate Token
-routes.get('/api/:session/generate-token', encryptSession);
+routes.post('/api/:session/:secretkey/generate-token', encryptSession);
 
 //Start All Sessions
-routes.post('/api/start-all', startAllSessions);
+routes.post('/api/:secretkey/start-all', startAllSessions);
 
 //Sessions
-routes.get('/api/:session/show-all-sessions', verifyToken, statusConnection, checkSessionConnected);
-routes.get('/api/:session/show-all-sessions', verifyToken, showAllSessions);
+routes.get('/api/:session/check-connection', verifyToken, statusConnection, checkSessionConnected);
+routes.get('/api/:session/show-all-sessions', verifyToken, statusConnection, showAllSessions);
 routes.get('/api/:session/start-session', verifyToken, startSession);
 routes.get('/api/:session/close-session', verifyToken, statusConnection, closeSession);
 

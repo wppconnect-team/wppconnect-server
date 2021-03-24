@@ -1,13 +1,10 @@
-import {config} from 'dotenv';
+import {} from 'dotenv/config'
 import cors from 'cors';
 import express from 'express';
 import {createServer} from 'http'
 import {Server as Socket} from "socket.io";
 import {routes} from './routes';
-import {getSession} from "./util/SessionUtil";
 
-
-config(); // DotEnv
 const app = express();
 const PORT = process.env.PORT || 21465;
 //Caso sua aplicação fique em algum server
@@ -20,6 +17,7 @@ const options = {
 }
 const server = createServer(app);
 const io = new Socket(server, options);
+
 
 app.use(cors()); //Aceita que nosso server seja acessado através de um website
 app.use(express.json()); //Aceita requisições via JSON

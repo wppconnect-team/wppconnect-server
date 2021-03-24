@@ -1,9 +1,18 @@
-import {clientsArray, getSession, sessions} from "../util/SessionUtil";
+import {clientsArray, sessions} from "../util/SessionUtil";
 import {opendata} from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
 
 export async function startAllSessions(req, res) {
+    const {secretkey} = req.params
+
     const allSessions = await getAllTokens();
+
+    if (secretkey !== process.env.SECRET_KEY) {
+        return res.status(400).json({
+            response: false,
+            message: 'O token informado está incorreto.'
+        })
+    }
 
     allSessions.map(async (session) => {
         await opendata(req, res, session.replace('data.json', ''))
