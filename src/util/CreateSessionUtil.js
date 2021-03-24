@@ -60,7 +60,7 @@ async function checkStateSession(req, res, client, session) {
             req.io.emit('whatsapp-status', true)
 
             sessions.push(session); //insere a nova sessão no session
-            console.log('Status Session -> ', session, ' connected');
+            console.log('Status Session -> ', session, ' -> connected');
         }
 
         const conflits = [
@@ -85,7 +85,7 @@ async function checkStateSession(req, res, client, session) {
 
 async function listenMessages(req, client, session) {
     await client[session].onAnyMessage((message) => {
-        console.log(`[${session}]: Mensagem Recebida: \nTelefone: ' ${message.from}, Mensagem: ${message.body}`)
+        console.log(`[${session}]: Mensagem Recebida: \nTelefone: ${message.from}, Mensagem: ${message.body}`)
         message.session = session
         req.io.emit('received-message', {response: message})
     });

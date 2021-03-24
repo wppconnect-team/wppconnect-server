@@ -11,11 +11,13 @@ export async function encryptSession(req, res) {
             return res.status(400).json(err)
         }
 
+        const hashFormat = hash.replace('/', '_').replace('+', '-')
+
         return res.status(201).json({
             status: "Success",
             session: session,
-            token: hash.replace('/', 'slash'),
-            full: `${session}:${hash.replace('/', 'slash')}`
+            token: hashFormat,
+            full: `${session}:${hashFormat}`
         })
     });
 }

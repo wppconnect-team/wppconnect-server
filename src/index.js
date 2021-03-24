@@ -4,7 +4,8 @@ import express from 'express';
 import {createServer} from 'http'
 import {Server as Socket} from "socket.io";
 import {routes} from './routes';
-import getAllTokens from './util/GetAllTokens'
+import {getSession} from "./util/SessionUtil";
+
 
 config(); // DotEnv
 const app = express();

@@ -1,11 +1,11 @@
 // Group Functions
-import {clientsArray, getSession} from "../util/SessionUtil";
+import {clientsArray} from "../util/SessionUtil";
 
 function returnError(res, session, error, message) {
     res.status(400).json({
         response: {
             message: message,
-            session: getSession(session),
+            session: session,
             log: error
         },
     })
@@ -16,17 +16,14 @@ function returnSucess(res, session, phone, message) {
         response: {
             message: message,
             contact: phone,
-            session: getSession(session)
+            session: session
         },
     })
 }
 
 export async function createGroup(req, res) {
-    const {session} = req.params
+    const session = req.session
     const {groupname, phone} = req.body
-
-    if (!session)
-        return res.status(401).send({message: 'Sessão não informada.'});
 
     if (!groupname)
         return res.status(401).send({message: 'O nome do grupo não foi informado.'});
@@ -35,7 +32,7 @@ export async function createGroup(req, res) {
         return res.status(401).send({message: 'O Telefone não foi informado.'});
 
     try {
-        await clientsArray[getSession(session)].createGroup(groupname, phone);
+        await clientsArray[session].createGroup(groupname, phone);
 
         returnSucess(res, session, phone, `O grupo ${groupname} foi criado com sucesso`)
     } catch (error) {
@@ -44,17 +41,14 @@ export async function createGroup(req, res) {
 }
 
 export async function joinGroupByCode(req, res) {
-    const {session} = req.params
+    const session = req.session
     const {inviteCode} = req.body
-
-    if (!getSession(session))
-        return res.status(401).send({message: 'A Sessão não foi informada.'});
 
     if (!inviteCode)
         return res.status(401).send({message: 'Informe o Codigo de Convite'});
 
     try {
-        await clientsArray[getSession(session)].joinGroup(inviteCode);
+        await clientsArray[session].joinGroup(inviteCode);
 
         returnSucess(res, session, inviteCode, "Você entrou no grupo com sucesso")
     } catch (error) {
