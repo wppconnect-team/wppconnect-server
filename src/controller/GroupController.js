@@ -1,4 +1,3 @@
-// Group Functions
 import {clientsArray} from "../util/SessionUtil";
 
 function returnError(res, session, error, message) {

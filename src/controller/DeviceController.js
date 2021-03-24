@@ -1,4 +1,3 @@
-// Device Functions
 import {clientsArray} from "../util/SessionUtil";
 
 export async function setProfileName(req, res) {
