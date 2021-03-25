@@ -1,6 +1,7 @@
-import {clientsArray, sessions} from "../util/SessionUtil";
+import {clientsArray, IP_BASE, sessions} from "../util/SessionUtil";
 import {opendata} from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
+import api from "axios";
 
 export async function startAllSessions(req, res) {
     const {secretkey} = req.params
@@ -34,6 +35,7 @@ export async function closeSession(req, res) {
     sessions.filter(item => item !== session);
 
     req.io.emit('whatsapp-status', false);
+    await api.post(IP_BASE, {'message': `Session: ${session} disconnected`, connected: false})
 }
 
 export async function showAllSessions(req, res) {
