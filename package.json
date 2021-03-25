@@ -12,7 +12,6 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.7",
     "socket.io": "^4.0.0"
   },
   "scripts": {
@@ -21,6 +20,7 @@
     "start": "node dist"
   },
   "devDependencies": {
+    "nodemon": "^2.0.7",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",

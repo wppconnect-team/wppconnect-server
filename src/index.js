@@ -1,7 +1,7 @@
 import {} from 'dotenv/config'
 import cors from 'cors';
 import express from 'express';
-import {createServer} from 'http'
+import {Server} from 'http'
 import {Server as Socket} from "socket.io";
 import {routes} from './routes';
 
@@ -15,9 +15,8 @@ const options = {
     cors: true,
     origins: ["*"],
 }
-const server = createServer(app);
+const server = Server(app);
 const io = new Socket(server, options);
-
 
 app.use(cors()); //Aceita que nosso server seja acessado através de um website
 app.use(express.json()); //Aceita requisições via JSON

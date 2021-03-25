@@ -17,7 +17,7 @@ export async function encryptSession(req, res) {
         if (err)
             return res.status(400).json(err)
 
-        const hashFormat = hash.replace('/', '_').replace('+', '-')
+        const hashFormat = hash.replace(/\//g, '_').replace(/\+/g, '-')
         return res.status(201).json({
             status: "Success",
             session: session,

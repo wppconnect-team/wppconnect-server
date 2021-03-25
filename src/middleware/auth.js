@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-const secureToken = process.env.SECURE_TOKEN;
+const secureToken = process.env.SECRET_KEY;
 
 function formatSession(session) {
     return session.split(":")[0];
@@ -14,7 +14,7 @@ const verifyToken = (req, res, next) => {
 
     try {
         const sessionDecrypt = session.split(":")[0]
-        const tokenDecrypt = session.split(":")[1].replace(/\//g, '_').replace(/\+/g, '-')
+        const tokenDecrypt = session.split(":")[1].replace(/_/g, '/').replace(/-/g, '+')
 
         bcrypt.compare(sessionDecrypt + secureToken, tokenDecrypt, function (err, result) {
             if (result) {
