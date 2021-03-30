@@ -1,24 +1,19 @@
-import {clientsArray, IP_BASE, sessions} from "./SessionUtil";
-import {create, SocketState} from "@wppconnect-team/wppconnect";
+import { clientsArray, IP_BASE, sessions } from "./SessionUtil";
+import { create, SocketState } from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import path from "path";
 import api from 'axios'
 
 let chromiumArgs = ['--disable-web-security', '--no-sandbox', '--disable-web-security', '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache', '--disable-offline-load-stale-cache', '--disk-cache-size=0', '--disable-background-networking', '--disable-default-apps', '--disable-extensions', '--disable-sync', '--disable-translate', '--hide-scrollbars', '--metrics-recording-only', '--mute-audio', '--no-first-run', '--safebrowsing-disable-auto-update', '--ignore-certificate-errors', '--ignore-ssl-errors', '--ignore-certificate-errors-spki-list'];
 
-export async function opendata(req, res, session) {
-    await createSessionUtil(req, res, clientsArray, session)
-
-    await res.status(201).json({
-        message: 'Inicializando Sessão',
-        session: session
-    })
+export async function opendata(req, session) {
+    await createSessionUtil(req, clientsArray, session)
 }
 
-async function createSessionUtil(req, res, clientsArray, session) {
+async function createSessionUtil(req, clientsArray, session) {
     try {
         clientsArray[session] = await create(session, (base64Qr, asciiQR) => {
-            exportQR(req, res, base64Qr, session);
+            exportQR(req, base64Qr, session);
         }, (statusFind) => {
             console.log(statusFind + '\n\n')
         }, {
@@ -32,13 +27,15 @@ async function createSessionUtil(req, res, clientsArray, session) {
             disableSpins: true,
         })
 
-        await start(req, res, clientsArray, session);
+        //ele nem vem pra cá
+        console.log('entrando no start ->')
+        await start(req, clientsArray, session);
     } catch (e) {
         console.log('error create -> ', e)
     }
 }
 
-function exportQR(req, res, qrCode, session) {
+function exportQR(req, qrCode, session) {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
@@ -50,22 +47,15 @@ function exportQR(req, res, qrCode, session) {
     });
 }
 
-async function start(req, res, client, session) {
-    await checkStateSession(req, res, client, session)
+async function start(req, client, session) {
+    await checkStateSession(client, session)
+
     await listenMessages(req, client, session)
     await listenAcks(client, session)
 }
 
-async function checkStateSession(req, res, client, session) {
-    await client[session].onStateChange(async (state) => {
-        if (state === 'CONNECTED') {
-            req.io.emit('whatsapp-status', true)
-            await api.post(IP_BASE, {'message': `Session: ${session} connected`, connected: true})
-            sessions.push(session); //insere a nova sessão no session
-
-            console.log('Status Session -> ', session, ' -> connected');
-        }
-
+async function checkStateSession(client, session) {
+    await client[session].onStateChange((state) => {
         const conflits = [
             SocketState.CONFLICT,
             SocketState.UNPAIRED,
@@ -73,15 +63,7 @@ async function checkStateSession(req, res, client, session) {
         ];
 
         if (conflits.includes(state)) {
-            try {
-                await client[session].useHere();
-            } catch (e) {
-                let tokenFile = path.resolve(__dirname, '..', '..', 'tokens', `${session}.data.json`);
-                await client[session].close();
-                fs.unlinkSync(tokenFile);
-
-                await createSessionUtil(req, res, client, session);
-            }
+            client[session].useHere();
         }
     });
 }
@@ -97,12 +79,12 @@ async function listenMessages(req, client, session) {
     await client[session].onMessage(async (message) => {
         await downloadFiles(client, message)
 
-        await api.post(IP_BASE, {message: message})
+        await api.post(IP_BASE, { message: message })
     })
 
     await client[session].onAnyMessage((message) => {
         message.session = session
-        req.io.emit('received-message', {response: message})
+        req.io.emit('received-message', { response: message })
     });
 }
 
@@ -123,7 +105,7 @@ async function listenAcks(client, session) {
     //  3 = READ,
     //  4 = PLAYED
     await client[session].onAck(async (ack) => {
-        await api.post(IP_BASE, {ack: ack})
+        await api.post(IP_BASE, { ack: ack })
     });
 
 }

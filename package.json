@@ -6,7 +6,7 @@
   "author": "kingaspx",
   "license": "MIT",
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.2.1",
+    "@wppconnect-team/wppconnect": "latest",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -20,10 +20,10 @@
     "start": "node dist"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
+    "nodemon": "^2.0.7",
     "rimraf": "^3.0.2"
   }
 }

@@ -1,14 +1,23 @@
-import {clientsArray, IP_BASE, sessions} from "../util/SessionUtil";
-import {opendata} from "../util/CreateSessionUtil";
+import { clientsArray, IP_BASE, sessions } from "../util/SessionUtil";
+import { opendata } from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
 import api from "axios";
 
 export async function startAllSessions(req, res) {
-    const {secretkey} = req.params
+    const { secretkey } = req.params
+    const { authorization: token } = req.headers;
+
+    let tokenDecrypt = '';
+
+    if (secretkey === undefined) {
+        tokenDecrypt = token.split(' ')[0];
+    } else {
+        tokenDecrypt = secretkey;
+    }
 
     const allSessions = await getAllTokens();
 
-    if (secretkey !== process.env.SECRET_KEY) {
+    if (tokenDecrypt !== process.env.SECRET_KEY) {
         return res.status(400).json({
             response: false,
             message: 'O token informado está incorreto.'
@@ -19,13 +28,18 @@ export async function startAllSessions(req, res) {
         await opendata(req, res, session.replace('data.json', ''))
     })
 
-    return await res.status(200).json({status: "Success", message: "Iniciando todas as sessões"})
+    return await res.status(200).json({ status: "Success", message: "Iniciando todas as sessões" })
 }
 
 export async function startSession(req, res) {
     const session = req.session;
 
-    await opendata(req, res, session)
+    await res.status(201).json({
+        message: 'Inicializando Sessão',
+        session: session
+    })
+
+    await opendata(req, session)
 }
 
 export async function closeSession(req, res) {
@@ -35,7 +49,7 @@ export async function closeSession(req, res) {
     sessions.filter(item => item !== session);
 
     req.io.emit('whatsapp-status', false);
-    await api.post(IP_BASE, {'message': `Session: ${session} disconnected`, connected: false})
+    await api.post(IP_BASE, { 'message': `Session: ${session} disconnected`, connected: false })
 }
 
 export async function showAllSessions(req, res) {
