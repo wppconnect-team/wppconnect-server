@@ -68,10 +68,8 @@ To generate an access token, you must use your SECRET_KEY.
 
 Using the route:
 
-```javascript
-/api/:session/:secretkey/generate-token
-//example
-/api/mysession/SECRETEXAMPLE/generate-token
+```shell
+  curl -X POST --location "http://localhost:21465/api/mySession/eUsouSeCreTo/generate-token"
 ```
 
 ### Response:
@@ -95,16 +93,23 @@ Save the value of the "full" response. Then use this value to call the routes.
 #Starting Session
 # /api/:session/start-session
 
-curl --request GET \
-  --url http://localhost:21465/api/wppconnect:$2b$10$duQ5YYV6fojn5qFiFv.aEuY32_SnHgcmxdfxohnjG4EHJ5_Z6QWhe/start-session
+curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $2b$10$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C"
 ```
 
 ```sh
 #Send Message
 # /api/:session/send-message
-
-curl --request GET \
-  --url http://localhost:21465/api/wppconnect:$2b$10$duQ5YYV6fojn5qFiFv.aEuY32_SnHgcmxdfxohnjG4EHJ5_Z6QWhe/send-message
+curl -X POST --location "http://localhost:21465/api/mySession/send-message" \
+    -H "Content-Type: application/json; charset=utf-8" \
+    -H "Accept: application/json" \
+    -H "Authorization: Bearer $2b$10$8aQFQxnWREtBEMZK_iHMe.u7NeoNkjL7s6NYai_83Pb31Ycss6Igm" \
+    -d "{
+          \"phone\": \"5511982743910\",
+          \"message\": \"*Abner* Rodrigues\"
+        }"
 ```
 
-See the `routes file` for all the routes. [here](/src/routes/index.js).
+See the `routes file` for all the routes. [here](/src/routes/index.js) and HTTP [file](/requests.http).
