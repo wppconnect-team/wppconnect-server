@@ -1,7 +1,14 @@
 import {Router} from 'express';
 import {encryptSession} from '../controller/EncryptController';
 import {sendFile, sendImage, sendMessage} from '../controller/MessageController';
-import {closeSession, showAllSessions, startAllSessions, startSession} from '../controller/SessionController';
+import {
+    checkConnectionSession,
+    closeSession, downloadMediaByMessage,
+    getChatById,
+    showAllSessions,
+    startAllSessions,
+    startSession
+} from '../controller/SessionController';
 import {createGroup, joinGroupByCode} from "../controller/GroupController";
 import {setProfileImage, setProfileName, showAllContacts} from "../controller/DeviceController";
 import verifyToken from '../middleware/auth';
@@ -17,8 +24,9 @@ routes.post('/api/:secretkey/start-all', startAllSessions);
 
 //Sessions
 routes.get('/api/:session/show-all-sessions', verifyToken, statusConnection, showAllSessions);
-routes.get('/api/:session/start-session', verifyToken, startSession);
-routes.get('/api/:session/close-session', verifyToken, statusConnection, closeSession);
+routes.post('/api/:session/start-session', verifyToken, startSession);
+routes.post('/api/:session/close-session', verifyToken, statusConnection, closeSession);
+routes.get('/api/:session/check-connection-session', verifyToken, checkConnectionSession);
 
 //SendMessages
 routes.post('/api/:session/send-message', verifyToken, statusConnection, sendMessage);
@@ -33,3 +41,5 @@ routes.post('/api/:session/join-code', verifyToken, statusConnection, joinGroupB
 routes.post('/api/:session/change-username', verifyToken, statusConnection, setProfileName);
 routes.post('/api/:session/change-profile-image', verifyToken, statusConnection, setProfileImage);
 routes.get('/api/:session/show-all-contacts', verifyToken, statusConnection, showAllContacts);
+routes.post('/api/:session/get-chat-by-id', verifyToken, statusConnection, getChatById);
+routes.post('/api/:session/download-media', verifyToken, statusConnection, downloadMediaByMessage);

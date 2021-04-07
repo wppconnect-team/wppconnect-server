@@ -1,7 +1,6 @@
-import { clientsArray, IP_BASE, sessions } from "./SessionUtil";
-import { create, SocketState } from "@wppconnect-team/wppconnect";
+import {clientsArray, IP_BASE, sessions} from "./SessionUtil";
+import {create, SocketState} from "@wppconnect-team/wppconnect";
 import fs from "fs";
-import path from "path";
 import api from 'axios'
 
 let chromiumArgs = ['--disable-web-security', '--no-sandbox', '--disable-web-security', '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache', '--disable-offline-load-stale-cache', '--disk-cache-size=0', '--disable-background-networking', '--disable-default-apps', '--disable-extensions', '--disable-sync', '--disable-translate', '--hide-scrollbars', '--metrics-recording-only', '--mute-audio', '--no-first-run', '--safebrowsing-disable-auto-update', '--ignore-certificate-errors', '--ignore-ssl-errors', '--ignore-certificate-errors-spki-list'];
@@ -27,9 +26,8 @@ async function createSessionUtil(req, clientsArray, session) {
             disableSpins: true,
         })
 
-        //ele nem vem pra cá
-        console.log('entrando no start ->')
         await start(req, clientsArray, session);
+        sessions.push({session: req.session, token: req.token});
     } catch (e) {
         console.log('error create -> ', e)
     }
@@ -48,7 +46,15 @@ function exportQR(req, qrCode, session) {
 }
 
 async function start(req, client, session) {
-    await checkStateSession(client, session)
+    try {
+        await clientsArray[session].isConnected();
+
+        console.log(`Started Session: ${session}`);
+        req.io.emit('session-logged', {status: true, session: session})
+    } catch (error) {
+        console.log(`Error Session: ${session}`)
+        req.io.emit('session-error', session)
+    }
 
     await listenMessages(req, client, session)
     await listenAcks(client, session)
@@ -77,35 +83,22 @@ const downloadFiles = async (client, message) => {
 
 async function listenMessages(req, client, session) {
     await client[session].onMessage(async (message) => {
+        console.log(message.from, message.body);
+
         await downloadFiles(client, message)
 
-        await api.post(IP_BASE, { message: message })
+        await api.post(IP_BASE, {message: message})
     })
 
     await client[session].onAnyMessage((message) => {
         message.session = session
-        req.io.emit('received-message', { response: message })
+        req.io.emit('received-message', {response: message})
     });
 }
 
 async function listenAcks(client, session) {
-    // Listen to ack's
-    // See the status of the message when sent.
-    // When receiving the confirmation object, "ack" may return a number, look {@link AckType} for details:
-    // -7 = MD_DOWNGRADE,
-    // -6 = INACTIVE,
-    // -5 = CONTENT_UNUPLOADABLE,
-    // -4 = CONTENT_TOO_BIG,
-    // -3 = CONTENT_GONE,
-    // -2 = EXPIRED,
-    // -1 = FAILED,
-    //  0 = CLOCK,
-    //  1 = SENT,
-    //  2 = RECEIVED,
-    //  3 = READ,
-    //  4 = PLAYED
     await client[session].onAck(async (ack) => {
-        await api.post(IP_BASE, { ack: ack })
+        await api.post(IP_BASE, {ack: ack})
     });
 
 }

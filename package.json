@@ -6,7 +6,7 @@
   "author": "kingaspx",
   "license": "MIT",
   "dependencies": {
-    "@wppconnect-team/wppconnect": "latest",
+    "@wppconnect-team/wppconnect": "^1.2.4",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
