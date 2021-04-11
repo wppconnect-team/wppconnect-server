@@ -3,7 +3,7 @@ import {encryptSession} from '../controller/EncryptController';
 import {sendFile, sendImage, sendMessage} from '../controller/MessageController';
 import {
     checkConnectionSession,
-    closeSession, downloadMediaByMessage,
+    closeSession, downloadMediaByMessage, getAllChats,
     getChatById,
     showAllSessions,
     startAllSessions,
@@ -41,5 +41,6 @@ routes.post('/api/:session/join-code', verifyToken, statusConnection, joinGroupB
 routes.post('/api/:session/change-username', verifyToken, statusConnection, setProfileName);
 routes.post('/api/:session/change-profile-image', verifyToken, statusConnection, setProfileImage);
 routes.get('/api/:session/show-all-contacts', verifyToken, statusConnection, showAllContacts);
+routes.get('/api/:session/show-all-chats', verifyToken, statusConnection, getAllChats);
 routes.post('/api/:session/get-chat-by-id', verifyToken, statusConnection, getChatById);
 routes.post('/api/:session/download-media', verifyToken, statusConnection, downloadMediaByMessage);

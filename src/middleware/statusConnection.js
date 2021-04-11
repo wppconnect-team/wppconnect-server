@@ -5,7 +5,6 @@ export default async function statusConnection(req, res, next) {
 
     try {
         const teste = await clientsArray[session].isConnected();
-        console.log(teste)
         next();
     } catch (error) {
         return res.status(400).json({

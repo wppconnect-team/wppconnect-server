@@ -32,10 +32,6 @@ app.use((req, res, next) => {
 io.on('connection', sock => {
     console.log(`ID: ${sock.id} entrou`)
 
-    sock.on('event', data => {
-        console.log(data)
-    });
-
     sock.on('disconnect', () => {
         console.log(`ID: ${sock.id} saiu`)
     });

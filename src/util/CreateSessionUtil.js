@@ -2,6 +2,7 @@ import {clientsArray, IP_BASE, sessions} from "./SessionUtil";
 import {create, SocketState} from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import api from 'axios'
+import {download} from "../controller/SessionController";
 
 let chromiumArgs = ['--disable-web-security', '--no-sandbox', '--disable-web-security', '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache', '--disable-offline-load-stale-cache', '--disk-cache-size=0', '--disable-background-networking', '--disable-default-apps', '--disable-extensions', '--disable-sync', '--disable-translate', '--hide-scrollbars', '--metrics-recording-only', '--mute-audio', '--no-first-run', '--safebrowsing-disable-auto-update', '--ignore-certificate-errors', '--ignore-ssl-errors', '--ignore-certificate-errors-spki-list'];
 
@@ -56,6 +57,7 @@ async function start(req, client, session) {
         req.io.emit('session-error', session)
     }
 
+    await checkStateSession(client, session);
     await listenMessages(req, client, session)
     await listenAcks(client, session)
 }
@@ -74,31 +76,33 @@ async function checkStateSession(client, session) {
     });
 }
 
-const downloadFiles = async (client, message) => {
-    if (message && (message.isMedia || message.isMMS)) {
-        let buffer = await client.decryptFile(message);
-        message.mediaData['mediaBlob'] = await buffer.toString('base64');
-    }
-}
-
 async function listenMessages(req, client, session) {
     await client[session].onMessage(async (message) => {
-        console.log(message.from, message.body);
-
-        await downloadFiles(client, message)
-
-        await api.post(IP_BASE, {message: message})
+        try {
+            await api.post(IP_BASE, {message: message})
+        } catch (e) {
+            console.log('erro ao enviar o ack');
+        }
     })
 
     await client[session].onAnyMessage((message) => {
-        message.session = session
-        req.io.emit('received-message', {response: message})
+        message.session = session;
+
+        if (message.type === 'sticker') {
+            download(message, session)
+        }
+
+        req.io.emit('received-message', {response: message});
     });
 }
 
 async function listenAcks(client, session) {
     await client[session].onAck(async (ack) => {
-        await api.post(IP_BASE, {ack: ack})
+        try {
+            await api.post(IP_BASE, {ack: ack})
+        } catch (e) {
+            console.log('erro ao enviar o ack')
+        }
     });
 
 }

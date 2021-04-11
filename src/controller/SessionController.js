@@ -2,47 +2,68 @@ import {clientsArray, IP_BASE, sessions} from "../util/SessionUtil";
 import {opendata} from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
 import api from "axios";
-import fs from 'fs';
-import mime from 'mime-types';
+import fs from "fs";
+import mime from "mime-types";
 
-async function downloadFIle(message, session) {
+async function downloadFileFunction(message, session) {
     try {
         const buffer = await clientsArray[session].decryptFile(message);
 
-        let filename = `./WhatsAppImages/file${message.t}`
+        let filename = `./WhatsAppImages/file${message.t}`;
         if (!fs.existsSync(filename)) {
-            let result = `${filename}.${mime.extension(message.mimetype)}`
+            let result = `${filename}.${mime.extension(message.mimetype)}`;
 
             await fs.writeFile(result, buffer, (err) => {
-                console.log(err)
+                if (err) {
+                    console.log(err);
+                }
             });
 
-            return result
+            return result;
         } else {
-            return `${filename}.${mime.extension(message.mimetype)}`
+            return `${filename}.${mime.extension(message.mimetype)}`;
         }
     } catch (e) {
-        console.log(e)
+        console.log("Erro ao descriptografar a midia, tentando fazer o download direto...");
+        try {
+            const buffer = await clientsArray[session].downloadMedia(message);
+            let filename = `./WhatsAppImages/file${message.t}`;
+            if (!fs.existsSync(filename)) {
+                let result = `${filename}.${mime.extension(message.mimetype)}`;
+
+                await fs.writeFile(result, buffer, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+
+                return result;
+            } else {
+                return `${filename}.${mime.extension(message.mimetype)}`;
+            }
+        } catch (e) {
+            console.log("Não foi possível baixar a mídia...");
+        }
     }
 }
 
-async function download(message, session) {
+export async function download(message, session) {
     try {
-        const path = await downloadFIle(message, session);
-        return path.replace('./', '');
+        const path = await downloadFileFunction(message, session);
+        return path.replace("./", "");
     } catch (e) {
         console.log(e);
     }
 }
 
 export async function startAllSessions(req, res) {
-    const {secretkey} = req.params
+    const {secretkey} = req.params;
     const {authorization: token} = req.headers;
 
-    let tokenDecrypt = '';
+    let tokenDecrypt = "";
 
     if (secretkey === undefined) {
-        tokenDecrypt = token.split(' ')[0];
+        tokenDecrypt = token.split(" ")[0];
     } else {
         tokenDecrypt = secretkey;
     }
@@ -52,26 +73,26 @@ export async function startAllSessions(req, res) {
     if (tokenDecrypt !== process.env.SECRET_KEY) {
         return res.status(400).json({
             response: false,
-            message: 'O token informado está incorreto.'
-        })
+            message: "O token informado está incorreto."
+        });
     }
 
     allSessions.map(async (session) => {
-        await opendata(req, res, session.replace('data.json', ''))
-    })
+        await opendata(req, res, session.replace("data.json", ""));
+    });
 
-    return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"})
+    return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
 }
 
 export async function startSession(req, res) {
     const session = req.session;
 
     await res.status(201).json({
-        message: 'Inicializando Sessão',
+        message: "Inicializando Sessão",
         session: session
-    })
+    });
 
-    await opendata(req, session)
+    await opendata(req, session);
 }
 
 export async function closeSession(req, res) {
@@ -80,12 +101,12 @@ export async function closeSession(req, res) {
     await clientsArray[session].close();
     sessions.filter(item => item !== session);
 
-    req.io.emit('whatsapp-status', false);
-    await api.post(IP_BASE, {'message': `Session: ${session} disconnected`, connected: false})
+    req.io.emit("whatsapp-status", false);
+    await api.post(IP_BASE, {"message": `Session: ${session} disconnected`, connected: false});
 }
 
 export async function checkConnectionSession(req, res) {
-    const session = req.session
+    const session = req.session;
     try {
         await clientsArray[session].isConnected();
 
@@ -106,14 +127,14 @@ export async function checkSessionConnected(req, res) {
         const response = await clientsArray[session].isConnected();
         return res.status(200).json({
             response: response,
-            message: 'A sessão está ativa.'
-        })
+            message: "A sessão está ativa."
+        });
 
     } catch (error) {
         return res.status(200).json({
             response: false,
-            message: 'A sessão não está ativa.'
-        })
+            message: "A sessão não está ativa."
+        });
     }
 }
 
@@ -125,22 +146,22 @@ export async function getChatById(req, res) {
         const allMessages = await clientsArray[session].getAllMessagesInChat(phone, true, true);
 
 
-        let dir = './WhatsAppImages';
+        let dir = "./WhatsAppImages";
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }
 
         allMessages.map((message) => {
-            if (message.type === 'sticker') {
-                download(message, session)
-                message.body = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`
+            if (message.type === "sticker") {
+                download(message, session);
+                message.body = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
             }
-        })
+        });
 
-        return res.json({status: 'Success', response: allMessages})
+        return res.json({status: "Success", response: allMessages});
     } catch (e) {
-        console.log("Não há mensagens")
-        return res.json({status: "Error", response: []})
+        console.log("Não há mensagens");
+        return res.json({status: "Error", response: []});
     }
 }
 
@@ -148,15 +169,26 @@ export async function downloadMediaByMessage(req, res) {
     const session = req.session;
     const {message} = req.body;
 
-    let result = '';
+    let result = "";
 
     if (message.isMedia === true) {
-        await download(message, session)
-        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`
-    } else if (message.type === 'ptt' || message.type === 'sticker') {
-        await download(message, session)
-        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`
+        await download(message, session);
+        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
+    } else if (message.type === "ptt" || message.type === "sticker") {
+        await download(message, session);
+        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
     }
 
     return res.status(200).json(result);
+}
+
+export async function getAllChats(req, res) {
+    const session = req.session;
+
+    try {
+        const response = await clientsArray[session].getAllChats();
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        return res.status(401).json({status: "error", response: "Error on open list"});
+    }
 }
