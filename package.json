@@ -15,7 +15,7 @@
     "socket.io": "^4.0.0"
   },
   "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
+    "dev": "nodemon -w src -w .env --exec \"babel-node src --presets env\"",
     "build": "rimraf dist && babel src -s -D -d dist --presets env",
     "start": "node dist"
   },

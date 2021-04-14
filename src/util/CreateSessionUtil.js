@@ -1,4 +1,4 @@
-import {clientsArray, IP_BASE, sessions} from "./SessionUtil";
+import {clientsArray, WEBHOOK_URL, sessions} from "./SessionUtil";
 import {create, SocketState} from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import api from 'axios'
@@ -78,10 +78,12 @@ async function checkStateSession(client, session) {
 
 async function listenMessages(req, client, session) {
     await client[session].onMessage(async (message) => {
-        try {
-            await api.post(IP_BASE, {message: message})
-        } catch (e) {
-            console.log('erro ao enviar o ack');
+        if (WEBHOOK_URL) {
+            try {
+                await api.post(WEBHOOK_URL, {message: message})
+            } catch (e) {
+                console.log('erro ao enviar a mensagem');
+            }
         }
     })
 
@@ -98,10 +100,12 @@ async function listenMessages(req, client, session) {
 
 async function listenAcks(client, session) {
     await client[session].onAck(async (ack) => {
-        try {
-            await api.post(IP_BASE, {ack: ack})
-        } catch (e) {
-            console.log('erro ao enviar o ack')
+        if (WEBHOOK_URL) {
+            try {
+                await api.post(WEBHOOK_URL, {ack: ack})
+            } catch (e) {
+                console.log('erro ao enviar o ack')
+            }
         }
     });
 

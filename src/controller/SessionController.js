@@ -1,4 +1,4 @@
-import {clientsArray, IP_BASE, sessions} from "../util/SessionUtil";
+import {clientsArray, WEBHOOK_URL, sessions} from "../util/SessionUtil";
 import {opendata} from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
 import api from "axios";
@@ -102,7 +102,13 @@ export async function closeSession(req, res) {
     sessions.filter(item => item !== session);
 
     req.io.emit("whatsapp-status", false);
-    await api.post(IP_BASE, {"message": `Session: ${session} disconnected`, connected: false});
+    if (WEBHOOK_URL) {
+        try {
+            await api.post(WEBHOOK_URL, {"message": `Session: ${session} disconnected`, connected: false});
+        } catch (e) {
+            console.log('erro ao enviar o status');
+        }
+    }
 }
 
 export async function checkConnectionSession(req, res) {
