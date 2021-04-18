@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {encryptSession} from '../controller/EncryptController';
-import {sendFile, sendImage, sendMessage} from '../controller/MessageController';
+import {sendFile, sendFile64, sendImage, sendMessage, sendVoice} from "../controller/MessageController";
 import {
     checkConnectionSession,
     closeSession, downloadMediaByMessage, getAllChats,
@@ -32,6 +32,8 @@ routes.get('/api/:session/check-connection-session', verifyToken, checkConnectio
 routes.post('/api/:session/send-message', verifyToken, statusConnection, sendMessage);
 routes.post('/api/:session/send-image', verifyToken, statusConnection, sendImage);
 routes.post('/api/:session/send-file', verifyToken, statusConnection, sendFile);
+routes.post('/api/:session/send-file-base64', verifyToken, statusConnection, sendFile64);
+routes.post('/api/:session/send-voice', verifyToken, statusConnection, sendVoice);
 
 // Group Functions
 routes.post('/api/:session/create-group', verifyToken, statusConnection, createGroup);
