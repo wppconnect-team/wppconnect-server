@@ -1,4 +1,6 @@
 import {clientsArray} from "../util/SessionUtil";
+import _ from "lodash";
+import {contactToArray, groupToArray} from "../util/functions";
 
 function returnError(res, session, error, message) {
     res.status(400).json({
@@ -7,7 +9,7 @@ function returnError(res, session, error, message) {
             session: session,
             log: error
         },
-    })
+    });
 }
 
 function returnSucess(res, session, phone, message) {
@@ -17,40 +19,259 @@ function returnSucess(res, session, phone, message) {
             contact: phone,
             session: session
         },
-    })
-}
-
-export async function createGroup(req, res) {
-    const session = req.session
-    const {groupname, phone} = req.body
-
-    if (!groupname)
-        return res.status(401).send({message: 'O nome do grupo não foi informado.'});
-
-    if (!phone)
-        return res.status(401).send({message: 'O Telefone não foi informado.'});
-
-    try {
-        await clientsArray[session].createGroup(groupname, phone);
-
-        returnSucess(res, session, phone, `O grupo ${groupname} foi criado com sucesso`)
-    } catch (error) {
-        returnError(res, session, error, "O grupo não foi criado")
-    }
+    });
 }
 
 export async function joinGroupByCode(req, res) {
-    const session = req.session
-    const {inviteCode} = req.body
+    const session = req.session;
+    const {inviteCode} = req.body;
 
     if (!inviteCode)
-        return res.status(401).send({message: 'Informe o Codigo de Convite'});
+        return res.status(401).send({message: "Informe o Codigo de Convite"});
 
     try {
         await clientsArray[session].joinGroup(inviteCode);
 
-        returnSucess(res, session, inviteCode, "Você entrou no grupo com sucesso")
+        returnSucess(res, session, inviteCode, "Você entrou no grupo com sucesso");
     } catch (error) {
-        returnError(res, session, error, "Você não entrou no grupo.")
+        returnError(res, session, error, "Você não entrou no grupo.");
+    }
+}
+
+export async function createGroup(req, res) {
+    const session = req.session;
+    const {participants, name} = req.body;
+
+    let response = {};
+    let infoGroup = [];
+
+    try {
+        for (const grupo of groupToArray(name)) {
+            response = await clientsArray[session].createGroup(grupo, contactToArray(participants));
+
+            infoGroup.push({
+                name: grupo,
+                id: response.gid.user,
+                participants: response.participants.map((user) => {
+                    return {user: Object.keys(user)[0]};
+                })
+            });
+        }
+
+        const grouped = _.groupBy(infoGroup, grupo => grupo.id);
+        return res.status(200).json({
+            status: "Success",
+            message: "Grupo criado com sucesso",
+            group: name,
+            groupInfo: grouped
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao criar grupo");
+    }
+}
+
+export async function leaveGroup(req, res) {
+    const session = req.session;
+    const {groupId} = req.body;
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            await clientsArray[session].leaveGroup(`${grupo}@g.us`);
+        }
+
+        return res.status(200).json({status: "Success", messages: "Você saiu do grupo com sucesso", group: groupId});
+    } catch (e) {
+        return res.status(400).json("Erro ao sair do(s) grupo(s)");
+    }
+}
+
+export async function getGroupMembers(req, res) {
+    const session = req.session;
+    const {groupId} = req.body;
+
+    try {
+        let groupInfo = [];
+        let response = {};
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].getGroupMembers(`${grupo}@g.us`);
+
+            for (const contato of response) {
+                groupInfo.push({
+                    id: grupo,
+                    participants: {
+                        phone: contato.id.user,
+                        name: contato.name ? contato.name : "",
+                        pushname: contato.isBusiness ? contato.verifiedName : contato.pushname,
+                        isBusiness: contato.isBusiness
+                    }
+                });
+            }
+        }
+
+        const grouped = _.groupBy(groupInfo, grupo => grupo.id);
+        return res.status(200).json({"groupInfo": grouped});
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao recuperar participantes do(s) grupo(s)");
+    }
+
+}
+
+export async function addParticipant(req, res) {
+    const session = req.session;
+    const {groupId, phone} = req.body;
+
+    let response = {};
+    let arrayGrupos = [];
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].addParticipant(`${grupo}@g.us`, contactToArray(phone));
+            arrayGrupos.push(response);
+        }
+
+        return res.status(200).json({
+            status: "Success",
+            message: "Participante(s) adicionado(s) com sucesso",
+            participants: phone,
+            groups: arrayGrupos
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao adicionar participante(s)");
+    }
+}
+
+export async function removeParticipant(req, res) {
+    const session = req.session;
+    const {groupId, phone} = req.body;
+
+    let response = {};
+    let arrayGrupos = [];
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].removeParticipant(`${grupo}@g.us`, contactToArray(phone));
+            arrayGrupos.push(response);
+        }
+
+        return res.status(200).json({
+            status: "Success",
+            message: "Participante(s) removido(s) com sucesso",
+            participants: phone,
+            groups: arrayGrupos
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao remover participante(s)");
+    }
+}
+
+export async function promoteParticipant(req, res) {
+    const session = req.session;
+    const {groupId, phone} = req.body;
+
+    let response = {};
+    let arrayGrupos = [];
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].promoteParticipant(`${grupo}@g.us`, contactToArray(phone));
+            arrayGrupos.push(grupo);
+        }
+
+        return res.status(200).json({
+            status: "Success",
+            message: "Participante(s) promovidos(s) com sucesso",
+            participants: phone,
+            groups: arrayGrupos
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao promover participante(s)");
+    }
+}
+
+export async function demoteParticipant(req, res) {
+    const session = req.session;
+    const {groupId, phone} = req.body;
+
+    let response = {};
+    let arrayGrupos = [];
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].demoteParticipant(`${grupo}@g.us`, contactToArray(phone));
+            arrayGrupos.push(grupo);
+        }
+
+        return res.status(200).json({
+            status: "Success",
+            message: "Admin do(s) participante(s) revogado(s) com sucesso",
+            participants: phone,
+            groups: arrayGrupos
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao revogar admin do(s) participante(s)");
+    }
+}
+
+export async function getGroupAdmins(req, res) {
+    const session = req.session;
+    const {groupId} = req.body;
+
+    let response = {};
+    let arrayGrupos = [];
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].getGroupAdmins(`${grupo}@g.us`);
+
+            arrayGrupos.push({
+                id: grupo,
+                admin: response.user,
+            });
+        }
+
+        const grouped = _.groupBy(arrayGrupos, grupo => grupo.id);
+        return res.status(200).json({
+            status: "Success",
+            participants: grouped,
+            groups: arrayGrupos
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao recuperar o(s) admin(s) do(s) grupo(s)");
+    }
+}
+
+export async function getGroupInviteLink(req, res) {
+    const session = req.session;
+    const {groupId} = req.body;
+
+    let response = {};
+    let arrayGrupos = [];
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await clientsArray[session].getGroupInviteLink(`${grupo}@g.us`);
+
+            arrayGrupos.push({
+                id: grupo,
+                link: response
+            });
+        }
+
+        const grouped = _.groupBy(arrayGrupos, grupo => grupo.id);
+        return res.status(200).json({
+            status: "Success",
+            participants: grouped,
+            groups: arrayGrupos
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(400).json("Erro ao recuperar o(s) link(s) do(s) grupo(s)");
     }
 }

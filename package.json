@@ -11,11 +11,17 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
+    "downloadjs": "^1.4.7",
     "express": "^4.17.1",
+    "ffmpeg": "^0.0.4",
+    "js-file-download": "^0.4.12",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "multer": "^1.4.2",
     "socket.io": "^4.0.0"
   },
   "scripts": {
-    "dev": "nodemon -w src -w .env --exec \"babel-node src --presets env\"",
+    "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
     "build": "rimraf dist && babel src -s -D -d dist --presets env",
     "start": "node dist"
   },

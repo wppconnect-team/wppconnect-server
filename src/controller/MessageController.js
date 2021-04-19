@@ -1,4 +1,6 @@
 import {clientsArray} from "../util/SessionUtil";
+import {contactToArray} from "../util/functions";
+import path from "path";
 
 function returnError(res, session, error) {
     res.status(400).json({
@@ -25,14 +27,16 @@ export async function sendMessage(req, res) {
     const {phone, message, isGroup = false} = req.body;
 
     try {
-        if (isGroup) {
-            await clientsArray[session].sendText(phone + "@g.us", message);
-        } else {
-            await clientsArray[session].sendText(phone + "@c.us", message);
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                await clientsArray[session].sendText(`${contato}@g.us`, message);
+            } else {
+                await clientsArray[session].sendText(`${contato}@c.us`, message);
+            }
         }
 
-        returnSucess(res, session, phone);
         req.io.emit("mensagem-enviada", {message: message, to: phone});
+        returnSucess(res, session, phone);
     } catch (error) {
         console.log(error);
 
@@ -53,20 +57,13 @@ export async function sendImage(req, res) {
         });
 
     try {
-        if (isGroup) {
-            await clientsArray[session].sendImage(
-                phone + "@g.us", //phone
-                path, //path
-                "image-api.jpg", //image name
-                caption //msg (caption)
-            );
-        } else {
-            await clientsArray[session].sendImage(
-                phone + "@c.us", //phone
-                path, //path
-                "image-api.jpg", //image name
-                caption //msg (caption)
-            );
+
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                await clientsArray[session].sendImage(`${contato}@g.us`, path, "image-api.jpg", caption);
+            } else {
+                await clientsArray[session].sendImage(`${contato}@c.us`, path, "image-api.jpg", caption);
+            }
         }
 
         returnSucess(res, session, phone);
@@ -77,26 +74,24 @@ export async function sendImage(req, res) {
 
 export async function sendFile(req, res) {
     const session = req.session;
-    const {path, phone, isGroup = false} = req.body;
+    const {phone, isGroup = false} = req.body;
 
-    if (!path)
-        return res.status(401).send({message: "O caminho do arquivo não foi informado."});
+    if (!req.file) {
+        return res.status(400).json({status: "Error", message: "O envio do arquivo é obrigatório."});
+    }
+
+    const {filename: file} = req.file;
+    path.resolve(req.file.destination, "WhatsAppImages", file);
+
+    const caminho = `http://localhost:3001/files/${file}`;
 
     try {
-        if (isGroup) {
-            await clientsArray[session].sendFile(
-                phone + "@c.us", //phone
-                path, //path file
-                "My File", //Title File
-                "Look this file" //Caption
-            );
-        } else {
-            await clientsArray[session].sendFile(
-                phone + "@g.us", //phone
-                path, //path file
-                "My File", //Title File
-                "Look this file" //Caption
-            );
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                await clientsArray[session].sendFile(`${contato}@g.us`, caminho, "File", "");
+            } else {
+                await clientsArray[session].sendFile(`${contato}@c.us`, caminho, "File", "");
+            }
         }
 
         returnSucess(res, session, phone);
@@ -113,20 +108,12 @@ export async function sendFile64(req, res) {
         return res.status(401).send({message: "O base64 do arquivo não foi informado."});
 
     try {
-        if (isGroup) {
-            await clientsArray[session].sendFileFromBase64(
-                phone + "@c.us", //phone
-                base64, //path file
-                "My File", //Title File
-                "Look this file" //Caption
-            );
-        } else {
-            await clientsArray[session].sendFileFromBase64(
-                phone + "@g.us", //phone
-                base64, //path file
-                "My File", //Title File
-                "Look this file" //Caption
-            );
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                await clientsArray[session].sendFileFromBase64(`${contato}@g.us`, base64, "My File", "");
+            } else {
+                await clientsArray[session].sendFileFromBase64(`${contato}@c.us`, base64, "My File", "");
+            }
         }
 
         returnSucess(res, session, phone);
@@ -140,14 +127,73 @@ export async function sendVoice(req, res) {
     const {phone, url: base64Ptt, isGroup = false} = req.body;
 
     try {
-        if (isGroup) {
-            await clientsArray[session].sendPttFromBase64(`${phone}@g.us`, base64Ptt);
-        } else {
-            await clientsArray[session].sendPttFromBase64(`${phone}@c.us`, base64Ptt);
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                await clientsArray[session].sendPttFromBase64(`${contato}@g.us`, base64Ptt, "Voice Audio");
+            } else {
+                await clientsArray[session].sendPttFromBase64(`${contato}@c.us`, base64Ptt, "Voice Audio");
+            }
         }
+
         return res.status(200).json("success");
     } catch (e) {
         console.log(e);
         return res.status(400).json({status: "FAIL"});
+    }
+}
+
+export async function sendLinkPreview(req, res) {
+    const session = req.session;
+    const {phone, url, caption, isGroup = false} = req.body;
+
+    try {
+        let response = {};
+
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                response = await clientsArray[session].sendLinkPreview(`${contato}@g.us`, url, caption);
+            } else {
+                response = await clientsArray[session].sendLinkPreview(`${contato}@c.us`, url, caption);
+            }
+        }
+
+        return res.status(200).json({status: "Success", message: "O link foi enviado com sucesso."});
+    } catch (error) {
+        return res.status(400).json({status: "Erro ao enviar mensagem", log: error});
+    }
+}
+
+export async function sendLocation(req, res) {
+    const session = req.session;
+    const {phone, lat, lng, title, isGroup = false} = req.body;
+
+    try {
+        let response = {};
+
+        for (const contato of contactToArray(phone)) {
+            if (isGroup) {
+                response = await clientsArray[session].sendLocation(`${contato}@g.us`, lat, lng, title);
+            } else {
+                response = await clientsArray[session].sendLocation(`${contato}@c.us`, lat, lng, title);
+            }
+        }
+
+        return res.status(200).json({status: "Success", message: "A localização foi enviada com sucesso."});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({status: "Erro ao enviar localização"});
+    }
+}
+
+export async function sendStatusText(req, res) {
+    const session = req.session;
+    const {message} = req.body;
+
+    try {
+        await clientsArray[session].sendText("status@broadcast", message);
+        return res.status(200).json({status: "Success", message: "A mensagem foi enviada com sucesso."});
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({status: "Erro ao enviar mensagem"});
     }
 }

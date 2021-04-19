@@ -1,4 +1,4 @@
-import {clientsArray, WEBHOOK_URL, sessions} from "../util/SessionUtil";
+import {clientsArray, IP_BASE, sessions} from "../util/SessionUtil";
 import {opendata} from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
 import api from "axios";
@@ -11,7 +11,12 @@ async function downloadFileFunction(message, session) {
 
         let filename = `./WhatsAppImages/file${message.t}`;
         if (!fs.existsSync(filename)) {
-            let result = `${filename}.${mime.extension(message.mimetype)}`;
+            let result = "";
+            if (message.type === "ptt") {
+                result = `${filename}.oga`;
+            } else {
+                result = `${filename}.${mime.extension(message.mimetype)}`;
+            }
 
             await fs.writeFile(result, buffer, (err) => {
                 if (err) {
@@ -27,9 +32,14 @@ async function downloadFileFunction(message, session) {
         console.log("Erro ao descriptografar a midia, tentando fazer o download direto...");
         try {
             const buffer = await clientsArray[session].downloadMedia(message);
-            let filename = `./WhatsAppImages/file${message.t}`;
+            const filename = `./WhatsAppImages/file${message.t}`;
             if (!fs.existsSync(filename)) {
-                let result = `${filename}.${mime.extension(message.mimetype)}`;
+                let result = "";
+                if (message.type === "ptt") {
+                    result = `${filename}.oga`;
+                } else {
+                    result = `${filename}.${mime.extension(message.mimetype)}`;
+                }
 
                 await fs.writeFile(result, buffer, (err) => {
                     if (err) {
@@ -102,13 +112,9 @@ export async function closeSession(req, res) {
     sessions.filter(item => item !== session);
 
     req.io.emit("whatsapp-status", false);
-    if (WEBHOOK_URL) {
-        try {
-            await api.post(WEBHOOK_URL, {"message": `Session: ${session} disconnected`, connected: false});
-        } catch (e) {
-            console.log('erro ao enviar o status');
-        }
-    }
+    await api.post(IP_BASE, {"message": `Session: ${session} disconnected`, connected: false});
+
+    return res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
 }
 
 export async function checkConnectionSession(req, res) {
@@ -144,33 +150,6 @@ export async function checkSessionConnected(req, res) {
     }
 }
 
-export async function getChatById(req, res) {
-    const session = req.session;
-    const {phone} = req.body;
-
-    try {
-        const allMessages = await clientsArray[session].getAllMessagesInChat(phone, true, true);
-
-
-        let dir = "./WhatsAppImages";
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-
-        allMessages.map((message) => {
-            if (message.type === "sticker") {
-                download(message, session);
-                message.body = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
-            }
-        });
-
-        return res.json({status: "Success", response: allMessages});
-    } catch (e) {
-        console.log("Não há mensagens");
-        return res.json({status: "Error", response: []});
-    }
-}
-
 export async function downloadMediaByMessage(req, res) {
     const session = req.session;
     const {message} = req.body;
@@ -186,15 +165,4 @@ export async function downloadMediaByMessage(req, res) {
     }
 
     return res.status(200).json(result);
-}
-
-export async function getAllChats(req, res) {
-    const session = req.session;
-
-    try {
-        const response = await clientsArray[session].getAllChats();
-        return res.status(200).json({status: "success", response: response});
-    } catch (e) {
-        return res.status(401).json({status: "error", response: "Error on open list"});
-    }
 }
