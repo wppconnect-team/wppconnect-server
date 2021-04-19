@@ -83,7 +83,7 @@ export async function sendFile(req, res) {
         return res.status(401).send({message: "O caminho do arquivo não foi informado."});
 
     try {
-        if (isGroup) {
+        if (!isGroup) {
             await clientsArray[session].sendFile(
                 phone + "@c.us", //phone
                 path, //path file
@@ -113,7 +113,7 @@ export async function sendFile64(req, res) {
         return res.status(401).send({message: "O base64 do arquivo não foi informado."});
 
     try {
-        if (isGroup) {
+        if (!isGroup) {
             await clientsArray[session].sendFileFromBase64(
                 phone + "@c.us", //phone
                 base64, //path file
