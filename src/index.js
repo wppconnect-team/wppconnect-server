@@ -1,4 +1,4 @@
-import {config} from "dotenv/config";
+import {config} from "dotenv";
 import cors from "cors";
 import express from "express";
 import {Server} from "http";
