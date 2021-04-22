@@ -1,10 +1,12 @@
-import {} from "dotenv/config";
+import {config} from "dotenv/config";
 import cors from "cors";
 import express from "express";
 import {Server} from "http";
 import {Server as Socket} from "socket.io";
 import routes from "./routes";
 import path from "path";
+
+config();
 
 const app = express();
 const PORT = process.env.PORT;
