@@ -65,5 +65,6 @@ routes.post("/api/:session/get-host-device", verifyToken, statusConnection, Devi
 routes.post("/api/:session/forward-messages", verifyToken, statusConnection, DeviceController.forwardMessages);
 routes.post("/api/:session/pin-chat", verifyToken, statusConnection, DeviceController.pinChat);
 routes.post("/api/:session/change-privacy-group", verifyToken, statusConnection, DeviceController.changePrivacyGroup);
+routes.post('/api/:session/download-media', verifyToken, statusConnection, SessionController.downloadMediaByMessage);
 
 export default routes;
