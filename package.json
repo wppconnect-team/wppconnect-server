@@ -18,7 +18,8 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "multer": "^1.4.2",
-    "socket.io": "^4.0.0"
+    "socket.io": "^4.0.0",
+    "swagger-ui-express": "^4.1.6"
   },
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src --presets env\"",

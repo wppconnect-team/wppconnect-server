@@ -1,0 +1,191 @@
+{
+    "swagger": "2.0",
+    "basePath":"/api",
+    "info": {
+        "title": "WppConnect Server",
+        "version": "1.0.0",
+        "description": "Api de integração com Whats"
+    },
+    "paths": {
+        "/{session}/{secretkey}/generate-token": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "resultado com sucesso da criação do token",
+                        "schema": {
+                            "$ref": "#/definitions/token"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "status": "Success",
+                                "session": "nova",
+                                "token": "$2b$10$N9xrdqCW4S1jpNyB44L1nuXj79EAvo83MS6uxhBg8JOvWNLV8QlaS",
+                                "full": "nova:$2b$10$N9xrdqCW4S1jpNyB44L1nuXj79EAvo83MS6uxhBg8JOvWNLV8QlaS"
+                            }
+                        }
+                    }
+                },
+                "operationId": "generate-token"
+            },
+            "parameters": [
+                {
+                    "name": "session",
+                    "description": "nome da sessão",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "secretkey",
+                    "description": "chave do admin",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/{session}/start-session": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "parametros da requisição",
+                        "schema": {
+                            "$ref": "#/definitions/start-session"
+                        },
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "resultado ok"
+                    }
+                },
+                "operationId": "start-session",
+                "description": "Inicializa a sessão"
+            },
+            "parameters": [
+                {
+                    "name": "session",
+                    "description": "nome da sessão",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/{session}/check-connection-session": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Connected"
+                    }
+                },
+                "operationId": "check-connection-session",
+                "description": "Verifica se a sessáo esta conectada"
+            },
+            "parameters": [
+                {
+                    "name": "session",
+                    "description": "nome da sessão",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/{session}/close-session": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "resultado ok"
+                    }
+                },
+                "operationId": "close-session",
+                "description": "finaliza a sessão"
+            },
+            "parameters": [
+                {
+                    "name": "session",
+                    "description": "nome da sessão",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/{session}/get-media-by-message/{messageId}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Connected"
+                    }
+                },
+                "operationId": "get-media-by-message",
+                "description": "Verifica se a sessáo esta conectada"
+            },
+            "parameters": [
+                {
+                    "name": "session",
+                    "description": "nome da sessão",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "name": "messageId",
+                    "description": "Id da mensagem do whats",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "token": {
+            "description": "Token gerado da sessao",
+            "required": [
+            ],
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "Status da transação",
+                    "type": "string"
+                },
+                "session": {
+                    "description": "nome da sessão",
+                    "type": "string"
+                },
+                "token": {
+                    "description": "token da sessão a ser utilizado nas proximas chamadas",
+                    "type": "string"
+                },
+                "full": {
+                    "description": "sessão mais token concatenado.",
+                    "type": "string"
+                }
+            }
+        },
+        "start-session": {
+            "title": "Root Type for generate-token",
+            "description": "estrutura do post de geração de token",
+            "type": "object",
+            "properties": {
+                "webhook": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "webhook": "https://webhook.site/7cc2944d-3967-4cea-988c-d57ea80bce5f"
+            }
+        }
+    }
+}
