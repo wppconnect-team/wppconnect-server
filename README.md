@@ -124,3 +124,6 @@ curl -X POST --location "http://localhost:21465/api/mySession/send-message" \
 ```
 
 See the `routes file` for all the routes. [here](/src/routes/index.js) and HTTP [file](/requests.http).
+
+# Swagger UI
+Swagger ui can be found at  `/api-docs`

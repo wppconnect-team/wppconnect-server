@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt';
 
-const secureToken = process.env.SECRET_KEY;
-
 function formatSession(session) {
     return session.split(":")[0];
 }
 
 const verifyToken = (req, res, next) => {
+    const secureToken = process.env.SECRET_KEY;
+
     const {session} = req.params;
     const {authorization: token} = req.headers;
 

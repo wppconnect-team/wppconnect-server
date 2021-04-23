@@ -1,11 +1,23 @@
 {
     "swagger": "2.0",
-    "basePath":"/api",
+    "basePath": "/api",
     "info": {
         "title": "WppConnect Server",
         "version": "1.0.0",
         "description": "Api de integração com Whats"
     },
+    "securityDefinitions": {
+        "Bearer": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+        }
+      },
+      "security": [
+        {
+          "Bearer": []
+        }
+      ],
     "paths": {
         "/{session}/{secretkey}/generate-token": {
             "post": {
@@ -152,8 +164,7 @@
     "definitions": {
         "token": {
             "description": "Token gerado da sessao",
-            "required": [
-            ],
+            "required": [],
             "type": "object",
             "properties": {
                 "status": {

@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 
 const saltRounds = 10;
-const secureTokenEnv = process.env.SECRET_KEY;
 
 export async function encryptSession(req, res) {
     const { session, secretkey } = req.params;
     const { authorization: token } = req.headers;
+    const secureTokenEnv = process.env.SECRET_KEY;
 
     let tokenDecrypt = '';
 
@@ -15,10 +15,12 @@ export async function encryptSession(req, res) {
         tokenDecrypt = secretkey;
     }
 
+    console.log(secureTokenEnv)
+
     if (tokenDecrypt !== secureTokenEnv) {
         return res.status(400).json({
             response: false,
-            message: 'O token informado está incorreto.'
+            message: 'A SECRET_KEY informada está incorreta.'
         })
     }
 
