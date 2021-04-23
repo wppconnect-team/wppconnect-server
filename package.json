@@ -24,13 +24,19 @@
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
     "build": "rimraf dist && babel src -s -D -d dist --presets env",
-    "start": "node dist"
+    "start": "node dist",
+    "swagger:copy-assets": "shx cp -R ./node_modules/swagger-ui-dist ./swagger-docs",
+    "swagger:copy-json": "shx cp ./src/swagger.json ./swagger-docs",
+    "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
+    "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "nodemon": "^2.0.7",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "shx": "^0.3.3",
+    "swagger-ui-dist": "^3.47.1"
   }
 }
