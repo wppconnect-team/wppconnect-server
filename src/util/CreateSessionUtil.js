@@ -56,7 +56,6 @@ function encodeFunction(data, webhook) {
 function exportQR(req, qrCode, session) {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
-    clientsArray[session].base64Qr = qrCode;
 
     fs.writeFileSync(`${session}.png`, imageBuffer);
 
