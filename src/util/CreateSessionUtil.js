@@ -74,8 +74,8 @@ function exportQR(req, qrCode, session, webhook) {
 
 async function start(req, client, session, webhook) {
     try {
-        await clientsArray[session].isConnected();
-        clientsArray[session].webhook = webhook;
+        await client[session].isConnected();
+        client[session].webhook = webhook;
         console.log(`Started Session: ${session}`);
         req.io.emit("session-logged", {status: true, session: session});
     } catch (error) {
@@ -106,7 +106,7 @@ async function checkStateSession(client, session) {
 async function listenMessages(req, client, session) {
     await client[session].onMessage(async (message) => {
         try {
-            await api.post(client.webhook, {message: message})
+            await api.post(client[session].webhook, {message: message})
         } catch (e) {
             console.log("A URL do Webhook não foi informado.");
         }
@@ -126,7 +126,7 @@ async function listenMessages(req, client, session) {
 async function listenAcks(client, session) {
     await client[session].onAck(async (ack) => {
         try {
-            await api.post(client.webhook, {ack: ack})
+            await api.post(client[session].webhook, {ack: ack})
         } catch (e) {
             console.log("A URL do Webhook não foi informado.");
         }
