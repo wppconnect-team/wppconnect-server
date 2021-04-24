@@ -44,6 +44,9 @@ function exportQR(req, qrCode, session) {
         data: "data:image/png;base64," + imageBuffer.toString("base64"),
         session: session
     });
+    
+     await api.post(process.env.WEBHOOK_URL, {data: "data:image/png;base64," + imageBuffer.toString("base64"),
+        session: session}).catch((err) => console.log(err));
 }
 
 async function start(req, client, session) {
