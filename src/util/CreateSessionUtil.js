@@ -13,7 +13,7 @@ export async function opendata(req, session) {
 async function createSessionUtil(req, clientsArray, session) {
     try {
         let {webhook} = req.body;
-        webhook = webhook == undefined ? process.env.WEBHOOK_URL : webhook;
+        webhook = webhook === undefined ? process.env.WEBHOOK_URL : webhook;
 
         let myTokenStore = new tokenStore.FileTokenStore({
             encodeFunction: (data) => {
@@ -33,8 +33,8 @@ async function createSessionUtil(req, clientsArray, session) {
                 refreshQR: 15000,
                 disableSpins: true,
                 tokenStore: myTokenStore,
-                catchQR: async (base64Qr, asciiQR) => {
-                    await exportQR(req, base64Qr, session);
+                catchQR: (base64Qr, asciiQR) => {
+                    exportQR(req, base64Qr, session, webhook);
                 },
                 statusFind: (statusFind) => {
                     console.log(statusFind + '\n\n')
@@ -53,7 +53,7 @@ function encodeFunction(data, webhook) {
     return JSON.stringify(data);
 }
 
-async function exportQR(req, qrCode, session) {
+function exportQR(req, qrCode, session, webhook) {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
@@ -64,10 +64,12 @@ async function exportQR(req, qrCode, session) {
         session: session
     });
 
-    await api.post(process.env.WEBHOOK_URL, {
-        data: "data:image/png;base64," + imageBuffer.toString("base64"),
-        session: session
-    }).catch((err) => console.log(err));
+    (async function () {
+        await api.post(webhook, {
+            data: "data:image/png;base64," + imageBuffer.toString("base64"),
+            session: session
+        }).catch((err) => console.log(err));
+    })()
 }
 
 async function start(req, client, session, webhook) {
