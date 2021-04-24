@@ -1,5 +1,5 @@
 import {clientsArray, sessions} from "./SessionUtil";
-import {create, SocketState} from "@wppconnect-team/wppconnect";
+import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import api from "axios";
 import {download} from "../controller/SessionController";
@@ -12,31 +12,50 @@ export async function opendata(req, session) {
 
 async function createSessionUtil(req, clientsArray, session) {
     try {
-        clientsArray[session] = await create(session, (base64Qr, asciiQR) => {
-            exportQR(req, base64Qr, session);
-        }, (statusFind) => {
-            console.log(statusFind + "\n\n");
-        }, {
-            headless: true,
-            devtools: false,
-            useChrome: true,
-            debug: false,
-            logQR: true,
-            browserArgs: chromiumArgs,
-            refreshQR: 15000,
-            disableSpins: true,
+        let {webhook} = req.body;
+        webhook = webhook == undefined ? process.env.WEBHOOK_URL : webhook;
+
+        let myTokenStore = new tokenStore.FileTokenStore({
+            encodeFunction: (data) => {
+                return encodeFunction(data, webhook);
+            }
         });
 
-        await start(req, clientsArray, session);
+        clientsArray[session] = await create(
+            {
+                session: session,
+                headless: true,
+                devtools: false,
+                useChrome: true,
+                debug: false,
+                logQR: true,
+                browserArgs: chromiumArgs,
+                refreshQR: 15000,
+                disableSpins: true,
+                tokenStore: myTokenStore,
+                catchQR: async (base64Qr, asciiQR) => {
+                    await exportQR(req, base64Qr, session);
+                },
+                statusFind: (statusFind) => {
+                    console.log(statusFind + '\n\n')
+                }
+            });
+
+        await start(req, clientsArray, session, webhook);
         sessions.push({session: req.session, token: req.token});
     } catch (e) {
         console.log("error create -> ", e);
     }
 }
 
-function exportQR(req, qrCode, session) {
-    qrCode = qrCode.replace("data:image/png;base64,", "");
-    const imageBuffer = Buffer.from(qrCode, "base64");
+function encodeFunction(data, webhook) {
+    data.webhook = webhook;
+    return JSON.stringify(data);
+}
+
+async function exportQR(req, qrCode, session) {
+    qrCode = qrCode.replace('data:image/png;base64,', '');
+    const imageBuffer = Buffer.from(qrCode, 'base64');
 
     fs.writeFileSync(`${session}.png`, imageBuffer);
 
@@ -44,18 +63,19 @@ function exportQR(req, qrCode, session) {
         data: "data:image/png;base64," + imageBuffer.toString("base64"),
         session: session
     });
-    
-     await api.post(process.env.WEBHOOK_URL, {data: "data:image/png;base64," + imageBuffer.toString("base64"),
-        session: session}).catch((err) => console.log(err));
+
+    await api.post(process.env.WEBHOOK_URL, {
+        data: "data:image/png;base64," + imageBuffer.toString("base64"),
+        session: session
+    }).catch((err) => console.log(err));
 }
 
-async function start(req, client, session) {
+async function start(req, client, session, webhook) {
     try {
         await clientsArray[session].isConnected();
-
+        clientsArray[session].webhook = webhook;
         console.log(`Started Session: ${session}`);
         req.io.emit("session-logged", {status: true, session: session});
-        await api.post(process.env.WEBHOOK_URL, {status: "Logged", session: session}).catch((err) => console.log(err));
     } catch (error) {
         console.log(`Error Session: ${session}`);
         req.io.emit("session-error", session);
@@ -68,6 +88,7 @@ async function start(req, client, session) {
 
 async function checkStateSession(client, session) {
     await client[session].onStateChange((state) => {
+        console.log(`State Change ${state}: ${session}`);
         const conflits = [
             SocketState.CONFLICT,
             SocketState.UNPAIRED,
@@ -82,7 +103,11 @@ async function checkStateSession(client, session) {
 
 async function listenMessages(req, client, session) {
     await client[session].onMessage(async (message) => {
-        await api.post(process.env.WEBHOOK_URL, {message: message}).catch((err) => console.log(err));
+        try {
+            await api.post(client.webhook, {message: message})
+        } catch (e) {
+            console.log("A URL do Webhook não foi informado.");
+        }
     });
 
     await client[session].onAnyMessage((message) => {
@@ -98,7 +123,11 @@ async function listenMessages(req, client, session) {
 
 async function listenAcks(client, session) {
     await client[session].onAck(async (ack) => {
-        await api.post(process.env.WEBHOOK_URL, {ack: ack}).catch((err) => console.log(err));
+        try {
+            await api.post(client.webhook, {ack: ack})
+        } catch (e) {
+            console.log("A URL do Webhook não foi informado.");
+        }
     });
 
 }
