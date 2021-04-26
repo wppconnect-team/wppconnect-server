@@ -103,7 +103,7 @@ export async function getChatById(req, res) {
         allMessages.map((message) => {
             if (message.type === "sticker") {
                 download(message, session);
-                message.body = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
+                message.body = `${process.env.HOST}:${process.env.PORT}/files/file${message.t}.${mime.extension(message.mimetype)}`;
             }
         });
 

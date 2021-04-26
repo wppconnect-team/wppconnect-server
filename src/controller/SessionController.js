@@ -158,10 +158,10 @@ export async function downloadMediaByMessage(req, res) {
 
     if (message.isMedia === true) {
         await download(message, session);
-        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
+        result = `${process.env.HOST}:${process.env.PORT}/files/file${message.t}.${mime.extension(message.mimetype)}`;
     } else if (message.type === "ptt" || message.type === "sticker") {
         await download(message, session);
-        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
+        result = `${process.env.HOST}:${process.env.PORT}/files/file${message.t}.${mime.extension(message.mimetype)}`;
     }
 
     return res.status(200).json(result);
