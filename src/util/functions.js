@@ -33,3 +33,21 @@ export function groupToArray(group) {
 
     return localArr;
 }
+
+export function groupNameToArray(group) {
+    let localArr = [];
+    if (Array.isArray(group)) {
+        for (const contact of group) {
+            if (contact !== "")
+                localArr.push(`${contact}`);
+        }
+    } else {
+        let arrContacts = group.split(/\s*[,;]\s*/g);
+        for (const contact of arrContacts) {
+            if (contact !== "")
+                localArr.push(`${contact}`);
+        }
+    }
+
+    return localArr;
+}
