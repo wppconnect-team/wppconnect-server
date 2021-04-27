@@ -24,6 +24,7 @@ routes.post("/api/:session/start-session", verifyToken, SessionController.startS
 routes.post("/api/:session/close-session", verifyToken, statusConnection, SessionController.closeSession);
 routes.get("/api/:session/check-connection-session", verifyToken, SessionController.checkConnectionSession);
 routes.get("/api/:session/get-media-by-message/:messageId", verifyToken, SessionController.getMediaByMessage);
+routes.get("/api/:session/status-session", verifyToken, SessionController.getSessionState);
 
 //SendMessages
 routes.post("/api/:session/send-message", verifyToken, statusConnection, MessageController.sendMessage);

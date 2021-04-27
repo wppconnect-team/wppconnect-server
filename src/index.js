@@ -8,7 +8,7 @@ import path from "path";
 import swaggerUi from 'swagger-ui-express';
 
 config();
-
+const __dirname = path.resolve(path.dirname(''));
 const app = express();
 const PORT = process.env.PORT;
 
@@ -39,7 +39,7 @@ io.on("connection", sock => {
 
 app.use(routes);
 
-const swaggerDocument = require('./swagger.json');
+import swaggerDocument from './swagger.json'; 
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 

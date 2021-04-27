@@ -1,4 +1,5 @@
-import { clientsArray, IP_BASE, sessions } from "../util/SessionUtil";
+import { clientsArray, sessions } from "../util/SessionUtil";
+import { callWebHook } from "../util/functions";
 import { opendata } from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
 import api from "axios";
@@ -110,9 +111,9 @@ export async function closeSession(req, res) {
 
     await clientsArray[session].close();
     sessions.filter(item => item !== session);
-
+    clientsArray[session].status = null;
     req.io.emit("whatsapp-status", false);
-    await api.post(IP_BASE, { "message": `Session: ${session} disconnected`, connected: false });
+    callWebHook(clientsArray[session], "closesession", { "message": `Session: ${session} disconnected`, connected: false });
 
     return res.status(200).json({ status: true, message: "Sessão Fechada com sucesso" });
 }
@@ -172,7 +173,7 @@ export async function getMediaByMessage(req, res) {
     const { messageId } = req.params;
 
     try {
-        const message = await clientsArray[session].getMessageById(messageId);        
+        const message = await clientsArray[session].getMessageById(messageId);
 
         if (!message)
             return res.status(400).json(
@@ -192,6 +193,23 @@ export async function getMediaByMessage(req, res) {
         const buffer = await clientsArray[session].decryptFile(message);
 
         return res.status(200).json(await buffer.toString('base64'));
+    } catch (ex) {
+        return res.status(400).json({
+            response: false,
+            message: "A sessão não está ativa."
+        });
+    }
+
+
+}
+
+export async function getSessionState(req, res) {
+    const session = req.session;
+
+    try {
+        const client = await clientsArray[session];
+
+        return res.status(200).json({ status: client.status, qrcode: client.qrcode });
     } catch (ex) {
         return res.status(400).json({
             response: false,

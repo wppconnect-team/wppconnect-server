@@ -159,6 +159,26 @@
                     "type": "string"
                 }
             ]
+        },
+        "/{session}/status-session": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Connected"
+                    }
+                },
+                "operationId": "status-session",
+                "description": "Retorna o status da session"
+            },
+            "parameters": [
+                {
+                    "name": "session",
+                    "description": "nome da sessão",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
         }
     },
     "definitions": {

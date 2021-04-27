@@ -1,3 +1,4 @@
+import api from "axios";
 export function contactToArray(number) {
     let localArr = [];
     if (Array.isArray(number)) {
@@ -32,4 +33,13 @@ export function groupToArray(group) {
     }
 
     return localArr;
+}
+
+export async function callWebHook(client, event, data) {
+    if (client.webhook)
+        try {
+            await api.post(client.webhook, Object.assign({ event: event }, data))
+        } catch (e) {
+            console.log("A URL do Webhook não foi informado.");
+        }
 }
