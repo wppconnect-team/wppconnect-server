@@ -153,16 +153,16 @@ export async function checkSessionConnected(req, res) {
 
 export async function downloadMediaByMessage(req, res) {
     const session = req.session;
-    const { getMessageById } = req.body;
+    const { messageId } = req.body;
 
     let result = "";
 
-    if (message.isMedia === true) {
-        await download(message, session);
-        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
-    } else if (message.type === "ptt" || message.type === "sticker") {
-        await download(message, session);
-        result = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
+    if (messageId.isMedia === true) {
+        await download(messageId, session);
+        result = `${process.env.HOST}:${process.env.PORT}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
+    } else if (messageId.type === "ptt" || messageId.type === "sticker") {
+        await download(messageId, session);
+        result = `${process.env.HOST}:${process.env.PORT}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     }
 
     return res.status(200).json(result);

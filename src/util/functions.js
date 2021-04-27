@@ -4,13 +4,13 @@ export function contactToArray(number) {
     if (Array.isArray(number)) {
         for (const contact of number) {
             if (contact !== "")
-                localArr.push(contact);
+                localArr.push(`${contact}@c.us`);
         }
     } else {
         let arrContacts = number.split(/\s*[,;]\s*/g);
         for (const contact of arrContacts) {
             if (contact !== "")
-                localArr.push(contact);
+                localArr.push(`${contact}@c.us`);
         }
     }
 
@@ -34,6 +34,25 @@ export function groupToArray(group) {
 
     return localArr;
 }
+
+export function groupNameToArray(group) {
+    let localArr = [];
+    if (Array.isArray(group)) {
+        for (const contact of group) {
+            if (contact !== "")
+                localArr.push(`${contact}`);
+        }
+    } else {
+        let arrContacts = group.split(/\s*[,;]\s*/g);
+        for (const contact of arrContacts) {
+            if (contact !== "")
+                localArr.push(`${contact}`);
+        }
+    }
+
+    return localArr;
+}
+
 
 export async function callWebHook(client, event, data) {
     if (client.webhook)

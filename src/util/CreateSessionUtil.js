@@ -1,5 +1,5 @@
-import { clientsArray, sessions } from "./SessionUtil";
-import { create, SocketState, tokenStore } from "@wppconnect-team/wppconnect";
+import {clientsArray, sessions} from "./SessionUtil";
+import { create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import { callWebHook } from "../util/functions";
 import { download } from "../controller/SessionController";
@@ -12,8 +12,8 @@ export async function opendata(req, session) {
 
 async function createSessionUtil(req, clientsArray, session) {
     try {
-        let { webhook } = req.body;
-        webhook = webhook == undefined ? process.env.WEBHOOK_URL : webhook;
+        let {webhook} = req.body;
+        webhook = webhook === undefined ? process.env.WEBHOOK_URL : webhook;
 
         let myTokenStore = new tokenStore.FileTokenStore({
             encodeFunction: (data) => {
@@ -39,7 +39,6 @@ async function createSessionUtil(req, clientsArray, session) {
                 refreshQR: 15000,
                 disableSpins: true,
                 tokenStore: myTokenStore,
-                autoClose: 0,
                 catchQR: (base64Qr, asciiQR) => {
                     exportQR(req, base64Qr, client);
                 },

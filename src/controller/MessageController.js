@@ -83,7 +83,7 @@ export async function sendFile(req, res) {
     const {filename: file} = req.file;
     path.resolve(req.file.destination, "WhatsAppImages", file);
 
-    const caminho = `http://localhost:3001/files/${file}`;
+    const caminho = `${process.env.HOST}:${process.env.PORT}/files/${file}`;
 
     try {
         for (const contato of contactToArray(phone)) {

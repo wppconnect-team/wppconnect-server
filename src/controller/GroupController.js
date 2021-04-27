@@ -1,6 +1,6 @@
 import {clientsArray} from "../util/SessionUtil";
 import _ from "lodash";
-import {contactToArray, groupToArray} from "../util/functions";
+import {contactToArray, groupNameToArray, groupToArray} from "../util/functions";
 
 function returnError(res, session, error, message) {
     res.status(400).json({
@@ -46,7 +46,7 @@ export async function createGroup(req, res) {
     let infoGroup = [];
 
     try {
-        for (const grupo of groupToArray(name)) {
+        for (const grupo of groupNameToArray(name)) {
             response = await clientsArray[session].createGroup(grupo, contactToArray(participants));
 
             infoGroup.push({

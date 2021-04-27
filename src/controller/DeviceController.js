@@ -83,10 +83,16 @@ export async function getAllChats(req, res) {
 
 export async function getChatById(req, res) {
     const session = req.session;
-    const {phone} = req.body;
+    const {phone, isGroup = false} = req.body;
 
     try {
-        const allMessages = await clientsArray[session].getAllMessagesInChat(phone, true, true);
+        let allMessages = {};
+
+        if (isGroup) {
+            allMessages = await clientsArray[session].getAllMessagesInChat(`${phone}@g.us`, true, true);
+        } else {
+            allMessages = await clientsArray[session].getAllMessagesInChat(`${phone}@c.us`, true, true);
+        }
 
 
         let dir = "./WhatsAppImages";
@@ -97,7 +103,7 @@ export async function getChatById(req, res) {
         allMessages.map((message) => {
             if (message.type === "sticker") {
                 download(message, session);
-                message.body = `http://localhost:21465/files/file${message.t}.${mime.extension(message.mimetype)}`;
+                message.body = `${process.env.HOST}:${process.env.PORT}/files/file${message.t}.${mime.extension(message.mimetype)}`;
             }
         });
 
