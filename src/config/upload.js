@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
         cb(null, path.resolve(__dirname, "..", "..", "files"));
     },
     filename: function (req, file, cb) {
-        let filename = `ikaro-${Date.now()}-${file.originalname}`;
+        let filename = `wppConnect-${Date.now()}-${file.originalname}`;
         cb(null, filename);
     }
 });
