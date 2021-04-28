@@ -3,7 +3,7 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.resolve(__dirname, "..", "..", "files"));
+        cb(null, path.resolve(__dirname, "..", "..", "WhatsAppImages"));
     },
     filename: function (req, file, cb) {
         let filename = `wppConnect-${Date.now()}-${file.originalname}`;
