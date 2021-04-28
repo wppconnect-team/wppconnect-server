@@ -39,6 +39,11 @@ io.on("connection", sock => {
 
 app.use(routes);
 
+let dirFiles = path.resolve(__dirname, '..', 'WhatsAppImages');
+if (!fs.existsSync(dirFiles)) {
+    fs.mkdirSync(dirFiles);
+}
+
 const swaggerDocument = require('./swagger.json');
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
