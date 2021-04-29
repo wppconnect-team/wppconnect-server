@@ -1,5 +1,5 @@
-import { clientsArray, IP_BASE, sessions } from "../util/SessionUtil";
-import { opendata } from "../util/CreateSessionUtil";
+import {clientsArray, sessions} from "../util/sessionUtil";
+import {opendata} from "../util/createSessionUtil";
 import getAllTokens from "../util/getAllTokens";
 import api from "axios";
 import fs from "fs";
@@ -67,8 +67,8 @@ export async function download(message, session) {
 }
 
 export async function startAllSessions(req, res) {
-    const { secretkey } = req.params;
-    const { authorization: token } = req.headers;
+    const {secretkey} = req.params;
+    const {authorization: token} = req.headers;
 
     let tokenDecrypt = "";
 
@@ -91,7 +91,7 @@ export async function startAllSessions(req, res) {
         await opendata(req, res, session.replace("data.json", ""));
     });
 
-    return await res.status(201).json({ status: "Success", message: "Iniciando todas as sessões" });
+    return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
 }
 
 export async function startSession(req, res) {
@@ -112,9 +112,9 @@ export async function closeSession(req, res) {
     sessions.filter(item => item !== session);
 
     req.io.emit("whatsapp-status", false);
-    await api.post(IP_BASE, { "message": `Session: ${session} disconnected`, connected: false });
+    await api.post(process.env.WEBHOOK_URL, {"message": `Session: ${session} disconnected`, connected: false});
 
-    return res.status(200).json({ status: true, message: "Sessão Fechada com sucesso" });
+    return res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
 }
 
 export async function checkConnectionSession(req, res) {
@@ -122,9 +122,9 @@ export async function checkConnectionSession(req, res) {
     try {
         await clientsArray[session].isConnected();
 
-        return res.status(200).json({ status: true, message: "Connected" });
+        return res.status(200).json({status: true, message: "Connected"});
     } catch (error) {
-        return res.status(200).json({ status: false, message: "Disconnected" });
+        return res.status(200).json({status: false, message: "Disconnected"});
     }
 }
 
@@ -152,7 +152,7 @@ export async function checkSessionConnected(req, res) {
 
 export async function downloadMediaByMessage(req, res) {
     const session = req.session;
-    const { messageId } = req.body;
+    const {messageId} = req.body;
 
     let result = "";
 
@@ -169,10 +169,10 @@ export async function downloadMediaByMessage(req, res) {
 
 export async function getMediaByMessage(req, res) {
     const session = req.session;
-    const { messageId } = req.params;
+    const {messageId} = req.params;
 
     try {
-        const message = await clientsArray[session].getMessageById(messageId);        
+        const message = await clientsArray[session].getMessageById(messageId);
 
         if (!message)
             return res.status(400).json(

@@ -1,10 +1,8 @@
-import {clientsArray, sessions} from "./SessionUtil";
+import {chromiumArgs, clientsArray, sessions} from "./sessionUtil";
 import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import api from "axios";
 import {download} from "../controller/SessionController";
-
-let chromiumArgs = ["--disable-web-security", "--no-sandbox", "--disable-web-security", "--aggressive-cache-discard", "--disable-cache", "--disable-application-cache", "--disable-offline-load-stale-cache", "--disk-cache-size=0", "--disable-background-networking", "--disable-default-apps", "--disable-extensions", "--disable-sync", "--disable-translate", "--hide-scrollbars", "--metrics-recording-only", "--mute-audio", "--no-first-run", "--safebrowsing-disable-auto-update", "--ignore-certificate-errors", "--ignore-ssl-errors", "--ignore-certificate-errors-spki-list"];
 
 export async function opendata(req, session) {
     await createSessionUtil(req, clientsArray, session);

@@ -1,4 +1,4 @@
-import {clientsArray} from "../util/SessionUtil";
+import {clientsArray} from "../util/sessionUtil";
 import fs from "fs";
 import {download} from "./SessionController";
 import {contactToArray} from "../util/functions";

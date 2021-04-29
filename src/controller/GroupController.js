@@ -1,4 +1,4 @@
-import {clientsArray} from "../util/SessionUtil";
+import {clientsArray} from "../util/sessionUtil";
 import _ from "lodash";
 import {contactToArray, groupNameToArray, groupToArray} from "../util/functions";
 

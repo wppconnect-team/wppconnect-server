@@ -1,4 +1,4 @@
-import {clientsArray} from "../util/SessionUtil";
+import {clientsArray} from "../util/sessionUtil";
 import {contactToArray} from "../util/functions";
 import path from "path";
 

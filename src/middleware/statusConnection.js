@@ -1,4 +1,4 @@
-import {clientsArray} from "../util/SessionUtil";
+import {clientsArray} from "../util/sessionUtil";
 
 export default async function statusConnection(req, res, next) {
     const session = req.session;
