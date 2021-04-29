@@ -6,6 +6,7 @@ import {Server as Socket} from "socket.io";
 import routes from "./routes";
 import path from "path";
 import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
 
 config();
 

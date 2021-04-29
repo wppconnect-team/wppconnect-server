@@ -1,6 +1,6 @@
 import { clientsArray, IP_BASE, sessions } from "../util/SessionUtil";
 import { opendata } from "../util/CreateSessionUtil";
-import getAllTokens from "../util/GetAllTokens";
+import getAllTokens from "../util/getAllTokens";
 import api from "axios";
 import fs from "fs";
 import mime from "mime-types";
