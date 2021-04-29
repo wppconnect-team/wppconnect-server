@@ -27,12 +27,8 @@ export async function sendMessage(req, res) {
     const {phone, message, isGroup = false} = req.body;
 
     try {
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                await clientsArray[session].sendText(`${contato}@g.us`, message);
-            } else {
-                await clientsArray[session].sendText(`${contato}@c.us`, message);
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            await clientsArray[session].sendText(`${contato}`, message);
         }
 
         req.io.emit("mensagem-enviada", {message: message, to: phone});
@@ -58,12 +54,8 @@ export async function sendImage(req, res) {
 
     try {
 
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                await clientsArray[session].sendImage(`${contato}@g.us`, path, "image-api.jpg", caption);
-            } else {
-                await clientsArray[session].sendImage(`${contato}@c.us`, path, "image-api.jpg", caption);
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            await clientsArray[session].sendImage(`${contato}`, path, "image-api.jpg", caption);
         }
 
         returnSucess(res, session, phone);
@@ -86,12 +78,8 @@ export async function sendFile(req, res) {
     const caminho = `${process.env.HOST}:${process.env.PORT}/files/${file}`;
 
     try {
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                await clientsArray[session].sendFile(`${contato}@g.us`, caminho, "File", "");
-            } else {
-                await clientsArray[session].sendFile(`${contato}@c.us`, caminho, "File", "");
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            await clientsArray[session].sendFile(`${contato}`, caminho, "File", "");
         }
 
         returnSucess(res, session, phone);
@@ -108,12 +96,8 @@ export async function sendFile64(req, res) {
         return res.status(401).send({message: "O base64 do arquivo não foi informado."});
 
     try {
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                await clientsArray[session].sendFileFromBase64(`${contato}@g.us`, base64, "My File", "");
-            } else {
-                await clientsArray[session].sendFileFromBase64(`${contato}@c.us`, base64, "My File", "");
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            await clientsArray[session].sendFileFromBase64(`${contato}`, base64, "My File", "");
         }
 
         returnSucess(res, session, phone);
@@ -127,12 +111,8 @@ export async function sendVoice(req, res) {
     const {phone, url: base64Ptt, isGroup = false} = req.body;
 
     try {
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                await clientsArray[session].sendPttFromBase64(`${contato}@g.us`, base64Ptt, "Voice Audio");
-            } else {
-                await clientsArray[session].sendPttFromBase64(`${contato}@c.us`, base64Ptt, "Voice Audio");
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            await clientsArray[session].sendPttFromBase64(`${contato}`, base64Ptt, "Voice Audio");
         }
 
         return res.status(200).json("success");
@@ -149,12 +129,8 @@ export async function sendLinkPreview(req, res) {
     try {
         let response = {};
 
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                response = await clientsArray[session].sendLinkPreview(`${contato}@g.us`, url, caption);
-            } else {
-                response = await clientsArray[session].sendLinkPreview(`${contato}@c.us`, url, caption);
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await clientsArray[session].sendLinkPreview(`${contato}`, url, caption);
         }
 
         return res.status(200).json({status: "Success", message: "O link foi enviado com sucesso."});
@@ -170,12 +146,8 @@ export async function sendLocation(req, res) {
     try {
         let response = {};
 
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                response = await clientsArray[session].sendLocation(`${contato}@g.us`, lat, lng, title);
-            } else {
-                response = await clientsArray[session].sendLocation(`${contato}@c.us`, lat, lng, title);
-            }
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await clientsArray[session].sendLocation(`${contato}`, lat, lng, title);
         }
 
         return res.status(200).json({status: "Success", message: "A localização foi enviada com sucesso."});

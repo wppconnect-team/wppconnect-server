@@ -1,15 +1,23 @@
-export function contactToArray(number) {
+import api from "axios";
+
+export function contactToArray(number, isGroup) {
     let localArr = [];
     if (Array.isArray(number)) {
         for (const contact of number) {
             if (contact !== "")
-                localArr.push(`${contact}@c.us`);
+                if (isGroup)
+                    localArr.push(`${contact}@g.us`);
+                else
+                    localArr.push(`${contact}@c.us`);
         }
     } else {
         let arrContacts = number.split(/\s*[,;]\s*/g);
         for (const contact of arrContacts) {
             if (contact !== "")
-                localArr.push(`${contact}@c.us`);
+                if (isGroup)
+                    localArr.push(`${contact}@g.us`);
+                else
+                    localArr.push(`${contact}@c.us`);
         }
     }
 
@@ -50,4 +58,13 @@ export function groupNameToArray(group) {
     }
 
     return localArr;
+}
+
+export async function callWebHook(client, event, data) {
+    if (client.webhook)
+        try {
+            await api.post(client.webhook, Object.assign({event: event}, data))
+        } catch (e) {
+            console.log("A URL do Webhook não foi informado.");
+        }
 }

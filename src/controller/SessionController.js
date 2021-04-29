@@ -1,5 +1,5 @@
 import {clientsArray, sessions} from "../util/sessionUtil";
-import {opendata} from "../util/createSessionUtil";
+import {openData} from "../util/createSessionUtil";
 import getAllTokens from "../util/getAllTokens";
 import api from "axios";
 import fs from "fs";
@@ -88,7 +88,7 @@ export async function startAllSessions(req, res) {
     }
 
     allSessions.map(async (session) => {
-        await opendata(req, res, session.replace("data.json", ""));
+        await openData(req, res, session.replace("data.json", ""));
     });
 
     return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
@@ -102,7 +102,7 @@ export async function startSession(req, res) {
         session: session
     });
 
-    await opendata(req, session);
+    await openData(req, session);
 }
 
 export async function closeSession(req, res) {
