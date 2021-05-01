@@ -88,7 +88,7 @@ export async function startAllSessions(req, res) {
     }
 
     allSessions.map(async (session) => {
-        await openData(req, res, session.replace("data.json", ""));
+        await openData(req, res, session.replace(".data.json", ""));
     });
 
     return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
