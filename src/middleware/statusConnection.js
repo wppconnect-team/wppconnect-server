@@ -1,4 +1,4 @@
-import {clientsArray} from "../util/SessionUtil";
+import {clientsArray} from "../util/sessionUtil";
 import Logger from "../util/logger";
 
 export default async function statusConnection(req, res, next) {

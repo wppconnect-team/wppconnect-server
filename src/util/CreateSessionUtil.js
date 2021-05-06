@@ -1,4 +1,4 @@
-import {clientsArray, sessions, chromiumArgs} from "./SessionUtil";
+import {clientsArray, sessions, chromiumArgs} from "./sessionUtil";
 import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import fs from "fs";
 import {callWebHook} from "../util/functions";

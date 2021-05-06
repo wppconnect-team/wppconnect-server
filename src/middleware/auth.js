@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import {clientsArray} from "../util/SessionUtil";
+import {clientsArray} from "../util/sessionUtil";
 import Logger from "../util/logger";
 
 function formatSession(session) {

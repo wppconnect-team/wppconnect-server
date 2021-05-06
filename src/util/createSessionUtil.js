@@ -1,11 +1,11 @@
-import {chromiumArgs, clientsArray, sessions} from "./sessionUtil";
+import {clientsArray, sessions, chromiumArgs} from "./sessionUtil";
 import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import fs from "fs";
-import api from "axios";
+import {callWebHook} from "../util/functions";
 import {download} from "../controller/SessionController";
-import {callWebHook} from "./functions";
+import Logger from "./logger"
 
-export async function openData(req, session) {
+export async function opendata(req, session) {
     await createSessionUtil(req, clientsArray, session);
 }
 
@@ -14,17 +14,20 @@ async function createSessionUtil(req, clientsArray, session) {
         let {webhook} = req.body;
         webhook = webhook === undefined ? process.env.WEBHOOK_URL : webhook;
 
-        let myTokenStore = new tokenStore.FileTokenStore({
-            encodeFunction: (data) => {
-                return encodeFunction(data, webhook);
-            }
-        });
-
         let client = getClient(session);
         if (client.status != null)
             return;
         client.status = "INITIALIZING";
         client.webhook = webhook;
+
+        let myTokenStore = new tokenStore.FileTokenStore({
+            encodeFunction: (data) => {
+                return encodeFunction(data, client.webhook);
+            },
+            decodeFunction: (text) => {
+                return decodeFunction(text, client);
+            }
+        });
 
         let wppClient = await create(
             {
@@ -42,25 +45,19 @@ async function createSessionUtil(req, clientsArray, session) {
                     exportQR(req, base64Qr, client);
                 },
                 statusFind: (statusFind) => {
-                    console.log(statusFind + '\n\n')
+                    Logger.info(statusFind + '\n\n')
                 }
             });
 
         client = clientsArray[session] = Object.assign(wppClient, client);
         await start(req, client);
-        sessions.push({ session: req.session, token: req.token });
     } catch (e) {
-        console.log("error create -> ", e);
+        Logger.error(e);
     }
 }
 
-function encodeFunction(data, webhook) {
-    data.webhook = webhook;
-    return JSON.stringify(data);
-}
-
 function exportQR(req, qrCode, client) {
-    Object.assign(client, { status: 'QRCODE', qrcode: qrCode });
+    Object.assign(client, {status: 'QRCODE', qrcode: qrCode});
 
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
@@ -71,18 +68,18 @@ function exportQR(req, qrCode, client) {
         data: "data:image/png;base64," + imageBuffer.toString("base64"),
         session: client.session
     });
-    callWebHook(client, "qrcode", { qrcode: qrCode });
+    callWebHook(client, "qrcode", {qrcode: qrCode});
 }
 
 async function start(req, client) {
     try {
         await client.isConnected();
-        Object.assign(client, { status: 'CONNECTED' });
+        Object.assign(client, {status: 'CONNECTED', qrcode: null});
 
-        console.log(`Started Session: ${client.session}`);
-        req.io.emit("session-logged", { status: true, session: client.session });
+        Logger.info(`Started Session: ${client.session}`);
+        req.io.emit("session-logged", {status: true, session: client.session});
     } catch (error) {
-        console.log(`Error Session: ${client.session}`);
+        Logger.error(error);
         req.io.emit("session-error", client.session);
     }
 
@@ -108,39 +105,43 @@ async function checkStateSession(client) {
 
 async function listenMessages(req, client) {
     await client.onMessage(async (message) => {
-        try {
-            await callWebHook(client, "onmessage", message)
-        } catch (e) {
-            console.log("A URL do Webhook não foi informado.");
-        }
+        callWebHook(client, "onmessage", message)
     });
 
     await client.onAnyMessage((message) => {
         message.session = client.session;
 
         if (message.type === "sticker") {
-            download(message, client.session);
+            download(message, client);
         }
 
-        req.io.emit("received-message", { response: message });
+        req.io.emit("received-message", {response: message});
     });
 }
 
 async function listenAcks(client) {
     await client.onAck(async (ack) => {
-        try {
-            await callWebHook(client, "onack", { ack: ack })
-        } catch (e) {
-            console.log("A URL do Webhook não foi informado.");
-        }
+        callWebHook(client, "onack", {ack: ack})
     });
 
+}
+
+function encodeFunction(data, webhook) {
+    data.webhook = webhook;
+    return JSON.stringify(data);
+}
+
+function decodeFunction(text, client) {
+    let object = JSON.parse(text);
+    if (object.webhook && !client.webhook)
+        client.webhook = object.webhook;
+    return object;
 }
 
 function getClient(session) {
     let client = clientsArray[session];
 
     if (!client)
-        client = clientsArray[session] = { status: null, session: session };
+        client = clientsArray[session] = {status: null, session: session};
     return client;
 }
