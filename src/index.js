@@ -1,14 +1,13 @@
-import { config } from "dotenv";
+import {config} from "dotenv";
 import Logger from "./util/logger";
-import { startAllSessions } from "./util/functions";
+import {startAllSessions} from "./util/functions";
 import cors from "cors";
 import express from "express";
-import { createServer } from "http";
-import { Server as Socket } from "socket.io";
+import {createServer} from "http";
+import {Server as Socket} from "socket.io";
 import routes from "./routes";
 import path from "path";
 import fs from 'fs'
-import routes from "./routes";
 import swaggerUi from 'swagger-ui-express';
 
 config();
@@ -24,8 +23,8 @@ const http = new createServer(app);
 const io = new Socket(http, options);
 
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({limit: "50mb"}));
+app.use(express.urlencoded({limit: "50mb", extended: true}));
 app.use("/files", express.static(path.resolve(__dirname, "..", "WhatsAppImages")));
 
 app.use((req, res, next) => {
@@ -48,12 +47,15 @@ if (!fs.existsSync(dirFiles)) {
     fs.mkdirSync(dirFiles);
 }
 
-const swaggerDocument = require('./swagger.json');
+import swaggerDocument from './swagger.json';
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
-http.listen(PORT, () => Logger.info(`Server is running on port: ${PORT}`));
+http.listen(PORT, () => {
+    Logger.info(`Server is running on port: ${PORT}`);
+    if (process.env.START_ALL_SESSION)
+        startAllSessions(process.env.PORT, process.env.SECRET_KEY);
+});
 
-if (process.env.START_ALL_SESSION)
-    startAllSessions(process.env.PORT, process.env.SECRET_KEY)
+
 
