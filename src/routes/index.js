@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { encryptSession } from "../controller/EncryptController";
+import {Router} from "express";
+import {encryptSession} from "../controller/EncryptController";
 import * as MessageController from "../controller/MessageController";
 import * as GroupController from "../controller/GroupController";
 import * as DeviceController from "../controller/DeviceController";

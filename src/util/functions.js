@@ -1,4 +1,5 @@
 import api from "axios";
+import Logger from "./logger"
 export function contactToArray(number) {
     let localArr = [];
     if (Array.isArray(number)) {
@@ -53,12 +54,23 @@ export function groupNameToArray(group) {
     return localArr;
 }
 
-
-export async function callWebHook(client, event, data) {
+export function callWebHook(client, event, data) {
     if (client.webhook)
         try {
-            await api.post(client.webhook, Object.assign({ event: event }, data))
+            api.post(client.webhook, Object.assign({event: event}, data))
+                .catch((e) => {
+                    Logger.error(e);
+                });
         } catch (e) {
-            console.log("A URL do Webhook não foi informado.");
+            Logger.error(e);
         }
+}
+
+export async function startAllSessions(port, secretkey) {
+    try {
+        await api.post(`http://localhost:${port}/api/${secretkey}/start-all`)
+    } catch (e) {
+        Logger.error(e);
+    }
+
 }

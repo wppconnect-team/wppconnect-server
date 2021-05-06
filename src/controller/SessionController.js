@@ -1,14 +1,15 @@
-import { clientsArray, sessions } from "../util/SessionUtil";
-import { callWebHook } from "../util/functions";
-import { opendata } from "../util/CreateSessionUtil";
+import {clientsArray} from "../util/SessionUtil";
+import {callWebHook} from "../util/functions";
+import {opendata} from "../util/CreateSessionUtil";
 import getAllTokens from "../util/GetAllTokens";
+import Logger from "../util/logger";
 import api from "axios";
 import fs from "fs";
 import mime from "mime-types";
 
-async function downloadFileFunction(message, session) {
+async function downloadFileFunction(message, client) {
     try {
-        const buffer = await clientsArray[session].decryptFile(message);
+        const buffer = await client.decryptFile(message);
 
         let filename = `./WhatsAppImages/file${message.t}`;
         if (!fs.existsSync(filename)) {
@@ -21,7 +22,7 @@ async function downloadFileFunction(message, session) {
 
             await fs.writeFile(result, buffer, (err) => {
                 if (err) {
-                    console.log(err);
+                    Logger.error(err);
                 }
             });
 
@@ -30,9 +31,10 @@ async function downloadFileFunction(message, session) {
             return `${filename}.${mime.extension(message.mimetype)}`;
         }
     } catch (e) {
-        console.log("Erro ao descriptografar a midia, tentando fazer o download direto...");
+        Logger.error(e);
+        Logger.warn("Erro ao descriptografar a midia, tentando fazer o download direto...");
         try {
-            const buffer = await clientsArray[session].downloadMedia(message);
+            const buffer = await client.downloadMedia(message);
             const filename = `./WhatsAppImages/file${message.t}`;
             if (!fs.existsSync(filename)) {
                 let result = "";
@@ -44,7 +46,7 @@ async function downloadFileFunction(message, session) {
 
                 await fs.writeFile(result, buffer, (err) => {
                     if (err) {
-                        console.log(err);
+                        Logger.error(err);
                     }
                 });
 
@@ -53,24 +55,24 @@ async function downloadFileFunction(message, session) {
                 return `${filename}.${mime.extension(message.mimetype)}`;
             }
         } catch (e) {
-            console.log("Não foi possível baixar a mídia...");
+            Logger.error(e);
+            Logger.warn("Não foi possível baixar a mídia...");
         }
     }
 }
 
-export async function download(message, session) {
+export async function download(message, client) {
     try {
-        const path = await downloadFileFunction(message, session);
+        const path = await downloadFileFunction(message, client);
         return path.replace("./", "");
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
     }
 }
 
 export async function startAllSessions(req, res) {
-    const { secretkey } = req.params;
-    const { authorization: token } = req.headers;
-
+    const {secretkey} = req.params;
+    const {authorization: token} = req.headers;
     let tokenDecrypt = "";
 
     if (secretkey === undefined) {
@@ -89,10 +91,10 @@ export async function startAllSessions(req, res) {
     }
 
     allSessions.map(async (session) => {
-        await opendata(req, res, session.replace("data.json", ""));
+        await opendata(req, session.replace(".data.json", ""));
     });
 
-    return await res.status(201).json({ status: "Success", message: "Iniciando todas as sessões" });
+    return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
 }
 
 export async function startSession(req, res) {
@@ -109,59 +111,44 @@ export async function startSession(req, res) {
 export async function closeSession(req, res) {
     const session = req.session;
 
-    await clientsArray[session].close();
-    sessions.filter(item => item !== session);
-    clientsArray[session].status = null;
-    req.io.emit("whatsapp-status", false);
-    callWebHook(clientsArray[session], "closesession", { "message": `Session: ${session} disconnected`, connected: false });
+    await req.client.close();
+    clientsArray[session] = {status: null};
 
-    return res.status(200).json({ status: true, message: "Sessão Fechada com sucesso" });
+    req.io.emit("whatsapp-status", false);
+    callWebHook(req.client, "closesession", {"message": `Session: ${session} disconnected`, connected: false});
+
+    return res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
 }
 
 export async function checkConnectionSession(req, res) {
     const session = req.session;
     try {
-        await clientsArray[session].isConnected();
+        await req.client.isConnected();
 
-        return res.status(200).json({ status: true, message: "Connected" });
+        return res.status(200).json({status: true, message: "Connected"});
     } catch (error) {
-        return res.status(200).json({ status: false, message: "Disconnected" });
+        return res.status(200).json({status: false, message: "Disconnected"});
     }
 }
 
 export async function showAllSessions(req, res) {
+    const allSessions = await clientsArray.map((client) => {
+        return client.session;
+    });
     return res.status(200).json(sessions);
-}
-
-export async function checkSessionConnected(req, res) {
-    const session = req.session;
-
-    try {
-        const response = await clientsArray[session].isConnected();
-        return res.status(200).json({
-            response: response,
-            message: "A sessão está ativa."
-        });
-
-    } catch (error) {
-        return res.status(200).json({
-            response: false,
-            message: "A sessão não está ativa."
-        });
-    }
 }
 
 export async function downloadMediaByMessage(req, res) {
     const session = req.session;
-    const { messageId } = req.body;
+    const {messageId} = req.body;
 
     let result = "";
 
     if (messageId.isMedia === true) {
-        await download(messageId, session);
+        await download(messageId, req.client);
         result = `${process.env.HOST}:${process.env.PORT}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     } else if (messageId.type === "ptt" || messageId.type === "sticker") {
-        await download(messageId, session);
+        await download(messageId, req.client);
         result = `${process.env.HOST}:${process.env.PORT}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     }
 
@@ -170,10 +157,11 @@ export async function downloadMediaByMessage(req, res) {
 
 export async function getMediaByMessage(req, res) {
     const session = req.session;
-    const { messageId } = req.params;
+    const client = req.client;
+    const {messageId} = req.params;
 
     try {
-        const message = await clientsArray[session].getMessageById(messageId);
+        const message = await client.getMessageById(messageId);
 
         if (!message)
             return res.status(400).json(
@@ -190,10 +178,11 @@ export async function getMediaByMessage(req, res) {
                 });
 
 
-        const buffer = await clientsArray[session].decryptFile(message);
+        const buffer = await client.decryptFile(message);
 
         return res.status(200).json(await buffer.toString('base64'));
     } catch (ex) {
+        Logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "A sessão não está ativa."
@@ -207,10 +196,11 @@ export async function getSessionState(req, res) {
     const session = req.session;
 
     try {
-        const client = await clientsArray[session];
+        const client = req.client;
 
-        return res.status(200).json({ status: client.status, qrcode: client.qrcode });
+        return res.status(200).json({status: client.status, qrcode: client.qrcode});
     } catch (ex) {
+        Logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "A sessão não está ativa."
