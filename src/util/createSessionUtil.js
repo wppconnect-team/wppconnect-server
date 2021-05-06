@@ -16,7 +16,7 @@ async function createSessionUtil(req, clientsArray, session) {
 
         let client = getClient(session);
         if (client.status != null)
-            return;
+            return; 
         client.status = "INITIALIZING";
         client.webhook = webhook;
 
