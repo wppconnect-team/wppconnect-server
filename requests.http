@@ -1,17 +1,17 @@
 # Admin Function
 
 ### Genereate Token
-POST http://localhost:21465/api/abner/eUsouSeCreTo/generate-token
+POST http://localhost:21465/api/abner/THISISMYSECURETOKEN/generate-token
 
 ###############################################################################################
 
 # Session Function
 
 ### Start Session
-POST http://localhost:21465/api/mySession/start-session
+POST http://localhost:21465/api/abner/start-session
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer $2b$10$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C
+Authorization: Bearer $2b$10$kLv5a3fM_.q7nPMHfPedeuS_QBHiIdByM.Goy4gsC4qfnGl11nJi2
 
 ### Close Session
 POST http://localhost:21465/api/abner/close-session
@@ -27,10 +27,10 @@ Authorization: Bearer $2b$10$8aQFQxnWREtBEMZK_iHMe.u7NeoNkjL7s6NYai
 POST http://localhost:21465/api/abner/send-message
 Content-Type:application/json; charset=utf-8
 Accept: application/json
-Authorization: Bearer $2b$10$8aQFQxnWREtBEMZK_iHMe.u7NeoNkjL7s6NYai_83Pb31Ycss6Igm
+Authorization: Bearer $2b$10$kLv5a3fM_.q7nPMHfPedeuS_QBHiIdByM.Goy4gsC4qfnGl11nJi2
 
 {
-  "phone": "5511982743910",
+  "phone": "5511982743910,5511982743910,5511982743910,5511982743910,5511982743910,5511982743910,5511982743910,5511982743910,5511982743910",
   "message": "*Abner* Rodrigues"
 }
 
@@ -70,7 +70,7 @@ Accept: application/json
 Authorization: Bearer $2b$10$8aQFQxnWREtBEMZK_iHMe.u7NeoNkjL7s6NYai_83Pb31Ycss6Igm
 
 {
-  "phone": "5511982743910, 5511972728091",
+  "phone": "5511982743910",
   "groupname": "Group Name"
 }
 

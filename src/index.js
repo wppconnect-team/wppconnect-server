@@ -7,6 +7,8 @@ import { createServer } from "http";
 import { Server as Socket } from "socket.io";
 import routes from "./routes";
 import path from "path";
+import fs from 'fs'
+import routes from "./routes";
 import swaggerUi from 'swagger-ui-express';
 
 config();
@@ -41,7 +43,12 @@ io.on("connection", sock => {
 
 app.use(routes);
 
-import swaggerDocument from './swagger.json';
+let dirFiles = path.resolve(__dirname, '..', 'WhatsAppImages');
+if (!fs.existsSync(dirFiles)) {
+    fs.mkdirSync(dirFiles);
+}
+
+const swaggerDocument = require('./swagger.json');
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 

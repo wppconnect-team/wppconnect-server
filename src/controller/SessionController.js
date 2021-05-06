@@ -73,6 +73,7 @@ export async function download(message, client) {
 export async function startAllSessions(req, res) {
     const {secretkey} = req.params;
     const {authorization: token} = req.headers;
+
     let tokenDecrypt = "";
 
     if (secretkey === undefined) {
@@ -105,7 +106,7 @@ export async function startSession(req, res) {
         session: session
     });
 
-    await opendata(req, session);
+    await openData(req, session);
 }
 
 export async function closeSession(req, res) {

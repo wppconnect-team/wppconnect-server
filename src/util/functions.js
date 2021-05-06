@@ -5,13 +5,19 @@ export function contactToArray(number) {
     if (Array.isArray(number)) {
         for (const contact of number) {
             if (contact !== "")
-                localArr.push(`${contact}@c.us`);
+                if (isGroup)
+                    localArr.push(`${contact}@g.us`);
+                else
+                    localArr.push(`${contact}@c.us`);
         }
     } else {
         let arrContacts = number.split(/\s*[,;]\s*/g);
         for (const contact of arrContacts) {
             if (contact !== "")
-                localArr.push(`${contact}@c.us`);
+                if (isGroup)
+                    localArr.push(`${contact}@g.us`);
+                else
+                    localArr.push(`${contact}@c.us`);
         }
     }
 

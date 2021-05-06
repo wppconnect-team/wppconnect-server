@@ -75,7 +75,7 @@ export async function leaveGroup(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            await req.client.leaveGroup(`${grupo}@g.us`);
+            await req.client.leaveGroup(`${grupo}`);
         }
 
         return res.status(200).json({status: "Success", messages: "Você saiu do grupo com sucesso", group: groupId});
@@ -92,7 +92,7 @@ export async function getGroupMembers(req, res) {
         let groupInfo = [];
         let response = {};
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.getGroupMembers(`${grupo}@g.us`);
+            response = await req.client.getGroupMembers(`${grupo}`);
 
             for (const contato of response) {
                 groupInfo.push({
@@ -124,7 +124,7 @@ export async function addParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.addParticipant(`${grupo}@g.us`, contactToArray(phone));
+            response = await req.client.addParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(response);
         }
 
@@ -148,7 +148,7 @@ export async function removeParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.removeParticipant(`${grupo}@g.us`, contactToArray(phone));
+            response = await req.client.removeParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(response);
         }
 
@@ -172,7 +172,7 @@ export async function promoteParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.promoteParticipant(`${grupo}@g.us`, contactToArray(phone));
+            response = await req.client.promoteParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(grupo);
         }
 
@@ -196,7 +196,7 @@ export async function demoteParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.demoteParticipant(`${grupo}@g.us`, contactToArray(phone));
+            response = await req.client.demoteParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(grupo);
         }
 
@@ -220,7 +220,7 @@ export async function getGroupAdmins(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.getGroupAdmins(`${grupo}@g.us`);
+            response = await req.client.getGroupAdmins(`${grupo}`);
 
             arrayGrupos.push({
                 id: grupo,
@@ -248,7 +248,7 @@ export async function getGroupInviteLink(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.getGroupInviteLink(`${grupo}@g.us`);
+            response = await req.client.getGroupInviteLink(`${grupo}`);
 
             arrayGrupos.push({
                 id: grupo,
