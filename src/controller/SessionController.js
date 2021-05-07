@@ -101,17 +101,14 @@ export async function startAllSessions(req, res) {
 export async function startSession(req, res) {
     const session = req.session;
 
-    await res.status(201).json({
-        message: "Inicializando Sessão",
-        session: session
-    });
+    await getSessionState(req, res);
 
-    await openData(req, session);
+    await opendata(req, session);
 }
 
 export async function closeSession(req, res) {
     const session = req.session;
-
+    req.client.close
     await req.client.close();
     clientsArray[session] = {status: null};
 
@@ -120,6 +117,18 @@ export async function closeSession(req, res) {
 
     return res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
 }
+
+export async function logOutSession(req, res) {
+    const session = req.session;
+    await req.client.logout();
+    delete clientsArray[session];
+
+    req.io.emit("whatsapp-status", false);
+    callWebHook(req.client, "logoutsession", {"message": `Session: ${session} logged out`, connected: false});
+
+    return res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
+}
+
 
 export async function checkConnectionSession(req, res) {
     const session = req.session;
@@ -199,7 +208,10 @@ export async function getSessionState(req, res) {
     try {
         const client = req.client;
 
+        if (client == null)
+            return res.status(200).json({status: 'CLOSED', qrcode: null});
         return res.status(200).json({status: client.status, qrcode: client.qrcode});
+
     } catch (ex) {
         Logger.error(ex);
         return res.status(400).json({

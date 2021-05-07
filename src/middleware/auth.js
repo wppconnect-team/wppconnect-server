@@ -10,8 +10,7 @@ const verifyToken = (req, res, next) => {
     const secureToken = process.env.SECRET_KEY;
 
     const {session} = req.params;
-    const {authorization: token} = req.headers;
-    req.pee = {pee: "meu pee"};
+    const {authorization: token} = req.headers;    
     if (!session)
         return res.status(401).send({message: 'Sessão não informada.'});
 

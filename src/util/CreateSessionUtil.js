@@ -15,8 +15,8 @@ async function createSessionUtil(req, clientsArray, session) {
         webhook = webhook === undefined ? process.env.WEBHOOK_URL : webhook;
 
         let client = getClient(session);
-        if (client.status != null)
-            return; 
+        if (client.status != null && client.status != 'CLOSED')
+            return;
         client.status = "INITIALIZING";
         client.webhook = webhook;
 
@@ -41,10 +41,15 @@ async function createSessionUtil(req, clientsArray, session) {
                 refreshQR: 15000,
                 disableSpins: true,
                 tokenStore: myTokenStore,
+
                 catchQR: (base64Qr, asciiQR) => {
                     exportQR(req, base64Qr, client);
                 },
                 statusFind: (statusFind) => {
+                    if (statusFind == 'autocloseCalled') {
+                        client.status = 'CLOSED';
+                        client.qrcode = null;
+                    }
                     Logger.info(statusFind + '\n\n')
                 }
             });
@@ -90,7 +95,7 @@ async function start(req, client) {
 
 async function checkStateSession(client) {
     await client.onStateChange((state) => {
-        console.log(`State Change ${state}: ${client.session}`);
+        Logger.info(`State Change ${state}: ${client.session}`);
         const conflits = [
             SocketState.CONFLICT,
             SocketState.UNPAIRED,

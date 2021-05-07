@@ -1,6 +1,6 @@
 import api from "axios";
 import Logger from "./logger"
-export function contactToArray(number) {
+export function contactToArray(number, isGroup) {
     let localArr = [];
     if (Array.isArray(number)) {
         for (const contact of number) {

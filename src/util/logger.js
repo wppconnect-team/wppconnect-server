@@ -30,9 +30,9 @@ if (process.env.NODE_ENV !== 'prod') {
             winston.format.printf(({level, message, timestamp, stack}) => {
                 if (stack) {
                     // print log trace
-                    return `${timestamp} ${level}: ${message} - ${stack}`;
+                    return `${level}: ${timestamp} ${message} - ${stack}`;
                 }
-                return `${timestamp} ${level}: ${message}`;
+                return `${level}: ${timestamp} ${message}`;
             }),
         )
     }));
