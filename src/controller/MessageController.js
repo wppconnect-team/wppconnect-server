@@ -1,8 +1,9 @@
-import {clientsArray} from "../util/sessionUtil";
 import {contactToArray} from "../util/functions";
 import path from "path";
+import Logger from "../util/logger";
 
 function returnError(res, session, error) {
+    Logger.error(error);
     res.status(400).json({
         response: {
             message: "Sua mensagem não foi enviada.",
@@ -26,16 +27,15 @@ export async function sendMessage(req, res) {
     const session = req.session;
     const {phone, message, isGroup = false} = req.body;
 
+
     try {
         for (const contato of contactToArray(phone, isGroup)) {
-            await clientsArray[session].sendText(`${contato}`, message);
+            await req.client.sendText(`${contato}`, message);
         }
 
         req.io.emit("mensagem-enviada", {message: message, to: phone});
         returnSucess(res, session, phone);
     } catch (error) {
-        console.log(error);
-
         returnError(res, session, error);
     }
 }
@@ -55,7 +55,7 @@ export async function sendImage(req, res) {
     try {
 
         for (const contato of contactToArray(phone, isGroup)) {
-            await clientsArray[session].sendImage(`${contato}`, path, "image-api.jpg", caption);
+            await req.client.sendImage(`${contato}`, path, "image-api.jpg", caption);
         }
 
         returnSucess(res, session, phone);
@@ -79,7 +79,7 @@ export async function sendFile(req, res) {
 
     try {
         for (const contato of contactToArray(phone, isGroup)) {
-            await clientsArray[session].sendFile(`${contato}`, caminho, "File", "");
+            await req.client.sendFile(`${contato}`, caminho, "File", "");
         }
 
         returnSucess(res, session, phone);
@@ -97,7 +97,7 @@ export async function sendFile64(req, res) {
 
     try {
         for (const contato of contactToArray(phone, isGroup)) {
-            await clientsArray[session].sendFileFromBase64(`${contato}`, base64, "My File", "");
+            await req.client.sendFileFromBase64(`${contato}`, base64, "My File", "");
         }
 
         returnSucess(res, session, phone);
@@ -107,12 +107,11 @@ export async function sendFile64(req, res) {
 }
 
 export async function sendVoice(req, res) {
-    const session = req.session;
     const {phone, url: base64Ptt, isGroup = false} = req.body;
 
     try {
         for (const contato of contactToArray(phone, isGroup)) {
-            await clientsArray[session].sendPttFromBase64(`${contato}`, base64Ptt, "Voice Audio");
+            await req.client.sendPttFromBase64(`${contato}`, base64Ptt, "Voice Audio");
         }
 
         return res.status(200).json("success");
@@ -130,11 +129,12 @@ export async function sendLinkPreview(req, res) {
         let response = {};
 
         for (const contato of contactToArray(phone, isGroup)) {
-            response = await clientsArray[session].sendLinkPreview(`${contato}`, url, caption);
+            response = await req.client.sendLinkPreview(`${contato}`, url, caption);
         }
 
         return res.status(200).json({status: "Success", message: "O link foi enviado com sucesso."});
     } catch (error) {
+        Logger.error(error);
         return res.status(400).json({status: "Erro ao enviar mensagem", log: error});
     }
 }
@@ -147,12 +147,12 @@ export async function sendLocation(req, res) {
         let response = {};
 
         for (const contato of contactToArray(phone, isGroup)) {
-            response = await clientsArray[session].sendLocation(`${contato}`, lat, lng, title);
+            response = await req.client.sendLocation(`${contato}`, lat, lng, title);
         }
 
         return res.status(200).json({status: "Success", message: "A localização foi enviada com sucesso."});
     } catch (error) {
-        console.log(error);
+        Logger.error(error);
         return res.status(400).json({status: "Erro ao enviar localização"});
     }
 }
@@ -162,10 +162,10 @@ export async function sendStatusText(req, res) {
     const {message} = req.body;
 
     try {
-        await clientsArray[session].sendText("status@broadcast", message);
+        await req.client.sendText("status@broadcast", message);
         return res.status(200).json({status: "Success", message: "A mensagem foi enviada com sucesso."});
     } catch (error) {
-        console.log(error);
+        Logger.error(error);
         return res.status(400).json({status: "Erro ao enviar mensagem"});
     }
 }

@@ -1,8 +1,8 @@
-import {clientsArray} from "../util/sessionUtil";
 import _ from "lodash";
 import {contactToArray, groupNameToArray, groupToArray} from "../util/functions";
 
 function returnError(res, session, error, message) {
+    Logger.error(error);
     res.status(400).json({
         response: {
             message: message,
@@ -30,7 +30,7 @@ export async function joinGroupByCode(req, res) {
         return res.status(401).send({message: "Informe o Codigo de Convite"});
 
     try {
-        await clientsArray[session].joinGroup(inviteCode);
+        await req.client.joinGroup(inviteCode);
 
         returnSucess(res, session, inviteCode, "Você entrou no grupo com sucesso");
     } catch (error) {
@@ -39,7 +39,6 @@ export async function joinGroupByCode(req, res) {
 }
 
 export async function createGroup(req, res) {
-    const session = req.session;
     const {participants, name} = req.body;
 
     let response = {};
@@ -47,7 +46,7 @@ export async function createGroup(req, res) {
 
     try {
         for (const grupo of groupNameToArray(name)) {
-            response = await clientsArray[session].createGroup(grupo, contactToArray(participants));
+            response = await req.client.createGroup(grupo, contactToArray(participants));
 
             infoGroup.push({
                 name: grupo,
@@ -66,35 +65,34 @@ export async function createGroup(req, res) {
             groupInfo: grouped
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao criar grupo");
     }
 }
 
 export async function leaveGroup(req, res) {
-    const session = req.session;
     const {groupId} = req.body;
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            await clientsArray[session].leaveGroup(`${grupo}`);
+            await req.client.leaveGroup(`${grupo}`);
         }
 
         return res.status(200).json({status: "Success", messages: "Você saiu do grupo com sucesso", group: groupId});
     } catch (e) {
+        Logger.error(e);
         return res.status(400).json("Erro ao sair do(s) grupo(s)");
     }
 }
 
 export async function getGroupMembers(req, res) {
-    const session = req.session;
     const {groupId} = req.body;
 
     try {
         let groupInfo = [];
         let response = {};
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].getGroupMembers(`${grupo}`);
+            response = await req.client.getGroupMembers(`${grupo}`);
 
             for (const contato of response) {
                 groupInfo.push({
@@ -112,14 +110,13 @@ export async function getGroupMembers(req, res) {
         const grouped = _.groupBy(groupInfo, grupo => grupo.id);
         return res.status(200).json({"groupInfo": grouped});
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao recuperar participantes do(s) grupo(s)");
     }
 
 }
 
 export async function addParticipant(req, res) {
-    const session = req.session;
     const {groupId, phone} = req.body;
 
     let response = {};
@@ -127,7 +124,7 @@ export async function addParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].addParticipant(`${grupo}`, contactToArray(phone));
+            response = await req.client.addParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(response);
         }
 
@@ -138,13 +135,12 @@ export async function addParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao adicionar participante(s)");
     }
 }
 
 export async function removeParticipant(req, res) {
-    const session = req.session;
     const {groupId, phone} = req.body;
 
     let response = {};
@@ -152,7 +148,7 @@ export async function removeParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].removeParticipant(`${grupo}`, contactToArray(phone));
+            response = await req.client.removeParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(response);
         }
 
@@ -163,13 +159,12 @@ export async function removeParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao remover participante(s)");
     }
 }
 
 export async function promoteParticipant(req, res) {
-    const session = req.session;
     const {groupId, phone} = req.body;
 
     let response = {};
@@ -177,7 +172,7 @@ export async function promoteParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].promoteParticipant(`${grupo}`, contactToArray(phone));
+            response = await req.client.promoteParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(grupo);
         }
 
@@ -188,13 +183,12 @@ export async function promoteParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao promover participante(s)");
     }
 }
 
 export async function demoteParticipant(req, res) {
-    const session = req.session;
     const {groupId, phone} = req.body;
 
     let response = {};
@@ -202,7 +196,7 @@ export async function demoteParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].demoteParticipant(`${grupo}`, contactToArray(phone));
+            response = await req.client.demoteParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(grupo);
         }
 
@@ -213,13 +207,12 @@ export async function demoteParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao revogar admin do(s) participante(s)");
     }
 }
 
 export async function getGroupAdmins(req, res) {
-    const session = req.session;
     const {groupId} = req.body;
 
     let response = {};
@@ -227,7 +220,7 @@ export async function getGroupAdmins(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].getGroupAdmins(`${grupo}`);
+            response = await req.client.getGroupAdmins(`${grupo}`);
 
             arrayGrupos.push({
                 id: grupo,
@@ -242,13 +235,12 @@ export async function getGroupAdmins(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao recuperar o(s) admin(s) do(s) grupo(s)");
     }
 }
 
 export async function getGroupInviteLink(req, res) {
-    const session = req.session;
     const {groupId} = req.body;
 
     let response = {};
@@ -256,7 +248,7 @@ export async function getGroupInviteLink(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await clientsArray[session].getGroupInviteLink(`${grupo}`);
+            response = await req.client.getGroupInviteLink(`${grupo}`);
 
             arrayGrupos.push({
                 id: grupo,
@@ -271,7 +263,7 @@ export async function getGroupInviteLink(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        console.log(e);
+        Logger.error(e);
         return res.status(400).json("Erro ao recuperar o(s) link(s) do(s) grupo(s)");
     }
 }

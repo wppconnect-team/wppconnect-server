@@ -1,12 +1,12 @@
 import {clientsArray} from "../util/sessionUtil";
+import Logger from "../util/logger";
 
 export default async function statusConnection(req, res, next) {
-    const session = req.session;
-
     try {
-        await clientsArray[session].isConnected();
+        await req.client.isConnected();
         next();
     } catch (error) {
+        Logger.error(error);
         return res.status(400).json({
             response: false,
             status: "Disconnected",

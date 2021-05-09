@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { encryptSession } from "../controller/EncryptController";
+import {Router} from "express";
+import {encryptSession} from "../controller/EncryptController";
 import * as MessageController from "../controller/MessageController";
 import * as GroupController from "../controller/GroupController";
 import * as DeviceController from "../controller/DeviceController";
@@ -22,8 +22,10 @@ routes.post("/api/:secretkey/start-all", SessionController.startAllSessions);
 routes.get("/api/:session/show-all-sessions", verifyToken, statusConnection, SessionController.showAllSessions);
 routes.post("/api/:session/start-session", verifyToken, SessionController.startSession);
 routes.post("/api/:session/close-session", verifyToken, statusConnection, SessionController.closeSession);
+routes.post("/api/:session/logout-session", verifyToken, statusConnection, SessionController.logOutSession);
 routes.get("/api/:session/check-connection-session", verifyToken, SessionController.checkConnectionSession);
 routes.get("/api/:session/get-media-by-message/:messageId", verifyToken, SessionController.getMediaByMessage);
+routes.get("/api/:session/status-session", verifyToken, SessionController.getSessionState);
 
 //SendMessages
 routes.post("/api/:session/send-message", verifyToken, statusConnection, MessageController.sendMessage);

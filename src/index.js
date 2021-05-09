@@ -1,15 +1,17 @@
 import {config} from "dotenv";
-import swaggerUi from 'swagger-ui-express';
+import Logger from "./util/logger";
+import {startAllSessions} from "./util/functions";
 import cors from "cors";
 import express from "express";
 import {createServer} from "http";
 import {Server as Socket} from "socket.io";
+import routes from "./routes";
 import path from "path";
 import fs from 'fs'
-import routes from "./routes";
+import swaggerUi from 'swagger-ui-express';
 
 config();
-
+const __dirname = path.resolve(path.dirname(''));
 const app = express();
 const PORT = process.env.PORT;
 
@@ -31,10 +33,10 @@ app.use((req, res, next) => {
 });
 
 io.on("connection", sock => {
-    console.log(`ID: ${sock.id} is logged`);
+    Logger.info(`ID: ${sock.id} entrou`);
 
     sock.on("disconnect", () => {
-        console.log(`ID: ${sock.id} logout`);
+        Logger.info(`ID: ${sock.id} saiu`);
     });
 });
 
@@ -45,8 +47,15 @@ if (!fs.existsSync(dirFiles)) {
     fs.mkdirSync(dirFiles);
 }
 
-const swaggerDocument = require('./swagger.json');
+import swaggerDocument from './swagger.json';
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
-http.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
+http.listen(PORT, () => {
+    Logger.info(`Server is running on port: ${PORT}`);
+    if (process.env.START_ALL_SESSION)
+        startAllSessions(process.env.PORT, process.env.SECRET_KEY);
+});
+
+
+
