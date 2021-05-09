@@ -1,8 +1,8 @@
-import {clientsArray, sessions, chromiumArgs} from "./sessionUtil";
-import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
+import { clientsArray, sessions, chromiumArgs } from "./sessionUtil";
+import { create, SocketState, tokenStore } from "@wppconnect-team/wppconnect";
 import fs from "fs";
-import {callWebHook} from "../util/functions";
-import {download} from "../controller/SessionController";
+import { callWebHook } from "../util/functions";
+import { download } from "../controller/SessionController";
 import Logger from "./logger"
 
 export async function opendata(req, session) {
@@ -11,12 +11,12 @@ export async function opendata(req, session) {
 
 async function createSessionUtil(req, clientsArray, session) {
     try {
-        let {webhook} = req.body;
+        let { webhook } = req.body;
         webhook = webhook === undefined ? process.env.WEBHOOK_URL : webhook;
 
         let client = getClient(session);
         if (client.status != null)
-            return; 
+            return;
         client.status = "INITIALIZING";
         client.webhook = webhook;
 
@@ -57,7 +57,7 @@ async function createSessionUtil(req, clientsArray, session) {
 }
 
 function exportQR(req, qrCode, client) {
-    Object.assign(client, {status: 'QRCODE', qrcode: qrCode});
+    Object.assign(client, { status: 'QRCODE', qrcode: qrCode });
 
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
@@ -68,16 +68,16 @@ function exportQR(req, qrCode, client) {
         data: "data:image/png;base64," + imageBuffer.toString("base64"),
         session: client.session
     });
-    callWebHook(client, "qrcode", {qrcode: qrCode});
+    callWebHook(client, "qrcode", { qrcode: qrCode });
 }
 
 async function start(req, client) {
     try {
         await client.isConnected();
-        Object.assign(client, {status: 'CONNECTED', qrcode: null});
+        Object.assign(client, { status: 'CONNECTED', qrcode: null });
 
         Logger.info(`Started Session: ${client.session}`);
-        req.io.emit("session-logged", {status: true, session: client.session});
+        req.io.emit("session-logged", { status: true, session: client.session });
     } catch (error) {
         Logger.error(error);
         req.io.emit("session-error", client.session);
@@ -115,13 +115,13 @@ async function listenMessages(req, client) {
             download(message, client);
         }
 
-        req.io.emit("received-message", {response: message});
+        req.io.emit("received-message", { response: message });
     });
 }
 
 async function listenAcks(client) {
     await client.onAck(async (ack) => {
-        callWebHook(client, "onack", {ack: ack})
+        callWebHook(client, "onack", { ack: ack })
     });
 
 }
@@ -142,6 +142,6 @@ function getClient(session) {
     let client = clientsArray[session];
 
     if (!client)
-        client = clientsArray[session] = {status: null, session: session};
+        client = clientsArray[session] = { status: null, session: session };
     return client;
 }
