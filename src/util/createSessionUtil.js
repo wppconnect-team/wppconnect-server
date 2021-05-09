@@ -96,8 +96,6 @@ async function checkStateSession(client) {
         console.log(`State Change ${state}: ${client.session}`);
         const conflits = [
             SocketState.CONFLICT,
-            SocketState.UNPAIRED,
-            SocketState.UNLAUNCHED,
         ];
 
         if (conflits.includes(state)) {
