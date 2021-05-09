@@ -1,7 +1,12 @@
 # Admin Function
 
 ### Genereate Token
-POST http://localhost:21465/api/abner/THISISMYSECURETOKEN/generate-token
+POST http://localhost:21465/api/sessao3/THISISMYSECURETOKEN/generate-token
+
+
+#$2b$10$GYEASZnNKSrGgo36Vlo64OxzhjXX7EcCKAbIFP7k2vTmImq.vO8AS 1
+#$2b$10$JxipHKU0kBVlJ_RRZgKLvOKHm9nGGnlXtWFiJegijYPR1XzMW8HQe 2
+#$2b$10$17q0IXG_.ERu.plsTI6Z8uooFpjyLP5esGWUxwvgQdUNhgyZ6CYnu 3
 
 ###############################################################################################
 
