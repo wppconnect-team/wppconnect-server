@@ -26,6 +26,7 @@ routes.post("/api/:session/logout-session", verifyToken, statusConnection, Sessi
 routes.get("/api/:session/check-connection-session", verifyToken, SessionController.checkConnectionSession);
 routes.get("/api/:session/get-media-by-message/:messageId", verifyToken, SessionController.getMediaByMessage);
 routes.get("/api/:session/status-session", verifyToken, SessionController.getSessionState);
+routes.get("/api/:session/qrcode-session", verifyToken, SessionController.getQrCode);
 
 //SendMessages
 routes.post("/api/:session/send-message", verifyToken, statusConnection, MessageController.sendMessage);

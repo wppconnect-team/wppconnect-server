@@ -60,8 +60,10 @@ export function groupNameToArray(group) {
     return localArr;
 }
 
-export function callWebHook(client, event, data) {
-    if (client.webhook)
+export async function callWebHook(client, event, data) {
+    if (client.webhook) {
+        if (process.env.AUTO_DOWNLOAD_FILES)
+            await AtuoDonwload(client, data);
         try {
             api.post(client.webhook, Object.assign({event: event}, data))
                 .catch((e) => {
@@ -70,6 +72,14 @@ export function callWebHook(client, event, data) {
         } catch (e) {
             Logger.error(e);
         }
+    }
+}
+
+async function AtuoDonwload(client, message) {
+    if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
+        var buffer = await client.decryptFile(message);
+        message.body = await buffer.toString('base64');
+    }
 }
 
 export async function startAllSessions(port, secretkey) {

@@ -13,12 +13,13 @@ function returnError(res, session, error) {
     });
 }
 
-function returnSucess(res, session, phone) {
+function returnSucess(res, session, phone, data) {
     res.status(201).json({
         response: {
             message: "Mensagem enviada com sucesso.",
             contact: phone,
-            session: session
+            session: session,
+            data: data
         },
     });
 }
@@ -29,12 +30,16 @@ export async function sendMessage(req, res) {
 
 
     try {
+        let result;
         for (const contato of contactToArray(phone, isGroup)) {
-            await req.client.sendText(`${contato}`, message);
+            result = await req.client.sendText(`${contato}`, message);
         }
 
+        if (!result)
+            throw new 'Erro ao enviar mensagem';
+
         req.io.emit("mensagem-enviada", {message: message, to: phone});
-        returnSucess(res, session, phone);
+        returnSucess(res, session, phone, result);
     } catch (error) {
         returnError(res, session, error);
     }
