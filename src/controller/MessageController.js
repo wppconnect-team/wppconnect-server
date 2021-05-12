@@ -1,3 +1,4 @@
+import {config} from "../util/sessionUtil";
 import {contactToArray} from "../util/functions";
 import path from "path";
 import Logger from "../util/logger";
@@ -80,7 +81,7 @@ export async function sendFile(req, res) {
     const {filename: file} = req.file;
     path.resolve(req.file.destination, "WhatsAppImages", file);
 
-    const caminho = `${process.env.HOST}:${process.env.PORT}/files/${file}`;
+    const caminho = `${config.host}:${config.port}/files/${file}`;
 
     try {
         for (const contato of contactToArray(phone, isGroup)) {
@@ -95,14 +96,14 @@ export async function sendFile(req, res) {
 
 export async function sendFile64(req, res) {
     const session = req.session;
-    const {base64, phone, isGroup = false} = req.body;
+    const {base64, phone, filename, message, isGroup = false} = req.body;
 
     if (!base64)
         return res.status(401).send({message: "O base64 do arquivo não foi informado."});
 
     try {
         for (const contato of contactToArray(phone, isGroup)) {
-            await req.client.sendFileFromBase64(`${contato}`, base64, "My File", "");
+            await req.client.sendFileFromBase64(`${contato}`, base64, filename, message);
         }
 
         returnSucess(res, session, phone);
@@ -172,5 +173,26 @@ export async function sendStatusText(req, res) {
     } catch (error) {
         Logger.error(error);
         return res.status(400).json({status: "Erro ao enviar mensagem"});
+    }
+}
+
+export async function replyMessage(req, res) {
+    const session = req.session;
+    const {phone, message, messageId, isGroup = false} = req.body;
+
+
+    try {
+        let result;
+        for (const contato of contactToArray(phone, isGroup)) {
+            result = await req.client.reply(`${contato}`, message, messageId);
+        }
+
+        if (!result)
+            throw new 'Erro ao enviar mensagem';
+
+        req.io.emit("mensagem-enviada", {message: message, to: phone});
+        returnSucess(res, session, phone, result);
+    } catch (error) {
+        returnError(res, session, error);
     }
 }

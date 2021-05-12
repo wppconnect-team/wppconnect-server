@@ -1,4 +1,3 @@
-import {config} from "dotenv";
 import Logger from "./util/logger";
 import {startAllSessions} from "./util/functions";
 import cors from "cors";
@@ -7,13 +6,13 @@ import {createServer} from "http";
 import {Server as Socket} from "socket.io";
 import routes from "./routes";
 import path from "path";
-import fs from 'fs'
+import fs from 'fs';
 import swaggerUi from 'swagger-ui-express';
+import {config} from './util/sessionUtil';
 
-config();
 const __dirname = path.resolve(path.dirname(''));
 const app = express();
-const PORT = process.env.PORT;
+const PORT = config.port;
 
 const options = {
     cors: true,
@@ -53,8 +52,10 @@ routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 http.listen(PORT, () => {
     Logger.info(`Server is running on port: ${PORT}`);
-    if (process.env.START_ALL_SESSION)
-        startAllSessions(process.env.PORT, process.env.SECRET_KEY);
+    Logger.info(`\x1b[31m Visit ${config.host}:${PORT}/api-docs for Swagger docs`);
+
+    if (config.startAllSession)
+        startAllSessions();
 });
 
 

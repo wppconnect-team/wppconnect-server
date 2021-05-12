@@ -1,0 +1,21 @@
+{
+  "secretKey": "THISISMYSECURETOKEN",
+  "host": "http://localhost",
+  "port": "21465",
+  "startAllSession": true,
+  "webhook": {
+    "url": null,
+    "autoDownload": true,
+    "readMessage": false,
+    "allUnreadOnStart": true
+  },
+  "archive": {
+    "enable": true,
+    "waitTime": 10,
+    "daysToArchive": 45
+  },
+  "log": {
+    "level": "error",
+    "logger": [ "console", "file" ]
+  }
+}

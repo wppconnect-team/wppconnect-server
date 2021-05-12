@@ -1,7 +1,7 @@
-import {clientsArray, sessions, chromiumArgs} from "./sessionUtil";
+import {clientsArray, sessions, chromiumArgs, config} from "./sessionUtil";
 import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import fs from "fs";
-import {callWebHook} from "../util/functions";
+import {callWebHook, startHelper} from "../util/functions";
 import {download} from "../controller/SessionController";
 import Logger from "./logger"
 
@@ -12,7 +12,7 @@ export async function opendata(req, session) {
 async function createSessionUtil(req, clientsArray, session) {
     try {
         let {webhook} = req.body;
-        webhook = webhook === undefined ? process.env.WEBHOOK_URL : webhook;
+        webhook = webhook === undefined ? config.webhook.url : webhook;
 
         let client = getClient(session);
         if (client.status != null && client.status != 'CLOSED')
@@ -83,6 +83,7 @@ async function start(req, client) {
 
         Logger.info(`Started Session: ${client.session}`);
         req.io.emit("session-logged", {status: true, session: client.session});
+        startHelper(client);
     } catch (error) {
         Logger.error(error);
         req.io.emit("session-error", client.session);

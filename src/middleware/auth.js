@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import {clientsArray} from "../util/sessionUtil";
+import {clientsArray, config} from "../util/sessionUtil";
 import Logger from "../util/logger";
 
 function formatSession(session) {
@@ -7,10 +7,10 @@ function formatSession(session) {
 }
 
 const verifyToken = (req, res, next) => {
-    const secureToken = process.env.SECRET_KEY;
+    const secureToken = config.secretKey;
 
     const {session} = req.params;
-    const {authorization: token} = req.headers;    
+    const {authorization: token} = req.headers;
     if (!session)
         return res.status(401).send({message: 'Sessão não informada.'});
 

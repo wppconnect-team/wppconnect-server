@@ -2,6 +2,7 @@ import fs from "fs";
 import {download} from "./SessionController";
 import {contactToArray} from "../util/functions";
 import Logger from "../util/logger";
+import {config} from "../util/sessionUtil";
 
 export async function setProfileName(req, res) {
     const session = req.session;
@@ -106,7 +107,7 @@ export async function getChatById(req, res) {
         allMessages.map((message) => {
             if (message.type === "sticker") {
                 download(message, req.client);
-                message.body = `${process.env.HOST}:${process.env.PORT}/files/file${message.t}.${mime.extension(message.mimetype)}`;
+                message.body = `${config.host}:${config.port}/files/file${message.t}.${mime.extension(message.mimetype)}`;
             }
         });
 
@@ -178,14 +179,18 @@ export async function getBlockList(req, res) {
 }
 
 export async function deleteChat(req, res) {
-    const {phone} = req.body;
+    const {phone, isGroup = false} = req.body;
 
     try {
-        req.client.deleteChat(`${phone}@c.us`);
-        return res.status(200).json({status: "Success", message: "Conversa deletada com sucesso"});
+        if (isGroup) {
+            await req.client.deleteChat(`${phone}@g.us`);
+        } else {
+            await req.client.deleteChat(`${phone}@c.us`);
+        }
+        return res.status(200).json({status: "Success", message: "Conversa deleteada com sucesso"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao deletar conversa"});
+        return res.status(400).json({status: "Error", message: "Erro ao deletada conversa"});
     }
 }
 
@@ -205,7 +210,7 @@ export async function clearChat(req, res) {
     }
 }
 
-export async function archiveChat(req, res) {    
+export async function archiveChat(req, res) {
     const {phone, isGroup = false} = req.body;
 
     try {
@@ -221,7 +226,7 @@ export async function archiveChat(req, res) {
     }
 }
 
-export async function deleteMessage(req, res) {    
+export async function deleteMessage(req, res) {
     const {phone, messageId} = req.body;
 
     try {
@@ -233,7 +238,7 @@ export async function deleteMessage(req, res) {
     }
 }
 
-export async function reply(req, res) {    
+export async function reply(req, res) {
     const {phone, text, messageid} = req.body;
 
     try {
@@ -250,7 +255,7 @@ export async function reply(req, res) {
     }
 }
 
-export async function forwardMessages(req, res) {    
+export async function forwardMessages(req, res) {
     const {phone, messageId} = req.body;
 
     try {
@@ -267,7 +272,7 @@ export async function forwardMessages(req, res) {
     }
 }
 
-export async function markUnseenMessage(req, res) {    
+export async function markUnseenMessage(req, res) {
     const {phone, isGroup = false} = req.body;
 
     try {
@@ -283,7 +288,7 @@ export async function markUnseenMessage(req, res) {
     }
 }
 
-export async function blockContact(req, res) {    
+export async function blockContact(req, res) {
     const {phone} = req.body;
 
     try {
@@ -295,7 +300,7 @@ export async function blockContact(req, res) {
     }
 }
 
-export async function unblockContact(req, res) {    
+export async function unblockContact(req, res) {
     const {phone} = req.body;
 
     try {
@@ -307,7 +312,7 @@ export async function unblockContact(req, res) {
     }
 }
 
-export async function pinChat(req, res) {    
+export async function pinChat(req, res) {
     const {phone, state, isGroup = false} = req.body;
 
     try {
@@ -324,7 +329,7 @@ export async function pinChat(req, res) {
     }
 }
 
-export async function setProfilePic(req, res) {    
+export async function setProfilePic(req, res) {
     const {phone, path, isGroup = false} = req.body;
 
     if (!path) {
@@ -344,5 +349,17 @@ export async function setProfilePic(req, res) {
     } catch (e) {
         Logger.error(e);
         return res.status(400).json({status: "Success", message: "Erro ao alterar foto de perfil"});
+    }
+}
+
+export async function getUnreadMessages(req, res) {
+    const session = req.session;
+
+    try {
+        const response = await req.client.getUnreadMessages(false, false, true);
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on open list"});
     }
 }
