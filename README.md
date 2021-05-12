@@ -60,9 +60,9 @@ yarn build
 
 This server use config.json file to define some options, default values are:
 
-```json
+```javascript
 {
-  // secret key to genereta access token
+  /* secret key to genereta access token */
   "secretKey": "THISISMYSECURETOKEN", 
   "host": "http://localhost",
   "port": "21465",
