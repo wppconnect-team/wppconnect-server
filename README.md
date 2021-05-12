@@ -58,20 +58,44 @@ yarn build
 
 # Configuration
 
-This server use environment variables to define some options, that can be:
+This server use config.json file to define some options, default values are:
 
-* `SECRET_KEY` - Secret key to generate tokens
-* `PORT` - The listening port for connections
-* `WEBHOOK_URL` - The webhook url to receive WhatsApp events (Messages, ACKs, States)
-
-As a alternative, you can define theses options using the `.env` file.
-To do that, you can make a copy of `.env.example` (`cp .env.example .env`) and change the values
+```json
+{
+  // secret key to genereta access token
+  "secretKey": "THISISMYSECURETOKEN", 
+  "host": "http://localhost",
+  "port": "21465",
+  // starts all sessions when starting the server.
+  "startAllSession": true,
+  "webhook": {
+    "url": null,
+    // automatically downloads files to upload to the webhook
+    "autoDownload": true,
+    //marks messages as read when the webhook returns ok
+    "readMessage": false,
+    //sends all unread messages to the webhook when the server starts
+    "allUnreadOnStart": true
+  },
+  //functionality that archives conversations, runs when the server starts
+  "archive": {
+    "enable": true,
+    //maximum interval between filings.
+    "waitTime": 10,
+    "daysToArchive": 45
+  },
+  "log": {
+    "level": "error",
+    "logger": [ "console", "file" ]
+  }
+}
+```
 
 # Secret Key
 
-Your `SECRET_KEY` is inside the `.env` file or environment variable. You must change the default value to one that only you know.
+Your `secretKey` is inside the `config.json` file. You must change the default value to one that only you know.
 
-![Peek 2021-03-25 09-33](https://user-images.githubusercontent.com/40338524/112473515-3b310a80-8d4d-11eb-94bb-ff409c91d9b8.gif)
+<!-- ![Peek 2021-03-25 09-33](https://user-images.githubusercontent.com/40338524/112473515-3b310a80-8d4d-11eb-94bb-ff409c91d9b8.gif) -->
 
 # Generate Token
 
@@ -103,6 +127,17 @@ Save the value of the "full" response. Then use this value to call the routes.
 ```sh
 #Starting Session
 # /api/:session/start-session
+
+curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer \$2b\$10\$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C"
+```
+
+```sh
+#Get QrCode
+# /api/:session/start-session
+# when the session is starting if the method is called again it will return the base64 qrCode
 
 curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
     -H "Accept: application/json" \

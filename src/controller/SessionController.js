@@ -1,4 +1,4 @@
-import {clientsArray} from "../util/sessionUtil";
+import {clientsArray, config} from "../util/sessionUtil";
 import {callWebHook} from "../util/functions";
 import {opendata} from "../util/createSessionUtil";
 import getAllTokens from "../util/getAllTokens";
@@ -84,7 +84,7 @@ export async function startAllSessions(req, res) {
 
     const allSessions = await getAllTokens();
 
-    if (tokenDecrypt !== process.env.SECRET_KEY) {
+    if (tokenDecrypt !== config.secretKey) {
         return res.status(400).json({
             response: false,
             message: "O token informado está incorreto."
@@ -137,7 +137,6 @@ export async function logOutSession(req, res) {
 
 }
 
-
 export async function checkConnectionSession(req, res) {
     const session = req.session;
     try {
@@ -167,10 +166,10 @@ export async function downloadMediaByMessage(req, res) {
 
     if (messageId.isMedia === true) {
         await download(messageId, req.client);
-        result = `${process.env.HOST}:${process.env.PORT}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
+        result = `${config.host}:${config.port}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     } else if (messageId.type === "ptt" || messageId.type === "sticker") {
         await download(messageId, req.client);
-        result = `${process.env.HOST}:${process.env.PORT}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
+        result = `${config.host}:${config.port}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     }
 
     return res.status(200).json(result);

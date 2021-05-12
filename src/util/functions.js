@@ -1,5 +1,6 @@
 import api from "axios";
 import Logger from "./logger"
+import {config} from "./sessionUtil"
 export function contactToArray(number, isGroup) {
     let localArr = [];
     if (Array.isArray(number)) {
@@ -62,10 +63,14 @@ export function groupNameToArray(group) {
 
 export async function callWebHook(client, event, data) {
     if (client.webhook) {
-        if (process.env.AUTO_DOWNLOAD_FILES)
+        if (config.webhook.autoDownload)
             await AtuoDonwload(client, data);
         try {
             api.post(client.webhook, Object.assign({event: event}, data))
+                .then(() => {
+                    if (config.webhook.readMessage)
+                        client.sendSeen(data.chatId || data.id.user + this.whatsPrefix);
+                })
                 .catch((e) => {
                     Logger.error(e);
                 });
@@ -82,11 +87,77 @@ async function AtuoDonwload(client, message) {
     }
 }
 
-export async function startAllSessions(port, secretkey) {
+export async function startAllSessions() {
     try {
-        await api.post(`http://localhost:${port}/api/${secretkey}/start-all`)
+        await api.post(`${config.host}:${config.port}/api/${config.secretKey}/start-all`)
     } catch (e) {
         Logger.error(e);
     }
 
+}
+
+export async function startHelper(client) {
+
+    if (config.webhook.allUnreadOnStart)
+        sendUnread(client);
+
+    if (config.archive.enable)
+        archive(client);
+}
+
+async function sendUnread(client) {
+    Logger.info(`${client.session} : Inicio enviar mensagens não lidas`);
+
+    try {
+        var chats = await client.getUnreadMessages(false, false, true);
+
+        for (var i = 0; i < chats.length; i++)
+            for (var j = 0; j < chats[i].messages.length; j++) {
+                callWebHook(chats[i].messages[j]);
+            }
+
+
+        Logger.info(`${client.session} : Fim enviar mensagens não lidas`);
+    } catch (ex) {
+        Logger.error(ex);
+    }
+
+    var m = await client.getUnreadMessages(false, false, true);
+}
+
+async function archive(client) {
+    async function sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    Logger.info(`${client.session} : Inicio arquivando chats`);
+
+    try {
+        let chats = await client.getAllChats();
+
+        for (var i = 0; i < chats.length; i++) {
+            let date = new Date(chats[i].t * 1000);
+
+            if (DaysBetween(date) > config.archive.daysToArchive) {
+                await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
+                await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
+            }
+        }
+        Logger.info(`${client.session} : Fim arquivando chats`);
+    } catch (ex) {
+        Logger.error(ex);
+    }
+}
+
+function DaysBetween(StartDate) {
+    let EndDate = new Date();
+    // The number of milliseconds in all UTC days (no DST)
+    const oneDay = 1000 * 60 * 60 * 24;
+
+    // A day in UTC always lasts 24 hours (unlike in other time formats)
+    const start = Date.UTC(EndDate.getFullYear(), EndDate.getMonth(), EndDate.getDate());
+    const end = Date.UTC(StartDate.getFullYear(), StartDate.getMonth(), StartDate.getDate());
+
+    // so it's safe to divide by 24 hours
+    return (start - end) / oneDay;
 }

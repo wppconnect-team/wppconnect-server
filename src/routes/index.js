@@ -31,6 +31,7 @@ routes.get("/api/:session/qrcode-session", verifyToken, SessionController.getQrC
 //SendMessages
 routes.post("/api/:session/send-message", verifyToken, statusConnection, MessageController.sendMessage);
 routes.post("/api/:session/send-image", verifyToken, statusConnection, MessageController.sendImage);
+routes.post("/api/:session/send-reply", verifyToken, statusConnection, MessageController.replyMessage);
 routes.post("/api/:session/send-file", upload.single("file"), verifyToken, statusConnection, MessageController.sendFile);
 routes.post("/api/:session/send-file-base64", verifyToken, statusConnection, MessageController.sendFile64);
 routes.post("/api/:session/send-voice", verifyToken, statusConnection, MessageController.sendVoice);
@@ -57,7 +58,7 @@ routes.get("/api/:session/show-all-chats", verifyToken, statusConnection, Device
 routes.post("/api/:session/show-all-groups", verifyToken, statusConnection, DeviceController.getAllGroups);
 routes.post("/api/:session/show-all-blocklist", verifyToken, statusConnection, DeviceController.getBlockList);
 routes.post("/api/:session/get-chat-by-id", verifyToken, statusConnection, DeviceController.getChatById);
-routes.post("/api/:session/get-battery-level", verifyToken, statusConnection, DeviceController.getBatteryLevel);
+routes.get("/api/:session/get-battery-level", verifyToken, statusConnection, DeviceController.getBatteryLevel);
 routes.post("/api/:session/delete-chat", verifyToken, statusConnection, DeviceController.deleteChat);
 routes.post("/api/:session/clear-chat", verifyToken, statusConnection, DeviceController.clearChat);
 routes.post("/api/:session/archive-chat", verifyToken, statusConnection, DeviceController.archiveChat);
@@ -70,5 +71,6 @@ routes.post("/api/:session/forward-messages", verifyToken, statusConnection, Dev
 routes.post("/api/:session/pin-chat", verifyToken, statusConnection, DeviceController.pinChat);
 routes.post("/api/:session/change-privacy-group", verifyToken, statusConnection, DeviceController.changePrivacyGroup);
 routes.post('/api/:session/download-media', verifyToken, statusConnection, SessionController.downloadMediaByMessage);
+routes.get("/api/:session/get-unread-messages", verifyToken, statusConnection, DeviceController.getUnreadMessages);
 
 export default routes;
