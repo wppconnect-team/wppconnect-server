@@ -99,11 +99,9 @@ export async function startAllSessions(req, res) {
 }
 
 export async function startSession(req, res) {
-    const {session} = req.session;
-
+    const session = req.session;
 
     await getSessionState(req, res);
-
     await opendata(req, session);
 }
 
