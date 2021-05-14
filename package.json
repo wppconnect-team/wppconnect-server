@@ -5,7 +5,6 @@
   "main": "index.js",
   "author": "kingaspx",
   "license": "MIT",
-  "type": "module",
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.4.0",
     "axios": "^0.21.1",
