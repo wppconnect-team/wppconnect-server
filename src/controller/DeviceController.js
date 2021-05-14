@@ -1,30 +1,27 @@
 import fs from "fs";
+import {unlink} from 'fs';
 import {download} from "./SessionController";
 import {contactToArray} from "../util/functions";
 import Logger from "../util/logger";
 import {config} from "../util/sessionUtil";
+import path from "path";
 
 export async function setProfileName(req, res) {
     const session = req.session;
     const {name} = req.body;
 
     if (!name)
-        return res.status(401).send({message: "Digite um novo nome de perfil."});
+        return res.status(401).send({message: "Parameter name is required !"});
 
     try {
-        await req.client.setProfileName(name);
-        return res.status(201).json({
-            response: {
-                status: true,
-                name: name,
-                session: session
-            },
-        });
+
+        const result = await req.client.setProfileName(name);
+        return res.status(200).json({status: "success", response: result});
     } catch (error) {
         Logger.error(error);
         res.status(400).json({
             response: {
-                message: "O nome de usuário de perfil não foi alterado.",
+                message: "Error on set profile name.",
                 session: session,
                 log: error
             },
@@ -56,14 +53,8 @@ export async function getAllGroups(req, res) {
     try {
         const response = await req.client.getAllGroups();
 
-        let groups = response.map(function (data) {
-            return {
-                "id": data.id.user,
-                "name": data.name,
-            };
-        });
 
-        return res.status(200).json({"groups": groups});
+        return res.status(200).json({"response": response});
     } catch (e) {
         Logger.error(e);
         res.status(401).json({
@@ -82,7 +73,48 @@ export async function getAllChats(req, res) {
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
         Logger.error(e);
-        return res.status(401).json({status: "error", response: "Error on open list"});
+        return res.status(401).json({status: "error", response: "Error on get all chats"});
+    }
+}
+
+export async function getAllChatsWithMessages(req, res) {
+    try {
+        const response = await req.client.getAllChatsWithMessages();
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get all chats whit messages"});
+    }
+}
+
+export async function getAllMessagesInChat(req, res) {
+    try {
+        const {phone, includeMe = true, includeNotifications = false} = req.body;
+        const response = await req.client.getAllMessagesInChat(`${phone}@c.us`, includeMe, includeNotifications);
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get all messages in chat"});
+    }
+}
+
+export async function getAllNewMessages(req, res) {
+    try {
+        const response = await req.client.getAllNewMessages();
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get all messages in chat"});
+    }
+}
+
+export async function getAllUnreadMessages(req, res) {
+    try {
+        const response = await req.client.getAllUnreadMessages();
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get all messages in chat"});
     }
 }
 
@@ -171,7 +203,7 @@ export async function getBlockList(req, res) {
             return {phone: contato ? contato.split("@")[0] : ""};
         });
 
-        return res.status(200).json({status: "Success", contacts: blocked});
+        return res.status(200).json({status: "Success", response: blocked});
     } catch (e) {
         Logger.error(e);
         return res.status(400).json({status: "Error", message: "Erro ao recuperar lista de contatos bloqueados"});
@@ -211,18 +243,19 @@ export async function clearChat(req, res) {
 }
 
 export async function archiveChat(req, res) {
-    const {phone, isGroup = false} = req.body;
+    const {phone, value = true, isGroup = false} = req.body;
 
     try {
+        let response;
         if (isGroup) {
-            await req.client.archiveChat(`${phone}@g.us`, true);
+            response = await req.client.archiveChat(`${phone}@g.us`, value);
         } else {
-            await req.client.archiveChat(`${phone}@c.us`, true);
+            response = await req.client.archiveChat(`${phone}@c.us`, value);
         }
-        return res.status(200).json({status: "Success", message: "Conversa arquivada com sucesso"});
+        return res.status(200).json({status: "Success", message: "Chat archived!", response: response});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao arquivar conversa"});
+        return res.status(400).json({status: "Error", message: "Error on archive chat"});
     }
 }
 
@@ -231,10 +264,10 @@ export async function deleteMessage(req, res) {
 
     try {
         await req.client.deleteMessage(`${phone}@c.us`, [messageId]);
-        return res.status(200).json({status: "Success", message: "Conversa deletada com sucesso"});
+        return res.status(200).json({status: "Success", message: "Message deleted"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao arquivar conversa"});
+        return res.status(400).json({status: "Error", message: "Error on delete message"});
     }
 }
 
@@ -281,10 +314,10 @@ export async function markUnseenMessage(req, res) {
         } else {
             await req.client.markUnseenMessage(`${phone}@c.us`);
         }
-        return res.status(200).json({status: "Success", message: "Mensagem marcada como não lida"});
+        return res.status(200).json({status: "Success", message: "unseen checked"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao desmarcar visto da mensagem"});
+        return res.status(400).json({status: "Error", message: "Error on mark unseen"});
     }
 }
 
@@ -293,10 +326,10 @@ export async function blockContact(req, res) {
 
     try {
         await req.client.blockContact(`${phone}@c.us`);
-        return res.status(200).json({status: "Success", message: "Contato bloqueado com sucesso"});
+        return res.status(200).json({status: "Success", message: "Contact blocked"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao bloquear contato"});
+        return res.status(400).json({status: "Error", message: "Error on block contact"});
     }
 }
 
@@ -305,10 +338,10 @@ export async function unblockContact(req, res) {
 
     try {
         await req.client.unblockContact(`${phone}@c.us`);
-        return res.status(200).json({status: "Success", message: "Contato desbloqueado com sucesso"});
+        return res.status(200).json({status: "Success", message: "Contact UnBlocked"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao desbloquear contato"});
+        return res.status(400).json({status: "Error", message: "Error on unlock contact"});
     }
 }
 
@@ -322,28 +355,30 @@ export async function pinChat(req, res) {
             await req.client.pinChat(`${phone}@c.us`, state === "true", false);
         }
 
-        return res.status(200).json({status: "Success", message: "Conversa fixada com sucesso"});
+        return res.status(200).json({status: "Success", message: "Chat fixed"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Success", message: "Erro ao fixar conversa"});
+        return res.status(400).json({status: "Error", message: "Error on pin chat"});
     }
 }
 
 export async function setProfilePic(req, res) {
-    const {phone, path, isGroup = false} = req.body;
+    const {phone, file, isGroup = false} = req.body;
 
-    if (!path) {
-        return res.status(400).json({status: "Error", message: "Informe o caminho da imagem"});
-    }
+    if (!req.file)
+        return res.status(400).json({status: "Error", message: "file parameter is required !"});
+
 
     try {
         for (const contato of contactToArray(phone)) {
             if (isGroup) {
-                await req.client.setProfilePic(path, `${contato}@g.us`);
+                await req.client.setProfilePic(req.file.path, `${contato}@g.us`);
             } else {
-                await req.client.setProfilePic(path, `${contato}@c.us`);
+                await req.client.setProfilePic(req.file.path);
             }
         }
+
+        unlink(req.file.path, (err) => {if (err) throw err;});
 
         return res.status(200).json({status: "Success", message: "Foto de perfil alterada com sucesso"});
     } catch (e) {
@@ -361,5 +396,257 @@ export async function getUnreadMessages(req, res) {
     } catch (e) {
         Logger.error(e);
         return res.status(401).json({status: "error", response: "Error on open list"});
+    }
+}
+
+export async function getChatIsOnline(req, res) {
+    const {phone} = req.body;
+    try {
+        const response = await req.client.getChatIsOnline(`${phone}@c.us`);
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get chat is online"});
+    }
+}
+
+export async function getLastSeen(req, res) {
+    const {phone} = req.body;
+    try {
+        const response = await req.client.getLastSeen(`${phone}@c.us`);
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get chat last seen"});
+    }
+}
+
+export async function getListMutes(req, res) {
+    const {type = 'all'} = req.body;
+    try {
+        const response = await req.client.getListMutes(type);
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on get list mutes"});
+    }
+}
+
+export async function loadAndGetAllMessagesInChat(req, res) {
+    const {phone, includeMe = true, includeNotifications = false} = req.body;
+
+    try {
+        const response = await req.client.loadAndGetAllMessagesInChat(`${phone}@c.us`, includeMe, includeNotifications);
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(401).json({status: "error", response: "Error on open list"});
+    }
+}
+
+export async function sendContactVcard(req, res) {
+    const {phone, contactsId, isGroup = false} = req.body;
+
+    try {
+        let response;
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await req.client.sendContactVcard(`${contato}`, contactsId);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json({status: "error", message: "Error on send contact vcard"});
+    }
+}
+
+export async function sendMentioned(req, res) {
+    const session = req.session;
+    const {phone, message, mentioned, isGroup = false} = req.body;
+
+
+    try {
+        let response;
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await req.client.sendMentioned(`${contato}`, message, mentioned);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on send message mentioned"});
+    }
+}
+
+export async function sendMute(req, res) {
+    const session = req.session;
+    const {phone, time, type = 'hours', isGroup = false} = req.body;
+
+
+    try {
+        let response;
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await req.client.sendMute(`${contato}`, time, type);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on send mute"});
+    }
+}
+
+export async function sendSeen(req, res) {
+    const session = req.session;
+    const {phone, isGroup = false} = req.body;
+
+
+    try {
+        let response;
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await req.client.sendSeen(`${contato}`);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on send seen"});
+    }
+}
+
+export async function setChatState(req, res) {
+    const session = req.session;
+    const {phone, chatstate, isGroup = false} = req.body;
+
+
+    try {
+        let response;
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await req.client.setChatState(`${contato}`, chatstate);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on send chat state"});
+    }
+}
+
+export async function setTemporaryMessages(req, res) {
+    const {phone, value = true, isGroup = false} = req.body;
+
+    try {
+        let response;
+        for (const contato of contactToArray(phone, isGroup)) {
+            response = await req.client.setTemporaryMessages(`${contato}`, value);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on set temporary messages"});
+    }
+}
+
+export async function setTyping(req, res) {
+    const {phone, value = true, isGroup = false} = req.body;
+    try {
+        let response;
+
+        for (const contato of contactToArray(phone, isGroup)) {
+            if (value)
+                response = await req.client.startTyping(contato);
+            else
+                response = await req.client.stopTyping(contato);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on set typing"});
+    }
+}
+
+export async function checkNumberStatus(req, res) {
+    const {phone} = req.body;
+    try {
+        let response;
+
+        for (const contato of contactToArray(phone, false)) {
+            response = await req.client.checkNumberStatus(`${contato}`);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on check number status"});
+    }
+}
+
+
+export async function getContact(req, res) {
+    const {phone = true} = req.params;
+    try {
+        let response;
+        for (const contato of contactToArray(phone, false)) {
+            response = await req.client.getContact(contato);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on get contact"});
+    }
+}
+
+export async function getAllContacts(req, res) {
+    try {
+        const response = await req.client.getAllContacts();
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on get all constacts"});
+    }
+}
+
+export async function getNumberProfile(req, res) {
+    const {phone = true} = req.params;
+    try {
+        let response;
+        for (const contato of contactToArray(phone, false)) {
+            response = await req.client.getNumberProfile(contato);
+        }
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on get number profile"});
+    }
+}
+
+export async function getProfilePicFromServer(req, res) {
+    const {phone = true} = req.params;
+    try {
+        let response;
+        for (const contato of contactToArray(phone, false)) {
+            response = await req.client.getProfilePicFromServer(contato);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on  get profile pic"});
+    }
+}
+
+export async function getStatus(req, res) {
+    const {phone = true} = req.params;
+    try {
+        let response;
+        for (const contato of contactToArray(phone, false)) {
+            response = await req.client.getStatus(contato);
+        }
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on  get status"});
+    }
+}
+
+export async function setProfileStatus(req, res) {
+    const {status} = req.body;
+
+    try {
+        return res.status(200).json({status: "Success", response: await req.client.setProfileStatus(status)});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json({status: "Success", message: "Error on set profile status"});
     }
 }

@@ -60,7 +60,7 @@ yarn build
 
 This server use config.json file to define some options, default values are:
 
-```json
+```javascript
 {
   // secret key to genereta access token
   "secretKey": "THISISMYSECURETOKEN", 

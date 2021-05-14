@@ -138,10 +138,10 @@ export async function sendLinkPreview(req, res) {
             response = await req.client.sendLinkPreview(`${contato}`, url, caption);
         }
 
-        return res.status(200).json({status: "Success", message: "O link foi enviado com sucesso."});
+        return res.status(200).json({status: "Success", message: "Lind send"});
     } catch (error) {
         Logger.error(error);
-        return res.status(400).json({status: "Erro ao enviar mensagem", log: error});
+        return res.status(400).json({status: "Error on send link", log: error});
     }
 }
 
@@ -156,10 +156,10 @@ export async function sendLocation(req, res) {
             response = await req.client.sendLocation(`${contato}`, lat, lng, title);
         }
 
-        return res.status(200).json({status: "Success", message: "A localização foi enviada com sucesso."});
+        return res.status(200).json({status: "Success", message: "Location sent"});
     } catch (error) {
         Logger.error(error);
-        return res.status(400).json({status: "Erro ao enviar localização"});
+        return res.status(400).json({status: "Error on send location"});
     }
 }
 
@@ -169,10 +169,10 @@ export async function sendStatusText(req, res) {
 
     try {
         await req.client.sendText("status@broadcast", message);
-        return res.status(200).json({status: "Success", message: "A mensagem foi enviada com sucesso."});
+        return res.status(200).json({status: "Success", message: "Location sent."});
     } catch (error) {
         Logger.error(error);
-        return res.status(400).json({status: "Erro ao enviar mensagem"});
+        return res.status(400).json({status: "Error on send location"});
     }
 }
 

@@ -12,6 +12,7 @@ import {config} from './util/sessionUtil';
 
 const __dirname = path.resolve(path.dirname(''));
 const app = express();
+
 const PORT = config.port;
 
 const options = {
@@ -57,6 +58,3 @@ http.listen(PORT, () => {
     if (config.startAllSession)
         startAllSessions();
 });
-
-
-

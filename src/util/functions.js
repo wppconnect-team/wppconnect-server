@@ -106,7 +106,7 @@ export async function startHelper(client) {
 }
 
 async function sendUnread(client) {
-    Logger.info(`${client.session} : Inicio enviar mensagens não lidas`);
+    Logger.info(`${client.session} : Inicio enviar mensagens nÃ£o lidas`);
 
     try {
         var chats = await client.getUnreadMessages(false, false, true);
@@ -117,7 +117,7 @@ async function sendUnread(client) {
             }
 
 
-        Logger.info(`${client.session} : Fim enviar mensagens não lidas`);
+        Logger.info(`${client.session} : Fim enviar mensagens nÃ£o lidas`);
     } catch (ex) {
         Logger.error(ex);
     }
@@ -127,7 +127,7 @@ async function sendUnread(client) {
 
 async function archive(client) {
     async function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
+        return new Promise((resolve) => setTimeout(resolve, time * 1000));
     }
 
     Logger.info(`${client.session} : Inicio arquivando chats`);

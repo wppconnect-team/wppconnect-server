@@ -99,7 +99,8 @@ export async function startAllSessions(req, res) {
 }
 
 export async function startSession(req, res) {
-    const session = req.session;
+    const {session} = req.session;
+
 
     await getSessionState(req, res);
 
@@ -249,4 +250,33 @@ export async function getQrCode(req, res) {
             message: "Error ao recuperar QRCode !"
         });
     }
+}
+
+export async function killServiceWorker(req, res) {
+    try {
+        return res.status(200).json({status: "success", response: req.client.killServiceWorker()});
+
+    } catch (ex) {
+        Logger.error(ex);
+        return res.status(400).json({
+            response: false,
+            message: "A sessão não está ativa."
+        });
+    }
+
+
+}
+
+export async function restartService(req, res) {
+    try {
+        return res.status(200).json({status: "success", response: req.client.restartService()});
+    } catch (ex) {
+        Logger.error(ex);
+        return res.status(400).json({
+            response: false,
+            message: "A sessão não está ativa."
+        });
+    }
+
+
 }

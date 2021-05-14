@@ -86,32 +86,18 @@ export async function leaveGroup(req, res) {
 }
 
 export async function getGroupMembers(req, res) {
-    const {groupId} = req.body;
+    const {groupId} = req.params;
 
     try {
-        let groupInfo = [];
         let response = {};
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.getGroupMembers(`${grupo}`);
+            response = await req.client.getGroupMembers(grupo);
 
-            for (const contato of response) {
-                groupInfo.push({
-                    id: grupo,
-                    participants: {
-                        phone: contato.id.user,
-                        name: contato.name ? contato.name : "",
-                        pushname: contato.isBusiness ? contato.verifiedName : contato.pushname,
-                        isBusiness: contato.isBusiness
-                    }
-                });
-            }
         }
-
-        const grouped = _.groupBy(groupInfo, grupo => grupo.id);
-        return res.status(200).json({"groupInfo": grouped});
+        return res.status(200).json({status: "Success", response: response});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json("Erro ao recuperar participantes do(s) grupo(s)");
+        return res.status(400).json("Error on get group members");
     }
 
 }
@@ -148,7 +134,7 @@ export async function removeParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.removeParticipant(`${grupo}`, contactToArray(phone));
+            response = await req.client.removeParticipant({grupo}, contactToArray(phone));
             arrayGrupos.push(response);
         }
 
@@ -213,7 +199,7 @@ export async function demoteParticipant(req, res) {
 }
 
 export async function getGroupAdmins(req, res) {
-    const {groupId} = req.body;
+    const {groupId} = req.params;
 
     let response = {};
     let arrayGrupos = [];
@@ -241,29 +227,129 @@ export async function getGroupAdmins(req, res) {
 }
 
 export async function getGroupInviteLink(req, res) {
-    const {groupId} = req.body;
+    const {groupId} = req.params;
 
     let response = {};
-    let arrayGrupos = [];
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.getGroupInviteLink(`${grupo}`);
-
-            arrayGrupos.push({
-                id: grupo,
-                link: response
-            });
+            response = await req.client.getGroupInviteLink(grupo);
         }
 
-        const grouped = _.groupBy(arrayGrupos, grupo => grupo.id);
         return res.status(200).json({
             status: "Success",
-            participants: grouped,
-            groups: arrayGrupos
+            response: response
         });
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json("Erro ao recuperar o(s) link(s) do(s) grupo(s)");
+        return res.status(400).json("Error on get group invite link");
+    }
+}
+
+export async function getAllBroadcastList(req, res) {
+    try {
+
+        let response = await req.client.getAllBroadcastList();
+        return res.status(200).json({status: "success", response: response});
+    }
+    catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on get all broad cast list");
+    }
+}
+
+export async function getGroupInfoFromInviteLink(req, res) {
+    try {
+        const {invitecode} = req.body;
+        let response = await req.client.getGroupInfoFromInviteLink(invitecode);
+        return res.status(200).json({status: "success", response: response});
+    }
+    catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on get group info from invite link");
+    }
+}
+
+export async function getGroupMembersIds(req, res) {
+    const {groupId} = req.params;
+    let response = {};
+    try {
+
+        for (const grupo of groupToArray(groupId)) {
+            response = await req.client.getGroupMembersIds(grupo);
+        }
+        return res.status(200).json({status: "success", response: response});
+
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on get group members ids");
+    }
+}
+
+export async function setGroupDescription(req, res) {
+    const {groupId, description} = req.body;
+
+    let response = {};
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await req.client.setGroupDescription(`${grupo}`, description);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on set group description");
+    }
+}
+
+export async function setGroupProperty(req, res) {
+    const {groupId, property, value = true} = req.body;
+
+    let response = {};
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await req.client.setGroupProperty(`${grupo}`, property, value);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on set group property");
+    }
+}
+
+export async function setGroupSubject(req, res) {
+    const {groupId, title} = req.body;
+
+    let response = {};
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await req.client.setGroupSubject(`${grupo}`, title);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on set group subject");
+    }
+}
+
+export async function setMessagesAdminsOnly(req, res) {
+    const {groupId, value = true} = req.body;
+
+    let response = {};
+
+    try {
+        for (const grupo of groupToArray(groupId)) {
+            response = await req.client.setMessagesAdminsOnly(`${grupo}`, value);
+        }
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json("Error on set messages admins only");
     }
 }
