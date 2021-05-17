@@ -92,7 +92,7 @@ export async function startAllSessions(req, res) {
     }
 
     allSessions.map(async (session) => {
-        await opendata(req, session.replace(".data.json", ""));
+        await opendata(req, session);
     });
 
     return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
@@ -217,7 +217,7 @@ export async function getSessionState(req, res) {
     try {
         const client = req.client;
 
-        if (client == null)
+        if (client == null || client.status == null)
             return res.status(200).json({status: 'CLOSED', qrcode: null});
         return res.status(200).json({status: client.status, qrcode: client.qrcode});
 

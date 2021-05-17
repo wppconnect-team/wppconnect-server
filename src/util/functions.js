@@ -66,7 +66,7 @@ export async function callWebHook(client, event, data) {
         if (config.webhook.autoDownload)
             await AtuoDonwload(client, data);
         try {
-            api.post(client.webhook, Object.assign({event: event}, data))
+            api.post(client.webhook, Object.assign({event: event, session: client.session}, data))
                 .then(() => {
                     if (config.webhook.readMessage)
                         client.sendSeen(data.chatId || data.id.user + this.whatsPrefix);
@@ -113,9 +113,8 @@ async function sendUnread(client) {
 
         for (var i = 0; i < chats.length; i++)
             for (var j = 0; j < chats[i].messages.length; j++) {
-                callWebHook(chats[i].messages[j]);
+                callWebHook(client, 'unreadmessages', chats[i].messages[j]);
             }
-
 
         Logger.info(`${client.session} : Fim enviar mensagens não lidas`);
     } catch (ex) {
@@ -136,7 +135,7 @@ async function archive(client) {
         let chats = await client.getAllChats();
 
         for (var i = 0; i < chats.length; i++) {
-            let date = new Date(chats[i].t * 1000);
+            let date = new Date(chats[i].t * 100);
 
             if (DaysBetween(date) > config.archive.daysToArchive) {
                 await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);

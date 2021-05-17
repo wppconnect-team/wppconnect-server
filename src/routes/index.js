@@ -69,15 +69,15 @@ routes.post("/api/:session/delete-message", verifyToken, statusConnection, Devic
 routes.post("/api/:session/forward-messages", verifyToken, statusConnection, DeviceController.forwardMessages);
 routes.get("/api/:session/all-chats", verifyToken, statusConnection, DeviceController.getAllChats);
 routes.get("/api/:session/all-chats-whit-messages", verifyToken, statusConnection, DeviceController.getAllChatsWithMessages);
-routes.get("/api/:session/all-messages-in-chat", verifyToken, statusConnection, DeviceController.getAllMessagesInChat);
+routes.get("/api/:session/all-messages-in-chat/:phone", verifyToken, statusConnection, DeviceController.getAllMessagesInChat);
 routes.get("/api/:session/all-new-messages", verifyToken, statusConnection, DeviceController.getAllNewMessages);
 routes.get("/api/:session/unread-messages", verifyToken, statusConnection, DeviceController.getUnreadMessages);
 routes.get("/api/:session/all-unread-messages", verifyToken, statusConnection, DeviceController.getAllUnreadMessages);
-routes.get("/api/:session/chat-by-id", verifyToken, statusConnection, DeviceController.getChatById);
-routes.get("/api/:session/chat-is-online", verifyToken, statusConnection, DeviceController.getChatIsOnline);
-routes.get("/api/:session/last-seen", verifyToken, statusConnection, DeviceController.getLastSeen);
-routes.get("/api/:session/list-mutes", verifyToken, statusConnection, DeviceController.getListMutes);
-routes.get("/api/:session/load-messages-in-chat", verifyToken, statusConnection, DeviceController.loadAndGetAllMessagesInChat);
+routes.get("/api/:session/chat-by-id/:phone", verifyToken, statusConnection, DeviceController.getChatById);
+routes.get("/api/:session/chat-is-online/:phone", verifyToken, statusConnection, DeviceController.getChatIsOnline);
+routes.get("/api/:session/last-seen/:phone", verifyToken, statusConnection, DeviceController.getLastSeen);
+routes.get("/api/:session/list-mutes/:type", verifyToken, statusConnection, DeviceController.getListMutes);
+routes.get("/api/:session/load-messages-in-chat/:phone", verifyToken, statusConnection, DeviceController.loadAndGetAllMessagesInChat);
 routes.post("/api/:session/mark-unseen", verifyToken, statusConnection, DeviceController.markUnseenMessage);
 routes.post("/api/:session/pin-chat", verifyToken, statusConnection, DeviceController.pinChat);
 routes.post("/api/:session/contact-vcard", verifyToken, statusConnection, DeviceController.sendContactVcard);
@@ -88,7 +88,7 @@ routes.post("/api/:session/temporary-messages", verifyToken, statusConnection, D
 routes.post("/api/:session/typing", verifyToken, statusConnection, DeviceController.setTyping);
 
 //Contact Methods
-routes.get("/api/:session/check-number-status", verifyToken, statusConnection, DeviceController.checkNumberStatus);
+routes.get("/api/:session/check-number-status/:phone", verifyToken, statusConnection, DeviceController.checkNumberStatus);
 routes.get("/api/:session/all-contacts", verifyToken, statusConnection, DeviceController.getAllContacts);
 routes.get("/api/:session/contact/:phone", verifyToken, statusConnection, DeviceController.getContact);
 routes.get("/api/:session/profile/:phone", verifyToken, statusConnection, DeviceController.getNumberProfile);

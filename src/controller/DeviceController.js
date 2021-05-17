@@ -89,7 +89,7 @@ export async function getAllChatsWithMessages(req, res) {
 
 export async function getAllMessagesInChat(req, res) {
     try {
-        const {phone, includeMe = true, includeNotifications = false} = req.body;
+        const {phone, includeMe = true, includeNotifications = false} = req.params;
         const response = await req.client.getAllMessagesInChat(`${phone}@c.us`, includeMe, includeNotifications);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
@@ -119,7 +119,7 @@ export async function getAllUnreadMessages(req, res) {
 }
 
 export async function getChatById(req, res) {
-    const {phone, isGroup = false} = req.body;
+    const {phone, isGroup = false} = req.params;
 
     try {
         let allMessages = {};
@@ -400,7 +400,7 @@ export async function getUnreadMessages(req, res) {
 }
 
 export async function getChatIsOnline(req, res) {
-    const {phone} = req.body;
+    const {phone} = req.params;
     try {
         const response = await req.client.getChatIsOnline(`${phone}@c.us`);
         return res.status(200).json({status: "success", response: response});
@@ -411,7 +411,7 @@ export async function getChatIsOnline(req, res) {
 }
 
 export async function getLastSeen(req, res) {
-    const {phone} = req.body;
+    const {phone} = req.params;
     try {
         const response = await req.client.getLastSeen(`${phone}@c.us`);
         return res.status(200).json({status: "success", response: response});
@@ -422,7 +422,7 @@ export async function getLastSeen(req, res) {
 }
 
 export async function getListMutes(req, res) {
-    const {type = 'all'} = req.body;
+    const {type = 'all'} = req.params;
     try {
         const response = await req.client.getListMutes(type);
         return res.status(200).json({status: "success", response: response});
@@ -433,7 +433,7 @@ export async function getListMutes(req, res) {
 }
 
 export async function loadAndGetAllMessagesInChat(req, res) {
-    const {phone, includeMe = true, includeNotifications = false} = req.body;
+    const {phone, includeMe = true, includeNotifications = false} = req.params;
 
     try {
         const response = await req.client.loadAndGetAllMessagesInChat(`${phone}@c.us`, includeMe, includeNotifications);
@@ -562,7 +562,7 @@ export async function setTyping(req, res) {
 }
 
 export async function checkNumberStatus(req, res) {
-    const {phone} = req.body;
+    const {phone} = req.params;
     try {
         let response;
 
