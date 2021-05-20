@@ -41,7 +41,7 @@ async function createSessionUtil(req, clientsArray, session) {
                 refreshQR: 15000,
                 disableSpins: true,
                 tokenStore: myTokenStore,
-
+                autoClose: 0,
                 catchQR: (base64Qr, asciiQR) => {
                     exportQR(req, base64Qr, client);
                 },
@@ -73,7 +73,7 @@ function exportQR(req, qrCode, client) {
         data: "data:image/png;base64," + imageBuffer.toString("base64"),
         session: client.session
     });
-    callWebHook(client, "qrcode", {qrcode: qrCode});
+    callWebHook(client, "qrcode", qrCode);
 }
 
 async function start(req, client) {
@@ -92,6 +92,7 @@ async function start(req, client) {
     await checkStateSession(client);
     await listenMessages(req, client);
     await listenAcks(client);
+    await onPresenceChanged(client);
 }
 
 async function checkStateSession(client) {
@@ -125,9 +126,15 @@ async function listenMessages(req, client) {
 
 async function listenAcks(client) {
     await client.onAck(async (ack) => {
-        callWebHook(client, "onack", {ack: ack})
+        callWebHook(client, "onack", ack)
     });
 
+}
+
+async function onPresenceChanged(client) {
+    await client.onPresenceChanged(async (presenceChangedEvent) => {
+        callWebHook(client, "onpresencechanged", presenceChangedEvent)
+    });
 }
 
 function encodeFunction(data, webhook) {

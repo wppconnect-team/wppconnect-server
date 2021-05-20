@@ -6,7 +6,7 @@
   "webhook": {
     "url": null,
     "autoDownload": true,
-    "readMessage": false,
+    "readMessage": true,
     "allUnreadOnStart": true
   },
   "archive": {

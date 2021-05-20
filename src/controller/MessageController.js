@@ -96,7 +96,7 @@ export async function sendFile(req, res) {
 
 export async function sendFile64(req, res) {
     const session = req.session;
-    const {base64, phone, filename, message, isGroup = false} = req.body;
+    const {base64, phone, filename = "arquivo", message, isGroup = false} = req.body;
 
     if (!base64)
         return res.status(401).send({message: "O base64 do arquivo não foi informado."});

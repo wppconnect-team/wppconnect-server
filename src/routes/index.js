@@ -27,6 +27,7 @@ routes.get("/api/:session/check-connection-session", verifyToken, SessionControl
 routes.get("/api/:session/get-media-by-message/:messageId", verifyToken, SessionController.getMediaByMessage);
 routes.get("/api/:session/status-session", verifyToken, SessionController.getSessionState);
 routes.get("/api/:session/qrcode-session", verifyToken, SessionController.getQrCode);
+routes.post("/api/:session/subscribe-presence", verifyToken, SessionController.subscribePresence);
 
 //SendMessages
 routes.post("/api/:session/send-message", verifyToken, statusConnection, MessageController.sendMessage);
@@ -86,6 +87,7 @@ routes.post("/api/:session/send-seen", verifyToken, statusConnection, DeviceCont
 routes.post("/api/:session/chat-state", verifyToken, statusConnection, DeviceController.setChatState);
 routes.post("/api/:session/temporary-messages", verifyToken, statusConnection, DeviceController.setTemporaryMessages);
 routes.post("/api/:session/typing", verifyToken, statusConnection, DeviceController.setTyping);
+routes.post("/api/:session/star-message", verifyToken, statusConnection, DeviceController.starMessage);
 
 //Contact Methods
 routes.get("/api/:session/check-number-status/:phone", verifyToken, statusConnection, DeviceController.checkNumberStatus);
@@ -99,11 +101,8 @@ routes.get("/api/:session/profile-status/:phone", verifyToken, statusConnection,
 routes.post("/api/:session/block-contact", verifyToken, statusConnection, DeviceController.blockContact);
 routes.post("/api/:session/unblock-contact", verifyToken, statusConnection, DeviceController.unblockContact);
 routes.get("/api/:session/blocklist", verifyToken, statusConnection, DeviceController.getBlockList);
-
 routes.get("/api/:session/show-all-contacts", verifyToken, statusConnection, DeviceController.showAllContacts);
-
 routes.get("/api/:session/get-battery-level", verifyToken, statusConnection, DeviceController.getBatteryLevel);
-
 routes.get("/api/:session/host-device", verifyToken, statusConnection, DeviceController.getHostDevice);
 routes.post("/api/:session/change-privacy-group", verifyToken, statusConnection, DeviceController.changePrivacyGroup);
 routes.post('/api/:session/download-media', verifyToken, statusConnection, SessionController.downloadMediaByMessage);

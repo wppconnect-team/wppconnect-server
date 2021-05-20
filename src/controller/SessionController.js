@@ -133,7 +133,6 @@ export async function logOutSession(req, res) {
     } catch (error) {
         return await res.status(400).json({status: false, message: "Error ao fechar sessão", error});
     }
-
 }
 
 export async function checkConnectionSession(req, res) {
@@ -275,6 +274,33 @@ export async function restartService(req, res) {
             message: "A sessão não está ativa."
         });
     }
+}
 
+export async function subscribePresence(req, res) {
+    try {
+        const {phone, isGroup = false, all = false} = req.body;
+
+        if (all) {
+            let contacts;
+            if (isGroup) {
+                const groups = await req.client.getAllGroups(false);
+                contacts = groups.map((p) => p.id._serialized);
+            }
+
+            else {
+                const chats = await req.client.getAllContacts();
+                contacts = chats.map((c) => c.id._serialized);
+            }
+            await req.client.subscribePresence(contacts);
+        }
+        else
+            for (const contato of contactToArray(phone, isGroup)) {
+                await req.client.subscribePresence(contato);
+            }
+
+        return await res.status(200).json({status: true, message: "Subscribe presence executed !"});
+    } catch (error) {
+        return await res.status(400).json({status: false, message: "Error on subscribe presence", error});
+    }
 
 }

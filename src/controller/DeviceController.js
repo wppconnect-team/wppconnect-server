@@ -650,3 +650,15 @@ export async function setProfileStatus(req, res) {
         return res.status(400).json({status: "Success", message: "Error on set profile status"});
     }
 }
+
+export async function starMessage(req, res) {
+    const {messageId, star = true} = req.body;
+    try {
+
+        let response = await req.client.starMessage(messageId, star);
+
+        return res.status(200).json({status: "success", response: response});
+    } catch (error) {
+        return res.status(400).json({status: "error", message: "Error on  start message"});
+    }
+}

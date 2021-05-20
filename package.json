@@ -6,7 +6,7 @@
   "author": "kingaspx",
   "license": "MIT",
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.4.0",
+    "@wppconnect-team/wppconnect": "^1.5.0",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -19,7 +19,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "multer": "^1.4.2",
-    "socket.io": "^4.0.2",
+    "socket.io": "^4.1.2",
     "swagger-ui-express": "^4.1.6"
   },
   "scripts": {
@@ -38,6 +38,6 @@
     "nodemon": "^2.0.7",
     "rimraf": "^3.0.2",
     "shx": "^0.3.3",
-    "swagger-ui-dist": "^3.48.0"
+    "swagger-ui-dist": "^3.49.0"
   }
 }

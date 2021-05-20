@@ -68,8 +68,8 @@ export async function callWebHook(client, event, data) {
         try {
             api.post(client.webhook, Object.assign({event: event, session: client.session}, data))
                 .then(() => {
-                    if (config.webhook.readMessage)
-                        client.sendSeen(data.chatId || data.id.user + this.whatsPrefix);
+                    if (event == "onmessage" && config.webhook.readMessage)
+                        client.sendSeen(data.chatId || data.id.id || data.id._serialized);
                 })
                 .catch((e) => {
                     Logger.error(e);
@@ -126,7 +126,7 @@ async function sendUnread(client) {
 
 async function archive(client) {
     async function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time * 1000));
+        return new Promise((resolve) => setTimeout(resolve, time * 100));
     }
 
     Logger.info(`${client.session} : Inicio arquivando chats`);
@@ -135,7 +135,7 @@ async function archive(client) {
         let chats = await client.getAllChats();
 
         for (var i = 0; i < chats.length; i++) {
-            let date = new Date(chats[i].t * 100);
+            let date = new Date(chats[i].t * 1000);
 
             if (DaysBetween(date) > config.archive.daysToArchive) {
                 await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);

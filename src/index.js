@@ -1,3 +1,4 @@
+import {config as env} from "dotenv";
 import Logger from "./util/logger";
 import {startAllSessions} from "./util/functions";
 import cors from "cors";
@@ -9,7 +10,7 @@ import path from "path";
 import fs from 'fs';
 import swaggerUi from 'swagger-ui-express';
 import {config} from './util/sessionUtil';
-
+env();
 const __dirname = path.resolve(path.dirname(''));
 const app = express();
 
