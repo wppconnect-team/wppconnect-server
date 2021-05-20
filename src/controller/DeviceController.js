@@ -4,6 +4,7 @@ import {download} from "./SessionController";
 import {contactToArray} from "../util/functions";
 import Logger from "../util/logger";
 import {config} from "../util/sessionUtil";
+import mime from "mime-types";
 import path from "path";
 
 export async function setProfileName(req, res) {
