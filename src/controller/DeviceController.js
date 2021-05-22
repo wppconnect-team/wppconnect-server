@@ -364,20 +364,13 @@ export async function pinChat(req, res) {
 }
 
 export async function setProfilePic(req, res) {
-    const {phone, file, isGroup = false} = req.body;
 
     if (!req.file)
         return res.status(400).json({status: "Error", message: "file parameter is required !"});
 
-
     try {
-        for (const contato of contactToArray(phone)) {
-            if (isGroup) {
-                await req.client.setProfilePic(req.file.path, `${contato}@g.us`);
-            } else {
-                await req.client.setProfilePic(req.file.path);
-            }
-        }
+        
+        await req.client.setProfilePic(req.file.path);
 
         unlink(req.file.path, (err) => {if (err) throw err;});
 
@@ -385,6 +378,27 @@ export async function setProfilePic(req, res) {
     } catch (e) {
         Logger.error(e);
         return res.status(400).json({status: "Success", message: "Erro ao alterar foto de perfil"});
+    }
+}
+
+export async function setGroupProfilePic(req, res) {
+    const {phone} = req.body;
+
+    if (!req.file)
+        return res.status(400).json({status: "Error", message: "file parameter is required !"});
+
+    try {
+        
+        for (const contato of contactToArray(phone, true)) {
+            await req.client.setProfilePic(req.file.path, contato);
+        }
+
+        unlink(req.file.path, (err) => {if (err) throw err;});
+
+        return res.status(200).json({status: "Success", message: "Foto de perfil do grupo alterada com sucesso"});
+    } catch (e) {
+        Logger.error(e);
+        return res.status(400).json({status: "Success", message: "Erro ao alterar foto do grupo"});
     }
 }
 
