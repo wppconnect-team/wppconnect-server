@@ -60,6 +60,7 @@ routes.post("/api/:session/group-description", verifyToken, statusConnection, Gr
 routes.post("/api/:session/group-property", verifyToken, statusConnection, GroupController.setGroupProperty);
 routes.post("/api/:session/group-subject", verifyToken, statusConnection, GroupController.setGroupSubject);
 routes.post("/api/:session/messages-admins-only", verifyToken, statusConnection, GroupController.setMessagesAdminsOnly);
+routes.post("/api/:session/group-pic", upload.single("file"), verifyToken, statusConnection, DeviceController.setGroupProfilePic);
 
 
 //Chat Metthods
