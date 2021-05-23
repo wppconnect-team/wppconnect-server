@@ -134,7 +134,7 @@ export async function removeParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.removeParticipant({grupo}, contactToArray(phone));
+            response = await req.client.removeParticipant(`${grupo}`, contactToArray(phone));
             arrayGrupos.push(response);
         }
 
