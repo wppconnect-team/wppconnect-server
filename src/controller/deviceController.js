@@ -1,18 +1,19 @@
 import fs from "fs";
-import {unlink} from 'fs';
-import {download} from "./SessionController";
+import {promisify} from "util";
+import {download} from "./sessionController";
 import {contactToArray} from "../util/functions";
 import Logger from "../util/logger";
 import {config} from "../util/sessionUtil";
 import mime from "mime-types";
-import path from "path";
+
+const unlinkAsync = promisify(fs.unlink);
 
 export async function setProfileName(req, res) {
     const session = req.session;
     const {name} = req.body;
 
     if (!name)
-        return res.status(401).send({message: "Parameter name is required !"});
+        return res.status(401).send({message: "Parameter name is required!"});
 
     try {
 
@@ -42,7 +43,7 @@ export async function showAllContacts(req, res) {
     } catch (error) {
         Logger.error(error);
         res.status(401).json({
-            response: "Erro ao buscar os contatos.",
+            response: "Error fetching contacts",
             session: session,
         });
     }
@@ -60,7 +61,7 @@ export async function getAllGroups(req, res) {
         Logger.error(e);
         res.status(401).json({
             status: "Error",
-            message: "Erro ao buscar os grupos.",
+            message: "Error fetching groups",
             session: session,
         });
     }
@@ -71,10 +72,10 @@ export async function getAllChats(req, res) {
 
     try {
         const response = await req.client.getAllChats();
-        return res.status(200).json({status: "success", response: response});
+        return res.status(200).json({status: "Success", response: response});
     } catch (e) {
         Logger.error(e);
-        return res.status(401).json({status: "error", response: "Error on get all chats"});
+        return res.status(401).json({status: "Error", response: "Error on get all chats"});
     }
 }
 
@@ -159,22 +160,20 @@ export async function changePrivacyGroup(req, res) {
             await req.client.setMessagesAdminsOnly(`${contato}@g.us`, status === "true");
         }
 
-        return res.status(200).json("Privacidade do grupo alterada com sucesso");
+        return res.status(200).json({status: "Success", message: "Group privacy changed successfully"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({"messages": "Erro ao alterar privacidade do grupo"});
+        return res.status(400).json({status: "Error", message: "Error changing group privacy"});
     }
 }
-
-//
 
 export async function getBatteryLevel(req, res) {
     try {
         let response = await req.client.getBatteryLevel();
-        return res.status(200).json({status: "Success", "batterylevel": response});
+        return res.status(200).json({status: "Success", batterylevel: response});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Erro ao recuperar status da bateria"});
+        return res.status(400).json({status: "Error retrieving battery status"});
     }
 }
 
@@ -191,7 +190,7 @@ export async function getHostDevice(req, res) {
         });
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao recuperar dados do telefone"});
+        return res.status(400).json({status: "Error", message: "Error retrieving phone data"});
     }
 }
 
@@ -207,7 +206,7 @@ export async function getBlockList(req, res) {
         return res.status(200).json({status: "Success", response: blocked});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao recuperar lista de contatos bloqueados"});
+        return res.status(400).json({status: "Error", message: "Error retrieving blocked contact list"});
     }
 }
 
@@ -236,10 +235,10 @@ export async function clearChat(req, res) {
         } else {
             await req.client.clearChat(`${phone}@c.us`);
         }
-        return res.status(200).json({status: "Success", message: "Conversa limpa com sucesso"});
+        return res.status(200).json({status: "Success", message: "Successfully cleared conversation"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao limpar conversa"});
+        return res.status(400).json({status: "Error", message: "Error clearing conversation"});
     }
 }
 
@@ -285,7 +284,7 @@ export async function reply(req, res) {
         });
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Success", message: "Erro ao responder mensagem"});
+        return res.status(400).json({status: "Success", message: "Error replying message"});
     }
 }
 
@@ -302,7 +301,7 @@ export async function forwardMessages(req, res) {
         });
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao encaminhar mensagem"});
+        return res.status(400).json({status: "Error", message: "Error forwarding message"});
     }
 }
 
@@ -364,20 +363,19 @@ export async function pinChat(req, res) {
 }
 
 export async function setProfilePic(req, res) {
-
     if (!req.file)
-        return res.status(400).json({status: "Error", message: "file parameter is required !"});
+        return res.status(400).json({status: "Error", message: "File parameter is required!"});
 
     try {
-        
-        await req.client.setProfilePic(req.file.path);
+        const {path: pathFile} = req.file;
 
-        unlink(req.file.path, (err) => {if (err) throw err;});
+        await req.client.setProfilePic(pathFile);
+        await unlinkAsync(pathFile);
 
-        return res.status(200).json({status: "Success", message: "Foto de perfil alterada com sucesso"});
+        return res.status(200).json({status: "Success", message: "Profile photo successfully changed"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Success", message: "Erro ao alterar foto de perfil"});
+        return res.status(400).json({status: "Error", message: "Error changing profile photo"});
     }
 }
 
@@ -385,20 +383,22 @@ export async function setGroupProfilePic(req, res) {
     const {phone} = req.body;
 
     if (!req.file)
-        return res.status(400).json({status: "Error", message: "file parameter is required !"});
+        return res.status(400).json({status: "Error", message: "File parameter is required!"});
 
     try {
-        
+        const {path: pathFile} = req.file;
+        await unlinkAsync(pathFile);
+
         for (const contato of contactToArray(phone, true)) {
-            await req.client.setProfilePic(req.file.path, contato);
+            await req.client.setProfilePic(pathFile, contato);
         }
 
-        unlink(req.file.path, (err) => {if (err) throw err;});
+        await unlinkAsync(pathFile);
 
-        return res.status(200).json({status: "Success", message: "Foto de perfil do grupo alterada com sucesso"});
+        return res.status(200).json({status: "Success", message: "Group profile photo successfully changed"});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Success", message: "Erro ao alterar foto do grupo"});
+        return res.status(400).json({status: "Success", message: "Error changing group photo"});
     }
 }
 

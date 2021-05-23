@@ -1,13 +1,15 @@
 import {Router} from "express";
-import {encryptSession} from "../controller/EncryptController";
-import * as MessageController from "../controller/MessageController";
-import * as GroupController from "../controller/GroupController";
-import * as DeviceController from "../controller/DeviceController";
-import * as SessionController from "../controller/SessionController";
+import {encryptSession} from "../controller/encryptController";
+import * as MessageController from "../controller/messageController";
+import * as GroupController from "../controller/groupController";
+import * as DeviceController from "../controller/deviceController";
+import * as SessionController from "../controller/sessionController";
 import verifyToken from "../middleware/auth";
 import statusConnection from "../middleware/statusConnection";
 import multer from "multer";
 import uploadConfig from "../config/upload";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "../swagger.json";
 
 const upload = multer(uploadConfig);
 const routes = new Router();
@@ -62,7 +64,6 @@ routes.post("/api/:session/group-subject", verifyToken, statusConnection, GroupC
 routes.post("/api/:session/messages-admins-only", verifyToken, statusConnection, GroupController.setMessagesAdminsOnly);
 routes.post("/api/:session/group-pic", upload.single("file"), verifyToken, statusConnection, DeviceController.setGroupProfilePic);
 
-
 //Chat Metthods
 routes.post("/api/:session/archive-chat", verifyToken, statusConnection, DeviceController.archiveChat);
 routes.post("/api/:session/clear-chat", verifyToken, statusConnection, DeviceController.clearChat);
@@ -98,11 +99,9 @@ routes.get("/api/:session/profile/:phone", verifyToken, statusConnection, Device
 routes.get("/api/:session/profile-pic/:phone", verifyToken, statusConnection, DeviceController.getProfilePicFromServer);
 routes.get("/api/:session/profile-status/:phone", verifyToken, statusConnection, DeviceController.getStatus);
 
-// Blocklist Methods
 routes.post("/api/:session/block-contact", verifyToken, statusConnection, DeviceController.blockContact);
 routes.post("/api/:session/unblock-contact", verifyToken, statusConnection, DeviceController.unblockContact);
 routes.get("/api/:session/blocklist", verifyToken, statusConnection, DeviceController.getBlockList);
-routes.get("/api/:session/show-all-contacts", verifyToken, statusConnection, DeviceController.showAllContacts);
 routes.get("/api/:session/get-battery-level", verifyToken, statusConnection, DeviceController.getBatteryLevel);
 routes.get("/api/:session/host-device", verifyToken, statusConnection, DeviceController.getHostDevice);
 routes.post("/api/:session/change-privacy-group", verifyToken, statusConnection, DeviceController.changePrivacyGroup);
@@ -115,5 +114,7 @@ routes.post("/api/:session/profile-pic", upload.single("file"), verifyToken, sta
 routes.post("/api/:session/profile-status", verifyToken, statusConnection, DeviceController.setProfileStatus);
 routes.post("/api/:session/change-username", verifyToken, statusConnection, DeviceController.setProfileName);
 
+routes.use('/api-docs', swaggerUi.serve);
+routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 export default routes;

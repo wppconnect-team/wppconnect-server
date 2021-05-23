@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
     const {session} = req.params;
     const {authorization: token} = req.headers;
     if (!session)
-        return res.status(401).send({message: 'Sessão não informada.'});
+        return res.status(401).send({message: 'Session not informed'});
 
     try {
         let tokenDecrypt = '';
@@ -26,7 +26,7 @@ const verifyToken = (req, res, next) => {
                 tokenDecrypt = token.split(" ")[1].replace(/_/g, '/').replace(/-/g, '+')
             } catch (e) {
                 Logger.error(e);
-                return res.status(401).json({error: "Verifique se a Session e o Token estão corretos.", message: error})
+                return res.status(401).json({error: "Check that the Session and Token are correct", message: error})
             }
         }
 
@@ -37,12 +37,12 @@ const verifyToken = (req, res, next) => {
                 req.client = clientsArray[req.session];
                 next();
             } else {
-                return res.status(401).json({error: "Verifique se a Session e o Token estão corretos."})
+                return res.status(401).json({error: "Check that the Session and Token are correct"})
             }
         });
     } catch (error) {
-        Logger.error(e);
-        return res.status(401).json({error: "Verifique se a Session e o Token estão corretos.", message: error})
+        Logger.error(error);
+        return res.status(401).json({error: "Check that the Session and Token are correct.", message: error})
     }
 }
 

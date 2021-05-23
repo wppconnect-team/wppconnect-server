@@ -1,6 +1,9 @@
 import api from "axios";
 import Logger from "./logger"
 import {config} from "./sessionUtil"
+import path from "path";
+import fs from "fs";
+
 export function contactToArray(number, isGroup) {
     let localArr = [];
     if (Array.isArray(number)) {
@@ -64,11 +67,11 @@ export function groupNameToArray(group) {
 export async function callWebHook(client, event, data) {
     if (client.webhook) {
         if (config.webhook.autoDownload)
-            await AtuoDonwload(client, data);
+            await autoDownload(client, data);
         try {
             api.post(client.webhook, Object.assign({event: event, session: client.session}, data))
                 .then(() => {
-                    if (event == "onmessage" && config.webhook.readMessage)
+                    if (event === "onmessage" && config.webhook.readMessage)
                         client.sendSeen(data.chatId || data.id.id || data.id._serialized);
                 })
                 .catch((e) => {
@@ -80,9 +83,9 @@ export async function callWebHook(client, event, data) {
     }
 }
 
-async function AtuoDonwload(client, message) {
+async function autoDownload(client, message) {
     if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
-        var buffer = await client.decryptFile(message);
+        let buffer = await client.decryptFile(message);
         message.body = await buffer.toString('base64');
     }
 }
@@ -97,22 +100,21 @@ export async function startAllSessions() {
 }
 
 export async function startHelper(client) {
-
     if (config.webhook.allUnreadOnStart)
-        sendUnread(client);
+        await sendUnread(client);
 
     if (config.archive.enable)
-        archive(client);
+        await archive(client);
 }
 
 async function sendUnread(client) {
     Logger.info(`${client.session} : Inicio enviar mensagens não lidas`);
 
     try {
-        var chats = await client.getUnreadMessages(false, false, true);
+        const chats = await client.getUnreadMessages(false, false, true);
 
-        for (var i = 0; i < chats.length; i++)
-            for (var j = 0; j < chats[i].messages.length; j++) {
+        for (let i = 0; i < chats.length; i++)
+            for (let j = 0; j < chats[i].messages.length; j++) {
                 callWebHook(client, 'unreadmessages', chats[i].messages[j]);
             }
 
@@ -121,7 +123,7 @@ async function sendUnread(client) {
         Logger.error(ex);
     }
 
-    var m = await client.getUnreadMessages(false, false, true);
+    const m = await client.getUnreadMessages(false, false, true);
 }
 
 async function archive(client) {
@@ -134,7 +136,7 @@ async function archive(client) {
     try {
         let chats = await client.getAllChats();
 
-        for (var i = 0; i < chats.length; i++) {
+        for (let i = 0; i < chats.length; i++) {
             let date = new Date(chats[i].t * 1000);
 
             if (DaysBetween(date) > config.archive.daysToArchive) {
@@ -149,14 +151,26 @@ async function archive(client) {
 }
 
 function DaysBetween(StartDate) {
-    let EndDate = new Date();
+    let endDate = new Date();
     // The number of milliseconds in all UTC days (no DST)
     const oneDay = 1000 * 60 * 60 * 24;
 
     // A day in UTC always lasts 24 hours (unlike in other time formats)
-    const start = Date.UTC(EndDate.getFullYear(), EndDate.getMonth(), EndDate.getDate());
+    const start = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
     const end = Date.UTC(StartDate.getFullYear(), StartDate.getMonth(), StartDate.getDate());
 
     // so it's safe to divide by 24 hours
     return (start - end) / oneDay;
+}
+
+export function createFolders() {
+    let dirFiles = path.resolve(__dirname, "..", "..", "WhatsAppImages");
+    if (!fs.existsSync(dirFiles)) {
+        fs.mkdirSync(dirFiles);
+    }
+
+    let dirUpload = path.resolve(__dirname, "..", "..", "uploads");
+    if (!fs.existsSync(dirUpload)) {
+        fs.mkdirSync(dirUpload);
+    }
 }

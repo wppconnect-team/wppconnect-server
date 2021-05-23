@@ -1,11 +1,12 @@
 import {clientsArray, config} from "../util/sessionUtil";
 import {callWebHook} from "../util/functions";
-import {opendata} from "../util/createSessionUtil";
+import CreateSessionUtil from "../util/createSessionUtil";
 import getAllTokens from "../util/getAllTokens";
 import Logger from "../util/logger";
-import api from "axios";
 import fs from "fs";
 import mime from "mime-types";
+
+const SessionUtil = new CreateSessionUtil();
 
 async function downloadFileFunction(message, client) {
     try {
@@ -87,22 +88,22 @@ export async function startAllSessions(req, res) {
     if (tokenDecrypt !== config.secretKey) {
         return res.status(400).json({
             response: false,
-            message: "O token informado está incorreto."
+            message: "The token is incorrect"
         });
     }
 
     allSessions.map(async (session) => {
-        await opendata(req, session);
+        await SessionUtil.opendata(req, session);
     });
 
-    return await res.status(201).json({status: "Success", message: "Iniciando todas as sessões"});
+    return await res.status(201).json({status: "Success", message: "Starting all sessions"});
 }
 
 export async function startSession(req, res) {
     const session = req.session;
 
     await getSessionState(req, res);
-    await opendata(req, session);
+    await SessionUtil.opendata(req, session);
 }
 
 export async function closeSession(req, res) {
@@ -114,9 +115,9 @@ export async function closeSession(req, res) {
         req.io.emit("whatsapp-status", false);
         callWebHook(req.client, "closesession", {"message": `Session: ${session} disconnected`, connected: false});
 
-        return await res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
+        return await res.status(200).json({status: true, message: "Session successfully closed"});
     } catch (error) {
-        return await res.status(400).json({status: false, message: "Error ao fechar sessão", error});
+        return await res.status(400).json({status: false, message: "Error closing session", error});
     }
 
 }
@@ -129,14 +130,13 @@ export async function logOutSession(req, res) {
         req.io.emit("whatsapp-status", false);
         callWebHook(req.client, "logoutsession", {"message": `Session: ${session} logged out`, connected: false});
 
-        return await res.status(200).json({status: true, message: "Sessão Fechada com sucesso"});
+        return await res.status(200).json({status: true, message: "Session successfully closed"});
     } catch (error) {
-        return await res.status(400).json({status: false, message: "Error ao fechar sessão", error});
+        return await res.status(400).json({status: false, message: "Error closing session", error});
     }
 }
 
 export async function checkConnectionSession(req, res) {
-    const session = req.session;
     try {
         await req.client.isConnected();
 
@@ -152,12 +152,10 @@ export async function showAllSessions(req, res) {
         return client.session;
     });
 
-    console.log(allSessions);
     return res.status(200).json(allSessions);
 }
 
 export async function downloadMediaByMessage(req, res) {
-    const session = req.session;
     const {messageId} = req.body;
 
     let result = "";
@@ -174,7 +172,6 @@ export async function downloadMediaByMessage(req, res) {
 }
 
 export async function getMediaByMessage(req, res) {
-    const session = req.session;
     const client = req.client;
     const {messageId} = req.params;
 
@@ -185,14 +182,14 @@ export async function getMediaByMessage(req, res) {
             return res.status(400).json(
                 {
                     response: false,
-                    message: "Mensagem não encontrada !"
+                    message: "Message not found"
                 });
 
         if (!(message['mimetype'] || message.isMedia || message.isMMS))
             return res.status(400).json(
                 {
                     response: false,
-                    message: "Mensagem não contem midia !"
+                    message: "Message does not contain media"
                 });
 
 
@@ -203,16 +200,12 @@ export async function getMediaByMessage(req, res) {
         Logger.error(ex);
         return res.status(400).json({
             response: false,
-            message: "A sessão não está ativa."
+            message: "The session is not active"
         });
     }
-
-
 }
 
 export async function getSessionState(req, res) {
-    const session = req.session;
-
     try {
         const client = req.client;
 
@@ -224,16 +217,14 @@ export async function getSessionState(req, res) {
         Logger.error(ex);
         return res.status(400).json({
             response: false,
-            message: "A sessão não está ativa."
+            message: "The session is not active"
         });
     }
-
-
 }
 
 export async function getQrCode(req, res) {
     try {
-        var img = Buffer.from(req.client.qrcode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
+        const img = Buffer.from(req.client.qrcode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
 
         res.writeHead(200, {
             'Content-Type': 'image/png',
@@ -244,7 +235,7 @@ export async function getQrCode(req, res) {
         Logger.error(ex);
         return res.status(400).json({
             response: false,
-            message: "Error ao recuperar QRCode !"
+            message: "Error retrieving QRCode"
         });
     }
 }
@@ -257,7 +248,7 @@ export async function killServiceWorker(req, res) {
         Logger.error(ex);
         return res.status(400).json({
             response: false,
-            message: "A sessão não está ativa."
+            message: "The session is not active"
         });
     }
 
@@ -271,7 +262,7 @@ export async function restartService(req, res) {
         Logger.error(ex);
         return res.status(400).json({
             response: false,
-            message: "A sessão não está ativa."
+            message: "The session is not active"
         });
     }
 }
@@ -285,22 +276,18 @@ export async function subscribePresence(req, res) {
             if (isGroup) {
                 const groups = await req.client.getAllGroups(false);
                 contacts = groups.map((p) => p.id._serialized);
-            }
-
-            else {
+            } else {
                 const chats = await req.client.getAllContacts();
                 contacts = chats.map((c) => c.id._serialized);
             }
             await req.client.subscribePresence(contacts);
-        }
-        else
+        } else
             for (const contato of contactToArray(phone, isGroup)) {
                 await req.client.subscribePresence(contato);
             }
 
-        return await res.status(200).json({status: true, message: "Subscribe presence executed !"});
+        return await res.status(200).json({status: true, message: "Subscribe presence executed"});
     } catch (error) {
         return await res.status(400).json({status: false, message: "Error on subscribe presence", error});
     }
-
 }
