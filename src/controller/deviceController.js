@@ -91,8 +91,14 @@ export async function getAllChatsWithMessages(req, res) {
 
 export async function getAllMessagesInChat(req, res) {
     try {
-        const {phone, includeMe = true, includeNotifications = false} = req.params;
-        const response = await req.client.getAllMessagesInChat(`${phone}@c.us`, includeMe, includeNotifications);
+        let {phone} = req.params;
+        const {isGroup = false, includeMe = true, includeNotifications = false} = req.query;
+
+        let response;
+        for (const contato of contactToArray(phone)) {
+            response = await req.client.getAllMessagesInChat(contato, includeMe, includeNotifications);
+        }
+
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
         Logger.error(e);
