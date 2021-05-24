@@ -69,7 +69,7 @@ export async function callWebHook(client, event, data) {
             api.post(client.webhook, Object.assign({event: event, session: client.session}, data))
                 .then(() => {
                     if (event == "onmessage" && config.webhook.readMessage)
-                        client.sendSeen(data.chatId || data.id.id || data.id._serialized);
+                        client.sendSeen(data.chatId._serialized || data.from || data.chatId);
                 })
                 .catch((e) => {
                     Logger.error(e);

@@ -180,17 +180,10 @@ export async function getBatteryLevel(req, res) {
 export async function getHostDevice(req, res) {
     try {
         const response = await req.client.getHostDevice();
-        return res.status(200).json({
-            "phone": response.id.user,
-            "connected": response.connected,
-            "plataform": response.plataform,
-            "locales": response.locales,
-            "batery": response.batery,
-            "pushname": response.pushname
-        });
+        return res.status(200).json({status: 'success', response: response});
     } catch (e) {
         Logger.error(e);
-        return res.status(400).json({status: "Error", message: "Erro ao recuperar dados do telefone"});
+        return res.status(400).json({status: "Error", message: "Error on get host device"});
     }
 }
 
