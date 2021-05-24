@@ -121,7 +121,8 @@ export async function getAllUnreadMessages(req, res) {
 }
 
 export async function getChatById(req, res) {
-    const {phone, isGroup = false} = req.params;
+    const {phone} = req.params;
+    const isGroup = req.originalUrl.includes('chat-group-by-id');
 
     try {
         let allMessages = {};
