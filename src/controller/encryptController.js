@@ -16,12 +16,10 @@ export async function encryptSession(req, res) {
         tokenDecrypt = secretkey;
     }
 
-    console.log(secureTokenEnv)
-
     if (tokenDecrypt !== secureTokenEnv) {
         return res.status(400).json({
             response: false,
-            message: 'A SECRET_KEY informada está incorreta.'
+            message: 'The SECRET_KEY is incorrect'
         })
     }
 

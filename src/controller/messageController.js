@@ -7,7 +7,7 @@ function returnError(res, session, error) {
     Logger.error(error);
     res.status(400).json({
         response: {
-            message: "Sua mensagem não foi enviada.",
+            message: "Message was not sent.",
             session: session,
             log: error
         },
@@ -17,7 +17,7 @@ function returnError(res, session, error) {
 function returnSucess(res, session, phone, data) {
     res.status(201).json({
         response: {
-            message: "Mensagem enviada com sucesso.",
+            message: "Message sent successfully",
             contact: phone,
             session: session,
             data: data
@@ -37,7 +37,7 @@ export async function sendMessage(req, res) {
         }
 
         if (!result)
-            throw new 'Erro ao enviar mensagem';
+            return res.status(400).json("Error sending message");
 
         req.io.emit("mensagem-enviada", {message: message, to: phone});
         returnSucess(res, session, phone, result);
@@ -61,7 +61,7 @@ export async function sendImage(req, res) {
     try {
 
         for (const contato of contactToArray(phone, isGroup)) {
-            await req.client.sendImage(`${contato}`, path, "image-api.jpg", caption);
+            await req.client.sendImage(contato, path, "image-api.jpg", caption);
         }
 
         returnSucess(res, session, phone);
@@ -75,7 +75,7 @@ export async function sendFile(req, res) {
     const {phone, isGroup = false} = req.body;
 
     if (!req.file) {
-        return res.status(400).json({status: "Error", message: "O envio do arquivo é obrigatório."});
+        return res.status(400).json({status: "Error", message: "Sending the file is mandatory"});
     }
 
     const {filename: file} = req.file;
@@ -99,7 +99,7 @@ export async function sendFile64(req, res) {
     const {base64, phone, filename = "arquivo", message, isGroup = false} = req.body;
 
     if (!base64)
-        return res.status(401).send({message: "O base64 do arquivo não foi informado."});
+        return res.status(401).send({message: "The base64 of the file was not informed"});
 
     try {
         for (const contato of contactToArray(phone, isGroup)) {
@@ -128,7 +128,6 @@ export async function sendVoice(req, res) {
 }
 
 export async function sendLinkPreview(req, res) {
-    const session = req.session;
     const {phone, url, caption, isGroup = false} = req.body;
 
     try {
@@ -146,7 +145,6 @@ export async function sendLinkPreview(req, res) {
 }
 
 export async function sendLocation(req, res) {
-    const session = req.session;
     const {phone, lat, lng, title, isGroup = false} = req.body;
 
     try {
@@ -164,7 +162,6 @@ export async function sendLocation(req, res) {
 }
 
 export async function sendStatusText(req, res) {
-    const session = req.session;
     const {message} = req.body;
 
     try {
@@ -188,7 +185,7 @@ export async function replyMessage(req, res) {
         }
 
         if (!result)
-            throw new 'Erro ao enviar mensagem';
+            return res.status(400).json("Error sending message");
 
         req.io.emit("mensagem-enviada", {message: message, to: phone});
         returnSucess(res, session, phone, result);
