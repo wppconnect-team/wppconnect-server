@@ -383,7 +383,6 @@ export async function setGroupProfilePic(req, res) {
 
     try {
         const {path: pathFile} = req.file;
-        await unlinkAsync(pathFile);
 
         for (const contato of contactToArray(phone, true)) {
             await req.client.setProfilePic(pathFile, contato);
