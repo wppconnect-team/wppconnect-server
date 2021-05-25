@@ -3,6 +3,7 @@ import Logger from "./logger"
 import {config} from "./sessionUtil"
 import path from "path";
 import fs from "fs";
+import {promisify} from "util";
 
 export function contactToArray(number, isGroup) {
     let localArr = [];
@@ -71,7 +72,8 @@ export async function callWebHook(client, event, data) {
         try {
             api.post(client.webhook, Object.assign({event: event, session: client.session}, data))
                 .then(() => {
-                    if (event == "onmessage" && config.webhook.readMessage)
+                    const events = ["unreadmessages", "onmessage"];
+                    if (events.includes(event) && config.webhook.readMessage)
                         client.sendSeen(data.chatId._serialized || data.from || data.chatId);
                 })
                 .catch((e) => {
@@ -111,7 +113,7 @@ async function sendUnread(client) {
     Logger.info(`${client.session} : Inicio enviar mensagens não lidas`);
 
     try {
-        const chats = await client.getUnreadMessages(false, false, true);
+        const chats = await client.getAllChatsWithMessages(true);
 
         for (let i = 0; i < chats.length; i++)
             for (let j = 0; j < chats[i].messages.length; j++) {
@@ -127,7 +129,7 @@ async function sendUnread(client) {
 
 async function archive(client) {
     async function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time * 100));
+        return new Promise((resolve) => setTimeout(resolve, time * 10));
     }
 
     Logger.info(`${client.session} : Inicio arquivando chats`);
@@ -163,6 +165,7 @@ function DaysBetween(StartDate) {
 }
 
 export function createFolders() {
+    const __dirname = path.resolve(path.dirname(''));
     let dirFiles = path.resolve(__dirname, "..", "..", "WhatsAppImages");
     if (!fs.existsSync(dirFiles)) {
         fs.mkdirSync(dirFiles);
@@ -173,3 +176,9 @@ export function createFolders() {
         fs.mkdirSync(dirUpload);
     }
 }
+
+export function strToBool(s) {
+    return (/^(true|1)$/i).test(s);
+}
+
+export let unlinkAsync = promisify(fs.unlink);

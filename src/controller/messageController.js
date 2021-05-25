@@ -1,5 +1,5 @@
 import {config} from "../util/sessionUtil";
-import {contactToArray} from "../util/functions";
+import {contactToArray, strToBool, unlinkAsync} from "../util/functions";
 import path from "path";
 import Logger from "../util/logger";
 
@@ -72,22 +72,19 @@ export async function sendImage(req, res) {
 
 export async function sendFile(req, res) {
     const session = req.session;
-    const {phone, isGroup = false} = req.body;
+    const {phone, filename = "file", message, isGroup = false} = req.body;
 
-    if (!req.file) {
+    if (!req.file)
         return res.status(400).json({status: "Error", message: "Sending the file is mandatory"});
-    }
 
-    const {filename: file} = req.file;
-    path.resolve(req.file.destination, "WhatsAppImages", file);
-
-    const caminho = `${config.host}:${config.port}/files/${file}`;
+    const {path: pathFile} = req.file;
 
     try {
-        for (const contato of contactToArray(phone, isGroup)) {
-            await req.client.sendFile(`${contato}`, caminho, "File", "");
+        for (const contato of contactToArray(phone, strToBool(isGroup))) {
+            await req.client.sendFile(`${contato}`, pathFile, filename, message);
         }
 
+        await unlinkAsync(pathFile);
         returnSucess(res, session, phone);
     } catch (error) {
         returnError(res, session, error);
@@ -96,7 +93,7 @@ export async function sendFile(req, res) {
 
 export async function sendFile64(req, res) {
     const session = req.session;
-    const {base64, phone, filename = "arquivo", message, isGroup = false} = req.body;
+    const {base64, phone, filename = "file", message, isGroup = false} = req.body;
 
     if (!base64)
         return res.status(401).send({message: "The base64 of the file was not informed"});

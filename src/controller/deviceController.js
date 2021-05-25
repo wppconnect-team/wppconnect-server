@@ -1,12 +1,11 @@
 import fs from "fs";
-import {promisify} from "util";
 import {download} from "./sessionController";
-import {contactToArray} from "../util/functions";
+import {contactToArray, unlinkAsync} from "../util/functions";
 import Logger from "../util/logger";
 import {config} from "../util/sessionUtil";
 import mime from "mime-types";
 
-const unlinkAsync = promisify(fs.unlink);
+
 
 export async function setProfileName(req, res) {
     const session = req.session;
@@ -193,7 +192,6 @@ export async function getHostDevice(req, res) {
         return res.status(400).json({status: "Error", message: "Erro ao recuperar dados do telefone"});
     }
 }
-
 
 export async function getBlockList(req, res) {
     let response = await req.client.getBlockList();
@@ -590,7 +588,6 @@ export async function checkNumberStatus(req, res) {
         return res.status(400).json({status: "error", message: "Error on check number status"});
     }
 }
-
 
 export async function getContact(req, res) {
     const {phone = true} = req.params;

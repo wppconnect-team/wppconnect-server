@@ -6,7 +6,7 @@ import Logger from "./logger"
 import fs from "fs";
 
 export default class CreateSessionUtil {
-    async createSessionUtil(req, clientsArray, session) {
+    async createSessionUtil(req, clientsArray, session, res) {
         try {
             let {webhook} = req.body;
             webhook = webhook === undefined ? config.webhook.url : webhook;
@@ -39,8 +39,8 @@ export default class CreateSessionUtil {
                     disableSpins: true,
                     tokenStore: myTokenStore,
                     autoClose: 0,
-                    catchQR: (base64Qr, asciiQR) => {
-                        this.exportQR(req, base64Qr, client);
+                    catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
+                        this.exportQR(req, base64Qr, urlCode, client, res);
                     },
                     statusFind: (statusFind) => {
                         if (statusFind === 'autocloseCalled') {
@@ -58,12 +58,12 @@ export default class CreateSessionUtil {
         }
     }
 
-    async opendata(req, session) {
-        await this.createSessionUtil(req, clientsArray, session);
+    async opendata(req, session, res) {
+        await this.createSessionUtil(req, clientsArray, session, res);
     }
 
-    exportQR(req, qrCode, client) {
-        Object.assign(client, {status: 'QRCODE', qrcode: qrCode});
+    exportQR(req, qrCode, urlCode, client, res) {
+        Object.assign(client, {status: 'QRCODE', qrcode: qrCode, urlcode: urlCode});
 
         qrCode = qrCode.replace('data:image/png;base64,', '');
         const imageBuffer = Buffer.from(qrCode, 'base64');
@@ -75,7 +75,10 @@ export default class CreateSessionUtil {
             session: client.session
         });
 
-        callWebHook(client, "qrcode", qrCode);
+        callWebHook(client, "qrcode", {qrcode: qrCode, urlcode: urlCode});
+        if (res && !res._headerSent)
+            res.status(200).json({status: "qrcode", qrcode: qrCode, urlcode: urlCode});
+
     }
 
     async start(req, client) {
@@ -85,7 +88,7 @@ export default class CreateSessionUtil {
 
             Logger.info(`Started Session: ${client.session}`);
             req.io.emit("session-logged", {status: true, session: client.session});
-            await startHelper(client);
+            startHelper(client);
         } catch (error) {
             Logger.error(error);
             req.io.emit("session-error", client.session);

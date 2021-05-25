@@ -101,16 +101,17 @@ export async function startAllSessions(req, res) {
 
 export async function startSession(req, res) {
     const session = req.session;
+    const {waitQrCode = false} = req.body;
 
     await getSessionState(req, res);
-    await SessionUtil.opendata(req, session);
+    await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
 
 export async function closeSession(req, res) {
     const session = req.session;
     try {
-        await req.client.close();
         clientsArray[session] = {status: null};
+        await req.client.close();
 
         req.io.emit("whatsapp-status", false);
         callWebHook(req.client, "closesession", {"message": `Session: ${session} disconnected`, connected: false});
@@ -207,11 +208,13 @@ export async function getMediaByMessage(req, res) {
 
 export async function getSessionState(req, res) {
     try {
+        const {waitQrCode = false} = req.body;
         const client = req.client;
 
-        if (client == null || client.status == null)
+        if ((client == null || client.status == null) && !waitQrCode)
             return res.status(200).json({status: 'CLOSED', qrcode: null});
-        return res.status(200).json({status: client.status, qrcode: client.qrcode});
+        else if (client != null)
+            return res.status(200).json({status: client.status, qrcode: client.qrcode, urlcode: client.urlcode});
 
     } catch (ex) {
         Logger.error(ex);
