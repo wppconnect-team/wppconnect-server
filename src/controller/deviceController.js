@@ -67,8 +67,6 @@ export async function getAllGroups(req, res) {
 }
 
 export async function getAllChats(req, res) {
-    const session = req.session;
-
     try {
         const response = await req.client.getAllChats();
         return res.status(200).json({status: "Success", response: response});
@@ -91,10 +89,10 @@ export async function getAllChatsWithMessages(req, res) {
 export async function getAllMessagesInChat(req, res) {
     try {
         let {phone} = req.params;
-        const {isGroup = false, includeMe = true, includeNotifications = false} = req.query;
+        const {isGroup = false, includeMe = true, includeNotifications = true} = req.query;
 
         let response;
-        for (const contato of contactToArray(phone)) {
+        for (const contato of contactToArray(phone, isGroup)) {
             response = await req.client.getAllMessagesInChat(contato, includeMe, includeNotifications);
         }
 
@@ -127,7 +125,7 @@ export async function getAllUnreadMessages(req, res) {
 
 export async function getChatById(req, res) {
     const {phone} = req.params;
-    const isGroup = req.originalUrl.includes('chat-group-by-id');
+    const {isGroup} = req.query;
 
     try {
         let allMessages = {};
@@ -477,7 +475,6 @@ export async function sendMentioned(req, res) {
     const session = req.session;
     const {phone, message, mentioned, isGroup = false} = req.body;
 
-
     try {
         let response;
         for (const contato of contactToArray(phone, isGroup)) {
@@ -508,7 +505,6 @@ export async function sendMute(req, res) {
 }
 
 export async function sendSeen(req, res) {
-    const session = req.session;
     const {phone, isGroup = false} = req.body;
 
 
