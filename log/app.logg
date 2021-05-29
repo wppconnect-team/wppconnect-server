@@ -1,0 +1,276 @@
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T00:59:47.084Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T00:59:54.726Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T00:59:54.909Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:00:00.684Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:00:01.644Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'split' of undefined",
+  stack: "TypeError: Cannot read property 'split' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:38)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:06:12.117Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'split' of undefined",
+  stack: "TypeError: Cannot read property 'split' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:38)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:06:22.954Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'split' of undefined",
+  stack: "TypeError: Cannot read property 'split' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:38)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:08:39.434Z'
+}
+{
+  level: 'error',
+  message: 'req.client.isConnected is not a function',
+  stack: 'TypeError: req.client.isConnected is not a function\n' +
+    '    at _callee$ (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/statusConnection.js:5:26)\n' +
+    '    at tryCatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:62:40)\n' +
+    '    at Generator.invoke [as _invoke] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:296:22)\n' +
+    '    at Generator.prototype.<computed> [as next] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:114:21)\n' +
+    '    at step (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:35:14\n' +
+    '    at new Promise (<anonymous>)\n' +
+    '    at new F (/home/kingasp/WPPConnect/wppconnect-server/node_modules/core-js/library/modules/_export.js:36:28)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:14:12\n' +
+    '    at statusConnection (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/statusConnection.js:56:21)',
+  timestamp: '2021-05-29T01:11:00.427Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:14:27.036Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:14:27.048Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:14:35.054Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'replace' of undefined",
+  stack: "TypeError: Cannot read property 'replace' of undefined\n" +
+    '    at verifyToken (/home/kingasp/WPPConnect/wppconnect-server/src/middleware/auth.js:26:32)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:137:13)\n' +
+    '    at Route.dispatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/route.js:112:3)\n' +
+    '    at Layer.handle [as handle_request] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/layer.js:95:5)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:281:22\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:354:14)\n' +
+    '    at param (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:365:14)\n' +
+    '    at Function.process_params (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:410:3)\n' +
+    '    at next (/home/kingasp/WPPConnect/wppconnect-server/node_modules/express/lib/router/index.js:275:10)',
+  timestamp: '2021-05-29T01:14:35.259Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'length' of undefined",
+  stack: "TypeError: Cannot read property 'length' of undefined\n" +
+    '    at _callee5$ (/home/kingasp/WPPConnect/wppconnect-server/src/util/functions.js:119:51)\n' +
+    '    at tryCatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:62:40)\n' +
+    '    at Generator.invoke [as _invoke] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:296:22)\n' +
+    '    at Generator.prototype.<computed> [as next] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:114:21)\n' +
+    '    at step (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:28:13\n' +
+    '    at runMicrotasks (<anonymous>)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:95:5)',
+  timestamp: '2021-05-29T02:12:07.497Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'length' of undefined",
+  stack: "TypeError: Cannot read property 'length' of undefined\n" +
+    '    at _callee5$ (/home/kingasp/WPPConnect/wppconnect-server/src/util/functions.js:119:51)\n' +
+    '    at tryCatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:62:40)\n' +
+    '    at Generator.invoke [as _invoke] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:296:22)\n' +
+    '    at Generator.prototype.<computed> [as next] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:114:21)\n' +
+    '    at step (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:28:13\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:95:5)',
+  timestamp: '2021-05-29T02:12:40.900Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'length' of undefined",
+  stack: "TypeError: Cannot read property 'length' of undefined\n" +
+    '    at _callee5$ (/home/kingasp/WPPConnect/wppconnect-server/src/util/functions.js:119:51)\n' +
+    '    at tryCatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:62:40)\n' +
+    '    at Generator.invoke [as _invoke] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:296:22)\n' +
+    '    at Generator.prototype.<computed> [as next] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:114:21)\n' +
+    '    at step (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:28:13\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:95:5)',
+  timestamp: '2021-05-29T02:17:40.591Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'length' of undefined",
+  stack: "TypeError: Cannot read property 'length' of undefined\n" +
+    '    at _callee5$ (/home/kingasp/WPPConnect/wppconnect-server/src/util/functions.js:119:51)\n' +
+    '    at tryCatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:62:40)\n' +
+    '    at Generator.invoke [as _invoke] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:296:22)\n' +
+    '    at Generator.prototype.<computed> [as next] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:114:21)\n' +
+    '    at step (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:28:13\n' +
+    '    at runMicrotasks (<anonymous>)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:95:5)',
+  timestamp: '2021-05-29T02:18:47.371Z'
+}
+{
+  level: 'error',
+  message: "Cannot read property 'length' of undefined",
+  stack: "TypeError: Cannot read property 'length' of undefined\n" +
+    '    at _callee5$ (/home/kingasp/WPPConnect/wppconnect-server/src/util/functions.js:119:51)\n' +
+    '    at tryCatch (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:62:40)\n' +
+    '    at Generator.invoke [as _invoke] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:296:22)\n' +
+    '    at Generator.prototype.<computed> [as next] (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/node_modules/regenerator-runtime/runtime.js:114:21)\n' +
+    '    at step (/home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)\n' +
+    '    at /home/kingasp/WPPConnect/wppconnect-server/node_modules/babel-runtime/helpers/asyncToGenerator.js:28:13\n' +
+    '    at runMicrotasks (<anonymous>)\n' +
+    '    at processTicksAndRejections (internal/process/task_queues.js:95:5)',
+  timestamp: '2021-05-29T02:19:10.286Z'
+}
