@@ -1,10 +1,10 @@
 {
   "name": "multi-client-whatsapp",
   "version": "1.0.0",
-  "description": "Projeto feito para autenticar a automomacao do WhatsappWeb com multi-clientes de forma dinamica. Backend feito em Nodejs(express, socketio), FrontEnd (html)",
+  "description": "Projeto feito para autenticar a automomacao do WhatsappWeb com multi-clientes de forma dinamica. Backend feito em Nodejs(express, socketio), FrontEnd (ReactJS)",
   "main": "index.js",
   "author": "kingaspx",
-  "license": "MIT",    
+  "license": "MIT",
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.5.2",
     "axios": "^0.21.1",

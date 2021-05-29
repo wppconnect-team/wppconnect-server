@@ -58,12 +58,11 @@ export async function createGroup(req, res) {
             });
         }
 
-        const grouped = _.groupBy(infoGroup, grupo => grupo.id);
         return res.status(200).json({
             status: "Success",
             message: "Group(s) created successfully",
             group: name,
-            groupInfo: grouped
+            groupInfo: infoGroup
         });
     } catch (e) {
         Logger.error(e);

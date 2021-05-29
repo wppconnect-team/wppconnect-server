@@ -1,6 +1,4 @@
-import {config} from "../util/sessionUtil";
 import {contactToArray, strToBool, unlinkAsync} from "../util/functions";
-import path from "path";
 import Logger from "../util/logger";
 
 function returnError(res, session, error) {
@@ -28,7 +26,6 @@ function returnSucess(res, session, phone, data) {
 export async function sendMessage(req, res) {
     const session = req.session;
     const {phone, message, isGroup = false} = req.body;
-
 
     try {
         let result;

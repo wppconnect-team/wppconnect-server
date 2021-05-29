@@ -5,8 +5,6 @@ import Logger from "../util/logger";
 import {config} from "../util/sessionUtil";
 import mime from "mime-types";
 
-
-
 export async function setProfileName(req, res) {
     const session = req.session;
     const {name} = req.body;
