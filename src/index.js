@@ -12,7 +12,7 @@ import boolParser from 'express-query-boolean';
 const __dirname = path.resolve(path.dirname(''));
 const app = express();
 
-const PORT = config.port;
+const PORT = process.env.PORT || config.port;
 
 const options = {
     cors: true,
