@@ -131,7 +131,7 @@ export async function sendLinkPreview(req, res) {
             response = await req.client.sendLinkPreview(`${contato}`, url, caption);
         }
 
-        return res.status(200).json({status: "Success", message: "Lind send"});
+        return res.status(200).json({status: "Success", message: "Link send"});
     } catch (error) {
         Logger.error(error);
         return res.status(400).json({status: "Error on send link", log: error});
