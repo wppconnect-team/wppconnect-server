@@ -136,8 +136,7 @@ async function archive(client) {
 
     try {
         let chats = await client.getAllChats();
-
-        if (chats)
+        if (chats.length > 0) {
             for (let i = 0; i < chats.length; i++) {
                 let date = new Date(chats[i].t * 1000);
 
@@ -146,6 +145,7 @@ async function archive(client) {
                     await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
                 }
             }
+        }
         Logger.info(`${client.session} : Fim arquivando chats`);
     } catch (ex) {
         Logger.error(ex);
