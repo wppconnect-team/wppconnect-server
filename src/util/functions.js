@@ -137,14 +137,15 @@ async function archive(client) {
     try {
         let chats = await client.getAllChats();
 
-        for (let i = 0; i < chats.length; i++) {
-            let date = new Date(chats[i].t * 1000);
+        if (chats)
+            for (let i = 0; i < chats.length; i++) {
+                let date = new Date(chats[i].t * 1000);
 
-            if (DaysBetween(date) > config.archive.daysToArchive) {
-                await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
-                await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
+                if (DaysBetween(date) > config.archive.daysToArchive) {
+                    await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
+                    await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
+                }
             }
-        }
         Logger.info(`${client.session} : Fim arquivando chats`);
     } catch (ex) {
         Logger.error(ex);
