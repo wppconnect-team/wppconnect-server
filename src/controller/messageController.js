@@ -48,20 +48,22 @@ export async function sendMessage(req, res) {
 
 export async function sendImage(req, res) {
     const session = req.session;
-    const {phone, caption, path, isGroup = false} = req.body;
+    const {phone, filename = "file", caption, path, isGroup = false} = req.body;
 
     if (!phone)
         return res.status(401).send({message: "Telefone não informado."});
 
-    if (!path)
+    if (!path && !req.file)
         return res.status(401).send({
-            message: "Informe o caminho da imagem. Exemplo: C:\\folder\\image.jpg."
+            message: "Sending the file is mandatory"
         });
+
+    const pathFile = path || req.file.path;
 
     try {
 
         for (const contato of contactToArray(phone, isGroup)) {
-            await req.client.sendImage(contato, path, "image-api.jpg", caption);
+            await req.client.sendImage(contato, pathFile, "image-api.jpg", caption);
         }
 
         returnSucess(res, session, phone);

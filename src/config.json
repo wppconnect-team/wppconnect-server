@@ -7,7 +7,7 @@
     "url": null,
     "autoDownload": true,
     "readMessage": true,
-    "allUnreadOnStart": true
+    "allUnreadOnStart": false
   },
   "archive": {
     "enable": true,

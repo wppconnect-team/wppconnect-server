@@ -17,7 +17,8 @@ export function contactToArray(number, isGroup) {
         }
     } else {
         let arrContacts = number.split(/\s*[,;]\s*/g);
-        for (const contact of arrContacts) {
+        for (let contact of arrContacts) {
+            contact = number.split('@')[0];
             if (contact !== "")
                 if (isGroup)
                     localArr.push(`${contact}@g.us`);

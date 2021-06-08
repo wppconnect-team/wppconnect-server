@@ -33,7 +33,7 @@ routes.post("/api/:session/subscribe-presence", verifyToken, SessionController.s
 
 //SendMessages
 routes.post("/api/:session/send-message", verifyToken, statusConnection, MessageController.sendMessage);
-routes.post("/api/:session/send-image", verifyToken, statusConnection, MessageController.sendImage);
+routes.post("/api/:session/send-image", upload.single("file"), verifyToken, statusConnection, MessageController.sendImage);
 routes.post("/api/:session/send-reply", verifyToken, statusConnection, MessageController.replyMessage);
 routes.post("/api/:session/send-file", upload.single("file"), verifyToken, statusConnection, MessageController.sendFile);
 routes.post("/api/:session/send-file-base64", verifyToken, statusConnection, MessageController.sendFile64);

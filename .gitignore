@@ -2,3 +2,14 @@
 /dist
 /node_modules
 /swagger-docs
+/.vs
+/bin
+/log
+/obj/Debug
+/tokens
+/uploads
+/WhatsAppImages
+/wppconnect-server.njsproj
+/wppconnect-server.njsproj.user
+*.sln
+/package-lock.json
