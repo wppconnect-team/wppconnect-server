@@ -5,8 +5,6 @@ import Logger from "../util/logger";
 import {config} from "../util/sessionUtil";
 import mime from "mime-types";
 
-
-
 export async function setProfileName(req, res) {
     const session = req.session;
     const {name} = req.body;
@@ -383,7 +381,6 @@ export async function setGroupProfilePic(req, res) {
 
     try {
         const {path: pathFile} = req.file;
-        await unlinkAsync(pathFile);
 
         for (const contato of contactToArray(phone, true)) {
             await req.client.setProfilePic(pathFile, contato);

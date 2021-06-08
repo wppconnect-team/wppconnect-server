@@ -148,12 +148,12 @@ export async function checkConnectionSession(req, res) {
 }
 
 export async function showAllSessions(req, res) {
-    const allSessions = await clientsArray.map((client) => {
-        console.log(client);
-        return client.session;
+    const arr = [];
+    Object.keys(clientsArray).forEach((item) => {
+        arr.push({session: item})
     });
 
-    return res.status(200).json(allSessions);
+    return res.status(200).json({response: arr});
 }
 
 export async function downloadMediaByMessage(req, res) {

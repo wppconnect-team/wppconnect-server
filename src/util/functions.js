@@ -137,13 +137,14 @@ async function archive(client) {
 
     try {
         let chats = await client.getAllChats();
+        if (chats.length > 0) {
+            for (let i = 0; i < chats.length; i++) {
+                let date = new Date(chats[i].t * 1000);
 
-        for (let i = 0; i < chats.length; i++) {
-            let date = new Date(chats[i].t * 1000);
-
-            if (DaysBetween(date) > config.archive.daysToArchive) {
-                await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
-                await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
+                if (DaysBetween(date) > config.archive.daysToArchive) {
+                    await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
+                    await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
+                }
             }
         }
         Logger.info(`${client.session} : Fim arquivando chats`);
@@ -166,7 +167,6 @@ function DaysBetween(StartDate) {
 }
 
 export function createFolders() {
-    const __dirname = path.resolve(path.dirname(''));
     let dirFiles = path.resolve(__dirname, "..", "..", "WhatsAppImages");
     if (!fs.existsSync(dirFiles)) {
         fs.mkdirSync(dirFiles);
