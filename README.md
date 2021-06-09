@@ -1,7 +1,7 @@
 # WPPConnect Team
 ## _WPPConnect Server_
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+[![Build](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml)
 
 Wppconnect Server is a ready-to-use API, just download, install, and start using, simple as that.
 
