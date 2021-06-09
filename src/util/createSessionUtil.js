@@ -40,7 +40,7 @@ export default class CreateSessionUtil {
                                 client.waPage.close();
                             }
                             Logger.info(statusFind + '\n\n')
-                        } catch { }
+                        } catch (error) { }
                     }
                 }));
 
