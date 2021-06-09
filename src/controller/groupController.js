@@ -1,9 +1,8 @@
 import _ from "lodash";
 import {contactToArray, groupNameToArray, groupToArray} from "../util/functions";
-import Logger from "../util/logger";
 
-function returnError(res, session, error, message) {
-    Logger.error(error);
+function returnError(req, res, session, error, message) {
+    req.logger.error(error);
     res.status(400).json({
         response: {
             message: message,
@@ -35,7 +34,7 @@ export async function joinGroupByCode(req, res) {
 
         returnSucess(res, session, inviteCode, "The informed contact(s) entered the group successfully");
     } catch (error) {
-        returnError(res, session, error, "The informed contact(s) did not join the group successfully");
+        returnError(req, res, session, error, "The informed contact(s) did not join the group successfully");
     }
 }
 
@@ -65,7 +64,7 @@ export async function createGroup(req, res) {
             groupInfo: infoGroup
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error creating group(s)");
     }
 }
@@ -80,7 +79,7 @@ export async function leaveGroup(req, res) {
 
         return res.status(200).json({status: "Success", messages: "Você saiu do grupo com sucesso", group: groupId});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Erro ao sair do(s) grupo(s)");
     }
 }
@@ -96,7 +95,7 @@ export async function getGroupMembers(req, res) {
         }
         return res.status(200).json({status: "Success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on get group members");
     }
 
@@ -121,7 +120,7 @@ export async function addParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error adding participant(s)");
     }
 }
@@ -145,7 +144,7 @@ export async function removeParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error removing participant(s)");
     }
 }
@@ -169,7 +168,7 @@ export async function promoteParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error promoting participant(s)");
     }
 }
@@ -193,7 +192,7 @@ export async function demoteParticipant(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error revoking participant's admin(s)");
     }
 }
@@ -221,7 +220,7 @@ export async function getGroupAdmins(req, res) {
             groups: arrayGrupos
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error retrieving group admin(s)");
     }
 }
@@ -241,7 +240,7 @@ export async function getGroupInviteLink(req, res) {
             response: response
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on get group invite link");
     }
 }
@@ -252,7 +251,7 @@ export async function getAllBroadcastList(req, res) {
         let response = await req.client.getAllBroadcastList();
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on get all broad cast list");
     }
 }
@@ -263,7 +262,7 @@ export async function getGroupInfoFromInviteLink(req, res) {
         let response = await req.client.getGroupInfoFromInviteLink(invitecode);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on get group info from invite link");
     }
 }
@@ -279,7 +278,7 @@ export async function getGroupMembersIds(req, res) {
         return res.status(200).json({status: "success", response: response});
 
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on get group members ids");
     }
 }
@@ -296,7 +295,7 @@ export async function setGroupDescription(req, res) {
 
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on set group description");
     }
 }
@@ -313,7 +312,7 @@ export async function setGroupProperty(req, res) {
 
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on set group property");
     }
 }
@@ -330,7 +329,7 @@ export async function setGroupSubject(req, res) {
 
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on set group subject");
     }
 }
@@ -347,7 +346,7 @@ export async function setMessagesAdminsOnly(req, res) {
 
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json("Error on set messages admins only");
     }
 }

@@ -1,8 +1,7 @@
 import {contactToArray, strToBool, unlinkAsync} from "../util/functions";
-import Logger from "../util/logger";
 
 function returnError(res, session, error) {
-    Logger.error(error);
+    req.logger.error(error);
     res.status(400).json({
         response: {
             message: "Message was not sent.",
@@ -135,7 +134,7 @@ export async function sendLinkPreview(req, res) {
 
         return res.status(200).json({status: "Success", message: "Link send"});
     } catch (error) {
-        Logger.error(error);
+        req.logger.error(error);
         return res.status(400).json({status: "Error on send link", log: error});
     }
 }
@@ -152,7 +151,7 @@ export async function sendLocation(req, res) {
 
         return res.status(200).json({status: "Success", message: "Location sent"});
     } catch (error) {
-        Logger.error(error);
+        req.logger.error(error);
         return res.status(400).json({status: "Error on send location"});
     }
 }
@@ -164,7 +163,7 @@ export async function sendStatusText(req, res) {
         await req.client.sendText("status@broadcast", message);
         return res.status(200).json({status: "Success", message: "Location sent."});
     } catch (error) {
-        Logger.error(error);
+        req.logger.error(error);
         return res.status(400).json({status: "Error on send location"});
     }
 }

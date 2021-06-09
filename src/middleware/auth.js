@@ -1,13 +1,12 @@
 import bcrypt from 'bcrypt';
-import {clientsArray, config} from "../util/sessionUtil";
-import Logger from "../util/logger";
+import {clientsArray} from "../util/sessionUtil";
 
 function formatSession(session) {
     return session.split(":")[0];
 }
 
 const verifyToken = (req, res, next) => {
-    const secureToken = config.secretKey;
+    const secureToken = req.serverOptions.secretKey;
 
     const {session} = req.params;
     const {authorization: token} = req.headers;
@@ -25,7 +24,7 @@ const verifyToken = (req, res, next) => {
             try {
                 if (token.split(" ").length > 0) tokenDecrypt = token.split(" ")[1].replace(/_/g, '/').replace(/-/g, '+')
             } catch (e) {
-                Logger.error(e);
+                req.logger.error(e);
                 return res.status(401).json({error: "Check that the Session and Token are correct", message: error})
             }
         }
@@ -41,7 +40,7 @@ const verifyToken = (req, res, next) => {
             }
         });
     } catch (error) {
-        Logger.error(error);
+        req.logger.error(error);
         return res.status(401).json({error: "Check that the Session and Token are correct.", message: error})
     }
 }
