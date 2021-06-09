@@ -27,29 +27,22 @@ export default class CreateSessionUtil {
             });
 
             let wppClient = await create(
-                {
+                Object.assign({}, config.createOptions, {
                     session: session,
-                    headless: true,
-                    devtools: false,
-                    useChrome: true,
-                    debug: false,
-                    logQR: true,
-                    browserArgs: chromiumArgs,
-                    refreshQR: 15000,
-                    disableSpins: true,
-                    tokenStore: myTokenStore,
-                    autoClose: 0,
                     catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
                         this.exportQR(req, base64Qr, urlCode, client, res);
                     },
                     statusFind: (statusFind) => {
-                        if (statusFind === 'autocloseCalled') {
-                            client.status = 'CLOSED';
-                            client.qrcode = null;
-                        }
-                        Logger.info(statusFind + '\n\n')
+                        try {
+                            if (statusFind === 'autocloseCalled' || statusFind === 'desconnectedMobile') {
+                                client.status = 'CLOSED';
+                                client.qrcode = null;
+                                client.waPage.close();
+                            }
+                            Logger.info(statusFind + '\n\n')
+                        } catch { }
                     }
-                });
+                }));
 
             client = clientsArray[session] = Object.assign(wppClient, client);
             await this.start(req, client);
@@ -161,4 +154,5 @@ export default class CreateSessionUtil {
             client = clientsArray[session] = {status: null, session: session};
         return client;
     }
+
 }

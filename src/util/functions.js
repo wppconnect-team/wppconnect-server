@@ -167,6 +167,7 @@ function DaysBetween(StartDate) {
 }
 
 export function createFolders() {
+    const __dirname = path.resolve(path.dirname(''));
     let dirFiles = path.resolve(__dirname, "..", "..", "WhatsAppImages");
     if (!fs.existsSync(dirFiles)) {
         fs.mkdirSync(dirFiles);

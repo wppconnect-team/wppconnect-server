@@ -17,5 +17,7 @@
   "log": {
     "level": "error",
     "logger": [ "console", "file" ]
+  },
+  "createOptions": {
   }
 }
