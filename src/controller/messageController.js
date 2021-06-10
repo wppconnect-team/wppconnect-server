@@ -30,7 +30,7 @@ export async function sendMessage(req, res) {
     try {
         let result;
         for (const contato of contactToArray(phone, isGroup)) {
-            result = await req.client.sendText(`${contato}`, message);
+            result = await req.client.sendText(contato, message);
         }
 
         if (!result)

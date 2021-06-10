@@ -116,10 +116,12 @@ async function sendUnread(client) {
     try {
         const chats = await client.getAllChatsWithMessages(true);
 
-        for (let i = 0; i < chats.length; i++)
-            for (let j = 0; j < chats[i].messages.length; j++) {
-                callWebHook(client, 'unreadmessages', chats[i].messages[j]);
-            }
+        if (chats && chats.length > 0) {
+            for (let i = 0; i < chats.length; i++)
+                for (let j = 0; j < chats[i].msgs.length; j++) {
+                    callWebHook(client, 'unreadmessages', chats[i].msgs[j]);
+                }
+        }
 
         Logger.info(`${client.session} : Fim enviar mensagens não lidas`);
     } catch (ex) {
@@ -137,7 +139,7 @@ async function archive(client) {
 
     try {
         let chats = await client.getAllChats();
-        if (chats.length > 0) {
+        if (chats && chats.length > 0) {
             for (let i = 0; i < chats.length; i++) {
                 let date = new Date(chats[i].t * 1000);
 

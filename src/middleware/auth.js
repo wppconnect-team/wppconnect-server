@@ -23,7 +23,7 @@ const verifyToken = (req, res, next) => {
             tokenDecrypt = session.split(":")[1].replace(/_/g, '/').replace(/-/g, '+')
         } catch (error) {
             try {
-                tokenDecrypt = token.split(" ")[1].replace(/_/g, '/').replace(/-/g, '+')
+                if (token.split(" ").length > 0) tokenDecrypt = token.split(" ")[1].replace(/_/g, '/').replace(/-/g, '+')
             } catch (e) {
                 Logger.error(e);
                 return res.status(401).json({error: "Check that the Session and Token are correct", message: error})
