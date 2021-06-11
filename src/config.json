@@ -19,6 +19,6 @@
     "logger": [ "console", "file" ]
   },
   "createOptions": {
-    "browserArgs": "--no-sandbox"
+    "browserArgs": ["--no-sandbox"]
   }
 }
