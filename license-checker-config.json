@@ -1,0 +1,30 @@
+{
+  "ignore": [
+    ".github",
+    ".husky",
+    "**/.*",
+    "**/*.http",
+    "**/*.lock",
+    "**/*.md",
+    "api-docs",
+    "log",
+    "tokens",
+    "WhatsAppImages"
+  ],
+  "license": "LICENSE.header",
+  "licenseFormats": {
+    "js|ts": {
+      "prepend": "/*",
+      "append": " */",
+      "eachLine": {
+        "prepend": " * "
+      }
+    },
+    "dotfile": {
+      "eachLine": {
+        "prepend": "# "
+      }
+    }
+  },
+  "trailingWhitespace": "TRIM"
+}

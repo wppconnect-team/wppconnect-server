@@ -5,6 +5,28 @@
   "main": "index.js",
   "author": "kingaspx",
   "license": "Apache-2.0",
+  "scripts": {
+    "build": "rimraf dist && babel src -s -D -d dist",
+    "changelog:last": "conventional-changelog -p angular -r 2",
+    "changelog:preview": "conventional-changelog -p angular -u",
+    "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "commit": "cz",
+    "dev": "nodemon -w src --exec \"babel-node src/server.js",
+    "license:add": "license-check-and-add add",
+    "license:check": "license-check-and-add check",
+    "prepare": "husky install",
+    "release": "release-it",
+    "start": "node ./dist/server.js",
+    "swagger:copy-assets": "shx cp -R ./node_modules/swagger-ui-dist ./swagger-docs",
+    "swagger:copy-json": "shx cp ./src/swagger.json ./swagger-docs",
+    "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
+    "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.6.0",
     "axios": "^0.21.1",
@@ -19,22 +41,21 @@
     "socket.io": "^4.1.2",
     "swagger-ui-express": "^4.1.6"
   },
-  "scripts": {
-    "dev": "nodemon -w src --exec \"babel-node src/server.js",
-    "build": "rimraf dist && babel src -s -D -d dist",
-    "start": "node ./dist/server.js",
-    "swagger:copy-assets": "shx cp -R ./node_modules/swagger-ui-dist ./swagger-docs",
-    "swagger:copy-json": "shx cp ./src/swagger.json ./swagger-docs",
-    "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
-    "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url"
-  },
   "devDependencies": {
     "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.5",
     "@babel/node": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-env": "^7.14.5",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-angular": "^12.1.4",
+    "commitizen": "^4.2.4",
+    "conventional-changelog-cli": "^2.1.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^6.0.0",
+    "license-check-and-add": "^4.0.2",
     "nodemon": "^2.0.7",
+    "release-it": "^14.8.0",
     "rimraf": "^3.0.2",
     "shx": "^0.3.3",
     "swagger-ui-dist": "^3.49.0"
