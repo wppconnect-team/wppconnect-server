@@ -38,14 +38,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Build
-        run: yarn build
-
       - name: Install Dependencies
         run: yarn install
         env:
           PUPPETEER_SKIP_DOWNLOAD: true
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build
+        run: yarn build
 
       - name: Publish in NPM
         run: yarn publish
