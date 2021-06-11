@@ -87,6 +87,9 @@ This server use config.json file to define some options, default values are:
   "log": {
     "level": "error",
     "logger": [ "console", "file" ]
+  }, 
+  "createOptions": {
+    "browserArgs": ["--no-sandbox"]
   }
 }
 ```
