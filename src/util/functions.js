@@ -1,5 +1,4 @@
 import api from "axios";
-import Logger from "./logger"
 import {config} from "./sessionUtil"
 import path from "path";
 import fs from "fs";
@@ -66,22 +65,22 @@ export function groupNameToArray(group) {
     return localArr;
 }
 
-export async function callWebHook(client, event, data) {
-    if (client.webhook) {
-        if (config.webhook.autoDownload)
+export async function callWebHook(client, req, event, data) {
+    if (client && client.webhook) {
+        if (req.serverOptions.webhook.autoDownload)
             await autoDownload(client, data);
         try {
             api.post(client.webhook, Object.assign({event: event, session: client.session}, data))
                 .then(() => {
                     const events = ["unreadmessages", "onmessage"];
-                    if (events.includes(event) && config.webhook.readMessage)
+                    if (events.includes(event) && req.serverOptions.webhook.readMessage)
                         client.sendSeen(data.chatId._serialized || data.from || data.chatId);
                 })
                 .catch((e) => {
-                    Logger.error(e);
+                    req.logger.error(e);
                 });
         } catch (e) {
-            Logger.error(e);
+            req.logger.error(e);
         }
     }
 }
@@ -93,49 +92,49 @@ async function autoDownload(client, message) {
     }
 }
 
-export async function startAllSessions() {
+export async function startAllSessions(config, logger) {
     try {
         await api.post(`${config.host}:${config.port}/api/${config.secretKey}/start-all`)
     } catch (e) {
-        Logger.error(e);
+        logger.error(e);
     }
 
 }
 
-export async function startHelper(client) {
-    if (config.webhook.allUnreadOnStart)
-        await sendUnread(client);
+export async function startHelper(client, req) {
+    if (req.serverOptions.webhook.allUnreadOnStart)
+        await sendUnread(client, req);
 
-    if (config.archive.enable)
-        await archive(client);
+    if (req.serverOptions.archive.enable)
+        await archive(client, req);
 }
 
-async function sendUnread(client) {
-    Logger.info(`${client.session} : Inicio enviar mensagens não lidas`);
+async function sendUnread(client, req) {
+    req.logger.info(`${client.session} : Inicio enviar mensagens não lidas`);
 
     try {
         const chats = await client.getAllChatsWithMessages(true);
 
         if (chats && chats.length > 0) {
-            for (let i = 0; i < chats.length; i++)
-                for (let j = 0; j < chats[i].msgs.length; j++) {
-                    callWebHook(client, 'unreadmessages', chats[i].msgs[j]);
-                }
+        for (let i = 0; i < chats.length; i++)
+            for (let j = 0; j < chats[i].msgs.length; j++) {
+                callWebHook(client, req, 'unreadmessages', chats[i].msgs[j]);
+            }
         }
 
-        Logger.info(`${client.session} : Fim enviar mensagens não lidas`);
+        req.logger.info(`${client.session} : Fim enviar mensagens não lidas`);
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
     }
 
 }
 
-async function archive(client) {
+async function archive(client, req) {
     async function sleep(time) {
         return new Promise((resolve) => setTimeout(resolve, time * 10));
     }
 
-    Logger.info(`${client.session} : Inicio arquivando chats`);
+    req.logger.info(`${client.session} : Inicio arquivando chats`);
 
     try {
         let chats = await client.getAllChats();
@@ -143,15 +142,15 @@ async function archive(client) {
             for (let i = 0; i < chats.length; i++) {
                 let date = new Date(chats[i].t * 1000);
 
-                if (DaysBetween(date) > config.archive.daysToArchive) {
+                if (DaysBetween(date) > req.serverOptions.archive.daysToArchive) {
                     await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
-                    await sleep(Math.floor(Math.random() * config.archive.waitTime + 1));
+                    await sleep(Math.floor(Math.random() * req.serverOptions.archive.waitTime + 1));
                 }
             }
         }
-        Logger.info(`${client.session} : Fim arquivando chats`);
+        req.logger.info(`${client.session} : Fim arquivando chats`);
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
     }
 }
 

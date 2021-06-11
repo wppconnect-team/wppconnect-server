@@ -1,15 +1,14 @@
-import {chromiumArgs, clientsArray, config} from "./sessionUtil";
+import {clientsArray} from "./sessionUtil";
 import {create, SocketState, tokenStore} from "@wppconnect-team/wppconnect";
 import {callWebHook, startHelper} from "./functions";
 import {download} from "../controller/sessionController";
-import Logger from "./logger"
 import fs from "fs";
 
 export default class CreateSessionUtil {
     async createSessionUtil(req, clientsArray, session, res) {
         try {
             let {webhook} = req.body;
-            webhook = webhook === undefined ? config.webhook.url : webhook;
+            webhook = webhook === undefined ? req.serverOptions.webhook.url : webhook;
 
             let client = this.getClient(session);
             if (client.status != null && client.status !== 'CLOSED')
@@ -27,7 +26,7 @@ export default class CreateSessionUtil {
             });
 
             let wppClient = await create(
-                Object.assign({}, config.createOptions, {
+                Object.assign({}, req.serverOptions.createOptions, {
                     session: session,
                     catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
                         this.exportQR(req, base64Qr, urlCode, client, res);
@@ -39,7 +38,7 @@ export default class CreateSessionUtil {
                                 client.qrcode = null;
                                 client.waPage.close();
                             }
-                            Logger.info(statusFind + '\n\n')
+                            req.logger.info(statusFind + '\n\n')
                         } catch (error) { }
                     }
                 }));
@@ -47,7 +46,7 @@ export default class CreateSessionUtil {
             client = clientsArray[session] = Object.assign(wppClient, client);
             await this.start(req, client);
         } catch (e) {
-            Logger.error(e);
+            req.logger.error(e);
         }
     }
 
@@ -68,7 +67,7 @@ export default class CreateSessionUtil {
             session: client.session
         });
 
-        callWebHook(client, "qrcode", {qrcode: qrCode, urlcode: urlCode});
+        callWebHook(client, req, "qrcode", {qrcode: qrCode, urlcode: urlCode});
         if (res && !res._headerSent)
             res.status(200).json({status: "qrcode", qrcode: qrCode, urlcode: urlCode});
 
@@ -79,23 +78,23 @@ export default class CreateSessionUtil {
             await client.isConnected();
             Object.assign(client, {status: 'CONNECTED', qrcode: null});
 
-            Logger.info(`Started Session: ${client.session}`);
+            req.logger.info(`Started Session: ${client.session}`);
             req.io.emit("session-logged", {status: true, session: client.session});
-            startHelper(client);
+            startHelper(client, req);
         } catch (error) {
-            Logger.error(error);
+            req.logger.error(error);
             req.io.emit("session-error", client.session);
         }
 
-        await this.checkStateSession(client);
-        await this.listenMessages(req, client);
-        await this.listenAcks(client);
-        await this.onPresenceChanged(client);
+        await this.checkStateSession(client, req);
+        await this.listenMessages(client, req);
+        await this.listenAcks(client, req);
+        await this.onPresenceChanged(client, req);
     }
 
-    async checkStateSession(client) {
+    async checkStateSession(client, req) {
         await client.onStateChange((state) => {
-            Logger.info(`State Change ${state}: ${client.session}`);
+            req.logger.info(`State Change ${state}: ${client.session}`);
             const conflits = [
                 SocketState.CONFLICT
             ];
@@ -106,32 +105,32 @@ export default class CreateSessionUtil {
         });
     }
 
-    async listenMessages(req, client) {
+    async listenMessages(client, req) {
         await client.onMessage(async (message) => {
-            callWebHook(client, "onmessage", message)
+            callWebHook(client, req, "onmessage", message)
         });
 
         await client.onAnyMessage((message) => {
             message.session = client.session;
 
             if (message.type === "sticker") {
-                download(message, client);
+                download(message, client, req.logger);
             }
 
             req.io.emit("received-message", {response: message});
         });
     }
 
-    async listenAcks(client) {
+    async listenAcks(client, req) {
         await client.onAck(async (ack) => {
-            callWebHook(client, "onack", ack)
+            callWebHook(client, req, "onack", ack)
         });
 
     }
 
-    async onPresenceChanged(client) {
+    async onPresenceChanged(client, req) {
         await client.onPresenceChanged(async (presenceChangedEvent) => {
-            callWebHook(client, "onpresencechanged", presenceChangedEvent)
+            callWebHook(client, req, "onpresencechanged", presenceChangedEvent)
         });
     }
 

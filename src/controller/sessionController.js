@@ -2,13 +2,12 @@ import {clientsArray, config} from "../util/sessionUtil";
 import {callWebHook} from "../util/functions";
 import CreateSessionUtil from "../util/createSessionUtil";
 import getAllTokens from "../util/getAllTokens";
-import Logger from "../util/logger";
 import fs from "fs";
 import mime from "mime-types";
 
 const SessionUtil = new CreateSessionUtil();
 
-async function downloadFileFunction(message, client) {
+async function downloadFileFunction(message, client, logger) {
     try {
         const buffer = await client.decryptFile(message);
 
@@ -23,7 +22,7 @@ async function downloadFileFunction(message, client) {
 
             await fs.writeFile(result, buffer, (err) => {
                 if (err) {
-                    Logger.error(err);
+                    logger.error(err);
                 }
             });
 
@@ -32,8 +31,8 @@ async function downloadFileFunction(message, client) {
             return `${filename}.${mime.extension(message.mimetype)}`;
         }
     } catch (e) {
-        Logger.error(e);
-        Logger.warn("Erro ao descriptografar a midia, tentando fazer o download direto...");
+        logger.error(e);
+        logger.warn("Erro ao descriptografar a midia, tentando fazer o download direto...");
         try {
             const buffer = await client.downloadMedia(message);
             const filename = `./WhatsAppImages/file${message.t}`;
@@ -47,7 +46,7 @@ async function downloadFileFunction(message, client) {
 
                 await fs.writeFile(result, buffer, (err) => {
                     if (err) {
-                        Logger.error(err);
+                        logger.error(err);
                     }
                 });
 
@@ -56,18 +55,18 @@ async function downloadFileFunction(message, client) {
                 return `${filename}.${mime.extension(message.mimetype)}`;
             }
         } catch (e) {
-            Logger.error(e);
-            Logger.warn("Não foi possível baixar a mídia...");
+            logger.error(e);
+            logger.warn("Não foi possível baixar a mídia...");
         }
     }
 }
 
-export async function download(message, client) {
+export async function download(message, client, logger) {
     try {
-        const path = await downloadFileFunction(message, client);
+        const path = await downloadFileFunction(message, client, logger);
         return path.replace("./", "");
     } catch (e) {
-        Logger.error(e);
+        logger.error(e);
     }
 }
 
@@ -83,9 +82,9 @@ export async function startAllSessions(req, res) {
         tokenDecrypt = secretkey;
     }
 
-    const allSessions = await getAllTokens();
+    const allSessions = await getAllTokens(req);
 
-    if (tokenDecrypt !== config.secretKey) {
+    if (tokenDecrypt !== req.serverOptions.secretKey) {
         return res.status(400).json({
             response: false,
             message: "The token is incorrect"
@@ -114,7 +113,7 @@ export async function closeSession(req, res) {
         await req.client.close();
 
         req.io.emit("whatsapp-status", false);
-        callWebHook(req.client, "closesession", {"message": `Session: ${session} disconnected`, connected: false});
+        callWebHook(req.client, req, "closesession", {"message": `Session: ${session} disconnected`, connected: false});
 
         return await res.status(200).json({status: true, message: "Session successfully closed"});
     } catch (error) {
@@ -129,7 +128,7 @@ export async function logOutSession(req, res) {
         await req.client.logout();
 
         req.io.emit("whatsapp-status", false);
-        callWebHook(req.client, "logoutsession", {"message": `Session: ${session} logged out`, connected: false});
+        callWebHook(req.client, req, "logoutsession", {"message": `Session: ${session} logged out`, connected: false});
 
         return await res.status(200).json({status: true, message: "Session successfully closed"});
     } catch (error) {
@@ -162,11 +161,11 @@ export async function downloadMediaByMessage(req, res) {
     let result = "";
 
     if (messageId.isMedia === true) {
-        await download(messageId, req.client);
-        result = `${config.host}:${config.port}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
+        await download(messageId, req.client, req.logger, req.logger);
+        result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     } else if (messageId.type === "ptt" || messageId.type === "sticker") {
         await download(messageId, req.client);
-        result = `${config.host}:${config.port}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
+        result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(messageId.mimetype)}`;
     }
 
     return res.status(200).json(result);
@@ -198,7 +197,7 @@ export async function getMediaByMessage(req, res) {
 
         return res.status(200).json(await buffer.toString('base64'));
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "The session is not active"
@@ -217,7 +216,7 @@ export async function getSessionState(req, res) {
             return res.status(200).json({status: client.status, qrcode: client.qrcode, urlcode: client.urlcode});
 
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "The session is not active"
@@ -235,7 +234,7 @@ export async function getQrCode(req, res) {
         });
         res.end(img);
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "Error retrieving QRCode"
@@ -248,7 +247,7 @@ export async function killServiceWorker(req, res) {
         return res.status(200).json({status: "success", response: req.client.killServiceWorker()});
 
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "The session is not active"
@@ -262,7 +261,7 @@ export async function restartService(req, res) {
     try {
         return res.status(200).json({status: "success", response: req.client.restartService()});
     } catch (ex) {
-        Logger.error(ex);
+        req.logger.error(ex);
         return res.status(400).json({
             response: false,
             message: "The session is not active"

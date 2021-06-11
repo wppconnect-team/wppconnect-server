@@ -1,4 +1,3 @@
-import {config} from '../util/sessionUtil';
 import bcrypt from 'bcrypt';
 
 const saltRounds = 10;
@@ -6,7 +5,7 @@ const saltRounds = 10;
 export async function encryptSession(req, res) {
     const {session, secretkey} = req.params;
     const {authorization: token} = req.headers;
-    const secureTokenEnv = config.secretKey;
+    const secureTokenEnv = req.serverOptions.secretKey;
 
     let tokenDecrypt = '';
 

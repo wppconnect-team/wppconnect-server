@@ -1,8 +1,6 @@
 import fs from "fs";
 import {download} from "./sessionController";
 import {contactToArray, unlinkAsync} from "../util/functions";
-import Logger from "../util/logger";
-import {config} from "../util/sessionUtil";
 import mime from "mime-types";
 
 export async function setProfileName(req, res) {
@@ -17,7 +15,7 @@ export async function setProfileName(req, res) {
         const result = await req.client.setProfileName(name);
         return res.status(200).json({status: "success", response: result});
     } catch (error) {
-        Logger.error(error);
+        req.logger.error(error);
         res.status(400).json({
             response: {
                 message: "Error on set profile name.",
@@ -38,7 +36,7 @@ export async function showAllContacts(req, res) {
             session: session,
         });
     } catch (error) {
-        Logger.error(error);
+        req.logger.error(error);
         res.status(401).json({
             response: "Error fetching contacts",
             session: session,
@@ -55,7 +53,7 @@ export async function getAllGroups(req, res) {
 
         return res.status(200).json({"response": response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         res.status(401).json({
             status: "Error",
             message: "Error fetching groups",
@@ -69,7 +67,7 @@ export async function getAllChats(req, res) {
         const response = await req.client.getAllChats();
         return res.status(200).json({status: "Success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "Error", response: "Error on get all chats"});
     }
 }
@@ -79,7 +77,7 @@ export async function getAllChatsWithMessages(req, res) {
         const response = await req.client.getAllChatsWithMessages();
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get all chats whit messages"});
     }
 }
@@ -96,7 +94,7 @@ export async function getAllMessagesInChat(req, res) {
 
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get all messages in chat"});
     }
 }
@@ -106,7 +104,7 @@ export async function getAllNewMessages(req, res) {
         const response = await req.client.getAllNewMessages();
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get all messages in chat"});
     }
 }
@@ -116,7 +114,7 @@ export async function getAllUnreadMessages(req, res) {
         const response = await req.client.getAllUnreadMessages();
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get all messages in chat"});
     }
 }
@@ -142,14 +140,14 @@ export async function getChatById(req, res) {
 
         allMessages.map((message) => {
             if (message.type === "sticker") {
-                download(message, req.client);
-                message.body = `${config.host}:${config.port}/files/file${message.t}.${mime.extension(message.mimetype)}`;
+                download(message, req.client, req.logger);
+                message.body = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${message.t}.${mime.extension(message.mimetype)}`;
             }
         });
 
         return res.json({status: "Success", response: allMessages});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.json({status: "Error", response: []});
     }
 }
@@ -164,7 +162,7 @@ export async function changePrivacyGroup(req, res) {
 
         return res.status(200).json({status: "Success", message: "Group privacy changed successfully"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error changing group privacy"});
     }
 }
@@ -174,7 +172,7 @@ export async function getBatteryLevel(req, res) {
         let response = await req.client.getBatteryLevel();
         return res.status(200).json({status: "Success", batterylevel: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error retrieving battery status"});
     }
 }
@@ -184,7 +182,7 @@ export async function getHostDevice(req, res) {
         const response = await req.client.getHostDevice();
         return res.status(200).json({status: 'success', response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Erro ao recuperar dados do telefone"});
     }
 }
@@ -199,7 +197,7 @@ export async function getBlockList(req, res) {
 
         return res.status(200).json({status: "Success", response: blocked});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error retrieving blocked contact list"});
     }
 }
@@ -215,7 +213,7 @@ export async function deleteChat(req, res) {
         }
         return res.status(200).json({status: "Success", message: "Conversa deleteada com sucesso"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Erro ao deletada conversa"});
     }
 }
@@ -231,7 +229,7 @@ export async function clearChat(req, res) {
         }
         return res.status(200).json({status: "Success", message: "Successfully cleared conversation"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error clearing conversation"});
     }
 }
@@ -248,7 +246,7 @@ export async function archiveChat(req, res) {
         }
         return res.status(200).json({status: "Success", message: "Chat archived!", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error on archive chat"});
     }
 }
@@ -260,7 +258,7 @@ export async function deleteMessage(req, res) {
         await req.client.deleteMessage(`${phone}@c.us`, [messageId]);
         return res.status(200).json({status: "Success", message: "Message deleted"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error on delete message"});
     }
 }
@@ -277,7 +275,7 @@ export async function reply(req, res) {
             content: response.content
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Success", message: "Error replying message"});
     }
 }
@@ -294,7 +292,7 @@ export async function forwardMessages(req, res) {
             phone: response.to.remote.user,
         });
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error forwarding message"});
     }
 }
@@ -310,7 +308,7 @@ export async function markUnseenMessage(req, res) {
         }
         return res.status(200).json({status: "Success", message: "unseen checked"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error on mark unseen"});
     }
 }
@@ -322,7 +320,7 @@ export async function blockContact(req, res) {
         await req.client.blockContact(`${phone}@c.us`);
         return res.status(200).json({status: "Success", message: "Contact blocked"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error on block contact"});
     }
 }
@@ -334,7 +332,7 @@ export async function unblockContact(req, res) {
         await req.client.unblockContact(`${phone}@c.us`);
         return res.status(200).json({status: "Success", message: "Contact UnBlocked"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error on unlock contact"});
     }
 }
@@ -351,7 +349,7 @@ export async function pinChat(req, res) {
 
         return res.status(200).json({status: "Success", message: "Chat fixed"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error on pin chat"});
     }
 }
@@ -368,7 +366,7 @@ export async function setProfilePic(req, res) {
 
         return res.status(200).json({status: "Success", message: "Profile photo successfully changed"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Error", message: "Error changing profile photo"});
     }
 }
@@ -390,7 +388,7 @@ export async function setGroupProfilePic(req, res) {
 
         return res.status(200).json({status: "Success", message: "Group profile photo successfully changed"});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Success", message: "Error changing group photo"});
     }
 }
@@ -402,7 +400,7 @@ export async function getUnreadMessages(req, res) {
         const response = await req.client.getUnreadMessages(false, false, true);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on open list"});
     }
 }
@@ -413,7 +411,7 @@ export async function getChatIsOnline(req, res) {
         const response = await req.client.getChatIsOnline(`${phone}@c.us`);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get chat is online"});
     }
 }
@@ -424,7 +422,7 @@ export async function getLastSeen(req, res) {
         const response = await req.client.getLastSeen(`${phone}@c.us`);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get chat last seen"});
     }
 }
@@ -435,7 +433,7 @@ export async function getListMutes(req, res) {
         const response = await req.client.getListMutes(type);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on get list mutes"});
     }
 }
@@ -447,7 +445,7 @@ export async function loadAndGetAllMessagesInChat(req, res) {
         const response = await req.client.loadAndGetAllMessagesInChat(`${phone}@c.us`, includeMe, includeNotifications);
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(401).json({status: "error", response: "Error on open list"});
     }
 }
@@ -463,7 +461,7 @@ export async function sendContactVcard(req, res) {
 
         return res.status(200).json({status: "success", response: response});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "error", message: "Error on send contact vcard"});
     }
 }
@@ -651,7 +649,7 @@ export async function setProfileStatus(req, res) {
     try {
         return res.status(200).json({status: "Success", response: await req.client.setProfileStatus(status)});
     } catch (e) {
-        Logger.error(e);
+        req.logger.error(e);
         return res.status(400).json({status: "Success", message: "Error on set profile status"});
     }
 }

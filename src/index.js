@@ -1,53 +1,74 @@
-import Logger from "./util/logger";
-import {createFolders, startAllSessions} from "./util/functions";
+import { createLogger } from "./util/logger";
+import { createFolders, startAllSessions } from "./util/functions";
 import cors from "cors";
 import express from "express";
-import {createServer} from "http";
-import {Server as Socket} from "socket.io";
+import { createServer } from "http";
+import { Server as Socket } from "socket.io";
 import routes from "./routes";
 import path from "path";
-import {config} from './util/sessionUtil';
-import boolParser from 'express-query-boolean';
+import config from "./config.json";
+import boolParser from "express-query-boolean";
+import mergeDeep from "merge-deep";
 
-const __dirname = path.resolve(path.dirname(''));
-const app = express();
+export function initServer(serverOptions) {
+    if (typeof serverOptions !== "object") {
+        serverOptions = {};
+    }
 
-const PORT = process.env.PORT || config.port;
+    serverOptions = mergeDeep({}, config, serverOptions);
 
-const options = {
-    cors: true,
-    origins: ["*"],
-};
-const http = new createServer(app);
-const io = new Socket(http, options);
+    const logger = createLogger(serverOptions.log);
 
-app.use(cors());
-app.use(express.json({limit: "50mb"}));
-app.use(express.urlencoded({limit: "50mb", extended: true}));
-app.use("/files", express.static(path.resolve(__dirname, "..", "WhatsAppImages")));
-app.use(boolParser());
+    const app = express();
+    const PORT = process.env.PORT || serverOptions.port;
 
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
-
-io.on("connection", sock => {
-    Logger.info(`ID: ${sock.id} entrou`);
-
-    sock.on("disconnect", () => {
-        Logger.info(`ID: ${sock.id} saiu`);
+    const http = new createServer(app);
+    const io = new Socket(http, {
+        cors: true,
+        origins: ["*"],
     });
-});
 
-app.use(routes);
+    app.use(cors());
+    app.use(express.json({ limit: "50mb" }));
+    app.use(express.urlencoded({ limit: "50mb", extended: true }));
+    app.use(
+        "/files",
+        express.static(path.resolve(__dirname, "..", "WhatsAppImages"))
+    );
+    app.use(boolParser());
 
-createFolders();
+    // Add request options
+    app.use((req, res, next) => {
+        req.serverOptions = serverOptions;
+        req.logger = logger;
+        req.io = io;
+        next();
+    });
 
-http.listen(PORT, () => {
-    Logger.info(`Server is running on port: ${PORT}`);
-    Logger.info(`\x1b[31m Visit ${config.host}:${PORT}/api-docs for Swagger docs`);
+    io.on("connection", (sock) => {
+        logger.info(`ID: ${sock.id} entrou`);
 
-    if (config.startAllSession)
-        startAllSessions();
-});
+        sock.on("disconnect", () => {
+            logger.info(`ID: ${sock.id} saiu`);
+        });
+    });
+
+    app.use(routes);
+
+    createFolders();
+
+    http.listen(PORT, () => {
+        logger.info(`Server is running on port: ${PORT}`);
+        logger.info(
+            `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
+        );
+
+        if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
+    });
+
+    return {
+        app,
+        routes,
+        logger
+    };
+}
