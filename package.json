@@ -12,7 +12,6 @@
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "commit": "cz",
     "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
-    //"dev": "nodemon -w src --exec \"babel-node src/server.js\ --presets env"", --old
     "license:add": "license-check-and-add add",
     "license:check": "license-check-and-add check",
     "prepare": "husky install",
