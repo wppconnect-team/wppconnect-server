@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import winston from "winston";
+import winston from 'winston';
 
 // Use JSON logging for log files
 // Here winston.format.errors() just seem to work
@@ -28,14 +28,14 @@ export function createLogger(options) {
   const log_level = options.level;
   // Create file loggers
   const logger = winston.createLogger({
-    level: "debug",
+    level: 'debug',
     format: jsonLogFileFormat,
     expressFormat: true,
   });
 
   // When running locally, write everything to the console
   // with proper stacktraces enabled
-  if (options.logger.indexOf("console") > -1) {
+  if (options.logger.indexOf('console') > -1) {
     logger.add(
       new winston.transports.Console({
         format: winston.format.combine(
@@ -52,10 +52,10 @@ export function createLogger(options) {
       })
     );
   }
-  if (options.logger.indexOf("file") > -1) {
+  if (options.logger.indexOf('file') > -1) {
     logger.add(
       new winston.transports.File({
-        filename: "./log/app.logg",
+        filename: './log/app.logg',
         level: log_level,
         maxsize: 10485760,
         maxFiles: 3,
