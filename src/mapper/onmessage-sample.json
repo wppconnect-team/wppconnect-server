@@ -1,0 +1,13 @@
+{
+  "event": "event",
+  "session": "session",
+  "id": "id",
+  "body": "body",
+  "type": "type",
+  "sender": {
+    "path": "sender",
+    "nested": {
+      "id": "id"
+    }
+  }
+}
