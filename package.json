@@ -10,7 +10,7 @@
     "changelog:last": "conventional-changelog -p angular -r 2",
     "changelog:preview": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "commit": "cz",
+    "commit": "git-cz",
     "dev": "nodemon -w src --exec \"babel-node src/server.js\"",
     "license:add": "license-check-and-add add",
     "license:check": "license-check-and-add check",
@@ -25,7 +25,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "@commitlint/cz-commitlint"
     }
   },
   "dependencies": {
@@ -53,9 +53,9 @@
     "@babel/preset-env": "^7.14.5",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "@commitlint/cz-commitlint": "^12.1.4",
     "commitizen": "^4.2.4",
     "conventional-changelog-cli": "^2.1.1",
-    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
