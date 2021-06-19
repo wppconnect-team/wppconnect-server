@@ -58,16 +58,9 @@ export async function sendMessage(req, res) {
 
 export async function sendImage(req, res) {
   const session = req.session;
-  const {
-    phone,
-    filename = 'image-api.jpg',
-    caption,
-    path,
-    isGroup = false,
-  } = req.body;
+  const { phone, filename = 'image-api.jpg', caption, path, isGroup = false } = req.body;
 
-  if (!phone)
-    return res.status(401).send({ message: 'Telefone não informado.' });
+  if (!phone) return res.status(401).send({ message: 'Telefone não informado.' });
 
   if (!path && !req.file)
     return res.status(401).send({
@@ -91,10 +84,7 @@ export async function sendFile(req, res) {
   const session = req.session;
   const { phone, filename = 'file', message, isGroup = false } = req.body;
 
-  if (!req.file)
-    return res
-      .status(400)
-      .json({ status: 'Error', message: 'Sending the file is mandatory' });
+  if (!req.file) return res.status(400).json({ status: 'Error', message: 'Sending the file is mandatory' });
 
   const { path: pathFile } = req.file;
 
@@ -112,27 +102,13 @@ export async function sendFile(req, res) {
 
 export async function sendFile64(req, res) {
   const session = req.session;
-  const {
-    base64,
-    phone,
-    filename = 'file',
-    message,
-    isGroup = false,
-  } = req.body;
+  const { base64, phone, filename = 'file', message, isGroup = false } = req.body;
 
-  if (!base64)
-    return res
-      .status(401)
-      .send({ message: 'The base64 of the file was not informed' });
+  if (!base64) return res.status(401).send({ message: 'The base64 of the file was not informed' });
 
   try {
     for (const contato of contactToArray(phone, isGroup)) {
-      await req.client.sendFileFromBase64(
-        `${contato}`,
-        base64,
-        filename,
-        message
-      );
+      await req.client.sendFileFromBase64(`${contato}`, base64, filename, message);
     }
 
     returnSucess(res, session, phone);
@@ -146,11 +122,7 @@ export async function sendVoice(req, res) {
 
   try {
     for (const contato of contactToArray(phone, isGroup)) {
-      await req.client.sendPttFromBase64(
-        `${contato}`,
-        base64Ptt,
-        'Voice Audio'
-      );
+      await req.client.sendPttFromBase64(`${contato}`, base64Ptt, 'Voice Audio');
     }
 
     return res.status(200).json('success');
@@ -183,9 +155,7 @@ export async function sendLocation(req, res) {
       await req.client.sendLocation(`${contato}`, lat, lng, title);
     }
 
-    return res
-      .status(200)
-      .json({ status: 'Success', message: 'Location sent' });
+    return res.status(200).json({ status: 'Success', message: 'Location sent' });
   } catch (error) {
     req.logger.error(error);
     return res.status(400).json({ status: 'Error on send location' });
@@ -197,9 +167,7 @@ export async function sendStatusText(req, res) {
 
   try {
     await req.client.sendText('status@broadcast', message);
-    return res
-      .status(200)
-      .json({ status: 'Success', message: 'Location sent.' });
+    return res.status(200).json({ status: 'Success', message: 'Location sent.' });
   } catch (error) {
     req.logger.error(error);
     return res.status(400).json({ status: 'Error on send location' });

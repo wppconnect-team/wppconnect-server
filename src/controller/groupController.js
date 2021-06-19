@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 import _ from 'lodash';
-import {
-  contactToArray,
-  groupNameToArray,
-  groupToArray,
-} from '../util/functions';
+import { contactToArray, groupNameToArray, groupToArray } from '../util/functions';
 
 function returnError(req, res, session, error, message) {
   req.logger.error(error);
@@ -45,26 +41,14 @@ export async function joinGroupByCode(req, res) {
   const session = req.session;
   const { inviteCode } = req.body;
 
-  if (!inviteCode)
-    return res.status(401).send({ message: 'Invitation Code is required' });
+  if (!inviteCode) return res.status(401).send({ message: 'Invitation Code is required' });
 
   try {
     await req.client.joinGroup(inviteCode);
 
-    returnSucess(
-      res,
-      session,
-      inviteCode,
-      'The informed contact(s) entered the group successfully'
-    );
+    returnSucess(res, session, inviteCode, 'The informed contact(s) entered the group successfully');
   } catch (error) {
-    returnError(
-      req,
-      res,
-      session,
-      error,
-      'The informed contact(s) did not join the group successfully'
-    );
+    returnError(req, res, session, error, 'The informed contact(s) did not join the group successfully');
   }
 }
 
@@ -76,10 +60,7 @@ export async function createGroup(req, res) {
 
   try {
     for (const grupo of groupNameToArray(name)) {
-      response = await req.client.createGroup(
-        grupo,
-        contactToArray(participants)
-      );
+      response = await req.client.createGroup(grupo, contactToArray(participants));
 
       infoGroup.push({
         name: grupo,
@@ -168,10 +149,7 @@ export async function removeParticipant(req, res) {
 
   try {
     for (const grupo of groupToArray(groupId)) {
-      response = await req.client.removeParticipant(
-        grupo,
-        contactToArray(phone)
-      );
+      response = await req.client.removeParticipant(grupo, contactToArray(phone));
       arrayGrupos.push(response);
     }
 

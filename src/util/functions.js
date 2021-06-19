@@ -74,8 +74,7 @@ export function groupNameToArray(group) {
 
 export async function callWebHook(client, req, event, data) {
   if (client && client.webhook) {
-    if (req.serverOptions.webhook.autoDownload)
-      await autoDownload(client, data);
+    if (req.serverOptions.webhook.autoDownload) await autoDownload(client, data);
     try {
       data = Object.assign({ event: event, session: client.session }, data);
       data = await convert(data);
@@ -84,9 +83,7 @@ export async function callWebHook(client, req, event, data) {
         .then(() => {
           const events = ['unreadmessages', 'onmessage'];
           if (events.includes(event) && req.serverOptions.webhook.readMessage)
-            client.sendSeen(
-              data.chatId._serialized || data.from || data.chatId
-            );
+            client.sendSeen(data.chatId._serialized || data.from || data.chatId);
         })
         .catch((e) => {
           req.logger.error(e);
@@ -106,9 +103,7 @@ async function autoDownload(client, message) {
 
 export async function startAllSessions(config, logger) {
   try {
-    await api.post(
-      `${config.host}:${config.port}/api/${config.secretKey}/start-all`
-    );
+    await api.post(`${config.host}:${config.port}/api/${config.secretKey}/start-all`);
   } catch (e) {
     logger.error(e);
   }
@@ -154,13 +149,8 @@ async function archive(client, req) {
         let date = new Date(chats[i].t * 1000);
 
         if (DaysBetween(date) > req.serverOptions.archive.daysToArchive) {
-          await client.archiveChat(
-            chats[i].id.id || chats[i].id._serialized,
-            true
-          );
-          await sleep(
-            Math.floor(Math.random() * req.serverOptions.archive.waitTime + 1)
-          );
+          await client.archiveChat(chats[i].id.id || chats[i].id._serialized, true);
+          await sleep(Math.floor(Math.random() * req.serverOptions.archive.waitTime + 1));
         }
       }
     }
@@ -176,16 +166,8 @@ function DaysBetween(StartDate) {
   const oneDay = 1000 * 60 * 60 * 24;
 
   // A day in UTC always lasts 24 hours (unlike in other time formats)
-  const start = Date.UTC(
-    endDate.getFullYear(),
-    endDate.getMonth(),
-    endDate.getDate()
-  );
-  const end = Date.UTC(
-    StartDate.getFullYear(),
-    StartDate.getMonth(),
-    StartDate.getDate()
-  );
+  const start = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+  const end = Date.UTC(StartDate.getFullYear(), StartDate.getMonth(), StartDate.getDate());
 
   // so it's safe to divide by 24 hours
   return (start - end) / oneDay;

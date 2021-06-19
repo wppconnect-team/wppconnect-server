@@ -40,30 +40,22 @@ export default class CreateSessionUtil {
       });
 
       let wppClient = await create(
-        Object.assign(
-          {},
-          { tokenStore: myTokenStore },
-          req.serverOptions.createOptions,
-          {
-            session: session,
-            catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
-              this.exportQR(req, base64Qr, urlCode, client, res);
-            },
-            statusFind: (statusFind) => {
-              try {
-                if (
-                  statusFind === 'autocloseCalled' ||
-                  statusFind === 'desconnectedMobile'
-                ) {
-                  client.status = 'CLOSED';
-                  client.qrcode = null;
-                  client.waPage.close();
-                }
-                req.logger.info(statusFind + '\n\n');
-              } catch (error) {}
-            },
-          }
-        )
+        Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
+          session: session,
+          catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
+            this.exportQR(req, base64Qr, urlCode, client, res);
+          },
+          statusFind: (statusFind) => {
+            try {
+              if (statusFind === 'autocloseCalled' || statusFind === 'desconnectedMobile') {
+                client.status = 'CLOSED';
+                client.qrcode = null;
+                client.waPage.close();
+              }
+              req.logger.info(statusFind + '\n\n');
+            } catch (error) {}
+          },
+        })
       );
 
       client = clientsArray[session] = Object.assign(wppClient, client);
@@ -95,10 +87,7 @@ export default class CreateSessionUtil {
     });
 
     callWebHook(client, req, 'qrcode', { qrcode: qrCode, urlcode: urlCode });
-    if (res && !res._headerSent)
-      res
-        .status(200)
-        .json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
+    if (res && !res._headerSent) res.status(200).json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
   }
 
   async start(req, client) {
@@ -178,8 +167,7 @@ export default class CreateSessionUtil {
   getClient(session) {
     let client = clientsArray[session];
 
-    if (!client)
-      client = clientsArray[session] = { status: null, session: session };
+    if (!client) client = clientsArray[session] = { status: null, session: session };
     return client;
   }
 }

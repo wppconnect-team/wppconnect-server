@@ -47,9 +47,7 @@ async function downloadFileFunction(message, client, logger) {
     }
   } catch (e) {
     logger.error(e);
-    logger.warn(
-      'Erro ao descriptografar a midia, tentando fazer o download direto...'
-    );
+    logger.warn('Erro ao descriptografar a midia, tentando fazer o download direto...');
     try {
       const buffer = await client.downloadMedia(message);
       const filename = `./WhatsAppImages/file${message.t}`;
@@ -112,9 +110,7 @@ export async function startAllSessions(req, res) {
     await SessionUtil.opendata(req, session);
   });
 
-  return await res
-    .status(201)
-    .json({ status: 'Success', message: 'Starting all sessions' });
+  return await res.status(201).json({ status: 'Success', message: 'Starting all sessions' });
 }
 
 export async function startSession(req, res) {
@@ -137,13 +133,9 @@ export async function closeSession(req, res) {
       connected: false,
     });
 
-    return await res
-      .status(200)
-      .json({ status: true, message: 'Session successfully closed' });
+    return await res.status(200).json({ status: true, message: 'Session successfully closed' });
   } catch (error) {
-    return await res
-      .status(400)
-      .json({ status: false, message: 'Error closing session', error });
+    return await res.status(400).json({ status: false, message: 'Error closing session', error });
   }
 }
 
@@ -158,13 +150,9 @@ export async function logOutSession(req, res) {
       connected: false,
     });
 
-    return await res
-      .status(200)
-      .json({ status: true, message: 'Session successfully closed' });
+    return await res.status(200).json({ status: true, message: 'Session successfully closed' });
   } catch (error) {
-    return await res
-      .status(400)
-      .json({ status: false, message: 'Error closing session', error });
+    return await res.status(400).json({ status: false, message: 'Error closing session', error });
   }
 }
 
@@ -194,14 +182,14 @@ export async function downloadMediaByMessage(req, res) {
 
   if (messageId.isMedia === true) {
     await download(messageId, req.client, req.logger, req.logger);
-    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${
-      messageId.t
-    }.${mime.extension(messageId.mimetype)}`;
+    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
+      messageId.mimetype
+    )}`;
   } else if (messageId.type === 'ptt' || messageId.type === 'sticker') {
     await download(messageId, req.client);
-    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${
-      messageId.t
-    }.${mime.extension(messageId.mimetype)}`;
+    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
+      messageId.mimetype
+    )}`;
   }
 
   return res.status(200).json(result);
@@ -262,10 +250,7 @@ export async function getSessionState(req, res) {
 
 export async function getQrCode(req, res) {
   try {
-    const img = Buffer.from(
-      req.client.qrcode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
-      'base64'
-    );
+    const img = Buffer.from(req.client.qrcode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
 
     res.writeHead(200, {
       'Content-Type': 'image/png',
@@ -283,9 +268,7 @@ export async function getQrCode(req, res) {
 
 export async function killServiceWorker(req, res) {
   try {
-    return res
-      .status(200)
-      .json({ status: 'success', response: req.client.killServiceWorker() });
+    return res.status(200).json({ status: 'success', response: req.client.killServiceWorker() });
   } catch (ex) {
     req.logger.error(ex);
     return res.status(400).json({
@@ -297,9 +280,7 @@ export async function killServiceWorker(req, res) {
 
 export async function restartService(req, res) {
   try {
-    return res
-      .status(200)
-      .json({ status: 'success', response: req.client.restartService() });
+    return res.status(200).json({ status: 'success', response: req.client.restartService() });
   } catch (ex) {
     req.logger.error(ex);
     return res.status(400).json({
@@ -328,12 +309,8 @@ export async function subscribePresence(req, res) {
         await req.client.subscribePresence(contato);
       }
 
-    return await res
-      .status(200)
-      .json({ status: true, message: 'Subscribe presence executed' });
+    return await res.status(200).json({ status: true, message: 'Subscribe presence executed' });
   } catch (error) {
-    return await res
-      .status(400)
-      .json({ status: false, message: 'Error on subscribe presence', error });
+    return await res.status(400).json({ status: false, message: 'Error on subscribe presence', error });
   }
 }

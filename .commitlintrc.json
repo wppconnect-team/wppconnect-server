@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/commitlintrc.json",
+  "extends": ["@commitlint/config-conventional"],
+  "rules": {
+    "subject-case": [1, "never", ["sentence-case", "start-case", "pascal-case", "upper-case"]]
+  }
+}
