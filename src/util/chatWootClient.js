@@ -57,17 +57,19 @@ export default class chatWootClient {
     async createContact(message) {
         let body = {
             inbox_id: this.inbox_id,
-            name: message.sender.isMyContact ? message.sender.formattedName : message.sender.pushname,
+            name: message.sender.isMyContact
+                ? message.sender.formattedName
+                : message.sender.pushname || message.sender.formattedName,
             phone_number:
                 typeof message.sender.id == 'object' ? message.sender.id.user : message.sender.id.split('@')[0],
         };
-
+        body.phone_number = `+${body.phone_number}`;
         var contact = await this.findContact(body.phone_number.replace('+', ''));
         if (contact.meta.count > 0) return contact.payload[0];
 
         try {
             const data = await this.api.post(`api/v1/accounts/${this.account_id}/contacts`, body);
-            return data;
+            return data.data.payload.contact;
         } catch (e) {
             return null;
         }

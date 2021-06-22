@@ -48,7 +48,7 @@
         "prefix": "tagone-"
     },
     "chatWoot": {
-        "enable": false,
+        "enable": true,
         "baseURL": "https://app.chatwoot.com",
         "token": "1qKpx7nvJ5yKiuhrn1N2Dz5p",
         "inbox_id": "5166",
