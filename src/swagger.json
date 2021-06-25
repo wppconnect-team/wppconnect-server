@@ -1415,7 +1415,7 @@
         "deprecated": false
       }
     },
-    "/all-chats-whit-messages": {
+    "/all-chats-with-messages": {
       "get": {
         "tags": [
           "Chat"
@@ -1514,7 +1514,7 @@
             "content": {
               "application/json; charset=utf-8": {
                 "schema": {
-                  "$ref": "#/components/schemas/AllChatsWitMessages"
+                  "$ref": "#/components/schemas/AllChatsWithMessages"
                 },
                 "example": {
                   "status": "success",
