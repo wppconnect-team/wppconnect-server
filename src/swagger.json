@@ -4968,7 +4968,9 @@
               },
               "example": {
                 "phone": "556593077171",
-                "contactsId": "556793474543@c.us"
+                "contactsId": "556793474543@c.us",
+                "name": "Contact Name",
+                "isGroup": false
               }
             }
           },
