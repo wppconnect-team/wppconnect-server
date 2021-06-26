@@ -483,6 +483,17 @@ export async function loadAndGetAllMessagesInChat(req, res) {
     return res.status(401).json({ status: 'error', response: 'Error on open list' });
   }
 }
+export async function loadEarlierMessages(req, res) {
+  const { phone, includeMe = true, includeNotifications = false } = req.params;
+
+  try {
+    const response = await req.client.loadEarlierMessages(`${phone}@c.us`, includeMe, includeNotifications);
+    return res.status(200).json({ status: 'success', response: response });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(401).json({ status: 'error', response: 'Error on open list' });
+  }
+}
 
 export async function sendContactVcard(req, res) {
   const { phone, contactsId, isGroup = false } = req.body;
