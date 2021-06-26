@@ -150,6 +150,12 @@ routes.get(
   statusConnection,
   DeviceController.loadAndGetAllMessagesInChat
 );
+routes.get(
+  '/api/:session/load-Earlier-Messages/:phone',
+  verifyToken,
+  statusConnection,
+  DeviceController.loadEarlierMessages
+);
 routes.post('/api/:session/mark-unseen', verifyToken, statusConnection, DeviceController.markUnseenMessage);
 routes.post('/api/:session/pin-chat', verifyToken, statusConnection, DeviceController.pinChat);
 routes.post('/api/:session/contact-vcard', verifyToken, statusConnection, DeviceController.sendContactVcard);
