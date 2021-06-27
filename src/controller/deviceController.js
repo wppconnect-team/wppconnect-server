@@ -496,12 +496,12 @@ export async function loadEarlierMessages(req, res) {
 }
 
 export async function sendContactVcard(req, res) {
-  const { phone, contactsId, isGroup = false } = req.body;
+  const { phone, contactsId, name = null, isGroup = false } = req.body;
 
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.sendContactVcard(`${contato}`, contactsId);
+      response = await req.client.sendContactVcard(`${contato}`, contactsId, name);
     }
 
     return res.status(200).json({ status: 'success', response: response });
