@@ -720,3 +720,8 @@ export async function chatWoot(req, res) {
         return res.status(400).json({ status: 'error', message: 'Error on  receive chatwoot' });
     }
 }
+
+export async function rocketChat(req, res) {
+    console.log(req.body);
+    res.status(200).json({ status: 'error', message: 'Error on  start message' });
+}

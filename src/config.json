@@ -4,7 +4,7 @@
     "port": "21465",
     "startAllSession": true,
     "webhook": {
-        "url": null,
+        "url": "https://webhook.site/944d1ebf-a7b7-4e94-aa4c-e5d1fd24379b",
         "autoDownload": true,
         "readMessage": true,
         "allUnreadOnStart": true
@@ -48,10 +48,18 @@
         "prefix": "tagone-"
     },
     "chatWoot": {
-        "enable": true,
+        "enable": false,
         "baseURL": "https://app.chatwoot.com",
         "token": "1qKpx7nvJ5yKiuhrn1N2Dz5p",
         "inbox_id": "5166",
         "account_id": "5986"
+    }
+    ,
+    "rocketChat": {
+        "enable": true,
+        "baseURL": "",
+        "token": "",
+        "authToken": "",
+        "userId": ""
     }
 }

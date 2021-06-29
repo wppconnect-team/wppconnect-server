@@ -1397,10 +1397,10 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.6.0.tgz#c02858ae418d59a59c1598228d88d425c6e6deef"
-  integrity sha512-LeCRZKehtbUOWmL2YXzshGDRq21cqsHMn4A0xSVfWLtPFAxnoMr3QpRqPgJtIu3bAMtRKKAWwPVY3tnBIkPGpQ==
+"@wppconnect-team/wppconnect@^1.7.0":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.7.1.tgz#e2e1a85c0ad84e554b0fb713424bd3ddce4d3fe4"
+  integrity sha512-2n4KX80f8cRHvcsmyafZwp/SJlxkDgonQyU9EjOk/M62VOmGfbMD8jQXwMREnzrahFquX2Hu2kasK8EE3Vtadg==
   dependencies:
     atob "^2.1.2"
     axios "^0.21.1"
@@ -3506,7 +3506,7 @@ for-own@^0.1.3:
   dependencies:
     for-in "^1.0.1"
 
-form-data@4.0.0:
+form-data@4.0.0, form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
   integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
