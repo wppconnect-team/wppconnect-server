@@ -318,9 +318,9 @@ export async function forwardMessages(req, res) {
   try {
     
     if (!isGroup) {
-      var response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
+      response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
     } else {
-      var response = await req.client.forwardMessages(`${phone}@g.us`, [messageId], false);
+      response = await req.client.forwardMessages(`${phone}@g.us`, [messageId], false);
     }
 
     return res.status(200).json({
