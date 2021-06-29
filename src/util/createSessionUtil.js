@@ -18,6 +18,13 @@ import { create, SocketState, tokenStore } from '@wppconnect-team/wppconnect';
 import { callWebHook, startHelper } from './functions';
 import { download } from '../controller/sessionController';
 import fs from 'fs';
+/*import FileTokenStoreCreator from './tokenStore/fileTokenStoreCreator';
+import MongodbTokenStoreCreator from './tokenStore/mongodbTokenStoreCreator';
+import RedisTokenStoreCreator from './tokenStore/redisTokenStoreCreator';
+import * as redis from 'redis';
+import Token from "./tokenStore/model/token";
+import { reject } from 'lodash';*/
+import Factory from './tokenStore/factory';
 
 export default class CreateSessionUtil {
   async createSessionUtil(req, clientsArray, session, res) {
@@ -30,14 +37,8 @@ export default class CreateSessionUtil {
       client.status = 'INITIALIZING';
       client.webhook = webhook;
 
-      let myTokenStore = new tokenStore.FileTokenStore({
-        encodeFunction: (data) => {
-          return this.encodeFunction(data, client.webhook);
-        },
-        decodeFunction: (text) => {
-          return this.decodeFunction(text, client);
-        },
-      });
+      const tokenStore = new Factory();
+      const myTokenStore = tokenStore.createTokenStory(client);
 
       let wppClient = await create(
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
