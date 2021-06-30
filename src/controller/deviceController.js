@@ -316,7 +316,7 @@ export async function forwardMessages(req, res) {
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
-    
+    let response;
     if (!isGroup) {
       response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
     } else {
