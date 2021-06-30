@@ -313,10 +313,16 @@ export async function reply(req, res) {
 }
 
 export async function forwardMessages(req, res) {
-  const { phone, messageId } = req.body;
+  const { phone, messageId, isGroup = false } = req.body;
 
   try {
-    let response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
+    let response;
+    if (!isGroup) {
+      response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
+    } else {
+      response = await req.client.forwardMessages(`${phone}@g.us`, [messageId], false);
+    }
+
     return res.status(200).json({
       status: 'Success',
       id: response.to._serialized,
