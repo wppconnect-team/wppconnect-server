@@ -59,7 +59,7 @@
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "husky": "^6.0.0",
+    "husky": "^7.0.0",
     "license-check-and-add": "^4.0.2",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.1",
