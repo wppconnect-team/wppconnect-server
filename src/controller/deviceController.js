@@ -313,10 +313,16 @@ export async function reply(req, res) {
 }
 
 export async function forwardMessages(req, res) {
-  const { phone, messageId } = req.body;
+  const { phone, messageId, isGroup = false } = req.body;
 
   try {
-    let response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
+    let response;
+    if (!isGroup) {
+      response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
+    } else {
+      response = await req.client.forwardMessages(`${phone}@g.us`, [messageId], false);
+    }
+
     return res.status(200).json({
       status: 'Success',
       id: response.to._serialized,
@@ -485,12 +491,12 @@ export async function loadAndGetAllMessagesInChat(req, res) {
 }
 
 export async function sendContactVcard(req, res) {
-  const { phone, contactsId, isGroup = false } = req.body;
+  const { phone, contactsId, name = null, isGroup = false } = req.body;
 
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.sendContactVcard(`${contato}`, contactsId);
+      response = await req.client.sendContactVcard(`${contato}`, contactsId, name);
     }
 
     return res.status(200).json({ status: 'success', response: response });
