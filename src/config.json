@@ -45,19 +45,15 @@
     ]
   },
   "db": {
-    "mongodb": {
-      "database": "tokens",
-      "collection": "",
-      "user": null,
-      "password": null,
-      "host": "localhost",
-      "port": 27017
-    },
-    "redis": {
-      "host": "localhost",
-      "port": 6379,
-      "password": "pass12345",
-      "db": 0
-    }
+    "mongodbDatabase": "tokens",
+    "mongodbCollection": "",
+    "mongodbUser": null,
+    "mongodbPassword": null,
+    "mongodbHost": "localhost",
+    "mongodbPort": 27017,
+    "redisHost": "localhost",
+    "redisPort": 6379,
+    "redisPassword": "pass12345",
+    "redisDb": 0
   }
 }
