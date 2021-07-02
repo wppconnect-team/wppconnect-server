@@ -144,7 +144,8 @@ export default class CreateSessionUtil {
                     let buffer = await client.decryptFile(message);
                     message.body = await buffer.toString('base64');
                 }
-                this.rocketChatClient.sendMessage(message);
+
+                this.rocketChatClient.sendMessage(client, message);
             }
 
             if (message.type == 'location' && message.isLive)

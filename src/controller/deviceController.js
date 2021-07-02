@@ -722,6 +722,38 @@ export async function chatWoot(req, res) {
 }
 
 export async function rocketChat(req, res) {
-    console.log(req.body);
-    res.status(200).json({ status: 'error', message: 'Error on  start message' });
+    const session = req.body.visitor.phone
+    const client = clientsArray[session[0].phoneNumber.split('--')[1]];
+    try {
+
+        if (await client.isConnected()) {
+            const {
+                type,
+                phone = req.body.visitor.username,
+                message = req.body.messages[0].msg,
+            } = req.body;
+
+
+                    const contato = contactToArray(phone, false)
+
+                    if (type === 'Message'){
+                        if (req.body.messages[0].fileUpload){
+                            await client.sendFile(`${contato}`, req.body.messages[0].fileUpload.publicFilePath, req.body.messages[0].file.name, message);
+                        }
+                        else {
+                            await client.sendText(contato, message)
+                        }
+
+                     }else if (type === 'LivechatSession'){
+                        await client.sendText(contato, "Atendimento Finalizado");
+                     }else if (type === 'LivechatSessionTaken'){
+                        await client.sendText(contato, `Você está está sendo antedido(a) por ${req.body.agent.name}`);
+                     }
+                    
+                    return res.status(200).json({ status: 'success', message: 'Success on  receive rocketChat' });
+            }
+        
+    } catch (e) {
+        return res.status(400).json({ status: 'error', message: 'Error on  receive chatwoot' });
+    }
 }

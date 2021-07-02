@@ -4,7 +4,7 @@
     "port": "21465",
     "startAllSession": true,
     "webhook": {
-        "url": "https://webhook.site/944d1ebf-a7b7-4e94-aa4c-e5d1fd24379b",
+        "url": "https://webhook.site/e7ec3d48-3cbd-411b-b81c-77aa36e0bab7",
         "autoDownload": true,
         "readMessage": true,
         "allUnreadOnStart": true
@@ -16,7 +16,10 @@
     },
     "log": {
         "level": "error",
-        "logger": ["console", "file"]
+        "logger": [
+            "console",
+            "file"
+        ]
     },
     "createOptions": {
         "browserArgs": [
@@ -53,13 +56,12 @@
         "token": "1qKpx7nvJ5yKiuhrn1N2Dz5p",
         "inbox_id": "5166",
         "account_id": "5986"
-    }
-    ,
+    },
     "rocketChat": {
         "enable": true,
-        "baseURL": "",
-        "token": "",
-        "authToken": "",
-        "userId": ""
+        "baseURL": "http://rocketchat:3000",
+        "token": "$2b$10$ZhXs8Qfw83LD1wHvxwaMTuz1wrJlHHY3AncHeyUuxakxDNh.dOKte",
+        "authToken": "ALB67-zr-q45pLql1zhiIBP32-peZM25pG9qp-PVme4",
+        "userId": "xPYXs7gRLBj9pYHqi"
     }
 }

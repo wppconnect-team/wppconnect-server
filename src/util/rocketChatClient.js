@@ -41,30 +41,44 @@ export default class rocketChatClient {
         fs.writeFileSync(path.join(__dirname, '../public/' + base.chatId.split('@')[0] + '.' + tempPath), buff);
     }
 
-    async sendMessage(message) {
+    async sendMessage(client, message) {
         if (message.mimetype) {
-            await this.typeMessage(message);
+            await this.typeMessage(client, message);
             return;
+        }else if (message.type == 'location'){
+            message.body = `http://maps.google.com/maps?q=${message.lat},${message.lng}&ll=${message.lat},${message.lng}&z=17`
         }
         let body = {
-            From: message.chatId.split('@')[0],
+            From: `${message.chatId.split('@')[0]}--${client.session}`,
             Body: message.body,
             MediaContentType0: 'Null',
             MediaUrl0: 'Null',
             NumMedia: '0',
         };
 
+       
         try {
             const { data } = await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
+            
+            const { data: result } = await this.api.get(`/api/v1/livechat/rooms?open=true`);
+            
+            if (data == "<Response><Message>Sorry, no online agents</Message></Response>"){
+                let body = {
+                    channel: "#general",
+                    text: `*Contato do Cliente:* ${message.chatId.split('@')[0]}\n *Mensagem:* Tentativa de Contato, nenhum agente online`
+                }
+                const result = await this.api.post(`/api/v1/chat.postMessage`, body);
+                return
+            }
             return data;
         } catch (e) {
             return null;
         }
     }
 
-    async sendInit(message) {
+    async sendInit(client, message) {
         let body = {
-            From: message.chatId.split('@')[0],
+            From: `${message.chatId.split('@')[0]}--${client.session}`,
             Body: '',
             MediaContentType0: 'Null',
             MediaUrl0: 'Null',
@@ -73,12 +87,13 @@ export default class rocketChatClient {
 
         try {
             const { data } = await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
-            return data;
+
+
         } catch (e) {
             return null;
         }
     }
-    async typeMessage(type) {
+    async typeMessage(client, type) {
         await this.Base64decoder(type);
         const { data: result } = await this.api.get(`/api/v1/livechat/rooms?open=true`);
         if (!type.filename) {
@@ -91,8 +106,8 @@ export default class rocketChatClient {
         const captionMessage = type.caption ? type.caption : '';
 
         if (result.count == 0) {
-            await this.sendInit(type);
-            await this.typeMessage(type);
+            await this.sendInit(client, type);
+            await this.typeMessage(client, type);
         }
         var count = 0;
         for (let item in result.rooms) {

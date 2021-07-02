@@ -1,0 +1,83 @@
+version: '2'
+
+services:
+  wppconnect:
+    container_name: "wppconnect"
+    restart: always
+    ports:
+      - 21465:21465
+    build: .
+    volumes:
+      - ./src/config.json:/app/src/config.json
+      - ./src/controller/deviceController.js:/app/src/controller/deviceController.js
+      - ./src/routes/index.js:/app/src/routes/index.js
+      - ./src/util/rocketChatClient.js:/app/src/util/rocketChatClient.js
+      - ./src/util/createSessionUtil.js:/app/src/util/createSessionUtil.js
+      - ./tokens:/app/tokens
+      
+      
+  rocketchat:
+    image: rocketchat/rocket.chat:3.15.0
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          node main.js &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    restart: unless-stopped
+    volumes:
+      - ../uploads:/app/uploads
+    environment:
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASS=admin
+      - ADMIN_EMAIL=admin@example.com
+      - PORT=3000
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - OVERWRITE_SETTING_Accounts_TwoFactorAuthentication_Enforce_Password_Fallback=false
+      - OVERWRITE_SETTING_SMTP_HOST=mailhog
+      - OVERWRITE_SETTING_SMTP_PORT=1025
+      - OVERWRITE_SETTING_SMTP_Username=smtp_user
+      - OVERWRITE_SETTING_SMTP_Password=smtp_password
+      - OVERWRITE_SETTING_SMTP_From_Email=from@email.smtp
+      - OVERWRITE_SETTING_Show_Setup_Wizard=completed
+      - OVERWRITE_SETTING_API_Enable_Rate_Limiter=false
+      - CREATE_TOKENS_FOR_USERS=true
+    depends_on:
+      - mongo
+    ports:
+      - 3000:3000
+#    labels:
+#      - "traefik.backend=rocketchat"
+#      - "traefik.frontend.rule=Host: your.domain.tld"
+
+  mongo:
+    image: mongo:4.0
+    restart: unless-stopped
+    volumes:
+     - ../data/db:/data/db
+     #- ./data/dump:/dump
+    command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
+#    labels:
+#      - "traefik.enable=false"
+
+  # this container's job is just run the command to initialize the replica set.
+  # it will run the command and remove himself (it will not stay running)
+  mongo-init-replica:
+    image: mongo:4.0
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          mongo mongo/rocketchat --eval \"
+            rs.initiate({
+              _id: 'rs0',
+              members: [ { _id: 0, host: 'localhost:27017' } ]})\" &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    depends_on:
+      - mongo
