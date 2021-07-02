@@ -1425,9 +1425,9 @@
     "@types/node" "*"
 
 "@wppconnect-team/wppconnect@^1.7.0":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.7.1.tgz#e2e1a85c0ad84e554b0fb713424bd3ddce4d3fe4"
-  integrity sha512-2n4KX80f8cRHvcsmyafZwp/SJlxkDgonQyU9EjOk/M62VOmGfbMD8jQXwMREnzrahFquX2Hu2kasK8EE3Vtadg==
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.7.3.tgz#5f1dcb532834efb832a704d2e7495eeb4d7d680f"
+  integrity sha512-Xy24fj7tHnZPI27j0cO+4MMK8/INmxiP1mEh0prZ5lNN+iu6eJH3Bs7bjDVTc+dYZYGJfhjiqJPFKm9zIaaUEg==
   dependencies:
     atob "^2.1.2"
     axios "^0.21.1"
