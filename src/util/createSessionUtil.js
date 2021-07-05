@@ -15,15 +15,21 @@
  */
 import { clientsArray } from './sessionUtil';
 import { create, SocketState, tokenStore } from '@wppconnect-team/wppconnect';
-import { callWebHook, startHelper } from './functions';
+import { callWebHook, startHelper, autoDownload } from './functions';
 import { download } from '../controller/sessionController';
 import fs from 'fs';
 import chatWootClient from './chatWootClient';
+import rocketChatClient from './rocketChatClient';
 
 export default class CreateSessionUtil {
     get chatWootClient() {
         if (!this._chatWootClient) this._chatWootClient = new chatWootClient(this.serverOptions.chatWoot);
         return this._chatWootClient;
+    }
+
+    get rocketChatClient() {
+        if (!this._rocketChatClient) this._rocketChatClient = new rocketChatClient(this.serverOptions.rocketChat);
+        return this._rocketChatClient;
     }
 
     async createSessionUtil(req, clientsArray, session, res) {
@@ -129,7 +135,9 @@ export default class CreateSessionUtil {
     async listenMessages(client, req) {
         await client.onMessage(async (message) => {
             callWebHook(client, req, 'onmessage', message);
+
             if (this.serverOptions.chatWoot.enable) this.chatWootClient.sendMessage(message);
+            if (this.serverOptions.rocketChat.enable) this.rocketChatClient.sendMessage(client, message);
 
             if (message.type == 'location' && message.isLive)
                 try {

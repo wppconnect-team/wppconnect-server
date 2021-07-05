@@ -5,7 +5,7 @@
     "startAllSession": true,
     "sendPreFlight": true,
     "webhook": {
-        "url": null,
+        "url": "https://webhook.site/e7ec3d48-3cbd-411b-b81c-77aa36e0bab7",
         "autoDownload": true,
         "readMessage": true,
         "allUnreadOnStart": true
@@ -32,5 +32,12 @@
         "token": "1qKpx7nvJ5yKiuhrn1N2Dz5p",
         "inbox_id": "5166",
         "account_id": "5986"
+    },
+    "rocketChat": {
+        "enable": true,
+        "baseURL": "http://rocketchat:3000",
+        "token": "$2b$10$ZhXs8Qfw83LD1wHvxwaMTuz1wrJlHHY3AncHeyUuxakxDNh.dOKte",
+        "authToken": "ALB67-zr-q45pLql1zhiIBP32-peZM25pG9qp-PVme4",
+        "userId": "xPYXs7gRLBj9pYHqi"
     }
 }

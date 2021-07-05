@@ -195,6 +195,7 @@ routes.post('/api/:session/profile-status', verifyToken, statusConnection, Devic
 routes.post('/api/:session/change-username', verifyToken, statusConnection, DeviceController.setProfileName);
 
 routes.post('/api/:session/chatwoot', verifyToken, statusConnection, DeviceController.chatWoot);
+routes.post('/api/connector/rocketChat', DeviceController.rocketChat);
 
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
