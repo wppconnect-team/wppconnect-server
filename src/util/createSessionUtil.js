@@ -136,17 +136,8 @@ export default class CreateSessionUtil {
         await client.onMessage(async (message) => {
             callWebHook(client, req, 'onmessage', message);
 
-            // await autoDownload(client, message);
-
             if (this.serverOptions.chatWoot.enable) this.chatWootClient.sendMessage(message);
-            if (this.serverOptions.rocketChat.enable) {
-                if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
-                    let buffer = await client.decryptFile(message);
-                    message.body = await buffer.toString('base64');
-                }
-
-                this.rocketChatClient.sendMessage(client, message);
-            }
+            if (this.serverOptions.rocketChat.enable) this.rocketChatClient.sendMessage(client, message);
 
             if (message.type == 'location' && message.isLive)
                 try {

@@ -42,11 +42,16 @@ export default class rocketChatClient {
     }
 
     async sendMessage(client, message) {
+        if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
+            let buffer = await client.decryptFile(message);
+            message.body = await buffer.toString('base64');
+        }
+
         if (message.mimetype) {
             await this.typeMessage(client, message);
             return;
-        }else if (message.type == 'location'){
-            message.body = `http://maps.google.com/maps?q=${message.lat},${message.lng}&ll=${message.lat},${message.lng}&z=17`
+        } else if (message.type == 'location') {
+            message.body = `http://maps.google.com/maps?q=${message.lat},${message.lng}&ll=${message.lat},${message.lng}&z=17`;
         }
         let body = {
             From: `${message.chatId.split('@')[0]}--${client.session}`,
@@ -56,19 +61,20 @@ export default class rocketChatClient {
             NumMedia: '0',
         };
 
-       
         try {
             const { data } = await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
-            
+
             const { data: result } = await this.api.get(`/api/v1/livechat/rooms?open=true`);
-            
-            if (data == "<Response><Message>Sorry, no online agents</Message></Response>"){
+
+            if (data == '<Response><Message>Sorry, no online agents</Message></Response>') {
                 let body = {
-                    channel: "#general",
-                    text: `*Contato do Cliente:* ${message.chatId.split('@')[0]}\n *Mensagem:* Tentativa de Contato, nenhum agente online`
-                }
+                    channel: '#general',
+                    text: `*Contato do Cliente:* ${
+                        message.chatId.split('@')[0]
+                    }\n *Mensagem:* Tentativa de Contato, nenhum agente online`,
+                };
                 const result = await this.api.post(`/api/v1/chat.postMessage`, body);
-                return
+                return;
             }
             return data;
         } catch (e) {
@@ -87,8 +93,6 @@ export default class rocketChatClient {
 
         try {
             const { data } = await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
-
-
         } catch (e) {
             return null;
         }
