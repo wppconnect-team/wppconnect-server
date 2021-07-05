@@ -91,6 +91,12 @@ routes.get(
   statusConnection,
   GroupController.getGroupInviteLink
 );
+routes.get(
+  '/api/:session/group-revoke-link/:groupId',
+  verifyToken,
+  statusConnection,
+  GroupController.revokeGroupInviteLink
+);
 routes.get('/api/:session/all-broadcast-list', verifyToken, statusConnection, GroupController.getAllBroadcastList);
 routes.get('/api/:session/all-groups', verifyToken, statusConnection, DeviceController.getAllGroups);
 routes.post(
@@ -117,7 +123,7 @@ routes.post(
   DeviceController.setGroupProfilePic
 );
 
-//Chat Metthods
+//Chat Methods
 routes.post('/api/:session/archive-chat', verifyToken, statusConnection, DeviceController.archiveChat);
 routes.post('/api/:session/clear-chat', verifyToken, statusConnection, DeviceController.clearChat);
 routes.post('/api/:session/delete-chat', verifyToken, statusConnection, DeviceController.deleteChat);

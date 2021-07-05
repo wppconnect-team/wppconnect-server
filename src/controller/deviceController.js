@@ -325,9 +325,9 @@ export async function forwardMessages(req, res) {
 
     return res.status(200).json({
       status: 'Success',
-      id: response.to._serialized,
+      id: response[0],
       session: req.session,
-      phone: response.to.remote.user,
+      phone: phone,
     });
   } catch (e) {
     req.logger.error(e);
