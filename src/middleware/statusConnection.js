@@ -13,10 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { contactToArray } from '../util/functions';
+let preFligthContact = new Map();
+
 export default async function statusConnection(req, res, next) {
     try {
         if (req.client) {
             await req.client.isConnected();
+            req.body.phone = contactToArray(req.body.phone || req.params.phone, req.body.isGroup);
+
+            if (req.serverOptions.sendPreFlight && req.body.phone && !req.body.isGroup) {
+                let localArr = [];
+                for (let phone of req.body.phone) {
+                    if (preFligthContact.has(phone)) localArr.push(preFligthContact.get(phone));
+                    else {
+                        const contact = await req.client.checkNumberStatus(phone);
+                        preFligthContact.set(phone, contact.id._serialized);
+                        localArr.push(contact.id._serialized);
+                    }
+                }
+                req.body.phone = localArr;
+            }
         } else {
             return res.status(400).json({
                 response: false,

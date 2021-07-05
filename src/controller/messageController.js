@@ -39,15 +39,14 @@ function returnSucess(res, session, phone, data) {
 
 export async function sendMessage(req, res) {
     const session = req.session;
-    const { phone, message, isGroup = false } = req.body;
+    const { phone, message } = req.body;
 
     try {
         let result;
-        for (const contato of contactToArray(phone, isGroup)) {
-            result = await req.client.sendText(contato, message);
-        }
 
-        if (!result) return res.status(400).json('Error sending message');
+        for (const contato of phone) result = await req.client.sendText(contato, message);
+
+        if (!result) return res.status(400).json({ message: 'Error sending message' });
 
         req.io.emit('mensagem-enviada', { message: message, to: phone });
         returnSucess(res, session, phone, result);
@@ -58,7 +57,7 @@ export async function sendMessage(req, res) {
 
 export async function sendImage(req, res) {
     const session = req.session;
-    const { phone, filename = 'image-api.jpg', caption, path, isGroup = false } = req.body;
+    const { phone, filename = 'image-api.jpg', caption, path } = req.body;
 
     if (!phone) return res.status(401).send({ message: 'Telefone não informado.' });
 
@@ -70,7 +69,7 @@ export async function sendImage(req, res) {
     const pathFile = path || req.file.path;
 
     try {
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             await req.client.sendImage(contato, pathFile, filename, caption);
         }
 
@@ -82,14 +81,14 @@ export async function sendImage(req, res) {
 
 export async function sendFile(req, res) {
     const session = req.session;
-    const { phone, filename = 'file', message, isGroup = false } = req.body;
+    const { phone, filename = 'file', message } = req.body;
 
     if (!req.file) return res.status(400).json({ status: 'Error', message: 'Sending the file is mandatory' });
 
     const { path: pathFile } = req.file;
 
     try {
-        for (const contato of contactToArray(phone, strToBool(isGroup))) {
+        for (const contato of phone) {
             await req.client.sendFile(`${contato}`, pathFile, filename, message);
         }
 
@@ -102,12 +101,12 @@ export async function sendFile(req, res) {
 
 export async function sendFile64(req, res) {
     const session = req.session;
-    const { base64, phone, filename = 'file', message, isGroup = false } = req.body;
+    const { base64, phone, filename = 'file', message } = req.body;
 
     if (!base64) return res.status(401).send({ message: 'The base64 of the file was not informed' });
 
     try {
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             await req.client.sendFileFromBase64(`${contato}`, base64, filename, message);
         }
 
@@ -118,10 +117,10 @@ export async function sendFile64(req, res) {
 }
 
 export async function sendVoice(req, res) {
-    const { phone, url: base64Ptt, isGroup = false } = req.body;
+    const { phone, url: base64Ptt } = req.body;
 
     try {
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             await req.client.sendPttFromBase64(`${contato}`, base64Ptt, 'Voice Audio');
         }
 
@@ -133,10 +132,10 @@ export async function sendVoice(req, res) {
 }
 
 export async function sendLinkPreview(req, res) {
-    const { phone, url, caption, isGroup = false } = req.body;
+    const { phone, url, caption } = req.body;
 
     try {
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             await req.client.sendLinkPreview(`${contato}`, url, caption);
         }
 
@@ -148,10 +147,10 @@ export async function sendLinkPreview(req, res) {
 }
 
 export async function sendLocation(req, res) {
-    const { phone, lat, lng, title, isGroup = false } = req.body;
+    const { phone, lat, lng, title } = req.body;
 
     try {
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             await req.client.sendLocation(`${contato}`, lat, lng, title);
         }
 
@@ -176,11 +175,11 @@ export async function sendStatusText(req, res) {
 
 export async function replyMessage(req, res) {
     const session = req.session;
-    const { phone, message, messageId, isGroup = false } = req.body;
+    const { phone, message, messageId } = req.body;
 
     try {
         let result;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             result = await req.client.reply(`${contato}`, message, messageId);
         }
 

@@ -35,10 +35,5 @@ export default {
             return value.mimetype || '';
         },
     },
-    filename: {
-        path: '$item',
-        formatting: (value) => {
-            return value.mimetype ? value.filename || value.id : '';
-        },
-    },
+    filename: 'id',
 };

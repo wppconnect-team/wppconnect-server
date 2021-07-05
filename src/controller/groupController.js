@@ -125,7 +125,7 @@ export async function addParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.addParticipant(grupo, contactToArray(phone));
+            response = await req.client.addParticipant(grupo, phone);
             arrayGrupos.push(response);
         }
 
@@ -149,7 +149,7 @@ export async function removeParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            response = await req.client.removeParticipant(grupo, contactToArray(phone));
+            response = await req.client.removeParticipant(grupo, phone);
             arrayGrupos.push(response);
         }
 
@@ -172,7 +172,7 @@ export async function promoteParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            await req.client.promoteParticipant(grupo, contactToArray(phone));
+            await req.client.promoteParticipant(grupo, phone);
             arrayGrupos.push(grupo);
         }
 
@@ -195,7 +195,7 @@ export async function demoteParticipant(req, res) {
 
     try {
         for (const grupo of groupToArray(groupId)) {
-            await req.client.demoteParticipant(grupo, contactToArray(phone));
+            await req.client.demoteParticipant(grupo, phone);
             arrayGrupos.push(grupo);
         }
 

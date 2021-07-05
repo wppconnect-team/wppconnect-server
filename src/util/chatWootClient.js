@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 import axios from 'axios';
+import { default as FormData } from 'form-data';
+import mime from 'mime-types';
+import toStream from 'buffer-to-stream';
 
 export default class chatWootClient {
     constructor(config) {
@@ -22,7 +25,7 @@ export default class chatWootClient {
         this.inbox_id = this.config.inbox_id;
         this.api = axios.create({
             baseURL: this.config.baseURL,
-            headers: { api_access_token: this.config.token },
+            headers: { 'Content-Type': 'application/json;charset=utf-8', api_access_token: this.config.token },
         });
     }
 
@@ -31,15 +34,58 @@ export default class chatWootClient {
         let conversation = await this.createConversation(contact, message.id);
 
         try {
-            let body = {
-                content: message.body,
-                message_type: 'incoming',
-            };
-            const { data } = await this.api.post(
-                `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
-                body
-            );
-            return data;
+            if (
+                message.type == 'image' ||
+                message.type == 'in' ||
+                message.type == 'document' ||
+                message.type == 'ptt'
+            ) {
+                let filename = `${message.timestamp}.${mime.extension(message.mimetype)}`;
+                let b64 = message.content;
+
+                let mediaData = Buffer.from(b64, 'base64');
+
+                let data = new FormData();
+                if (message.caption) {
+                    data.append('content', message.caption);
+                }
+                data.append('attachments[]', toStream(mediaData), {
+                    filename: filename,
+                    contentType: message.mimetype,
+                });
+                data.append('message_type', 'incoming');
+                data.append('private', 'false');
+
+                let configPost = Object.assign(
+                    {},
+                    {
+                        baseURL: this.config.baseURL,
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8',
+                            api_access_token: this.config.token,
+                        },
+                    }
+                );
+                configPost.headers = { ...configPost.headers, ...data.getHeaders() };
+
+                var result = await axios.post(
+                    `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
+                    data,
+                    configPost
+                );
+
+                return result;
+            } else {
+                let body = {
+                    content: message.body,
+                    message_type: 'incoming',
+                };
+                const { data } = await this.api.post(
+                    `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
+                    body
+                );
+                return data;
+            }
         } catch (e) {
             return null;
         }

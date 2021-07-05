@@ -100,11 +100,10 @@ export async function getAllChatsWithMessages(req, res) {
 
 export async function getAllMessagesInChat(req, res) {
     try {
-        let { phone } = req.params;
-        const { isGroup = false, includeMe = true, includeNotifications = true } = req.query;
+        const { includeMe = true, includeNotifications = true } = req.query;
 
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of req.body.phone) {
             response = await req.client.getAllMessagesInChat(contato, includeMe, includeNotifications);
         }
 
@@ -173,7 +172,7 @@ export async function changePrivacyGroup(req, res) {
     const { phone, status } = req.body;
 
     try {
-        for (const contato of contactToArray(phone)) {
+        for (const contato of phone) {
             await req.client.setMessagesAdminsOnly(`${contato}@g.us`, status === 'true');
         }
 
@@ -414,7 +413,7 @@ export async function setGroupProfilePic(req, res) {
     try {
         const { path: pathFile } = req.file;
 
-        for (const contato of contactToArray(phone, true)) {
+        for (const contato of phone) {
             await req.client.setProfilePic(pathFile, contato);
         }
 
@@ -486,11 +485,11 @@ export async function loadAndGetAllMessagesInChat(req, res) {
 }
 
 export async function sendContactVcard(req, res) {
-    const { phone, contactsId, isGroup = false } = req.body;
+    const { phone, contactsId } = req.body;
 
     try {
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             response = await req.client.sendContactVcard(`${contato}`, contactsId);
         }
 
@@ -502,11 +501,11 @@ export async function sendContactVcard(req, res) {
 }
 
 export async function sendMentioned(req, res) {
-    const { phone, message, mentioned, isGroup = false } = req.body;
+    const { phone, message, mentioned } = req.body;
 
     try {
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             response = await req.client.sendMentioned(`${contato}`, message, mentioned);
         }
 
@@ -517,11 +516,11 @@ export async function sendMentioned(req, res) {
 }
 
 export async function sendMute(req, res) {
-    const { phone, time, type = 'hours', isGroup = false } = req.body;
+    const { phone, time, type = 'hours' } = req.body;
 
     try {
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             response = await req.client.sendMute(`${contato}`, time, type);
         }
 
@@ -532,11 +531,11 @@ export async function sendMute(req, res) {
 }
 
 export async function sendSeen(req, res) {
-    const { phone, isGroup = false } = req.body;
+    const { phone } = req.body;
 
     try {
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             response = await req.client.sendSeen(`${contato}`);
         }
 
@@ -547,11 +546,11 @@ export async function sendSeen(req, res) {
 }
 
 export async function setChatState(req, res) {
-    const { phone, chatstate, isGroup = false } = req.body;
+    const { phone, chatstate } = req.body;
 
     try {
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             response = await req.client.setChatState(`${contato}`, chatstate);
         }
 
@@ -562,11 +561,11 @@ export async function setChatState(req, res) {
 }
 
 export async function setTemporaryMessages(req, res) {
-    const { phone, value = true, isGroup = false } = req.body;
+    const { phone, value = true } = req.body;
 
     try {
         let response;
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             response = await req.client.setTemporaryMessages(`${contato}`, value);
         }
 
@@ -577,11 +576,11 @@ export async function setTemporaryMessages(req, res) {
 }
 
 export async function setTyping(req, res) {
-    const { phone, value = true, isGroup = false } = req.body;
+    const { phone, value = true } = req.body;
     try {
         let response;
 
-        for (const contato of contactToArray(phone, isGroup)) {
+        for (const contato of phone) {
             if (value) response = await req.client.startTyping(contato);
             else response = await req.client.stopTyping(contato);
         }
@@ -593,11 +592,11 @@ export async function setTyping(req, res) {
 }
 
 export async function checkNumberStatus(req, res) {
-    const { phone } = req.params;
+    const { phone } = req.body;
     try {
         let response;
 
-        for (const contato of contactToArray(phone, false)) {
+        for (const contato of phone) {
             response = await req.client.checkNumberStatus(`${contato}`);
         }
 
@@ -608,10 +607,10 @@ export async function checkNumberStatus(req, res) {
 }
 
 export async function getContact(req, res) {
-    const { phone = true } = req.params;
+    const { phone } = req.body;
     try {
         let response;
-        for (const contato of contactToArray(phone, false)) {
+        for (const contato of phone) {
             response = await req.client.getContact(contato);
         }
 
@@ -631,10 +630,10 @@ export async function getAllContacts(req, res) {
 }
 
 export async function getNumberProfile(req, res) {
-    const { phone = true } = req.params;
+    const { phone } = req.body;
     try {
         let response;
-        for (const contato of contactToArray(phone, false)) {
+        for (const contato of phone) {
             response = await req.client.getNumberProfile(contato);
         }
         return res.status(200).json({ status: 'success', response: response });
@@ -644,10 +643,10 @@ export async function getNumberProfile(req, res) {
 }
 
 export async function getProfilePicFromServer(req, res) {
-    const { phone = true } = req.params;
+    const { phone } = req.body;
     try {
         let response;
-        for (const contato of contactToArray(phone, false)) {
+        for (const contato of phone) {
             response = await req.client.getProfilePicFromServer(contato);
         }
 
@@ -658,10 +657,10 @@ export async function getProfilePicFromServer(req, res) {
 }
 
 export async function getStatus(req, res) {
-    const { phone = true } = req.params;
+    const { phone } = req.body;
     try {
         let response;
-        for (const contato of contactToArray(phone, false)) {
+        for (const contato of phone) {
             response = await req.client.getStatus(contato);
         }
         return res.status(200).json({ status: 'success', response: response });
@@ -696,7 +695,7 @@ export async function starMessage(req, res) {
 }
 
 export async function chatWoot(req, res) {
-    const session = req.session;
+    const { session } = req.params;
     const client = clientsArray[session];
     try {
         if (await client.isConnected()) {

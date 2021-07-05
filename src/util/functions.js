@@ -21,6 +21,7 @@ import { convert } from '../mapper/index';
 
 export function contactToArray(number, isGroup) {
     let localArr = [];
+    if (!number) return localArr;
     if (Array.isArray(number)) {
         for (const contact of number) {
             if (contact !== '')
@@ -36,7 +37,6 @@ export function contactToArray(number, isGroup) {
                 else localArr.push(`${contact}@c.us`);
         }
     }
-
     return localArr;
 }
 
