@@ -33,10 +33,11 @@ export default class rocketChatClient {
 
     async Base64decoder(base) {
         let buff = new Buffer.from(base.body, 'base64');
+        let tempPath;
         if (!base.filename) {
-            var tempPath = base.mimetype.split('/')[1].split(';')[0];
+            tempPath = base.mimetype.split('/')[1].split(';')[0];
         } else {
-            var tempPath = base.filename.split('.')[1];
+            tempPath = base.filename.split('.')[1];
         }
         fs.writeFileSync(path.join(__dirname, '../public/' + base.chatId.split('@')[0] + '.' + tempPath), buff);
     }
@@ -64,8 +65,6 @@ export default class rocketChatClient {
         try {
             const { data } = await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
 
-            const { data: result } = await this.api.get(`/api/v1/livechat/rooms?open=true`);
-
             if (data == '<Response><Message>Sorry, no online agents</Message></Response>') {
                 let body = {
                     channel: '#general',
@@ -73,7 +72,7 @@ export default class rocketChatClient {
                         message.chatId.split('@')[0]
                     }\n *Mensagem:* Tentativa de Contato, nenhum agente online`,
                 };
-                const result = await this.api.post(`/api/v1/chat.postMessage`, body);
+                await this.api.post(`/api/v1/chat.postMessage`, body);
                 return;
             }
             return data;
@@ -92,7 +91,7 @@ export default class rocketChatClient {
         };
 
         try {
-            const { data } = await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
+            await this.api.post(`/api/v1/livechat/sms-incoming/twilio`, body);
         } catch (e) {
             return null;
         }
@@ -100,10 +99,11 @@ export default class rocketChatClient {
     async typeMessage(client, type) {
         await this.Base64decoder(type);
         const { data: result } = await this.api.get(`/api/v1/livechat/rooms?open=true`);
+        let tempPath;
         if (!type.filename) {
-            var tempPath = type.mimetype.split('/')[1].split(';')[0];
+            tempPath = type.mimetype.split('/')[1].split(';')[0];
         } else {
-            var tempPath = type.filename.split('.')[1];
+            tempPath = type.filename.split('.')[1];
         }
         const pathSend = type.chatId.split('@')[0] + '.' + tempPath;
 

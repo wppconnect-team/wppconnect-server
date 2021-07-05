@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { contactToArray, strToBool, unlinkAsync } from '../util/functions';
+import { unlinkAsync } from '../util/functions';
 
 function returnError(req, res, session, error) {
     req.logger.error(error);
