@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { tokenStore } from '@wppconnect-team/wppconnect';
+import Factory from './tokenStore/factory';
 
 export default async function getAllTokens(req) {
-  let myTokenStore = new tokenStore.FileTokenStore();
+  const tokenStore = new Factory();
+  const myTokenStore = tokenStore.createTokenStory(null);
   try {
     return await myTokenStore.listTokens();
   } catch (e) {

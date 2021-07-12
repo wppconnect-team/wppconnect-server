@@ -67,6 +67,12 @@
     "release-it": "^14.8.0",
     "rimraf": "^3.0.2",
     "shx": "^0.3.3",
-    "swagger-ui-dist": "^3.50.0"
+    "swagger-ui-dist": "^3.50.0",
+    "mongoose": "^5.12.15",
+    "redis": "^3.1.2"
+  },
+  "peerDependencies": {
+    "mongoose": "^5.12.15",
+    "redis": "^3.1.2"
   }
 }
