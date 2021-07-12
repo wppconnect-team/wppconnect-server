@@ -1439,10 +1439,10 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.7.0":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.7.3.tgz#5f1dcb532834efb832a704d2e7495eeb4d7d680f"
-  integrity sha512-Xy24fj7tHnZPI27j0cO+4MMK8/INmxiP1mEh0prZ5lNN+iu6eJH3Bs7bjDVTc+dYZYGJfhjiqJPFKm9zIaaUEg==
+"@wppconnect-team/wppconnect@^1.7.3":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.7.5.tgz#df3c40a98d0aade425b8f3d0891d71b048121d9a"
+  integrity sha512-E18HT0ppLpF6G9K+FVoe4ccaIWCZPidaV90KxGgZIacyavSI+luYZDmesTtNPxqb7lAu8AAYzB7EzQKPZH9hag==
   dependencies:
     atob "^2.1.2"
     axios "^0.21.1"
@@ -5421,9 +5421,9 @@ node-releases@^1.1.71:
   integrity sha512-uW7fodD6pyW2FZNZnp/Z3hvWKeEW1Y8R1+1CnErE8cXFXzl5blBOoVB41CvMer6P6Q0S5FXDwcHgFd1Wj0U9zg==
 
 nodemon@^2.0.7:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.9.tgz#f5cd550ba215da3c1081459ae2c1c8da2c353165"
-  integrity sha512-6O4k7C8f2HQArGpaPBOqGGddjzDLQAqCYmq3tKMeNIbz7Is/hOphMHy2dcY10sSq5wl3cqyn9Iz+Ep2j51JOLg==
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.11.tgz#957f2f28d7d255402eb46e6ec722edceb6e8e8cf"
+  integrity sha512-V9UizUMs7hM63YC+e+26FC4iTqEA1GJsrM8C7DiNyPvYBOG/QE169kMIe+sH7FSe8YteMQpaKkUDwfAF83+kEQ==
   dependencies:
     chokidar "^3.2.2"
     debug "^3.2.6"
