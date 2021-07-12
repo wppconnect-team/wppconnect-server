@@ -493,7 +493,7 @@ export async function loadEarlierMessages(req, res) {
   const { phone, includeMe = true, includeNotifications = false } = req.params;
 
   try {
-    const response = await req.client.loadEarlierMessages(`${phone}@c.us`, includeMe, includeNotifications);
+    const response = await req.client.loadEarlierMessages(`${phone}`, includeMe, includeNotifications);
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
