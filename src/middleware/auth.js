@@ -36,13 +36,12 @@ const verifyToken = (req, res, next) => {
       tokenDecrypt = session.split(':')[1].replace(/_/g, '/').replace(/-/g, '+');
     } catch (error) {
       try {
-        if (token.split(' ').length > 0) tokenDecrypt = token.split(' ')[1].replace(/_/g, '/').replace(/-/g, '+');
+        if (token && token !== '' && token.split(' ').length > 0)
+          tokenDecrypt = token.split(' ')[1].replace(/_/g, '/').replace(/-/g, '+');
+        else return res.status(401).json({ message: 'Token is not present. Check your header and try again' });
       } catch (e) {
         req.logger.error(e);
-        return res.status(401).json({
-          error: 'Check that the Session and Token are correct',
-          message: error,
-        });
+        return res.status(401).json({ error: 'Check that a Session and Token are correct', message: error });
       }
     }
 

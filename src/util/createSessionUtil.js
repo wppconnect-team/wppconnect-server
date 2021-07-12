@@ -124,7 +124,7 @@ export default class CreateSessionUtil {
   async listenMessages(client, req) {
     await client.onMessage(async (message) => {
       callWebHook(client, req, 'onmessage', message);
-      if (message.type == 'location')
+      if (message.type === 'location')
         client.onLiveLocation(message.sender.id, (location) => {
           callWebHook(client, req, 'location', location);
         });

@@ -50,6 +50,8 @@
     "mongodbUser": null,
     "mongodbPassword": null,
     "mongodbHost": "localhost",
+    "mongoIsRemote": false,
+    "mongoURLRemote": false,
     "mongodbPort": 27017,
     "redisHost": "localhost",
     "redisPort": 6379,
