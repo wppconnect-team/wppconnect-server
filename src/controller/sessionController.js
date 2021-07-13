@@ -23,313 +23,313 @@ import mime from 'mime-types';
 const SessionUtil = new CreateSessionUtil();
 
 async function downloadFileFunction(message, client, logger) {
-    try {
-        const buffer = await client.decryptFile(message);
+  try {
+    const buffer = await client.decryptFile(message);
 
-        let filename = `./WhatsAppImages/file${message.t}`;
-        if (!fs.existsSync(filename)) {
-            let result = '';
-            if (message.type === 'ptt') {
-                result = `${filename}.oga`;
-            } else {
-                result = `${filename}.${mime.extension(message.mimetype)}`;
-            }
+    let filename = `./WhatsAppImages/file${message.t}`;
+    if (!fs.existsSync(filename)) {
+      let result = '';
+      if (message.type === 'ptt') {
+        result = `${filename}.oga`;
+      } else {
+        result = `${filename}.${mime.extension(message.mimetype)}`;
+      }
 
-            await fs.writeFile(result, buffer, (err) => {
-                if (err) {
-                    logger.error(err);
-                }
-            });
-
-            return result;
-        } else {
-            return `${filename}.${mime.extension(message.mimetype)}`;
+      await fs.writeFile(result, buffer, (err) => {
+        if (err) {
+          logger.error(err);
         }
-    } catch (e) {
-        logger.error(e);
-        logger.warn('Erro ao descriptografar a midia, tentando fazer o download direto...');
-        try {
-            const buffer = await client.downloadMedia(message);
-            const filename = `./WhatsAppImages/file${message.t}`;
-            if (!fs.existsSync(filename)) {
-                let result = '';
-                if (message.type === 'ptt') {
-                    result = `${filename}.oga`;
-                } else {
-                    result = `${filename}.${mime.extension(message.mimetype)}`;
-                }
+      });
 
-                await fs.writeFile(result, buffer, (err) => {
-                    if (err) {
-                        logger.error(err);
-                    }
-                });
-
-                return result;
-            } else {
-                return `${filename}.${mime.extension(message.mimetype)}`;
-            }
-        } catch (e) {
-            logger.error(e);
-            logger.warn('Não foi possível baixar a mídia...');
-        }
+      return result;
+    } else {
+      return `${filename}.${mime.extension(message.mimetype)}`;
     }
+  } catch (e) {
+    logger.error(e);
+    logger.warn('Erro ao descriptografar a midia, tentando fazer o download direto...');
+    try {
+      const buffer = await client.downloadMedia(message);
+      const filename = `./WhatsAppImages/file${message.t}`;
+      if (!fs.existsSync(filename)) {
+        let result = '';
+        if (message.type === 'ptt') {
+          result = `${filename}.oga`;
+        } else {
+          result = `${filename}.${mime.extension(message.mimetype)}`;
+        }
+
+        await fs.writeFile(result, buffer, (err) => {
+          if (err) {
+            logger.error(err);
+          }
+        });
+
+        return result;
+      } else {
+        return `${filename}.${mime.extension(message.mimetype)}`;
+      }
+    } catch (e) {
+      logger.error(e);
+      logger.warn('Não foi possível baixar a mídia...');
+    }
+  }
 }
 
 export async function download(message, client, logger) {
-    try {
-        const path = await downloadFileFunction(message, client, logger);
-        return path.replace('./', '');
-    } catch (e) {
-        logger.error(e);
-    }
+  try {
+    const path = await downloadFileFunction(message, client, logger);
+    return path.replace('./', '');
+  } catch (e) {
+    logger.error(e);
+  }
 }
 
 export async function startAllSessions(req, res) {
-    const { secretkey } = req.params;
-    const { authorization: token } = req.headers;
+  const { secretkey } = req.params;
+  const { authorization: token } = req.headers;
 
-    let tokenDecrypt = '';
+  let tokenDecrypt = '';
 
-    if (secretkey === undefined) {
-        tokenDecrypt = token.split(' ')[0];
-    } else {
-        tokenDecrypt = secretkey;
-    }
+  if (secretkey === undefined) {
+    tokenDecrypt = token.split(' ')[0];
+  } else {
+    tokenDecrypt = secretkey;
+  }
 
-    const allSessions = await getAllTokens(req);
+  const allSessions = await getAllTokens(req);
 
-    if (tokenDecrypt !== req.serverOptions.secretKey) {
-        return res.status(400).json({
-            response: false,
-            message: 'The token is incorrect',
-        });
-    }
-
-    allSessions.map(async(session) => {
-        await SessionUtil.opendata(req, session);
+  if (tokenDecrypt !== req.serverOptions.secretKey) {
+    return res.status(400).json({
+      response: false,
+      message: 'The token is incorrect',
     });
+  }
 
-    return await res.status(201).json({ status: 'Success', message: 'Starting all sessions' });
+  allSessions.map(async (session) => {
+    await SessionUtil.opendata(req, session);
+  });
+
+  return await res.status(201).json({ status: 'Success', message: 'Starting all sessions' });
 }
 
 export async function showAllSessions(req, res) {
-    const { secretkey } = req.params;
-    const { authorization: token } = req.headers;
+  const { secretkey } = req.params;
+  const { authorization: token } = req.headers;
 
-    let tokenDecrypt = '';
+  let tokenDecrypt = '';
 
-    if (secretkey === undefined) {
-        tokenDecrypt = token.split(' ')[0];
-    } else {
-        tokenDecrypt = secretkey;
-    }
+  if (secretkey === undefined) {
+    tokenDecrypt = token.split(' ')[0];
+  } else {
+    tokenDecrypt = secretkey;
+  }
 
-    const arr = [];
+  const arr = [];
 
-    if (tokenDecrypt !== req.serverOptions.secretKey) {
-        return res.status(400).json({
-            response: false,
-            message: 'The token is incorrect',
-        });
-    }
-
-    Object.keys(clientsArray).forEach((item) => {
-        arr.push({ session: item });
+  if (tokenDecrypt !== req.serverOptions.secretKey) {
+    return res.status(400).json({
+      response: false,
+      message: 'The token is incorrect',
     });
+  }
 
-    return res.status(200).json({ response: arr });
+  Object.keys(clientsArray).forEach((item) => {
+    arr.push({ session: item });
+  });
+
+  return res.status(200).json({ response: arr });
 }
 
 export async function startSession(req, res) {
-    const session = req.session;
-    const { waitQrCode = false } = req.body;
+  const session = req.session;
+  const { waitQrCode = false } = req.body;
 
-    await getSessionState(req, res);
-    await SessionUtil.opendata(req, session, waitQrCode ? res : null);
+  await getSessionState(req, res);
+  await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
 
 export async function closeSession(req, res) {
-    const session = req.session;
-    try {
-        clientsArray[session] = { status: null };
-        await req.client.close();
+  const session = req.session;
+  try {
+    clientsArray[session] = { status: null };
+    await req.client.close();
 
-        req.io.emit('whatsapp-status', false);
-        callWebHook(req.client, req, 'closesession', {
-            message: `Session: ${session} disconnected`,
-            connected: false,
-        });
+    req.io.emit('whatsapp-status', false);
+    callWebHook(req.client, req, 'closesession', {
+      message: `Session: ${session} disconnected`,
+      connected: false,
+    });
 
-        return await res.status(200).json({ status: true, message: 'Session successfully closed' });
-    } catch (error) {
-        return await res.status(400).json({ status: false, message: 'Error closing session', error });
-    }
+    return await res.status(200).json({ status: true, message: 'Session successfully closed' });
+  } catch (error) {
+    return await res.status(400).json({ status: false, message: 'Error closing session', error });
+  }
 }
 
 export async function logOutSession(req, res) {
-    try {
-        const session = req.session;
-        await req.client.logout();
+  try {
+    const session = req.session;
+    await req.client.logout();
 
-        req.io.emit('whatsapp-status', false);
-        callWebHook(req.client, req, 'logoutsession', {
-            message: `Session: ${session} logged out`,
-            connected: false,
-        });
+    req.io.emit('whatsapp-status', false);
+    callWebHook(req.client, req, 'logoutsession', {
+      message: `Session: ${session} logged out`,
+      connected: false,
+    });
 
-        return await res.status(200).json({ status: true, message: 'Session successfully closed' });
-    } catch (error) {
-        return await res.status(400).json({ status: false, message: 'Error closing session', error });
-    }
+    return await res.status(200).json({ status: true, message: 'Session successfully closed' });
+  } catch (error) {
+    return await res.status(400).json({ status: false, message: 'Error closing session', error });
+  }
 }
 
 export async function checkConnectionSession(req, res) {
-    try {
-        await req.client.isConnected();
+  try {
+    await req.client.isConnected();
 
-        return res.status(200).json({ status: true, message: 'Connected' });
-    } catch (error) {
-        return res.status(200).json({ status: false, message: 'Disconnected' });
-    }
+    return res.status(200).json({ status: true, message: 'Connected' });
+  } catch (error) {
+    return res.status(200).json({ status: false, message: 'Disconnected' });
+  }
 }
 
 export async function downloadMediaByMessage(req, res) {
-    const { messageId } = req.body;
+  const { messageId } = req.body;
 
-    let result = '';
+  let result = '';
 
-    if (messageId.isMedia === true) {
-        await download(messageId, req.client, req.logger, req.logger);
-        result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
+  if (messageId.isMedia === true) {
+    await download(messageId, req.client, req.logger, req.logger);
+    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
       messageId.mimetype
     )}`;
-    } else if (messageId.type === 'ptt' || messageId.type === 'sticker') {
-        await download(messageId, req.client);
-        result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
+  } else if (messageId.type === 'ptt' || messageId.type === 'sticker') {
+    await download(messageId, req.client);
+    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
       messageId.mimetype
     )}`;
-    }
+  }
 
-    return res.status(200).json(result);
+  return res.status(200).json(result);
 }
 
 export async function getMediaByMessage(req, res) {
-    const client = req.client;
-    const { messageId } = req.params;
+  const client = req.client;
+  const { messageId } = req.params;
 
-    try {
-        const message = await client.getMessageById(messageId);
+  try {
+    const message = await client.getMessageById(messageId);
 
-        if (!message)
-            return res.status(400).json({
-                response: false,
-                message: 'Message not found',
-            });
+    if (!message)
+      return res.status(400).json({
+        response: false,
+        message: 'Message not found',
+      });
 
-        if (!(message['mimetype'] || message.isMedia || message.isMMS))
-            return res.status(400).json({
-                response: false,
-                message: 'Message does not contain media',
-            });
+    if (!(message['mimetype'] || message.isMedia || message.isMMS))
+      return res.status(400).json({
+        response: false,
+        message: 'Message does not contain media',
+      });
 
-        const buffer = await client.decryptFile(message);
+    const buffer = await client.decryptFile(message);
 
-        return res.status(200).json(await buffer.toString('base64'));
-    } catch (ex) {
-        req.logger.error(ex);
-        return res.status(400).json({
-            response: false,
-            message: 'The session is not active',
-        });
-    }
+    return res.status(200).json(await buffer.toString('base64'));
+  } catch (ex) {
+    req.logger.error(ex);
+    return res.status(400).json({
+      response: false,
+      message: 'The session is not active',
+    });
+  }
 }
 
 export async function getSessionState(req, res) {
-    try {
-        const { waitQrCode = false } = req.body;
-        const client = req.client;
+  try {
+    const { waitQrCode = false } = req.body;
+    const client = req.client;
 
-        if ((client == null || client.status == null) && !waitQrCode)
-            return res.status(200).json({ status: 'CLOSED', qrcode: null });
-        else if (client != null)
-            return res.status(200).json({
-                status: client.status,
-                qrcode: client.qrcode,
-                urlcode: client.urlcode,
-            });
-    } catch (ex) {
-        req.logger.error(ex);
-        return res.status(400).json({
-            response: false,
-            message: 'The session is not active',
-        });
-    }
+    if ((client == null || client.status == null) && !waitQrCode)
+      return res.status(200).json({ status: 'CLOSED', qrcode: null });
+    else if (client != null)
+      return res.status(200).json({
+        status: client.status,
+        qrcode: client.qrcode,
+        urlcode: client.urlcode,
+      });
+  } catch (ex) {
+    req.logger.error(ex);
+    return res.status(400).json({
+      response: false,
+      message: 'The session is not active',
+    });
+  }
 }
 
 export async function getQrCode(req, res) {
-    try {
-        const img = Buffer.from(req.client.qrcode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
+  try {
+    const img = Buffer.from(req.client.qrcode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
 
-        res.writeHead(200, {
-            'Content-Type': 'image/png',
-            'Content-Length': img.length,
-        });
-        res.end(img);
-    } catch (ex) {
-        req.logger.error(ex);
-        return res.status(400).json({
-            response: false,
-            message: 'Error retrieving QRCode',
-        });
-    }
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': img.length,
+    });
+    res.end(img);
+  } catch (ex) {
+    req.logger.error(ex);
+    return res.status(400).json({
+      response: false,
+      message: 'Error retrieving QRCode',
+    });
+  }
 }
 
 export async function killServiceWorker(req, res) {
-    try {
-        return res.status(200).json({ status: 'success', response: req.client.killServiceWorker() });
-    } catch (ex) {
-        req.logger.error(ex);
-        return res.status(400).json({
-            response: false,
-            message: 'The session is not active',
-        });
-    }
+  try {
+    return res.status(200).json({ status: 'success', response: req.client.killServiceWorker() });
+  } catch (ex) {
+    req.logger.error(ex);
+    return res.status(400).json({
+      response: false,
+      message: 'The session is not active',
+    });
+  }
 }
 
 export async function restartService(req, res) {
-    try {
-        return res.status(200).json({ status: 'success', response: req.client.restartService() });
-    } catch (ex) {
-        req.logger.error(ex);
-        return res.status(400).json({
-            response: false,
-            message: 'The session is not active',
-        });
-    }
+  try {
+    return res.status(200).json({ status: 'success', response: req.client.restartService() });
+  } catch (ex) {
+    req.logger.error(ex);
+    return res.status(400).json({
+      response: false,
+      message: 'The session is not active',
+    });
+  }
 }
 
 export async function subscribePresence(req, res) {
-    try {
-        const { phone, isGroup = false, all = false } = req.body;
+  try {
+    const { phone, isGroup = false, all = false } = req.body;
 
-        if (all) {
-            let contacts;
-            if (isGroup) {
-                const groups = await req.client.getAllGroups(false);
-                contacts = groups.map((p) => p.id._serialized);
-            } else {
-                const chats = await req.client.getAllContacts();
-                contacts = chats.map((c) => c.id._serialized);
-            }
-            await req.client.subscribePresence(contacts);
-        } else
-            for (const contato of contactToArray(phone, isGroup)) {
-                await req.client.subscribePresence(contato);
-            }
+    if (all) {
+      let contacts;
+      if (isGroup) {
+        const groups = await req.client.getAllGroups(false);
+        contacts = groups.map((p) => p.id._serialized);
+      } else {
+        const chats = await req.client.getAllContacts();
+        contacts = chats.map((c) => c.id._serialized);
+      }
+      await req.client.subscribePresence(contacts);
+    } else
+      for (const contato of contactToArray(phone, isGroup)) {
+        await req.client.subscribePresence(contato);
+      }
 
-        return await res.status(200).json({ status: true, message: 'Subscribe presence executed' });
-    } catch (error) {
-        return await res.status(400).json({ status: false, message: 'Error on subscribe presence', error });
-    }
+    return await res.status(200).json({ status: true, message: 'Subscribe presence executed' });
+  } catch (error) {
+    return await res.status(400).json({ status: false, message: 'Error on subscribe presence', error });
+  }
 }
