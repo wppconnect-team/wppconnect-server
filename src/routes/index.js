@@ -33,7 +33,7 @@ const routes = new Router();
 routes.post('/api/:session/:secretkey/generate-token', encryptSession);
 
 // All Sessions
-routes.get('/api/:session/show-all-sessions', verifyToken, statusConnection, SessionController.showAllSessions);
+routes.get('/api/:secretkey/show-all-sessions', SessionController.showAllSessions);
 routes.post('/api/:secretkey/start-all', SessionController.startAllSessions);
 
 // Sessions

@@ -115,6 +115,9 @@ export async function startAllSessions(req, res) {
 
 export async function showAllSessions(req, res) {
     const { secretkey } = req.params;
+    const { authorization: token } = req.headers;
+
+    let tokenDecrypt = '';
 
     if (secretkey === undefined) {
         tokenDecrypt = token.split(' ')[0];
