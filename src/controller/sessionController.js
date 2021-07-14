@@ -113,6 +113,34 @@ export async function startAllSessions(req, res) {
   return await res.status(201).json({ status: 'Success', message: 'Starting all sessions' });
 }
 
+export async function showAllSessions(req, res) {
+  const { secretkey } = req.params;
+  const { authorization: token } = req.headers;
+
+  let tokenDecrypt = '';
+
+  if (secretkey === undefined) {
+    tokenDecrypt = token.split(' ')[0];
+  } else {
+    tokenDecrypt = secretkey;
+  }
+
+  const arr = [];
+
+  if (tokenDecrypt !== req.serverOptions.secretKey) {
+    return res.status(400).json({
+      response: false,
+      message: 'The token is incorrect',
+    });
+  }
+
+  Object.keys(clientsArray).forEach((item) => {
+    arr.push({ session: item });
+  });
+
+  return res.status(200).json({ response: arr });
+}
+
 export async function startSession(req, res) {
   const session = req.session;
   const { waitQrCode = false } = req.body;
@@ -164,15 +192,6 @@ export async function checkConnectionSession(req, res) {
   } catch (error) {
     return res.status(200).json({ status: false, message: 'Disconnected' });
   }
-}
-
-export async function showAllSessions(req, res) {
-  const arr = [];
-  Object.keys(clientsArray).forEach((item) => {
-    arr.push({ session: item });
-  });
-
-  return res.status(200).json({ response: arr });
 }
 
 export async function downloadMediaByMessage(req, res) {
