@@ -1415,7 +1415,7 @@
         "deprecated": false
       }
     },
-    "/all-chats-whit-messages": {
+    "/all-chats-with-messages": {
       "get": {
         "tags": [
           "Chat"
@@ -1514,7 +1514,7 @@
             "content": {
               "application/json; charset=utf-8": {
                 "schema": {
-                  "$ref": "#/components/schemas/AllChatsWhitMessages"
+                  "$ref": "#/components/schemas/AllChatsWithMessages"
                 },
                 "example": {
                   "status": "success",
@@ -4968,7 +4968,9 @@
               },
               "example": {
                 "phone": "556593077171",
-                "contactsId": "556793474543@c.us"
+                "contactsId": "556793474543@c.us",
+                "name": "Contact Name",
+                "isGroup": false
               }
             }
           },
