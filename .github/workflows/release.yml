@@ -9,7 +9,7 @@ on:
         default: 'patch'
 
 jobs:
-  semantic:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,4 +44,4 @@ jobs:
         run: yarn install
 
       - name: Release
-        run: npx release-it --increment ${{ github.event.inputs.name }}"
+        run: 'npx release-it --increment ${{ github.event.inputs.increment }}'
