@@ -168,6 +168,31 @@ export async function getChatById(req, res) {
   }
 }
 
+export async function getMessageById(req, res) {
+  const { messageId } = req.params;
+
+  try {
+    let allMessages = {};
+    let messageDetails = {};
+
+    let phone = messageId.split('_')[1];
+
+    allMessages = await req.client.getAllMessagesInChat(phone, true, true);
+
+    allMessages.forEach((message) => {
+      if (message.id === messageId) {
+        messageDetails = message;
+        return false;
+      }
+    });
+
+    return res.json({ status: 'Success', response: messageDetails });
+  } catch (e) {
+    req.logger.error(e);
+    return res.json({ status: 'Error', response: [] });
+  }
+}
+
 export async function changePrivacyGroup(req, res) {
   const { phone, status } = req.body;
 

@@ -145,6 +145,7 @@ routes.get('/api/:session/all-new-messages', verifyToken, statusConnection, Devi
 routes.get('/api/:session/unread-messages', verifyToken, statusConnection, DeviceController.getUnreadMessages);
 routes.get('/api/:session/all-unread-messages', verifyToken, statusConnection, DeviceController.getAllUnreadMessages);
 routes.get('/api/:session/chat-by-id/:phone', verifyToken, statusConnection, DeviceController.getChatById);
+routes.get('/api/:session/message-by-id/:messageId', verifyToken, statusConnection, DeviceController.getMessageById);
 routes.get('/api/:session/chat-is-online/:phone', verifyToken, statusConnection, DeviceController.getChatIsOnline);
 routes.get('/api/:session/last-seen/:phone', verifyToken, statusConnection, DeviceController.getLastSeen);
 routes.get('/api/:session/list-mutes/:type', verifyToken, statusConnection, DeviceController.getListMutes);
