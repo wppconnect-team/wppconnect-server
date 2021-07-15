@@ -613,11 +613,11 @@ export async function checkNumberStatus(req, res) {
   try {
     let response;
 
-    for (const contato of contactToArray(phone, false)) {
-      response = await req.client.checkNumberStatus(`${contato}`);
+    for (const contact of contactToArray(phone, false)) {
+      response = await req.client.checkNumberStatus(`${contact}`);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    return res.status(response.status).json(response);
   } catch (error) {
     return res.status(400).json({ status: 'Error', message: 'Error on check number status' });
   }
