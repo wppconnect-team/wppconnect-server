@@ -526,22 +526,6 @@ export async function loadEarlierMessages(req, res) {
   }
 }
 
-export async function sendContactVcard(req, res) {
-  const { phone, contactsId, name = null, isGroup = false } = req.body;
-
-  try {
-    let response;
-    for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.sendContactVcard(`${contato}`, contactsId, name);
-    }
-
-    return res.status(200).json({ status: 'Success', response: response });
-  } catch (e) {
-    req.logger.error(e);
-    return res.status(400).json({ status: 'Error', message: 'Error on send contact vcard' });
-  }
-}
-
 export async function sendMentioned(req, res) {
   const { phone, message, mentioned, isGroup = false } = req.body;
 

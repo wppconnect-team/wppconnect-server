@@ -72,6 +72,7 @@ routes.post('/api/:session/send-status', verifyToken, statusConnection, MessageC
 routes.post('/api/:session/send-link-preview', verifyToken, statusConnection, MessageController.sendLinkPreview);
 routes.post('/api/:session/send-location', verifyToken, statusConnection, MessageController.sendLocation);
 routes.post('/api/:session/send-mentioned', verifyToken, statusConnection, DeviceController.sendMentioned);
+routes.post('/api/:session/send-contact', verifyToken, statusConnection, MessageController.sendContactVcard);
 
 // Group
 routes.get('/api/:session/all-broadcast-list', verifyToken, statusConnection, GroupController.getAllBroadcastList);
@@ -168,7 +169,6 @@ routes.post('/api/:session/delete-message', verifyToken, statusConnection, Devic
 routes.post('/api/:session/forward-messages', verifyToken, statusConnection, DeviceController.forwardMessages);
 routes.post('/api/:session/mark-unseen', verifyToken, statusConnection, DeviceController.markUnseenMessage);
 routes.post('/api/:session/pin-chat', verifyToken, statusConnection, DeviceController.pinChat);
-routes.post('/api/:session/contact-vcard', verifyToken, statusConnection, DeviceController.sendContactVcard);
 routes.post('/api/:session/send-mute', verifyToken, statusConnection, DeviceController.sendMute);
 routes.post('/api/:session/send-seen', verifyToken, statusConnection, DeviceController.sendSeen);
 routes.post('/api/:session/chat-state', verifyToken, statusConnection, DeviceController.setChatState);
@@ -208,6 +208,9 @@ routes.post(
 );
 routes.post('/api/:session/profile-status', verifyToken, statusConnection, DeviceController.setProfileStatus);
 routes.post('/api/:session/change-username', verifyToken, statusConnection, DeviceController.setProfileName);
+
+// Deprecated
+routes.post('/api/:session/contact-vcard', verifyToken, statusConnection, MessageController.sendContactVcard);
 
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve);

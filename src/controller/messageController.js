@@ -190,6 +190,25 @@ export async function sendLocation(req, res) {
   }
 }
 
+export async function sendContactVcard(req, res) {
+  const session = req.session;
+  const { phone, contactsId, name = null, isGroup = false } = req.body;
+
+  try {
+    let result;
+
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.sendContactVcard(`${contact}`, contactsId, name);
+    }
+
+    if (!result) return returnError(req, res, session, 'Error sending message');
+
+    returnSucess(res, session, phone, result);
+  } catch (error) {
+    returnError(req, res, session, error);
+  }
+}
+
 export async function sendStatusText(req, res) {
   const { message } = req.body;
 
