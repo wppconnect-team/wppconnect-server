@@ -16,3 +16,4 @@
 *.png
 *.tgz
 /.idea
+*.DS_Store
