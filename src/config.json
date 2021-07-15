@@ -8,7 +8,10 @@
     "url": null,
     "autoDownload": true,
     "readMessage": true,
-    "allUnreadOnStart": false
+    "allUnreadOnStart": false,
+    "listenAcks": true,
+    "onPresenceChanged": true,
+    "onParticipantsChanged": true
   },
   "archive": {
     "enable": true,

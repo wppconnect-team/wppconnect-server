@@ -61,6 +61,11 @@ export default class CreateSessionUtil {
 
       client = clientsArray[session] = Object.assign(wppClient, client);
       await this.start(req, client);
+
+      if (req.serverOptions.webhook.onParticipantsChanged) {
+        await this.onParticipantsChanged(req, client);
+      }
+      
     } catch (e) {
       req.logger.error(e);
     }
@@ -91,6 +96,13 @@ export default class CreateSessionUtil {
     if (res && !res._headerSent) res.status(200).json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
   }
 
+  async onParticipantsChanged(req, client) {
+    await client.isConnected();
+    await client.onParticipantsChanged((message) => {
+      callWebHook(client, req, 'onparticipantschanged', message);
+    });
+  }
+
   async start(req, client) {
     try {
       await client.isConnected();
@@ -106,8 +118,14 @@ export default class CreateSessionUtil {
 
     await this.checkStateSession(client, req);
     await this.listenMessages(client, req);
-    await this.listenAcks(client, req);
-    await this.onPresenceChanged(client, req);
+
+    if (req.serverOptions.webhook.listenAcks) {
+      await this.listenAcks(client, req);
+    }
+    
+    if (req.serverOptions.webhook.onPresenceChanged) {
+      await this.onPresenceChanged(client, req);
+    }
   }
 
   async checkStateSession(client, req) {
