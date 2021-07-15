@@ -8,7 +8,10 @@
     "url": null,
     "autoDownload": true,
     "readMessage": true,
-    "allUnreadOnStart": false
+    "allUnreadOnStart": false,
+    "listenAcks": true,
+    "onPresenceChanged": true,
+    "onParticipantsChanged": true
   },
   "archive": {
     "enable": true,
@@ -51,7 +54,7 @@
     "mongodbPassword": null,
     "mongodbHost": "localhost",
     "mongoIsRemote": false,
-    "mongoURLRemote": false,
+    "mongoURLRemote": null,
     "mongodbPort": 27017,
     "redisHost": "localhost",
     "redisPort": 6379,
