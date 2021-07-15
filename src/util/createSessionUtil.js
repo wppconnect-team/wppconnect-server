@@ -65,7 +65,6 @@ export default class CreateSessionUtil {
       if (req.serverOptions.webhook.onParticipantsChanged) {
         await this.onParticipantsChanged(req, client);
       }
-      
     } catch (e) {
       req.logger.error(e);
     }
@@ -122,7 +121,7 @@ export default class CreateSessionUtil {
     if (req.serverOptions.webhook.listenAcks) {
       await this.listenAcks(client, req);
     }
-    
+
     if (req.serverOptions.webhook.onPresenceChanged) {
       await this.onPresenceChanged(client, req);
     }
