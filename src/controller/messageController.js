@@ -46,8 +46,8 @@ export async function sendMessage(req, res) {
   try {
     let result;
 
-    for (const contato of contactToArray(phone, isGroup)) {
-      result = await req.client.sendText(contato, message);
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.sendText(contact, message);
     }
 
     if (!result) return returnError(req, res, session, 'Error sending message');
@@ -76,8 +76,8 @@ export async function sendImage(req, res) {
   try {
     let result;
 
-    for (const contato of contactToArray(phone, isGroup)) {
-      result = await req.client.sendImage(contato, pathFile, filename, caption);
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.sendImage(contact, pathFile, filename, caption);
     }
 
     if (!result) return returnError(req, res, session, 'Error sending message');
@@ -99,8 +99,8 @@ export async function sendFile(req, res) {
   try {
     let result;
 
-    for (const contato of contactToArray(phone, strToBool(isGroup))) {
-      result = await req.client.sendFile(`${contato}`, pathFile, filename, message);
+    for (const contact of contactToArray(phone, strToBool(isGroup))) {
+      result = await req.client.sendFile(`${contact}`, pathFile, filename, message);
     }
 
     if (!result) return returnError(req, res, session, 'Error sending message');
@@ -121,8 +121,8 @@ export async function sendFile64(req, res) {
   try {
     let result;
 
-    for (const contato of contactToArray(phone, isGroup)) {
-      result = await req.client.sendFileFromBase64(`${contato}`, base64, filename, message);
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.sendFileFromBase64(`${contact}`, base64, filename, message);
     }
 
     if (!result) return returnError(req, res, session, 'Error sending message');
@@ -140,8 +140,8 @@ export async function sendVoice(req, res) {
   try {
     let result;
 
-    for (const contato of contactToArray(phone, isGroup)) {
-      result = await req.client.sendPttFromBase64(`${contato}`, base64Ptt, 'Voice Audio');
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.sendPttFromBase64(`${contact}`, base64Ptt, 'Voice Audio');
     }
 
     if (!result) return returnError(req, res, session, 'Error sending message');
@@ -159,8 +159,8 @@ export async function sendLinkPreview(req, res) {
   try {
     let result;
 
-    for (const contato of contactToArray(phone, isGroup)) {
-      result = await req.client.sendLinkPreview(`${contato}`, url, caption);
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.sendLinkPreview(`${contact}`, url, caption);
     }
 
     if (!result) return returnError(req, res, session, 'Error sending message');
@@ -208,8 +208,8 @@ export async function replyMessage(req, res) {
 
   try {
     let result;
-    for (const contato of contactToArray(phone, isGroup)) {
-      result = await req.client.reply(`${contato}`, message, messageId);
+    for (const contact of contactToArray(phone, isGroup)) {
+      result = await req.client.reply(`${contact}`, message, messageId);
     }
 
     if (!result) return res.status(400).json('Error sending message');
