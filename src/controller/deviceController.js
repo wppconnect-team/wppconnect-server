@@ -648,15 +648,17 @@ export async function checkNumberStatus(req, res) {
 
 export async function getContact(req, res) {
   const { phone = true } = req.params;
+
   try {
     let response;
-    for (const contato of contactToArray(phone, false)) {
-      response = await req.client.getContact(contato);
+
+    for (const contact of contactToArray(phone, false)) {
+      response = await req.client.getContact(`${contact}`);
     }
 
-    return res.status(200).json({ status: 'Success', response: response });
+    returnSucess(res, req.session, phone, response);
   } catch (error) {
-    return res.status(400).json({ status: 'Error', message: 'Error on get contact' });
+    returnError(req, res, req.session, error);
   }
 }
 
