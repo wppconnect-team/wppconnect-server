@@ -24,6 +24,7 @@ import path from 'path';
 import config from './config.json';
 import boolParser from 'express-query-boolean';
 import mergeDeep from 'merge-deep';
+import { convert } from './mapper/index';
 
 export function initServer(serverOptions) {
   const __dirname = path.resolve(path.dirname(''));
@@ -55,6 +56,25 @@ export function initServer(serverOptions) {
     req.serverOptions = serverOptions;
     req.logger = logger;
     req.io = io;
+
+    var oldSend = res.send;
+
+    res.send = async function (data) {
+      const content = req.headers['content-type'];
+      //console.log('data', data);
+      //console.log('content', content);
+      if (content == 'application/json') {
+        data = JSON.parse(data);
+        data.session = req.client ? req.client.session : '';
+        if (data.mapper && req.serverOptions.mapper.enable) {
+          data.response = await convert(req.serverOptions.mapper.prefix, data.response, data.mapper);
+          delete data.mapper;
+        }
+      }
+      res.send = oldSend;
+      return res.send(data);
+    };
+
     next();
   });
 

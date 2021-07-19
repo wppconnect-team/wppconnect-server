@@ -5,7 +5,7 @@
   "startAllSession": true,
   "tokenStoreType": "redis",
   "webhook": {
-    "url": "http://localhost:8080/",
+    "url": "http://localhost:8080/metazap/api",
     "autoDownload": true,
     "uploadS3": true,
     "readMessage": true,
@@ -56,15 +56,15 @@
     "mongodbPassword": null,
     "mongodbHost": "localhost",
     "mongodbPort": 27017,
-    "redisHost": "localhost",
-    "redisPort": 6379,
-    "redisPassword": "",
+    "redisHost": "redis-10066.c276.us-east-1-2.ec2.cloud.redislabs.com",
+    "redisPort": 10066,
+    "redisPassword": "vE3Kx7tuBq5bWEBYLH2ReCWSxOqU4o9Q",
     "redisDb": 0
   },
   "awsS3": {
-    "awsAccessKeyId": "",
-    "awsSecretAccessKey": "",
-    "awsDefaultRegion": "",
-    "awsBucket": ""
+    "awsAccessKeyId": "AKIA5ICCOOZVE5D4CIPG",
+    "awsSecretAccessKey": "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",
+    "awsDefaultRegion": "us-east-1",
+    "awsBucket": "bucketuploadjg"
   }
 }

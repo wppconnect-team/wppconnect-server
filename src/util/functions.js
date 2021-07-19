@@ -18,8 +18,13 @@ import path from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
 import { convert } from '../mapper/index';
+import config from '../config.json';
 
-export function contactToArray(number, isGroup) {
+let mime = config.webhook.uploadS3 ? require('mime-types') : null;
+let crypto = config.webhook.uploadS3 ? require('crypto') : null;
+let aws = config.webhook.uploadS3 ? require('aws-sdk') : null;
+
+/*export function contactToArray(number, isGroup) {
   let localArr = [];
   if (Array.isArray(number)) {
     for (const contact of number) {
@@ -28,9 +33,9 @@ export function contactToArray(number, isGroup) {
         else localArr.push(`${contact}@c.us`);
     }
   } else {
-    let arrContacts = number.split(/\s*[,;]\s*/g);
+    let arrContacts = number.split(/\s*[,;]\s*/ /*g);
     for (let contact of arrContacts) {
-      contact = number.split('@')[0];
+      contact = contact.split('@')[0];
       if (contact !== '')
         if (isGroup) localArr.push(`${contact}@g.us`);
         else localArr.push(`${contact}@c.us`);
@@ -38,7 +43,7 @@ export function contactToArray(number, isGroup) {
   }
 
   return localArr;
-}
+}*/
 
 export function groupToArray(group) {
   let localArr = [];
@@ -74,16 +79,18 @@ export function groupNameToArray(group) {
 
 export async function callWebHook(client, req, event, data) {
   if (client && client.webhook) {
-    if (req.serverOptions.webhook.autoDownload) await autoDownload(client, data);
+    if (req.serverOptions.webhook.autoDownload) await autoDownload(client, req, data);
     try {
+      const chatId = data.from || data.chatId || (data.chatId ? data.chatId._serialized : null);
       data = Object.assign({ event: event, session: client.session }, data);
-      data = await convert(data);
+      if (req.serverOptions.mapper.enable) data = await convert(req.serverOptions.mapper.prefix, data);
       api
         .post(client.webhook, data)
         .then(() => {
-          const events = ['unreadmessages', 'onmessage'];
-          if (events.includes(event) && req.serverOptions.webhook.readMessage)
-            client.sendSeen(data.chatId._serialized || data.from || data.chatId);
+          try {
+            const events = ['unreadmessages', 'onmessage'];
+            if (events.includes(event) && req.serverOptions.webhook.readMessage) client.sendSeen(chatId);
+          } catch (e) {}
         })
         .catch((e) => {
           req.logger.error(e);
@@ -94,10 +101,31 @@ export async function callWebHook(client, req, event, data) {
   }
 }
 
-async function autoDownload(client, message) {
+async function autoDownload(client, req, message) {
   if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
     let buffer = await client.decryptFile(message);
-    message.body = await buffer.toString('base64');
+    if (req.serverOptions.webhook.uploadS3) {
+      var hashName = crypto.randomBytes(24).toString('hex');
+      var fileName = `${hashName}.${mime.extension(message.mimetype)}`;
+
+      const s3 = new aws.S3({
+        accessKeyId: config.awsS3.awsAccessKeyId,
+        secretAccessKey: config.awsS3.awsSecretAccessKey,
+        region: config.awsS3.awsDefaultRegion,
+      });
+
+      var params = {
+        Bucket: config.awsS3.awsBucket,
+        Key: fileName,
+        Body: buffer,
+        ACL: 'public-read',
+        ContentType: message.mimetype,
+      };
+      const data = await s3.upload(params).promise();
+      message.fileUrl = data.Location;
+    } else {
+      message.body = await buffer.toString('base64');
+    }
   }
 }
 

@@ -29,7 +29,7 @@
     }
   },
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.7.0",
+    "@wppconnect-team/wppconnect": "^1.8.3",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -69,10 +69,14 @@
     "shx": "^0.3.3",
     "swagger-ui-dist": "^3.50.0",
     "mongoose": "^5.12.15",
-    "redis": "^3.1.2"
+    "redis": "^3.1.2",
+    "aws-sdk": "^2.903.0",
+    "crypto-js": "^4.0.0"
   },
   "peerDependencies": {
     "mongoose": "^5.12.15",
-    "redis": "^3.1.2"
+    "redis": "^3.1.2",
+    "aws-sdk": "^2.903.0",
+    "crypto-js": "^4.0.0"
   }
 }
