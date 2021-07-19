@@ -3,9 +3,9 @@
   "host": "http://localhost",
   "port": "21465",
   "startAllSession": true,
-  "tokenStoreType": "redis",
+  "tokenStoreType": "file",
   "webhook": {
-    "url": "http://localhost:8080/",
+    "url": "http://localhost:8080/metazap/api",
     "autoDownload": true,
     "uploadS3": true,
     "readMessage": true,
