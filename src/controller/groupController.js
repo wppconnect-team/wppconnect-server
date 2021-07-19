@@ -215,6 +215,26 @@ export async function getGroupInviteLink(req, res) {
   }
 }
 
+export async function revokeGroupInviteLink(req, res) {
+  const { groupId } = req.params;
+
+  let response = {};
+
+  try {
+    for (const grupo of groupToArray(groupId)) {
+      response = await req.client.revokeGroupInviteLink(grupo);
+    }
+
+    return res.status(200).json({
+      status: 'Success',
+      response: response,
+    });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(400).json('Error on revoke group invite link');
+  }
+}
+
 export async function getAllBroadcastList(req, res) {
   try {
     let response = await req.client.getAllBroadcastList();

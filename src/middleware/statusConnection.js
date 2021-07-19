@@ -16,7 +16,7 @@
 
 export default async function statusConnection(req, res, next) {
   try {
-    if (req.client) {
+    if (req.client && req.client.isConnected) {
       await req.client.isConnected();
 
       let localArr = [];
