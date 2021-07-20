@@ -14,29 +14,14 @@
  * limitations under the License.
  */
 
+import { contactToArray } from '../util/functions';
+
 export default async function statusConnection(req, res, next) {
   try {
     if (req.client && req.client.isConnected) {
       await req.client.isConnected();
 
-      let localArr = [];
-      const number = req.body.phone || [];
-      const isGroup = req.body.isGroup;
-      if (Array.isArray(number)) {
-        for (const contact of number) {
-          if (contact !== '')
-            if (isGroup) localArr.push(`${contact}@g.us`);
-            else localArr.push(`${contact}@c.us`);
-        }
-      } else {
-        let arrContacts = number.split(/\s*[,;]\s*/g);
-        for (let contact of arrContacts) {
-          contact = contact.split('@')[0];
-          if (contact !== '')
-            if (isGroup) localArr.push(`${contact}@g.us`);
-            else localArr.push(`${contact}@c.us`);
-        }
-      }
+      let localArr = contactToArray(req.body.phone || [], req.body.isGroup);
 
       let index = 0;
       for (const contact of localArr) {

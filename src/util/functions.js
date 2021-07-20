@@ -24,7 +24,7 @@ let mime = config.webhook.uploadS3 ? require('mime-types') : null;
 let crypto = config.webhook.uploadS3 ? require('crypto') : null;
 let aws = config.webhook.uploadS3 ? require('aws-sdk') : null;
 
-/*export function contactToArray(number, isGroup) {
+export function contactToArray(number, isGroup) {
   let localArr = [];
   if (Array.isArray(number)) {
     for (const contact of number) {
@@ -33,7 +33,7 @@ let aws = config.webhook.uploadS3 ? require('aws-sdk') : null;
         else localArr.push(`${contact}@c.us`);
     }
   } else {
-    let arrContacts = number.split(/\s*[,;]\s*/ /*g);
+    let arrContacts = number.split(/\s*[,;]\s*/g);
     for (let contact of arrContacts) {
       contact = contact.split('@')[0];
       if (contact !== '')
@@ -43,7 +43,7 @@ let aws = config.webhook.uploadS3 ? require('aws-sdk') : null;
   }
 
   return localArr;
-}*/
+}
 
 export function groupToArray(group) {
   let localArr = [];
@@ -108,14 +108,10 @@ async function autoDownload(client, req, message) {
       var hashName = crypto.randomBytes(24).toString('hex');
       var fileName = `${hashName}.${mime.extension(message.mimetype)}`;
 
-      const s3 = new aws.S3({
-        accessKeyId: config.awsS3.awsAccessKeyId,
-        secretAccessKey: config.awsS3.awsSecretAccessKey,
-        region: config.awsS3.awsDefaultRegion,
-      });
+      const s3 = new aws.S3();
 
       var params = {
-        Bucket: config.awsS3.awsBucket,
+        Bucket: client.session,
         Key: fileName,
         Body: buffer,
         ACL: 'public-read',

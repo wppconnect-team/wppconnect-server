@@ -1448,14 +1448,10 @@
   dependencies:
     "@types/node" "*"
 
-<<<<<<< HEAD
-"@wppconnect-team/wppconnect@^1.8.3":
-=======
-"@wppconnect-team/wppconnect@^1.8.0":
->>>>>>> be6261238848ca14c836da160a3538ddfbd6042f
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.3.tgz#b55f4345c951049bb364840b9e8a7cc940487b6b"
-  integrity sha512-grV6F+b19ri9Cjs21nZ3ZPNHf4VqpVX4rLIfXs5J2tnu3c1BaRhI3v18kPIM1/1fbFOs/WHxB/Vgdv89fj61/A==
+"@wppconnect-team/wppconnect@^1.8.5":
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.5.tgz#00e781e5649e78d99c20a8d7daf0ab9ef7823796"
+  integrity sha512-4nUq8CKC8crFc1CrdmXCnmtk6CKdj547+nNzZGHQqX16KxCLP6t8A1INzgy/PVJUBGi3iWbtRoxWjeKzx1jXNg==
   dependencies:
     "@wppconnect/wa-version" "^1.1.1"
     atob "^2.1.2"
@@ -2975,6 +2971,11 @@ dot-prop@^5.1.0, dot-prop@^5.2.0:
   integrity sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==
   dependencies:
     is-obj "^2.0.0"
+
+dotenv@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
+  integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 duplexer3@^0.1.4:
   version "0.1.4"
