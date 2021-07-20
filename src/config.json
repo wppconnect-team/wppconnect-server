@@ -5,7 +5,7 @@
   "startAllSession": true,
   "tokenStoreType": "file",
   "webhook": {
-    "url": "http://localhost:8080/metazap/api",
+    "url": null,
     "autoDownload": true,
     "uploadS3": true,
     "readMessage": true,
