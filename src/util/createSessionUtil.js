@@ -17,7 +17,6 @@ import { clientsArray } from './sessionUtil';
 import { create, SocketState } from '@wppconnect-team/wppconnect';
 import { callWebHook, startHelper } from './functions';
 import { download } from '../controller/sessionController';
-import fs from 'fs';
 import Factory from './tokenStore/factory';
 export default class CreateSessionUtil {
   async createSessionUtil(req, clientsArray, session, res) {

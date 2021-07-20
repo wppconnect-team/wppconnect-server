@@ -1,4 +1,4 @@
-var FirebaseTokenStore = function (client) {
+/*var FirebaseTokenStore = function (client) {
   this.tokenStore = {
     getToken: (sessionName) => {
       return null;
@@ -13,6 +13,6 @@ var FirebaseTokenStore = function (client) {
       return [];
     },
   };
-};
+};*/
 
-module.exports = FirebaseTokenStore;
+module.exports = null; // FirebaseTokenStore;

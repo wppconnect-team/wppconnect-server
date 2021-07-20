@@ -659,7 +659,7 @@ export async function setProfileStatus(req, res) {
 
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
-    req.logger.error(error);
+    req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Error on set profile status' });
   }
 }
