@@ -101,7 +101,7 @@ export async function startAllSessions(req, res) {
 
   if (tokenDecrypt !== req.serverOptions.secretKey) {
     return res.status(400).json({
-      response: false,
+      response: 'error',
       message: 'The token is incorrect',
     });
   }
@@ -110,7 +110,7 @@ export async function startAllSessions(req, res) {
     await SessionUtil.opendata(req, session);
   });
 
-  return await res.status(201).json({ status: 'Success', message: 'Starting all sessions' });
+  return await res.status(201).json({ status: 'success', message: 'Starting all sessions' });
 }
 
 export async function showAllSessions(req, res) {
@@ -163,7 +163,8 @@ export async function closeSession(req, res) {
 
     return await res.status(200).json({ status: true, message: 'Session successfully closed' });
   } catch (error) {
-    return await res.status(400).json({ status: false, message: 'Error closing session', error });
+    req.logger.error(error);
+    return await res.status(500).json({ status: false, message: 'Error closing session', error });
   }
 }
 
@@ -180,7 +181,8 @@ export async function logOutSession(req, res) {
 
     return await res.status(200).json({ status: true, message: 'Session successfully closed' });
   } catch (error) {
-    return await res.status(400).json({ status: false, message: 'Error closing session', error });
+    req.logger.error(error);
+    return await res.status(500).json({ status: false, message: 'Error closing session', error });
   }
 }
 
@@ -223,13 +225,13 @@ export async function getMediaByMessage(req, res) {
 
     if (!message)
       return res.status(400).json({
-        response: false,
+        status: 'error',
         message: 'Message not found',
       });
 
     if (!(message['mimetype'] || message.isMedia || message.isMMS))
       return res.status(400).json({
-        response: false,
+        status: 'error',
         message: 'Message does not contain media',
       });
 
@@ -238,10 +240,7 @@ export async function getMediaByMessage(req, res) {
     return res.status(200).json(await buffer.toString('base64'));
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(400).json({
-      response: false,
-      message: 'The session is not active',
-    });
+    return res.status(500).json({ status: 'error', message: 'The session is not active' });
   }
 }
 
@@ -260,10 +259,7 @@ export async function getSessionState(req, res) {
       });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(400).json({
-      response: false,
-      message: 'The session is not active',
-    });
+    return res.status(500).json({ status: 'error', message: 'The session is not active' });
   }
 }
 
@@ -278,10 +274,7 @@ export async function getQrCode(req, res) {
     res.end(img);
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(400).json({
-      response: false,
-      message: 'Error retrieving QRCode',
-    });
+    return res.status(500).json({ status: 'error', message: 'Error retrieving QRCode' });
   }
 }
 
@@ -290,10 +283,7 @@ export async function killServiceWorker(req, res) {
     return res.status(200).json({ status: 'success', response: req.client.killServiceWorker() });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(400).json({
-      response: false,
-      message: 'The session is not active',
-    });
+    return res.status(500).json({ status: 'error', message: 'The session is not active' });
   }
 }
 
@@ -302,10 +292,7 @@ export async function restartService(req, res) {
     return res.status(200).json({ status: 'success', response: req.client.restartService() });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(400).json({
-      response: false,
-      message: 'The session is not active',
-    });
+    return res.status(500).json({ status: 'error', response: { message: 'The session is not active' } });
   }
 }
 
@@ -328,8 +315,8 @@ export async function subscribePresence(req, res) {
         await req.client.subscribePresence(contato);
       }
 
-    return await res.status(200).json({ status: true, message: 'Subscribe presence executed' });
+    return await res.status(200).json({ status: 'success', response: { message: 'Subscribe presence executed' } });
   } catch (error) {
-    return await res.status(400).json({ status: false, message: 'Error on subscribe presence', error });
+    return await res.status(500).json({ status: 'error', message: 'Error on subscribe presence', error });
   }
 }

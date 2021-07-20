@@ -5,8 +5,9 @@
   "startAllSession": true,
   "tokenStoreType": "file",
   "webhook": {
-    "url": null,
+    "url": "http://localhost:8080/metazap/api",
     "autoDownload": true,
+    "uploadS3": true,
     "readMessage": true,
     "allUnreadOnStart": false,
     "listenAcks": true,
@@ -47,6 +48,10 @@
       "--ignore-certificate-errors-spki-list"
     ]
   },
+  "mapper": {
+    "enable": true,
+    "prefix": "tagone-"
+  },
   "db": {
     "mongodbDatabase": "tokens",
     "mongodbCollection": "",
@@ -58,7 +63,7 @@
     "mongodbPort": 27017,
     "redisHost": "localhost",
     "redisPort": 6379,
-    "redisPassword": "pass12345",
+    "redisPassword": "",
     "redisDb": 0
   }
 }

@@ -38,11 +38,11 @@ export async function encryptSession(req, res) {
   }
 
   bcrypt.hash(session + secureTokenEnv, saltRounds, function (err, hash) {
-    if (err) return res.status(400).json(err);
+    if (err) return res.status(500).json(err);
 
     const hashFormat = hash.replace(/\//g, '_').replace(/\+/g, '-');
     return res.status(201).json({
-      status: 'Success',
+      status: 'success',
       session: session,
       token: hashFormat,
       full: `${session}:${hashFormat}`,
