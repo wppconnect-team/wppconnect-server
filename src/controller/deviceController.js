@@ -18,6 +18,30 @@ import { download } from './sessionController';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import mime from 'mime-types';
 
+function returnSucess(res, session, phone, data) {
+  res.status(201).json({
+    status: 'Success',
+    response: {
+      message: 'Information retrieved successfully.',
+      contact: phone,
+      session: session,
+      data: data,
+    },
+  });
+}
+
+function returnError(req, res, session, error) {
+  req.logger.error(error);
+  res.status(400).json({
+    status: 'Error',
+    response: {
+      message: 'Error retrieving information',
+      session: session,
+      log: error,
+    },
+  });
+}
+
 export async function setProfileName(req, res) {
   const session = req.session;
   const { name } = req.body;
@@ -165,6 +189,21 @@ export async function getChatById(req, res) {
   } catch (e) {
     req.logger.error(e);
     return res.json({ status: 'Error', response: [] });
+  }
+}
+
+export async function getMessageById(req, res) {
+  const session = req.session;
+  const { messageId } = req.params;
+
+  try {
+    let result;
+
+    result = await req.client.getMessageById(messageId);
+
+    returnSucess(res, session, result.chatId.user, result);
+  } catch (error) {
+    returnError(req, res, session, error);
   }
 }
 
