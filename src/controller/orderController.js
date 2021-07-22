@@ -58,12 +58,12 @@ export async function getBusinessProfilesProducts(req, res) {
 }
 export async function getOrderbyMsg(req, res) {
   const session = req.session;
-  const { sellerid } = req.body;
+  const { messageId } = req.body;
 
   try {
     let result;
 
-    result = await req.client.getOrderbyMsg(sellerid);
+    result = await req.client.getOrderbyMsg(messageId);
 
     returnSucess(res, session, result);
   } catch (error) {
