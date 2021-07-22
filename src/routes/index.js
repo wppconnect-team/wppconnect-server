@@ -216,7 +216,7 @@ routes.get(
   statusConnection,
   OrderController.getBusinessProfilesProducts
 );
-routes.get('/api/:session/get-order-by-sellerid', verifyToken, statusConnection, OrderController.getOrderbyMsg);
+routes.get('/api/:session/get-order-by-messageId', verifyToken, statusConnection, OrderController.getOrderbyMsg);
 
 
 // Api Doc
