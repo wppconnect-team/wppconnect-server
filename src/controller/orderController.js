@@ -49,7 +49,7 @@ export async function getBusinessProfilesProducts(req, res) {
   try {
     let result;
 
-    result = await req.client.getOrderbyMsg(phone);
+    result = await req.client.getBusinessProfilesProducts(phone);
 
     returnSucess(res, session, result);
   } catch (error) {
