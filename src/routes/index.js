@@ -218,7 +218,6 @@ routes.get(
 );
 routes.get('/api/:session/get-order-by-messageId', verifyToken, statusConnection, OrderController.getOrderbyMsg);
 
-
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
