@@ -19,6 +19,7 @@ import * as MessageController from '../controller/messageController';
 import * as GroupController from '../controller/groupController';
 import * as DeviceController from '../controller/deviceController';
 import * as SessionController from '../controller/sessionController';
+import * as OrderController from '../controller/orderController';
 import verifyToken from '../middleware/auth';
 import statusConnection from '../middleware/statusConnection';
 import multer from 'multer';
@@ -209,7 +210,7 @@ routes.post(
 routes.post('/api/:session/profile-status', verifyToken, statusConnection, DeviceController.setProfileStatus);
 routes.post('/api/:session/change-username', verifyToken, statusConnection, DeviceController.setProfileName);
 
-// Business 
+// Business
 routes.get(
   '/api/:session/get-business-profiles-products',
   verifyToken,
