@@ -209,6 +209,16 @@ routes.post(
 routes.post('/api/:session/profile-status', verifyToken, statusConnection, DeviceController.setProfileStatus);
 routes.post('/api/:session/change-username', verifyToken, statusConnection, DeviceController.setProfileName);
 
+// Business 
+routes.get(
+  '/api/:session/get-business-profiles-products',
+  verifyToken,
+  statusConnection,
+  OrderController.getBusinessProfilesProducts
+);
+routes.get('/api/:session/get-order-by-sellerid', verifyToken, statusConnection, OrderController.getOrderbyMsg);
+
+
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
