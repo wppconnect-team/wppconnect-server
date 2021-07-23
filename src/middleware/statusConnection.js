@@ -42,7 +42,7 @@ export default async function statusConnection(req, res, next) {
               localArr[index] = profile.id._serialized;
             }
           } else {
-            localArr[index] = `${contact}@g.us`;
+            localArr[index] = contact;
           }
         }
         index++;
