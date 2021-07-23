@@ -26,19 +26,23 @@ export default async function statusConnection(req, res, next) {
       let index = 0;
       for (const contact of localArr) {
         if (numbers.indexOf(contact) < 0) {
-          let profile = await req.client.checkNumberStatus(contact).catch((error) => console.log(error));
-          if (!profile.numberExists) {
-            const num = contact.split('@')[0];
-            return res.status(400).json({
-              response: null,
-              status: 'Connected',
-              message: `O número ${num} não existe.`,
-            });
-          } else {
-            if (numbers.indexOf(profile.id._serialized) < 0) {
-              numbers.push(profile.id._serialized);
+          if (!req.body.isGroup) {
+            let profile = await req.client.checkNumberStatus(contact).catch((error) => console.log(error));
+            if (!profile.numberExists) {
+              const num = contact.split('@')[0];
+              return res.status(400).json({
+                response: null,
+                status: 'Connected',
+                message: `O número ${num} não existe.`,
+              });
+            } else {
+              if (numbers.indexOf(profile.id._serialized) < 0) {
+                numbers.push(profile.id._serialized);
+              }
+              localArr[index] = profile.id._serialized;
             }
-            localArr[index] = profile.id._serialized;
+          } else {
+            localArr[index] = `${contact}@g.us`;
           }
         }
         index++;
