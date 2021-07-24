@@ -59,7 +59,7 @@
         "account_id": "5986"
     },
     "rocketChat": {
-        "enable": true,
+        "enable": false,
         "baseURL": "http://rocketchat:3000",
         "token": "$2b$10$ZhXs8Qfw83LD1wHvxwaMTuz1wrJlHHY3AncHeyUuxakxDNh.dOKte",
         "authToken": "ALB67-zr-q45pLql1zhiIBP32-peZM25pG9qp-PVme4",
