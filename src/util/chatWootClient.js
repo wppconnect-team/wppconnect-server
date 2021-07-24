@@ -96,6 +96,7 @@ export default class chatWootClient {
             const { data } = await this.api.get(`api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`);
             return data;
         } catch (e) {
+            console.log(e);
             return null;
         }
     }
