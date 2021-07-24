@@ -27,7 +27,8 @@ let aws = config.webhook.uploadS3 ? require('aws-sdk') : null;
 export function contactToArray(number, isGroup) {
   let localArr = [];
   if (Array.isArray(number)) {
-    for (const contact of number) {
+    for (let contact of number) {
+      contact = contact.split('@')[0];
       if (contact !== '')
         if (isGroup) localArr.push(`${contact}@g.us`);
         else localArr.push(`${contact}@c.us`);

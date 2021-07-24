@@ -15,7 +15,7 @@
     "onParticipantsChanged": true
   },
   "archive": {
-    "enable": true,
+    "enable": false,
     "waitTime": 10,
     "daysToArchive": 45
   },

@@ -25,7 +25,9 @@ export default async function statusConnection(req, res, next) {
 
       let index = 0;
       for (const contact of localArr) {
-        if (numbers.indexOf(contact) < 0) {
+        if (req.body.isGroup) {
+          localArr[index] = contact;
+        } else if (numbers.indexOf(contact) < 0) {
           let profile = await req.client.checkNumberStatus(contact).catch((error) => console.log(error));
           if (!profile.numberExists) {
             const num = contact.split('@')[0];
