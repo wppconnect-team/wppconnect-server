@@ -29,7 +29,7 @@ export default class chatWootClient {
         });
     }
 
-    async sendMessage(message) {
+    async sendMessage(client, message) {
         let contact = await this.createContact(message);
         let conversation = await this.createConversation(contact, message.id);
 
@@ -41,7 +41,9 @@ export default class chatWootClient {
                 message.type == 'ptt'
             ) {
                 let filename = `${message.timestamp}.${mime.extension(message.mimetype)}`;
-                let b64 = message.content;
+
+                let buffer = await client.decryptFile(message);
+                let b64 = await buffer.toString('base64');
 
                 let mediaData = Buffer.from(b64, 'base64');
 

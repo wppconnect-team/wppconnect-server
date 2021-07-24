@@ -136,7 +136,7 @@ export default class CreateSessionUtil {
         await client.onMessage(async (message) => {
             callWebHook(client, req, 'onmessage', message);
 
-            if (this.serverOptions.chatWoot.enable) this.chatWootClient.sendMessage(message);
+            if (this.serverOptions.chatWoot.enable) this.chatWootClient.sendMessage(client, message);
             if (this.serverOptions.rocketChat.enable) this.rocketChatClient.sendMessage(client, message);
 
             if (message.type == 'location' && message.isLive)
