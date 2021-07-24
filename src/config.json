@@ -5,7 +5,7 @@
     "startAllSession": true,
     "sendPreFlight": true,
     "webhook": {
-        "url": "https://webhook.site/e7ec3d48-3cbd-411b-b81c-77aa36e0bab7",
+        "url": null,
         "autoDownload": true,
         "readMessage": true,
         "allUnreadOnStart": true
@@ -17,10 +17,35 @@
     },
     "log": {
         "level": "error",
-        "logger": ["console", "file"]
+        "logger": [
+            "console",
+            "file"
+        ]
     },
     "createOptions": {
-        "autoClose": 0
+        "browserArgs": [
+            "--disable-web-security",
+            "--no-sandbox",
+            "--disable-web-security",
+            "--aggressive-cache-discard",
+            "--disable-cache",
+            "--disable-application-cache",
+            "--disable-offline-load-stale-cache",
+            "--disk-cache-size=0",
+            "--disable-background-networking",
+            "--disable-default-apps",
+            "--disable-extensions",
+            "--disable-sync",
+            "--disable-translate",
+            "--hide-scrollbars",
+            "--metrics-recording-only",
+            "--mute-audio",
+            "--no-first-run",
+            "--safebrowsing-disable-auto-update",
+            "--ignore-certificate-errors",
+            "--ignore-ssl-errors",
+            "--ignore-certificate-errors-spki-list"
+        ]
     },
     "mapper": {
         "enable": true,
