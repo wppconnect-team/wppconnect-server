@@ -695,6 +695,7 @@ export async function starMessage(req, res) {
 }
 
 export async function chatWoot(req, res) {
+    console.log(req.body);
     const { session } = req.params;
     const client = clientsArray[session];
     try {
