@@ -36,6 +36,7 @@ export default class chatWootClient {
         try {
             if (
                 message.type == 'image' ||
+                message.type == 'video' ||
                 message.type == 'in' ||
                 message.type == 'document' ||
                 message.type == 'ptt'
