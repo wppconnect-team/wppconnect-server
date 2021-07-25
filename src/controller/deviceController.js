@@ -694,7 +694,7 @@ export async function starMessage(req, res) {
     }
 }
 
-export async function chatWoot(req, res) {
+/*export async function chatWoot(req, res) {
     const { session } = req.params;
     const client = clientsArray[session];
     try {
@@ -712,6 +712,40 @@ export async function chatWoot(req, res) {
                 if (message.attachments)
                     await client.sendFile(`${contato}`, message.attachments[0].data_url, 'file', message.content);
                 else await client.sendText(contato, message.content);
+            }
+            return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
+        }
+    } catch (e) {
+        return res.status(400).json({ status: 'error', message: 'Error on receive chatwoot' });
+    }
+}*/
+
+export async function chatWoot(req, res) {
+    const { session } = req.params;
+    const client = clientsArray[session];
+    try {
+        if (await client.isConnected()) {
+            const event = req.body.event;
+  
+            if(event == 'conversation_status_changed'){
+                return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
+            }
+            
+            const {
+                message_type,
+                phone = req.body.conversation.meta.sender.phone_number,
+                message = req.body.conversation.messages[0],
+            } = req.body;
+            
+            if (event != 'message_created' && message_type != 'outgoing') return res.status(200);
+            for (const contato of contactToArray(phone, false)) {
+                 if(message_type == 'outgoing'){ 
+                    if (message.attachments){
+                        await client.sendFile(`${contato}`, message.attachments[0].data_url, 'file', message.content);
+                    }else{
+                        await client.sendText(contato, message.content);                    
+                    }
+                }
             }
             return res.status(200).json({ status: 'success', message: 'Success on  receive chatwoot' });
         }
