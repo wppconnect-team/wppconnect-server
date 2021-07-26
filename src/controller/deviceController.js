@@ -695,37 +695,74 @@ export async function starMessage(req, res) {
 }
 
 export async function chatWoot(req, res) {
-    console.log(req.body);
-    const { session } = req.params;
+//console.log("variavel req: ",req);
+    const { session } = req.params;    
     const client = clientsArray[session];
     try {
         if (await client.isConnected()) {
-            const event = req.body.event;
-  
-            if(event == 'conversation_status_changed'){
-                return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
-            }
             
+            const event = req.body.event;
+
+              /* abrir/fechar atendimento */
+              if(event == 'conversation_resolved' || event == 'conversation_opened'){
+
+                var autoMsg = ""; 
+                /* aqui vc pode usar dados advindos do seu DB */
+                if(event == 'conversation_opened'){
+                    autoMsg = "Olá tudo bem? \r\n Em que podemos lhe ajudar?";
+                }else if(event == 'conversation_resolved'){
+                    autoMsg = "😉Atendimento finalizado! \r\n Obrigado pelo seu contato, estamos finalizando o atendimento.";
+                }
+
+                const {
+                    phone = req.body.meta.sender.phone_number,
+                    message = autoMsg,
+                } = req.body;               
+                    
+                await client.sendText(`${phone.substring(1)}@c.us`, message);
+
+               
+                /* finalizar */
+                return res.status(200).json({ status: 'success', message: 'Success on  receive chatwoot' });
+
+            }
+
+            /* tratar ações do chatwoot */
+            if(event == 'conversation_status_changed'){
+              //executar ação quando alterar status do atendimento chatwoot
+              /* finalizar */
+              return res.status(200).json({ status: 'success', message: 'Success on  receive chatwoot' });
+            }
+
+
             const {
                 message_type,
                 phone = req.body.conversation.meta.sender.phone_number,
                 message = req.body.conversation.messages[0],
-            } = req.body;
-            
+            } = req.body; 
+
             if (event != 'message_created' && message_type != 'outgoing') return res.status(200);
+
             for (const contato of contactToArray(phone, false)) {
-                 if(message_type == 'outgoing'){ 
-                    if (message.attachments){
-                        await client.sendFile(`${contato}`, message.attachments[0].data_url, 'file', message.content);
-                    }else{
-                        await client.sendText(contato, message.content);                    
-                    }
+
+                if(message_type == 'outgoing'){ //somente mensagem vindo do  chatwoot
+
+                        if (message.attachments){
+                            
+                            await client.sendFile(`${contato}`, message.attachments[0].data_url, 'file', message.content);
+                
+                        } else{
+
+                            await client.sendText(contato, message.content);                        
+
+                        }
+
                 }
             }
             return res.status(200).json({ status: 'success', message: 'Success on  receive chatwoot' });
         }
     } catch (e) {
-        console.log(e);
+        console.log("erro: ",e);
         return res.status(400).json({ status: 'error', message: 'Error on  receive chatwoot' });
     }
 }
