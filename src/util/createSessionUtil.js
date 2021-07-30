@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 import { clientsArray } from './sessionUtil';
-import { create, SocketState, tokenStore } from '@wppconnect-team/wppconnect';
+import { create, SocketState } from '@wppconnect-team/wppconnect';
 import { callWebHook, startHelper } from './functions';
 import { download } from '../controller/sessionController';
-import fs from 'fs';
-/*import FileTokenStoreCreator from './tokenStore/fileTokenStoreCreator';
-import MongodbTokenStoreCreator from './tokenStore/mongodbTokenStoreCreator';
-import RedisTokenStoreCreator from './tokenStore/redisTokenStoreCreator';
-import * as redis from 'redis';
-import Token from "./tokenStore/model/token";
-import { reject } from 'lodash';*/
 import Factory from './tokenStore/factory';
-
 export default class CreateSessionUtil {
   async createSessionUtil(req, clientsArray, session, res) {
     try {
@@ -33,6 +25,7 @@ export default class CreateSessionUtil {
       webhook = webhook === undefined ? req.serverOptions.webhook.url : webhook;
 
       let client = this.getClient(session);
+
       if (client.status != null && client.status !== 'CLOSED') return;
       client.status = 'INITIALIZING';
       client.webhook = webhook;
@@ -53,6 +46,7 @@ export default class CreateSessionUtil {
                 client.qrcode = null;
                 client.waPage.close();
               }
+              callWebHook(client, req, 'status-find', { status: statusFind });
               req.logger.info(statusFind + '\n\n');
             } catch (error) {}
           },
@@ -84,7 +78,7 @@ export default class CreateSessionUtil {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
-    fs.writeFileSync(`${client.session}.png`, imageBuffer);
+    // fs.writeFileSync(`${client.session}.png`, imageBuffer);
 
     req.io.emit('qrCode', {
       data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
@@ -108,6 +102,7 @@ export default class CreateSessionUtil {
       Object.assign(client, { status: 'CONNECTED', qrcode: null });
 
       req.logger.info(`Started Session: ${client.session}`);
+      //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
       req.io.emit('session-logged', { status: true, session: client.session });
       startHelper(client, req);
     } catch (error) {

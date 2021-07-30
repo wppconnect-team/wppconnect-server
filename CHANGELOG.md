@@ -1,10 +1,6 @@
 ## 1.0.3 (2021-07-15)
 
-
-
 ## 1.0.2 (2021-07-14)
-
-
 
 ## [1.0.1](https://github.com/wppconnect-team/wppconnect-server/compare/v1.0.0...v1.0.1) (2021-06-13)
 

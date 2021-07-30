@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+require('dotenv').config();
+
 import { createLogger } from './util/logger';
 import { createFolders, startAllSessions } from './util/functions';
 import cors from 'cors';
@@ -24,6 +27,7 @@ import path from 'path';
 import config from './config.json';
 import boolParser from 'express-query-boolean';
 import mergeDeep from 'merge-deep';
+import { convert } from './mapper/index';
 
 export function initServer(serverOptions) {
   const __dirname = path.resolve(path.dirname(''));
