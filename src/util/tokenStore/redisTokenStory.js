@@ -15,7 +15,7 @@ var RedisTokenStore = function (client) {
       new Promise((resolve) => {
         tokenData.sessionName = sessionName;
         tokenData.webhook = client.webhook;
-        redisClient.set(sessionName, JSON.stringify(tokenData), (err, reply) => {
+        redisClient.set(sessionName, JSON.stringify(tokenData), (err) => {
           return resolve(err ? false : true);
         });
       }),

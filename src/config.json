@@ -7,6 +7,7 @@
   "webhook": {
     "url": null,
     "autoDownload": true,
+    "uploadS3": false,
     "readMessage": true,
     "allUnreadOnStart": false,
     "listenAcks": true,
@@ -14,7 +15,7 @@
     "onParticipantsChanged": true
   },
   "archive": {
-    "enable": true,
+    "enable": false,
     "waitTime": 10,
     "daysToArchive": 45
   },
@@ -47,6 +48,10 @@
       "--ignore-certificate-errors-spki-list"
     ]
   },
+  "mapper": {
+    "enable": false,
+    "prefix": "tagone-"
+  },
   "db": {
     "mongodbDatabase": "tokens",
     "mongodbCollection": "",
@@ -58,7 +63,7 @@
     "mongodbPort": 27017,
     "redisHost": "localhost",
     "redisPort": 6379,
-    "redisPassword": "pass12345",
+    "redisPassword": "",
     "redisDb": 0
   }
 }
