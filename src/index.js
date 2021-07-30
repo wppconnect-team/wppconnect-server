@@ -55,6 +55,23 @@ export function initServer(serverOptions) {
     req.serverOptions = serverOptions;
     req.logger = logger;
     req.io = io;
+
+    var oldSend = res.send;
+
+    res.send = async function (data) {
+      const content = req.headers['content-type'];
+      if (content == 'application/json') {
+        data = JSON.parse(data);
+        data.session = req.client ? req.client.session : '';
+        if (data.mapper && req.serverOptions.mapper.enable) {
+          data.response = await convert(req.serverOptions.mapper.prefix, data.response, data.mapper);
+          delete data.mapper;
+        }
+      }
+      res.send = oldSend;
+      return res.send(data);
+    };
+
     next();
   });
 
