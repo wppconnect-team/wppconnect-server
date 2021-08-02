@@ -54,7 +54,7 @@
     "@babel/preset-env": "^7.14.5",
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
-    "@commitlint/cz-commitlint": "^12.1.4",
+    "@commitlint/cz-commitlint": "^13.1.0",
     "aws-sdk": "^2.903.0",
     "commitizen": "^4.2.4",
     "conventional-changelog-cli": "^2.1.1",
