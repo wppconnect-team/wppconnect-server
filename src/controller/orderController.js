@@ -47,11 +47,13 @@ export async function getBusinessProfilesProducts(req, res) {
   const { phone } = req.body;
 
   try {
-    let result;
+    let results = [];
 
-    result = await req.client.getBusinessProfilesProducts(phone);
+    for (const contato of phone) {
+      results.push(await req.client.getBusinessProfilesProducts(contato));
+    }
 
-    returnSucess(res, session, result);
+    returnSucess(res, session, phone, results);
   } catch (error) {
     returnError(req, res, session, error);
   }
@@ -65,7 +67,7 @@ export async function getOrderbyMsg(req, res) {
 
     result = await req.client.getOrderbyMsg(messageId);
 
-    returnSucess(res, session, result);
+    returnSucess(res, session, null, result);
   } catch (error) {
     returnError(req, res, session, error);
   }
