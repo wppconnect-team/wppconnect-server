@@ -1,4 +1,6 @@
 # WPPConnect Team
+access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
+
 ## _WPPConnect Server_
 
 [![Build](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml)
