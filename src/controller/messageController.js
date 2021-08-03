@@ -247,3 +247,22 @@ export async function replyMessage(req, res) {
     returnError(req, res, session, error);
   }
 }
+
+export async function sendMentioned(req, res) {
+  const session = req.session;
+  const { phone, message, mentioned } = req.body;
+
+  try {
+    let results = [];
+
+    for (const contact of phone) {
+      results.push(await req.client.sendMentioned(contact, message, mentioned));
+    }
+
+    if (results.length === 0) return returnError(req, res, session, 'Error sending message');
+
+    returnSucess(res, session, phone, results);
+  } catch (error) {
+    returnError(req, res, session, error);
+  }
+}

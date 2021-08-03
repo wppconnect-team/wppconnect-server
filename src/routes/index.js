@@ -71,7 +71,7 @@ routes.post('/api/:session/send-voice', verifyToken, statusConnection, MessageCo
 routes.post('/api/:session/send-status', verifyToken, statusConnection, MessageController.sendStatusText);
 routes.post('/api/:session/send-link-preview', verifyToken, statusConnection, MessageController.sendLinkPreview);
 routes.post('/api/:session/send-location', verifyToken, statusConnection, MessageController.sendLocation);
-routes.post('/api/:session/send-mentioned', verifyToken, statusConnection, DeviceController.sendMentioned);
+routes.post('/api/:session/send-mentioned', verifyToken, statusConnection, MessageController.sendMentioned);
 routes.post('/api/:session/send-contact', verifyToken, statusConnection, MessageController.sendContactVcard);
 
 // Group
