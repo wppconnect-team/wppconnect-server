@@ -13,23 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import _ from 'lodash';
 import { contactToArray, groupNameToArray, groupToArray } from '../util/functions';
+
+function returnSucess(res, session, group, data, message = 'Information retrieved successfully.') {
+  res.status(200).json({
+    status: 'success',
+    response: {
+      message: message,
+      group: group,
+      session: session,
+      data: data,
+    },
+  });
+}
+
+function returnError(req, res, session, error, messsage = 'Error retrieving information') {
+  req.logger.error(error);
+  res.status(400).json({
+    status: 'error',
+    response: {
+      message: messsage,
+      session: session,
+      log: error,
+    },
+  });
+}
 
 export async function joinGroupByCode(req, res) {
   const { inviteCode } = req.body;
 
-  if (!inviteCode) return res.status(400).send({ message: 'Invitation Code is required' });
+  if (!inviteCode) return returnError(req, res, req.session, 'Invitation Code is required');
 
   try {
-    await req.client.joinGroup(inviteCode);
-    res.status(201).json({
-      status: 'success',
-      response: { message: 'The informed contact(s) entered the group successfully', contact: inviteCode },
-    });
+    let result;
+
+    result = await req.client.joinGroup(inviteCode);
+
+    returnSucess(res, req.session, inviteCode, result, 'The informed contact(s) entered the group successfully');
   } catch (error) {
-    req.logger.error(error);
-    res.status(500).json({ status: 'error', message: 'The informed contact(s) did not join the group successfully' });
+    returnError(req, res, req.session, 'The informed contact(s) did not join the group successfully');
+  }
+}
+
+export async function getAllGroups(req, res) {
+  try {
+    let result;
+
+    result = await req.client.getAllGroups();
+
+    returnSucess(res, req.session, 'all-groups', result);
+  } catch (e) {
+    returnError(req, res, req.session, 'Error fetching groups');
   }
 }
 
@@ -183,35 +217,26 @@ export async function getGroupAdmins(req, res) {
   const { groupId } = req.params;
 
   try {
-    let response = {};
-    let arrayGrupos = [];
+    let result;
 
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.getGroupAdmins(grupo);
+    result = await req.client.getGroupAdmins(groupId);
 
-      arrayGrupos.push({ id: grupo, admin: response.user });
-    }
-
-    const grouped = _.groupBy(arrayGrupos, (grupo) => grupo.id);
-    return res.status(200).json({ status: 'success', response: { participants: grouped, groups: arrayGrupos } });
+    returnSucess(res, req.session, groupId, result);
   } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error retrieving group admin(s)' });
+    returnError(req, res, req.session, 'Error retrieving group admin(s)');
   }
 }
 
 export async function getGroupInviteLink(req, res) {
   const { groupId } = req.params;
   try {
-    let response = {};
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.getGroupInviteLink(grupo);
-    }
+    let result;
 
-    return res.status(200).json({ status: 'success', response: response });
+    result = await req.client.getGroupInviteLink(groupId);
+
+    returnSucess(res, req.session, groupId, result);
   } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on get group invite link' });
+    returnError(req, res, req.session, 'Error on get group invite link');
   }
 }
 

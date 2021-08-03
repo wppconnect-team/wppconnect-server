@@ -66,17 +66,6 @@ export async function showAllContacts(req, res) {
   }
 }
 
-export async function getAllGroups(req, res) {
-  try {
-    const response = await req.client.getAllGroups();
-
-    return res.status(200).json({ status: 'success', response: response });
-  } catch (e) {
-    req.logger.error(e);
-    res.status(500).json({ status: 'error', message: 'Error fetching groups' });
-  }
-}
-
 export async function getAllChats(req, res) {
   try {
     const response = await req.client.getAllChats();
