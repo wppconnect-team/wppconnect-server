@@ -13,51 +13,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clientsArray } from './sessionUtil';
+import { clientsArray, eventEmitter } from './sessionUtil';
 import { create, SocketState } from '@wppconnect-team/wppconnect';
 import { callWebHook, startHelper } from './functions';
 import { download } from '../controller/sessionController';
 import Factory from './tokenStore/factory';
+import chatWootClient from './chatWootClient';
+
 export default class CreateSessionUtil {
+  startChatWootClient() {
+    if (this.client.config.chatWoot && !this._chatWootClient)
+      this._chatWootClient = new chatWootClient(this.client.config.chatWoot);
+    return this._chatWootClient;
+  }
+
   async createSessionUtil(req, clientsArray, session, res) {
     try {
-      let { webhook } = req.body;
-      webhook = webhook === undefined ? req.serverOptions.webhook.url : webhook;
-
-      let client = this.getClient(session);
-
-      if (client.status != null && client.status !== 'CLOSED') return;
-      client.status = 'INITIALIZING';
-      client.webhook = webhook;
+      this.client = this.getClient(session);
+      if (this.client.status != null && this.client.status !== 'CLOSED') return;
+      this.client.status = 'INITIALIZING';
+      this.client.config = req.body;
 
       const tokenStore = new Factory();
-      const myTokenStore = tokenStore.createTokenStory(client);
+      const myTokenStore = tokenStore.createTokenStory(this.client);
+
+      await myTokenStore.getToken(session);
+      this.startChatWootClient();
 
       let wppClient = await create(
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
           session: session,
           catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
-            this.exportQR(req, base64Qr, urlCode, client, res);
+            this.exportQR(req, base64Qr, urlCode, this.client, res);
           },
           statusFind: (statusFind) => {
             try {
+              eventEmitter.emit('status', this.client, statusFind);
               if (statusFind === 'autocloseCalled' || statusFind === 'desconnectedMobile') {
-                client.status = 'CLOSED';
-                client.qrcode = null;
-                client.waPage.close();
+                this.client.status = 'CLOSED';
+                this.client.qrcode = null;
+                this.client.waPage.close();
               }
-              callWebHook(client, req, 'status-find', { status: statusFind });
+              callWebHook(this.client, req, 'status-find', { status: statusFind });
               req.logger.info(statusFind + '\n\n');
             } catch (error) {}
           },
         })
       );
 
-      client = clientsArray[session] = Object.assign(wppClient, client);
-      await this.start(req, client);
+      this.client = clientsArray[session] = Object.assign(wppClient, this.client);
+      await this.start(req, this.client);
 
       if (req.serverOptions.webhook.onParticipantsChanged) {
-        await this.onParticipantsChanged(req, client);
+        await this.onParticipantsChanged(req, this.client);
       }
     } catch (e) {
       req.logger.error(e);
@@ -69,6 +77,7 @@ export default class CreateSessionUtil {
   }
 
   exportQR(req, qrCode, urlCode, client, res) {
+    eventEmitter.emit('qrcode', qrCode, urlCode, client);
     Object.assign(client, {
       status: 'QRCODE',
       qrcode: qrCode,
@@ -77,8 +86,6 @@ export default class CreateSessionUtil {
 
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
-
-    // fs.writeFileSync(`${client.session}.png`, imageBuffer);
 
     req.io.emit('qrCode', {
       data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
@@ -135,6 +142,7 @@ export default class CreateSessionUtil {
 
   async listenMessages(client, req) {
     await client.onMessage(async (message) => {
+      eventEmitter.emit('mensagem', this.client, message);
       callWebHook(client, req, 'onmessage', message);
       if (message.type === 'location')
         client.onLiveLocation(message.sender.id, (location) => {

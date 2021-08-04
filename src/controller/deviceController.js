@@ -17,6 +17,7 @@ import fs from 'fs';
 import { download } from './sessionController';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import mime from 'mime-types';
+import { clientsArray } from '../util/sessionUtil';
 
 function returnSucess(res, session, phone, data) {
   res.status(201).json({
@@ -712,5 +713,43 @@ export async function starMessage(req, res) {
   } catch (error) {
     req.logger.error(error);
     return res.status(500).json({ status: 'error', message: 'Error on  start message' });
+  }
+}
+
+export async function chatWoot(req, res) {
+  const { session } = req.params;
+  const client = clientsArray[session];
+  try {
+    if (await client.isConnected()) {
+      const event = req.body.event;
+
+      if (event == 'conversation_status_changed') {
+        return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
+      }
+
+      const {
+        message_type,
+        phone = req.body.conversation.meta.sender.phone_number,
+        message = req.body.conversation.messages[0],
+      } = req.body;
+
+      if (event != 'message_created' && message_type != 'outgoing') return res.status(200);
+      for (const contato of contactToArray(phone, false)) {
+        if (message_type == 'outgoing') {
+          if (message.attachments) {
+            let base_url = `${client.config.chatWoot.baseURL}/${message.attachments[0].data_url.substring(
+              message.attachments[0].data_url.indexOf('/rails/') + 1
+            )}`;
+            await client.sendFile(`${contato}`, base_url, 'file', message.content);
+          } else {
+            await client.sendText(contato, message.content);
+          }
+        }
+      }
+      return res.status(200).json({ status: 'success', message: 'Success on  receive chatwoot' });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({ status: 'error', message: 'Error on  receive chatwoot' });
   }
 }

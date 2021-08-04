@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { EventEmitter } from 'events';
 export const chromiumArgs = [
   '--disable-web-security',
   '--no-sandbox',
@@ -38,3 +39,4 @@ export const chromiumArgs = [
 ];
 export let clientsArray = [];
 export let sessions = [];
+export const eventEmitter = new EventEmitter();

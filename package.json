@@ -42,7 +42,8 @@
     "moment": "^2.29.1",
     "multer": "^1.4.2",
     "socket.io": "^4.1.2",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "buffer-to-stream": "1.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",

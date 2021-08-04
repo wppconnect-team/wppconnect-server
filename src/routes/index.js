@@ -219,6 +219,8 @@ routes.get(
 );
 routes.get('/api/:session/get-order-by-messageId', verifyToken, statusConnection, OrderController.getOrderbyMsg);
 
+routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
+
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));

@@ -10,6 +10,7 @@ if (config.tokenStoreType === 'mongodb') {
     WAToken1: String,
     WAToken2: String,
     webhook: String,
+    config: String,
     sessionName: String,
   });
   Token = mongoose.model('Token', TokenSchema);

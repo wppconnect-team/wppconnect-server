@@ -79,14 +79,15 @@ export function groupNameToArray(group) {
 }
 
 export async function callWebHook(client, req, event, data) {
-  if (client && client.webhook) {
+  const webhook = client?.config.webhook || false;
+  if (webhook) {
     if (req.serverOptions.webhook.autoDownload) await autoDownload(client, req, data);
     try {
       const chatId = data.from || data.chatId || (data.chatId ? data.chatId._serialized : null);
       data = Object.assign({ event: event, session: client.session }, data);
       if (req.serverOptions.mapper.enable) data = await convert(req.serverOptions.mapper.prefix, data);
       api
-        .post(client.webhook, data)
+        .post(webhook, data)
         .then(() => {
           try {
             const events = ['unreadmessages', 'onmessage'];
