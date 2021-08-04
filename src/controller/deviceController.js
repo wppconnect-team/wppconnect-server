@@ -720,7 +720,9 @@ export async function chatWoot(req, res) {
   const { session } = req.params;
   const client = clientsArray[session];
   try {
-    if (await client.isConnected()) {
+    if(client == null){
+      return;
+    }else if (await client.isConnected()) {
       const event = req.body.event;
 
       if (event == 'conversation_status_changed') {
