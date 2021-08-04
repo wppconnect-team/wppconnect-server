@@ -719,6 +719,7 @@ export async function starMessage(req, res) {
 export async function chatWoot(req, res) {
   const { session } = req.params;
   const client = clientsArray[session];
+  if (client == null || client.status !== 'CONNECTED') return;
   try {
     if (client == null) {
       return;
