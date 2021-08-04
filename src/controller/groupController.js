@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { contactToArray, groupNameToArray, groupToArray } from '../util/functions';
+import { contactToArray, groupToArray } from '../util/functions';
 
 function returnSucess(res, session, group, data, message = 'Information retrieved successfully.') {
   res.status(200).json({
@@ -71,28 +71,25 @@ export async function createGroup(req, res) {
   const { participants, name } = req.body;
 
   try {
-    let response = {};
+    let result;
+    let inviteLink;
     let infoGroup = [];
 
-    for (const grupo of groupNameToArray(name)) {
-      response = await req.client.createGroup(grupo, contactToArray(participants));
+    result = await req.client.createGroup(name, contactToArray(participants));
+    inviteLink = await req.client.getGroupInviteLink(result.gid.user);
 
-      infoGroup.push({
-        name: grupo,
-        id: response.gid.user,
-        participants: response.participants.map((user) => {
-          return { user: Object.keys(user)[0] };
-        }),
-      });
-    }
-
-    return res.status(201).json({
-      status: 'success',
-      response: { message: 'Group(s) created successfully', group: name, groupInfo: infoGroup },
+    infoGroup.push({
+      id: result.gid.user,
+      name: name,
+      participants: result.participants.map((user) => {
+        return { user: Object.keys(user)[0] };
+      }),
+      inviteLink: inviteLink,
     });
+
+    returnSucess(res, req.session, result.gid.user, infoGroup, 'Group(s) created successfully');
   } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error creating group(s)' });
+    returnError(req, res, req.session, 'Error creating group');
   }
 }
 
