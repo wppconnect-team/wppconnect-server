@@ -1478,10 +1478,10 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.8.10":
-  version "1.8.10"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.10.tgz#f5b816afb9834de63b96be7fedd102e227a8f881"
-  integrity sha512-SYfKYNZg+T2ENUdFpexpQ1m4RTawdAPg0IIBBgIIjYBQ/pD5Sp6h41mveU4oGY6DuuY27nCsj9KJ8U1rdrEHBA==
+"@wppconnect-team/wppconnect@^1.8.11":
+  version "1.8.11"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.11.tgz#d8269fab93d157ba1bcd1de44dd48ef09c539f30"
+  integrity sha512-mo1Ge0OIBSpz/mIhzYbHO8st1K8feHn+EoddTQiH0ZNzraN2LM032FbDWau+sofheH9qy+5jelw2+vj9bAqJTw==
   dependencies:
     "@wppconnect/wa-version" "^1.1.3"
     atob "^2.1.2"
@@ -1782,9 +1782,9 @@ atob@^2.1.2:
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
 aws-sdk@^2.903.0:
-  version "2.961.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.961.0.tgz#c3bde072c3a38f119f01c170e8dc84cddd2f646e"
-  integrity sha512-71ELXHWd0roRT0FW8CnqGLYGKLksHARa7Yn8LPN3mF70FJt2LuvVAyK49IChoUczTjlzS78p+Y5197Tkky4N8g==
+  version "2.962.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.962.0.tgz#cb9c5a4e52b7bb31c2906f91e280b39c6a1538b2"
+  integrity sha512-uY87X0bQ0tFjxt/AxJM9gZDxNzz8hD7uJG4azw7fgZibBqG2eYMAw2ythkQB/B8kLPenm/jr5+FsIG28qaC63Q==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
