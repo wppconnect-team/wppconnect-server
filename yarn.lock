@@ -59,9 +59,9 @@
     source-map "^0.5.0"
 
 "@babel/eslint-parser@^7.14.5":
-  version "7.14.9"
-  resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.14.9.tgz#b2cfaf67cc7f7a9b475d3ee9b166755ffd44e086"
-  integrity sha512-W3En2CT6iOZJ+jEujLlwL2h/Jraj6S/IHrh63nV+TfX83DYe9pI4pcu0Luj6/hJ2kIr/3hOttxzaEsSQnUKx+w==
+  version "7.15.0"
+  resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.15.0.tgz#b54f06e04d0e93aebcba99f89251e3bf0ee39f21"
+  integrity sha512-+gSPtjSBxOZz4Uh8Ggqu7HbfpB8cT1LwW0DnVVLZEJvzXauiD0Di3zszcBkRmfGGrLdYeHUwcflG7i3tr9kQlw==
   dependencies:
     eslint-scope "^5.1.1"
     eslint-visitor-keys "^2.1.0"
@@ -1478,10 +1478,10 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.8.10":
-  version "1.8.10"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.10.tgz#f5b816afb9834de63b96be7fedd102e227a8f881"
-  integrity sha512-SYfKYNZg+T2ENUdFpexpQ1m4RTawdAPg0IIBBgIIjYBQ/pD5Sp6h41mveU4oGY6DuuY27nCsj9KJ8U1rdrEHBA==
+"@wppconnect-team/wppconnect@^1.8.11":
+  version "1.8.11"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.11.tgz#d8269fab93d157ba1bcd1de44dd48ef09c539f30"
+  integrity sha512-mo1Ge0OIBSpz/mIhzYbHO8st1K8feHn+EoddTQiH0ZNzraN2LM032FbDWau+sofheH9qy+5jelw2+vj9bAqJTw==
   dependencies:
     "@wppconnect/wa-version" "^1.1.3"
     atob "^2.1.2"
