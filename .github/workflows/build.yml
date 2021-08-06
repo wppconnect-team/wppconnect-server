@@ -68,3 +68,35 @@ jobs:
 
       - name: Lint source
         run: yarn lint
+
+  update-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 12.x
+
+      - name: Get yarn cache directory
+        id: yarn-cache
+        run: |
+          echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Setup yarn cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'chore: Updated yarn.lock'
+          file_pattern: yarn.lock
