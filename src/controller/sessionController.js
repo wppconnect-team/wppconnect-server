@@ -107,7 +107,8 @@ export async function startAllSessions(req, res) {
   }
 
   allSessions.map(async (session) => {
-    await SessionUtil.opendata(req, session);
+    const util = new CreateSessionUtil();
+    await util.opendata(req, session);
   });
 
   return await res.status(201).json({ status: 'success', message: 'Starting all sessions' });

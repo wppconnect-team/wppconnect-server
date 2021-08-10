@@ -721,9 +721,7 @@ export async function chatWoot(req, res) {
   const client = clientsArray[session];
   if (client == null || client.status !== 'CONNECTED') return;
   try {
-    if (client == null) {
-      return;
-    } else if (await client.isConnected()) {
+    if (await client.isConnected()) {
       const event = req.body.event;
 
       if (event == 'conversation_status_changed') {

@@ -64,8 +64,6 @@ export function initServer(serverOptions) {
 
     res.send = async function (data) {
       const content = req.headers['content-type'];
-      //console.log('data', data);
-      //console.log('content', content);
       if (content == 'application/json') {
         data = JSON.parse(data);
         data.session = req.client ? req.client.session : '';
@@ -77,7 +75,6 @@ export function initServer(serverOptions) {
       res.send = oldSend;
       return res.send(data);
     };
-
     next();
   });
 
