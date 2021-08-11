@@ -64,11 +64,9 @@ export function initServer(serverOptions) {
 
     res.send = async function (data) {
       const content = req.headers['content-type'];
-      //console.log('data', data);
-      //console.log('content', content);
       if (content == 'application/json') {
         data = JSON.parse(data);
-        data.session = req.client ? req.client.session : '';
+        if (!data.session) data.session = req.client ? req.client.session : '';
         if (data.mapper && req.serverOptions.mapper.enable) {
           data.response = await convert(req.serverOptions.mapper.prefix, data.response, data.mapper);
           delete data.mapper;
@@ -77,7 +75,6 @@ export function initServer(serverOptions) {
       res.send = oldSend;
       return res.send(data);
     };
-
     next();
   });
 

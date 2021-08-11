@@ -58,6 +58,7 @@ export async function sendImage(req, res) {
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');
+    if (req.file.path) await unlinkAsync(pathFile);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
@@ -65,14 +66,14 @@ export async function sendImage(req, res) {
 }
 
 export async function sendFile(req, res) {
-  const { phone, file, filename = 'file', message } = req.body;
+  const { phone, path, filename = 'file', message } = req.body;
 
-  if (!file && !req.file)
+  if (!path && !req.file)
     return res.status(401).send({
       message: 'Sending the file is mandatory',
     });
 
-  const pathFile = file || req.file.path;
+  const pathFile = path || req.file.path;
 
   try {
     let results = [];
@@ -81,7 +82,7 @@ export async function sendFile(req, res) {
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');
-    if (!req.serverOptions.webhook.uploadS3) await unlinkAsync(pathFile);
+    if (req.file) await unlinkAsync(pathFile);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);

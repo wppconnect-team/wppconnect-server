@@ -20,7 +20,7 @@ import toStream from 'buffer-to-stream';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
-  constructor(config) {
+  constructor(config, session) {
     this.sender = {
       pushname: `wppconnect`,
       id: '5511999999999',
@@ -34,7 +34,7 @@ export default class chatWootClient {
     });
 
     //assina o evento do qrcode
-    eventEmitter.on('qrcode', (qrCode, urlCode, client) => {
+    eventEmitter.on(`qrcode-${session}`, (qrCode, urlCode, client) => {
       this.sendMessage(client, {
         sender: this.sender,
         chatId: '',
@@ -47,7 +47,7 @@ export default class chatWootClient {
     });
 
     //assiona o evento do status
-    eventEmitter.on('status', (client, status) => {
+    eventEmitter.on(`status-${session}`, (client, status) => {
       this.sendMessage(client, {
         sender: this.sender,
         chatId: '',
@@ -56,7 +56,7 @@ export default class chatWootClient {
     });
 
     //assina o evento de mensagem
-    eventEmitter.on('mensagem', (client, message) => {
+    eventEmitter.on(`mensagem-${session}`, (client, message) => {
       this.sendMessage(client, message);
     });
   }
@@ -155,7 +155,7 @@ export default class chatWootClient {
     };
     body.phone_number = `+${body.phone_number}`;
     var contact = await this.findContact(body.phone_number.replace('+', ''));
-    if (contact.meta.count > 0) return contact.payload[0];
+    if (contact && contact.meta.count > 0) return contact.payload[0];
 
     try {
       const data = await this.api.post(`api/v1/accounts/${this.account_id}/contacts`, body);

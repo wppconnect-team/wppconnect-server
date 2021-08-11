@@ -188,12 +188,10 @@ export async function getGroupAdmins(req, res) {
 
     for (const grupo of groupToArray(groupId)) {
       response = await req.client.getGroupAdmins(grupo);
-
-      arrayGrupos.push({ id: grupo, admin: response.user });
+      arrayGrupos.push(response);
     }
 
-    const grouped = _.groupBy(arrayGrupos, (grupo) => grupo.id);
-    return res.status(200).json({ status: 'success', response: { participants: grouped, groups: arrayGrupos } });
+    return res.status(200).json({ status: 'success', response: arrayGrupos });
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Error retrieving group admin(s)' });

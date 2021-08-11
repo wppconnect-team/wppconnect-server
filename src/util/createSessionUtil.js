@@ -21,51 +21,51 @@ import Factory from './tokenStore/factory';
 import chatWootClient from './chatWootClient';
 
 export default class CreateSessionUtil {
-  startChatWootClient() {
-    if (this.client.config.chatWoot && !this._chatWootClient)
-      this._chatWootClient = new chatWootClient(this.client.config.chatWoot);
-    return this._chatWootClient;
+  startChatWootClient(client) {
+    if (client.config.chatWoot && !client._chatWootClient)
+      client._chatWootClient = new chatWootClient(client.config.chatWoot, client.session);
+    return client._chatWootClient;
   }
 
   async createSessionUtil(req, clientsArray, session, res) {
     try {
-      this.client = this.getClient(session);
-      if (this.client.status != null && this.client.status !== 'CLOSED') return;
-      this.client.status = 'INITIALIZING';
-      this.client.config = req.body;
+      let client = this.getClient(session);
+      if (client.status != null && client.status !== 'CLOSED') return;
+      client.status = 'INITIALIZING';
+      client.config = req.body;
 
       const tokenStore = new Factory();
-      const myTokenStore = tokenStore.createTokenStory(this.client);
+      const myTokenStore = tokenStore.createTokenStory(client);
 
       await myTokenStore.getToken(session);
-      this.startChatWootClient();
+      this.startChatWootClient(client);
 
       let wppClient = await create(
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
           session: session,
           catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
-            this.exportQR(req, base64Qr, urlCode, this.client, res);
+            this.exportQR(req, base64Qr, urlCode, client, res);
           },
           statusFind: (statusFind) => {
             try {
-              eventEmitter.emit('status', this.client, statusFind);
+              eventEmitter.emit(`status-${client.session}`, client, statusFind);
               if (statusFind === 'autocloseCalled' || statusFind === 'desconnectedMobile') {
-                this.client.status = 'CLOSED';
-                this.client.qrcode = null;
-                this.client.waPage.close();
+                client.status = 'CLOSED';
+                client.qrcode = null;
+                client.waPage.close();
               }
-              callWebHook(this.client, req, 'status-find', { status: statusFind });
+              callWebHook(client, req, 'status-find', { status: statusFind });
               req.logger.info(statusFind + '\n\n');
             } catch (error) {}
           },
         })
       );
 
-      this.client = clientsArray[session] = Object.assign(wppClient, this.client);
-      await this.start(req, this.client);
+      client = clientsArray[session] = Object.assign(wppClient, client);
+      await this.start(req, client);
 
       if (req.serverOptions.webhook.onParticipantsChanged) {
-        await this.onParticipantsChanged(req, this.client);
+        await this.onParticipantsChanged(req, client);
       }
     } catch (e) {
       req.logger.error(e);
@@ -77,7 +77,7 @@ export default class CreateSessionUtil {
   }
 
   exportQR(req, qrCode, urlCode, client, res) {
-    eventEmitter.emit('qrcode', qrCode, urlCode, client);
+    eventEmitter.emit(`qrcode-${client.session}`, qrCode, urlCode, client);
     Object.assign(client, {
       status: 'QRCODE',
       qrcode: qrCode,
@@ -142,7 +142,7 @@ export default class CreateSessionUtil {
 
   async listenMessages(client, req) {
     await client.onMessage(async (message) => {
-      eventEmitter.emit('mensagem', this.client, message);
+      eventEmitter.emit(`mensagem-${client.session}`, client, message);
       callWebHook(client, req, 'onmessage', message);
       if (message.type === 'location')
         client.onLiveLocation(message.sender.id, (location) => {
