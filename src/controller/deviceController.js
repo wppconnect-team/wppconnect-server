@@ -15,7 +15,7 @@
  */
 import fs from 'fs';
 import { download } from './sessionController';
-import { contactToArray, unlinkAsync } from '../util/functions';
+import { contactToArray, groupToArray, unlinkAsync } from '../util/functions';
 import mime from 'mime-types';
 import { clientsArray } from '../util/sessionUtil';
 
@@ -185,11 +185,11 @@ export async function getMessageById(req, res) {
 }
 
 export async function changePrivacyGroup(req, res) {
-  const { phone, status } = req.body;
+  const { groupId, status } = req.body;
 
   try {
-    for (const contato of contactToArray(phone)) {
-      await req.client.setMessagesAdminsOnly(`${contato}@g.us`, status === 'true');
+    for (const group of groupToArray(groupId)) {
+      await req.client.setMessagesAdminsOnly(`${group}`, status === 'true');
     }
 
     return res.status(200).json({ status: 'success', response: { message: 'Group privacy changed successfully' } });
