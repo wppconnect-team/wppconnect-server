@@ -313,6 +313,7 @@ export async function forwardMessages(req, res) {
 
   try {
     let response;
+
     if (!isGroup) {
       response = await req.client.forwardMessages(`${phone}`, [messageId], false);
     } else {
@@ -367,19 +368,17 @@ export async function unblockContact(req, res) {
 }
 
 export async function pinChat(req, res) {
-  const { phone, state, isGroup = false } = req.body;
+  const { phone, state } = req.body;
 
   try {
-    if (isGroup) {
-      await req.client.pinChat(`${phone}@g.us`, state === 'true', false);
-    } else {
-      await req.client.pinChat(`${phone}@c.us`, state === 'true', false);
+    for (const contato of phone) {
+      await req.client.pinChat(contato, state === 'true', false);
     }
 
     return res.status(200).json({ status: 'success', response: { message: 'Chat fixed' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on pin chat' });
+    return res.status(500).json({ status: 'error', message: e.text || 'Error on pin chat' });
   }
 }
 
