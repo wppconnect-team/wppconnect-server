@@ -124,7 +124,7 @@ routes.post(
   upload.single('file'),
   verifyToken,
   statusConnection,
-  DeviceController.setGroupProfilePic
+  GroupController.setGroupProfilePic
 );
 routes.post('/api/:session/change-privacy-group', verifyToken, statusConnection, DeviceController.changePrivacyGroup);
 

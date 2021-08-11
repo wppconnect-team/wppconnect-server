@@ -399,28 +399,6 @@ export async function setProfilePic(req, res) {
   }
 }
 
-export async function setGroupProfilePic(req, res) {
-  const { phone } = req.body;
-
-  if (!req.file) return res.status(400).json({ status: 'error', message: 'File parameter is required!' });
-
-  try {
-    const { path: pathFile } = req.file;
-
-    for (const contato of contactToArray(phone, true)) {
-      await req.client.setProfilePic(pathFile, contato);
-    }
-    await unlinkAsync(pathFile);
-
-    return res
-      .status(201)
-      .json({ status: 'success', response: { message: 'Group profile photo successfully changed' } });
-  } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error changing group photo' });
-  }
-}
-
 export async function getUnreadMessages(req, res) {
   try {
     const response = await req.client.getUnreadMessages(false, false, true);
