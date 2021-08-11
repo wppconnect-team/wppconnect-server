@@ -49,12 +49,14 @@ export function contactToArray(number, isGroup) {
 export function groupToArray(group) {
   let localArr = [];
   if (Array.isArray(group)) {
-    for (const contact of group) {
+    for (let contact of group) {
+      contact = contact.split('@')[0];
       if (contact !== '') localArr.push(`${contact}@g.us`);
     }
   } else {
     let arrContacts = group.split(/\s*[,;]\s*/g);
-    for (const contact of arrContacts) {
+    for (let contact of arrContacts) {
+      contact = contact.split('@')[0];
       if (contact !== '') localArr.push(`${contact}@g.us`);
     }
   }
