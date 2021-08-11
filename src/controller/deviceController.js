@@ -314,19 +314,12 @@ export async function forwardMessages(req, res) {
   try {
     let response;
     if (!isGroup) {
-      response = await req.client.forwardMessages(`${phone}@c.us`, [messageId], false);
+      response = await req.client.forwardMessages(`${phone}`, [messageId], false);
     } else {
-      response = await req.client.forwardMessages(`${phone}@g.us`, [messageId], false);
+      response = await req.client.forwardMessages(`${phone}`, [messageId], false);
     }
 
-    return res.status(201).json({
-      status: 'success',
-      response: {
-        id: response.to._serialized,
-        session: req.session,
-        phone: response.to.remote.user,
-      },
-    });
+    return res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Error forwarding message' });
