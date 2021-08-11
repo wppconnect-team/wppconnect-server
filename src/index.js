@@ -66,7 +66,7 @@ export function initServer(serverOptions) {
       const content = req.headers['content-type'];
       if (content == 'application/json') {
         data = JSON.parse(data);
-        data.session = req.client ? req.client.session : '';
+        if (!data.session) data.session = req.client ? req.client.session : '';
         if (data.mapper && req.serverOptions.mapper.enable) {
           data.response = await convert(req.serverOptions.mapper.prefix, data.response, data.mapper);
           delete data.mapper;
