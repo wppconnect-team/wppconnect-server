@@ -67,17 +67,6 @@ export async function showAllContacts(req, res) {
   }
 }
 
-export async function getAllGroups(req, res) {
-  try {
-    const response = await req.client.getAllGroups();
-
-    return res.status(200).json({ status: 'success', response: response });
-  } catch (e) {
-    req.logger.error(e);
-    res.status(500).json({ status: 'error', message: 'Error fetching groups' });
-  }
-}
-
 export async function getAllChats(req, res) {
   try {
     const response = await req.client.getAllChats();
@@ -181,21 +170,6 @@ export async function getMessageById(req, res) {
     returnSucess(res, session, result.chatId.user, result);
   } catch (error) {
     returnError(req, res, session, error);
-  }
-}
-
-export async function changePrivacyGroup(req, res) {
-  const { groupId, status } = req.body;
-
-  try {
-    for (const group of groupToArray(groupId)) {
-      await req.client.setMessagesAdminsOnly(`${group}`, status === 'true');
-    }
-
-    return res.status(200).json({ status: 'success', response: { message: 'Group privacy changed successfully' } });
-  } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error changing group privacy' });
   }
 }
 
