@@ -211,3 +211,19 @@ export async function replyMessage(req, res) {
     returnError(req, res, error);
   }
 }
+
+export async function sendMentioned(req, res) {
+  const { phone, message, mentioned } = req.body;
+
+  try {
+    let response;
+    for (const contato of phone) {
+      response = await req.client.sendMentioned(`${contato}`, message, mentioned);
+    }
+
+    return res.status(201).json({ status: 'success', response: response });
+  } catch (error) {
+    req.logger.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error on send message mentioned' });
+  }
+}
