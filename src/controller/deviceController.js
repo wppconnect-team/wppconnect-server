@@ -67,17 +67,6 @@ export async function showAllContacts(req, res) {
   }
 }
 
-export async function getAllGroups(req, res) {
-  try {
-    const response = await req.client.getAllGroups();
-
-    return res.status(200).json({ status: 'success', response: response });
-  } catch (e) {
-    req.logger.error(e);
-    res.status(500).json({ status: 'error', message: 'Error fetching groups' });
-  }
-}
-
 export async function getAllChats(req, res) {
   try {
     const response = await req.client.getAllChats();
@@ -181,21 +170,6 @@ export async function getMessageById(req, res) {
     returnSucess(res, session, result.chatId.user, result);
   } catch (error) {
     returnError(req, res, session, error);
-  }
-}
-
-export async function changePrivacyGroup(req, res) {
-  const { phone, status } = req.body;
-
-  try {
-    for (const contato of contactToArray(phone)) {
-      await req.client.setMessagesAdminsOnly(`${contato}@g.us`, status === 'true');
-    }
-
-    return res.status(200).json({ status: 'success', response: { message: 'Group privacy changed successfully' } });
-  } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error changing group privacy' });
   }
 }
 
@@ -313,6 +287,7 @@ export async function forwardMessages(req, res) {
 
   try {
     let response;
+
     if (!isGroup) {
       response = await req.client.forwardMessages(`${phone}`, [messageId], false);
     } else {
@@ -367,19 +342,17 @@ export async function unblockContact(req, res) {
 }
 
 export async function pinChat(req, res) {
-  const { phone, state, isGroup = false } = req.body;
+  const { phone, state } = req.body;
 
   try {
-    if (isGroup) {
-      await req.client.pinChat(`${phone}@g.us`, state === 'true', false);
-    } else {
-      await req.client.pinChat(`${phone}@c.us`, state === 'true', false);
+    for (const contato of phone) {
+      await req.client.pinChat(contato, state === 'true', false);
     }
 
     return res.status(200).json({ status: 'success', response: { message: 'Chat fixed' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on pin chat' });
+    return res.status(500).json({ status: 'error', message: e.text || 'Error on pin chat' });
   }
 }
 

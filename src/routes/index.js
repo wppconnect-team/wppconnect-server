@@ -76,7 +76,7 @@ routes.post('/api/:session/send-mentioned', verifyToken, statusConnection, Devic
 
 // Group
 routes.get('/api/:session/all-broadcast-list', verifyToken, statusConnection, GroupController.getAllBroadcastList);
-routes.get('/api/:session/all-groups', verifyToken, statusConnection, DeviceController.getAllGroups);
+routes.get('/api/:session/all-groups', verifyToken, statusConnection, GroupController.getAllGroups);
 routes.get('/api/:session/group-members/:groupId', verifyToken, statusConnection, GroupController.getGroupMembers);
 routes.get('/api/:session/group-admins/:groupId', verifyToken, statusConnection, GroupController.getGroupAdmins);
 routes.get(
@@ -126,7 +126,7 @@ routes.post(
   statusConnection,
   GroupController.setGroupProfilePic
 );
-routes.post('/api/:session/change-privacy-group', verifyToken, statusConnection, DeviceController.changePrivacyGroup);
+routes.post('/api/:session/change-privacy-group', verifyToken, statusConnection, GroupController.changePrivacyGroup);
 
 // Chat
 routes.get('/api/:session/all-chats', verifyToken, statusConnection, DeviceController.getAllChats);
