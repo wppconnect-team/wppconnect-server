@@ -13,8 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import _ from 'lodash';
-import { contactToArray, groupNameToArray, groupToArray } from '../util/functions';
+import { contactToArray, groupNameToArray, groupToArray, unlinkAsync } from '../util/functions';
+
+export async function getAllGroups(req, res) {
+  try {
+    const response = await req.client.getAllGroups();
+
+    return res.status(200).json({ status: 'success', response: response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error fetching groups' });
+  }
+}
 
 export async function joinGroupByCode(req, res) {
   const { inviteCode } = req.body;
@@ -40,11 +50,11 @@ export async function createGroup(req, res) {
     let response = {};
     let infoGroup = [];
 
-    for (const grupo of groupNameToArray(name)) {
-      response = await req.client.createGroup(grupo, contactToArray(participants));
+    for (const group of groupNameToArray(name)) {
+      response = await req.client.createGroup(group, contactToArray(participants));
 
       infoGroup.push({
-        name: grupo,
+        name: group,
         id: response.gid.user,
         participants: response.participants.map((user) => {
           return { user: Object.keys(user)[0] };
@@ -66,8 +76,8 @@ export async function leaveGroup(req, res) {
   const { groupId } = req.body;
 
   try {
-    for (const grupo of groupToArray(groupId)) {
-      await req.client.leaveGroup(grupo);
+    for (const group of groupToArray(groupId)) {
+      await req.client.leaveGroup(group);
     }
 
     return res.status(200).json({
@@ -85,8 +95,8 @@ export async function getGroupMembers(req, res) {
 
   try {
     let response = {};
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.getGroupMembers(grupo);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.getGroupMembers(group);
     }
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -100,16 +110,16 @@ export async function addParticipant(req, res) {
 
   try {
     let response = {};
-    let arrayGrupos = [];
+    let arrayGroups = [];
 
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.addParticipant(grupo, contactToArray(phone));
-      arrayGrupos.push(response);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.addParticipant(group, contactToArray(phone));
+      arrayGroups.push(response);
     }
 
     return res.status(201).json({
       status: 'success',
-      response: { message: 'Participant(s) added successfully', participants: phone, groups: arrayGrupos },
+      response: { message: 'Participant(s) added successfully', participants: phone, groups: arrayGroups },
     });
   } catch (e) {
     req.logger.error(e);
@@ -122,16 +132,16 @@ export async function removeParticipant(req, res) {
 
   try {
     let response = {};
-    let arrayGrupos = [];
+    let arrayGroups = [];
 
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.removeParticipant(grupo, contactToArray(phone));
-      arrayGrupos.push(response);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.removeParticipant(group, contactToArray(phone));
+      arrayGroups.push(response);
     }
 
     return res.status(200).json({
       status: 'success',
-      response: { message: 'Participant(s) removed successfully', participants: phone, groups: arrayGrupos },
+      response: { message: 'Participant(s) removed successfully', participants: phone, groups: arrayGroups },
     });
   } catch (e) {
     req.logger.error(e);
@@ -143,15 +153,15 @@ export async function promoteParticipant(req, res) {
   const { groupId, phone } = req.body;
 
   try {
-    let arrayGrupos = [];
-    for (const grupo of groupToArray(groupId)) {
-      await req.client.promoteParticipant(grupo, contactToArray(phone));
-      arrayGrupos.push(grupo);
+    let arrayGroups = [];
+    for (const group of groupToArray(groupId)) {
+      await req.client.promoteParticipant(group, contactToArray(phone));
+      arrayGroups.push(group);
     }
 
     return res.status(201).json({
       status: 'success',
-      response: { message: 'Successful promoted participant(s)', participants: phone, groups: arrayGrupos },
+      response: { message: 'Successful promoted participant(s)', participants: phone, groups: arrayGroups },
     });
   } catch (e) {
     req.logger.error(e);
@@ -163,15 +173,15 @@ export async function demoteParticipant(req, res) {
   const { groupId, phone } = req.body;
 
   try {
-    let arrayGrupos = [];
-    for (const grupo of groupToArray(groupId)) {
-      await req.client.demoteParticipant(grupo, contactToArray(phone));
-      arrayGrupos.push(grupo);
+    let arrayGroups = [];
+    for (const group of groupToArray(groupId)) {
+      await req.client.demoteParticipant(group, contactToArray(phone));
+      arrayGroups.push(group);
     }
 
     return res.status(201).json({
       status: 'success',
-      response: { message: 'Admin of participant(s) revoked successfully', participants: phone, groups: arrayGrupos },
+      response: { message: 'Admin of participant(s) revoked successfully', participants: phone, groups: arrayGroups },
     });
   } catch (e) {
     req.logger.error(e);
@@ -184,14 +194,14 @@ export async function getGroupAdmins(req, res) {
 
   try {
     let response = {};
-    let arrayGrupos = [];
+    let arrayGroups = [];
 
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.getGroupAdmins(grupo);
-      arrayGrupos.push(response);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.getGroupAdmins(group);
+      arrayGroups.push(response);
     }
 
-    return res.status(200).json({ status: 'success', response: arrayGrupos });
+    return res.status(200).json({ status: 'success', response: arrayGroups });
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Error retrieving group admin(s)' });
@@ -202,8 +212,8 @@ export async function getGroupInviteLink(req, res) {
   const { groupId } = req.params;
   try {
     let response = {};
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.getGroupInviteLink(grupo);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.getGroupInviteLink(group);
     }
 
     return res.status(200).json({ status: 'success', response: response });
@@ -219,8 +229,8 @@ export async function revokeGroupInviteLink(req, res) {
   let response = {};
 
   try {
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.revokeGroupInviteLink(grupo);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.revokeGroupInviteLink(group);
     }
 
     return res.status(200).json({
@@ -258,8 +268,8 @@ export async function getGroupMembersIds(req, res) {
   const { groupId } = req.params;
   let response = {};
   try {
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.getGroupMembersIds(grupo);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.getGroupMembersIds(group);
     }
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -274,8 +284,8 @@ export async function setGroupDescription(req, res) {
   let response = {};
 
   try {
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.setGroupDescription(grupo, description);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.setGroupDescription(group, description);
     }
 
     return res.status(200).json({ status: 'success', response: response });
@@ -291,8 +301,8 @@ export async function setGroupProperty(req, res) {
   let response = {};
 
   try {
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.setGroupProperty(grupo, property, value);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.setGroupProperty(group, property, value);
     }
 
     return res.status(200).json({ status: 'success', response: response });
@@ -308,8 +318,8 @@ export async function setGroupSubject(req, res) {
   let response = {};
 
   try {
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.setGroupSubject(grupo, title);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.setGroupSubject(group, title);
     }
 
     return res.status(200).json({ status: 'success', response: response });
@@ -325,13 +335,50 @@ export async function setMessagesAdminsOnly(req, res) {
   let response = {};
 
   try {
-    for (const grupo of groupToArray(groupId)) {
-      response = await req.client.setMessagesAdminsOnly(grupo, value);
+    for (const group of groupToArray(groupId)) {
+      response = await req.client.setMessagesAdminsOnly(group, value);
     }
 
-    return res.status(201).json({ status: 'success', response: response });
+    return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Error on set messages admins only' });
+  }
+}
+
+export async function changePrivacyGroup(req, res) {
+  const { groupId, status } = req.body;
+
+  try {
+    for (const group of contactToArray(groupId)) {
+      await req.client.setMessagesAdminsOnly(group, status === 'true');
+    }
+
+    return res.status(200).json({ status: 'success', response: { message: 'Group privacy changed successfully' } });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error changing group privacy' });
+  }
+}
+
+export async function setGroupProfilePic(req, res) {
+  const { phone } = req.body;
+
+  if (!req.file) return res.status(400).json({ status: 'error', message: 'File parameter is required!' });
+
+  try {
+    const { path: pathFile } = req.file;
+
+    for (const contato of contactToArray(phone, true)) {
+      await req.client.setProfilePic(pathFile, contato);
+    }
+    await unlinkAsync(pathFile);
+
+    return res
+      .status(201)
+      .json({ status: 'success', response: { message: 'Group profile photo successfully changed' } });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error changing group photo' });
   }
 }
