@@ -156,7 +156,6 @@ export async function sendLocation(req, res) {
 }
 
 export async function sendButtons(req, res) {
-  const session = req.session;
   const { phone, message = null, title, footer = null, dynamic_reply = true, buttons } = req.body;
 
   try {
@@ -173,11 +172,11 @@ export async function sendButtons(req, res) {
       );
     }
 
-    if (results.length === 0) return returnError(req, res, session, 'Error sending message');
+    if (results.length === 0) return returnError(req, res, 'Error sending message');
 
-    returnSucess(res, session, phone, results);
+    returnSucess(res, phone, results);
   } catch (error) {
-    returnError(req, res, session, error);
+    returnError(req, res, error);
   }
 }
 
