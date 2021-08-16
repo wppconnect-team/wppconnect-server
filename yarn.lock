@@ -3569,14 +3569,6 @@ find-root@1.1.0:
   resolved "https://registry.yarnpkg.com/find-root/-/find-root-1.1.0.tgz#abcfc8ba76f708c42a97b3d685b7e9450bfb9ce4"
   integrity sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==
 
-find-up@5.0.0, find-up@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/find-up/-/find-up-5.0.0.tgz#4c92819ecb7083561e4f4a240a86be5198f536fc"
-  integrity sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==
-  dependencies:
-    locate-path "^6.0.0"
-    path-exists "^4.0.0"
-
 find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
@@ -3605,6 +3597,14 @@ find-up@^4.0.0, find-up@^4.1.0:
   integrity sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==
   dependencies:
     locate-path "^5.0.0"
+    path-exists "^4.0.0"
+
+find-up@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/find-up/-/find-up-5.0.0.tgz#4c92819ecb7083561e4f4a240a86be5198f536fc"
+  integrity sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==
+  dependencies:
+    locate-path "^6.0.0"
     path-exists "^4.0.0"
 
 findup-sync@^4.0.0:
@@ -6545,9 +6545,9 @@ regjsparser@^0.6.4:
     jsesc "~0.5.0"
 
 release-it@^14.8.0:
-  version "14.11.3"
-  resolved "https://registry.yarnpkg.com/release-it/-/release-it-14.11.3.tgz#214fb624208381b05e7ff95d8f9d6cfa6f161a70"
-  integrity sha512-dE7x/p4BGVpEYQynwXFEPMCezH1XNGhXI3tczjlbX8rHNOnV8F08+q/SPaqmwfjca667/FGxbLbi1dIkc9qOPw==
+  version "14.11.5"
+  resolved "https://registry.yarnpkg.com/release-it/-/release-it-14.11.5.tgz#1d705d458463ab55f86c286239ccf0303fcbab40"
+  integrity sha512-9BaPdq7ZKOwtzz3p1mRhg/tOH/cT/y2tUnPYzUwQiVdj42JaGI1Vo2l3WbgK8ICsbFyrhc0tri1+iqI8OvkI1A==
   dependencies:
     "@iarna/toml" "2.2.5"
     "@octokit/rest" "18.9.0"
@@ -6557,7 +6557,6 @@ release-it@^14.8.0:
     debug "4.3.2"
     deprecated-obj "2.0.0"
     execa "5.1.1"
-    find-up "5.0.0"
     form-data "4.0.0"
     git-url-parse "11.5.0"
     globby "11.0.4"
