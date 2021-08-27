@@ -162,8 +162,7 @@ export default class CreateSessionUtil {
     
     await client.onIncomingCall(async (call) => {
       callWebHook(client, req, 'incomingcall', call);
-	  });    
-    
+    });      
   }
 
   async listenAcks(client, req) {
