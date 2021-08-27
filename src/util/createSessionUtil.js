@@ -159,6 +159,11 @@ export default class CreateSessionUtil {
 
       req.io.emit('received-message', { response: message });
     });
+    
+    await client.onIncomingCall(async (call) => {
+      callWebHook(client, req, 'incomingcall', call);
+	  });    
+    
   }
 
   async listenAcks(client, req) {
