@@ -64,7 +64,6 @@
     "redisHost": "localhost",
     "redisPort": 6379,
     "redisPassword": "",
-    "redisDb": 0,
-    "redisPrefix": "docker"
+    "redisDb": 0
   }
 }
