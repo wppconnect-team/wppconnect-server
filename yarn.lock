@@ -1873,9 +1873,9 @@ atob@^2.1.2:
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
 aws-sdk@^2.903.0:
-  version "2.987.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.987.0.tgz#a6e952ae3d3adf352516402d88397fbe2b9e3480"
-  integrity sha512-XgMrHWHE3aKg11D4QSlpyLvsGw6mHHiUQuowbswd11k89Q6wEfA+jMbYMC7/jsx3LrH9EKti70qhfZyw/wQIfg==
+  version "2.989.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.989.0.tgz#ed3cce6b94856b469784bc3312a0b64438b9fe67"
+  integrity sha512-sMjvqeF9mEOxXkhOAUjCrBt2iYafclkmaIbgSdjJ+te7zKXeReqrc6P3VgIGUxU8kwmdSro0n1NjrXbzKQJhcw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -5439,9 +5439,9 @@ mongodb@4.1.1:
     saslprep "^1.0.0"
 
 mongoose@^6.0.0:
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.0.5.tgz#42648005d13b49261c757607d1f23761b59a610d"
-  integrity sha512-1MoG52oosjEK8z45DHQVbakP6DJG1sbQI/ZASBW8sZRV+rCaG/pC3L3wWjrsiped/2+uhvanWM9C89F2n6bQ3w==
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.0.6.tgz#d99d7c478b121e23c0035682da1b9b7640bff48b"
+  integrity sha512-8lHgva/q5msZT16KOKDl+26Mh7uzTrmznup0p/TMqDCt7Y41voP7rZ0sTW/6tk2nsrmmMlJzzThJ8vexq7aQtQ==
   dependencies:
     bson "^4.2.2"
     kareem "2.3.2"
@@ -7421,9 +7421,9 @@ supports-color@^7.1.0:
     has-flag "^4.0.0"
 
 swagger-ui-dist@^3.18.1, swagger-ui-dist@^3.50.0:
-  version "3.52.1"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.52.1.tgz#e4e53543c0834ded91b25bc8bfe20333cd58b7c8"
-  integrity sha512-S/UFHg1Zr5v5QUn7hCuoPqltuGrmobny66pZYdl/nb5p4OvFgEfYy9bY2ZaIZlgkX5kYkOdoEui8Hia0mtj74g==
+  version "3.52.2"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.52.2.tgz#30ed9cfa64043651b62f7662681181e21abf0fe2"
+  integrity sha512-k6QsJqDxfkMlelFUobIKRggR9y5BPvhr/ok9IUPlpnAQsytCx8SSKtNOFkf+W5yZi1Zh6X8GAz2picmmvZBSIw==
 
 swagger-ui-express@^4.1.6:
   version "4.1.6"
