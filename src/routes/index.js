@@ -26,6 +26,7 @@ import multer from 'multer';
 import uploadConfig from '../config/upload';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
+import { sendButtonsList } from '../controller/messageController';
 
 const upload = multer(uploadConfig);
 const routes = new Router();
@@ -74,6 +75,7 @@ routes.post('/api/:session/send-link-preview', verifyToken, statusConnection, Me
 routes.post('/api/:session/send-location', verifyToken, statusConnection, MessageController.sendLocation);
 routes.post('/api/:session/send-mentioned', verifyToken, statusConnection, MessageController.sendMentioned);
 routes.post('/api/:session/send-buttons', verifyToken, statusConnection, MessageController.sendButtons);
+routes.post('/api/:session/send-buttons-list', verifyToken, statusConnection, MessageController.sendButtonsList);
 
 // Group
 routes.get('/api/:session/all-broadcast-list', verifyToken, statusConnection, GroupController.getAllBroadcastList);

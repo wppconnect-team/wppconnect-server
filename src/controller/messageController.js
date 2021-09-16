@@ -180,6 +180,39 @@ export async function sendButtons(req, res) {
   }
 }
 
+export async function sendButtonsList(req, res) {
+  const { phone, message = '', title, buttons, buttonText = 'SELECIONE UMA OPÇÃO' } = req.body;
+
+  try {
+    let results = [];
+
+    for (const contact of phone) {
+      results.push(
+        await req.client.sendMessageOptions(contact, null, {
+          type: 'list',
+          list: {
+            listType: 1,
+            title: title,
+            description: message,
+            buttonText: buttonText,
+            sections: [
+              {
+                rows: buttons,
+              },
+            ],
+          },
+        })
+      );
+    }
+
+    if (results.length === 0) return returnError(req, res, 'Error sending list buttons');
+
+    returnSucess(res, phone, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
 export async function sendStatusText(req, res) {
   const { message } = req.body;
 

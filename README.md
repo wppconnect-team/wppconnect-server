@@ -1,4 +1,5 @@
 # WPPConnect Team
+
 access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
 
 ## _WPPConnect Server_
@@ -20,17 +21,17 @@ Wppconnect Server is a ready-to-use API, just download, install, and start using
 
 ## Features
 
-|                                                            |     |
-| ---------------------------------------------------------- | --- |
-| Multiple Sessions                                          | ✔ |
-| Send **text, image, video and docs**                | ✔ |
-| Get **contacts list** | ✔   |
-| Receive messages                                            | ✔ |
-| Open/Close Session                                        | ✔|
-| Change Profile/Username                                         | ✔   |
-| Create Group                                         | ✔ | 
-| Join Group by Invite Code                                         | ✔ | 
-| Webhook                                         | ✔ |
+|                                      |     |
+| ------------------------------------ | --- |
+| Multiple Sessions                    | ✔   |
+| Send **text, image, video and docs** | ✔   |
+| Get **contacts list**                | ✔   |
+| Receive messages                     | ✔   |
+| Open/Close Session                   | ✔   |
+| Change Profile/Username              | ✔   |
+| Create Group                         | ✔   |
+| Join Group by Invite Code            | ✔   |
+| Webhook                              | ✔   |
 
 ## Libraries Used
 
@@ -54,16 +55,18 @@ npm install
 ```
 
 ## Run Server
+
 ```sh
 yarn dev
 ```
 
 ## Build Server
+
 ```sh
 yarn build
 ```
 
-------
+---
 
 # Configuration
 
@@ -72,7 +75,7 @@ This server use config.json file to define some options, default values are:
 ```javascript
 {
   /* secret key to genereta access token */
-  "secretKey": "THISISMYSECURETOKEN", 
+  "secretKey": "THISISMYSECURETOKEN",
   "host": "http://localhost",
   "port": "21465",
   // starts all sessions when starting the server.
@@ -96,10 +99,30 @@ This server use config.json file to define some options, default values are:
   "log": {
     "level": "error",
     "logger": [ "console", "file" ]
-  }, 
+  },
   "createOptions": {
     "browserArgs": ["--no-sandbox"]
-  }
+  },
+  "mapper": {
+    "enable": false,
+    "prefix": "tagone-"
+  },
+  "db": {
+    "mongodbDatabase": "tokens",
+    "mongodbCollection": "",
+    "mongodbUser": "",
+    "mongodbPassword": "",
+    "mongodbHost": "",
+    "mongoIsRemote": true,
+    "mongoURLRemote": "",
+    "mongodbPort": 27017,
+    "redisHost": "localhost",
+    "redisPort": 6379,
+    "redisPassword": "",
+    "redisDb": 0,
+    //Used to prefix the redis key, so it doesn't get the keys from other systems.
+    "redisPrefix": "docker"
+}
 }
 ```
 
@@ -173,4 +196,5 @@ curl -X POST --location "http://localhost:21465/api/mySession/send-message" \
 See the `routes file` for all the routes. [here](/src/routes/index.js) and HTTP [file](/requests.http).
 
 # Swagger UI
-Swagger ui can be found at  `/api-docs`
+
+Swagger ui can be found at `/api-docs`
