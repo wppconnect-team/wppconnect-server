@@ -5,6 +5,7 @@
 /log
 /src
 /tokens
+/userData
 /WhatsAppImages
 nodemon.json
 requests.http
