@@ -81,7 +81,7 @@ export function groupNameToArray(group) {
 }
 
 export async function callWebHook(client, req, event, data) {
-  const webhook = client?.config.webhook || false;
+  const webhook = client?.config.webhook || req.serverOptions.webhook.url || false;
   if (webhook) {
     if (req.serverOptions.webhook.autoDownload) await autoDownload(client, req, data);
     try {
