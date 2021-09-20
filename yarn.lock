@@ -1569,9 +1569,9 @@
     "@types/node" "*"
 
 "@wppconnect-team/wppconnect@^1.8.13":
-  version "1.8.13"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.13.tgz#e3e459362fbdb94a7a9f1a96f4a29c3155f6dba6"
-  integrity sha512-famAxmpf26pvaSSM+y0MeAPq2u45PFVmlrVvINGp7bCpfW+Vnn0yhfdO2jOGFJenmeG6Y74QqrWNDMkbmaWKyw==
+  version "1.8.14"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.8.14.tgz#6438772f3d5c12cf6167dc2462b47ac53f64f52e"
+  integrity sha512-FPWQE7MmD2tW+HzguQup68VVa75StqgYB3MU0CNNBOA+MxTNY+AhbFU16K7ISx3gDDoeUBETjrbZ1bmF2yRp6w==
   dependencies:
     "@wppconnect/wa-version" "^1.1.3"
     atob "^2.1.2"
