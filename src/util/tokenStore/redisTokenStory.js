@@ -14,7 +14,10 @@ var RedisTokenStore = function (client) {
           if (err) {
             return reject(err);
           }
-          resolve(JSON.parse(reply));
+          const object = JSON.parse(reply);
+          if (object.config && Object.keys(client.config).length === 0) client.config = object.config;
+          if (object.webhook && Object.keys(client.config).length === 0) client.config.webhook = object.webhook;
+          resolve(object);
         });
       }),
     setToken: (sessionName, tokenData) =>
