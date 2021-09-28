@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export async function healthCheck(req, res) {
+export async function healthz(req, res) {
     const healthcheck = {
         uptime: process.uptime(),
         message: 'OK',
