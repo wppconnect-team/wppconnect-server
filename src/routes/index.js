@@ -20,6 +20,7 @@ import * as GroupController from '../controller/groupController';
 import * as DeviceController from '../controller/deviceController';
 import * as SessionController from '../controller/sessionController';
 import * as OrderController from '../controller/orderController';
+import * as HealthCheck from '../middleware/healthCheck';
 import verifyToken from '../middleware/auth';
 import statusConnection from '../middleware/statusConnection';
 import multer from 'multer';
@@ -227,5 +228,8 @@ routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
+
+//k8s
+routes.get('/healthz', HealthCheck.healthz);
 
 export default routes;
