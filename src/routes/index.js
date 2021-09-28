@@ -20,9 +20,9 @@ import * as GroupController from '../controller/groupController';
 import * as DeviceController from '../controller/deviceController';
 import * as SessionController from '../controller/sessionController';
 import * as OrderController from '../controller/orderController';
+import * as HealthCheck from '../middleware/healthCheck';
 import verifyToken from '../middleware/auth';
 import statusConnection from '../middleware/statusConnection';
-import healthCheck from '../middleware/healthCheck';
 import multer from 'multer';
 import uploadConfig from '../config/upload';
 import swaggerUi from 'swagger-ui-express';
@@ -230,6 +230,6 @@ routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 //k8s
-routes.get('/healthz',  healthCheck.healthz);
+routes.get('/healthz',  HealthCheck.healthz);
 
 export default routes;
