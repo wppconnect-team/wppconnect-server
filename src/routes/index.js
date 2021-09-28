@@ -230,6 +230,6 @@ routes.use('/api-docs', swaggerUi.serve);
 routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
 //k8s
-routes.get('/healthz',  HealthCheck.healthz);
+routes.get('/healthz', HealthCheck.healthz);
 
 export default routes;
