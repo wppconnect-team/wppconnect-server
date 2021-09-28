@@ -18,7 +18,7 @@ export async function healthz(req, res) {
   const healthcheck = {
     uptime: process.uptime(),
     message: 'OK',
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
   try {
     res.status(200).send(healthcheck);
