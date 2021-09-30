@@ -233,5 +233,4 @@ routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 routes.get('/healthz', HealthCheck.healthz);
 routes.get('/unhealthy', HealthCheck.unhealthy);
 
-
 export default routes;
