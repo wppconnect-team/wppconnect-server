@@ -27,3 +27,8 @@ export async function healthz(req, res) {
     res.status(503).send();
   }
 }
+
+export async function unhealthy(req, res) {
+  res.status(503).send();
+  process.exit();
+}
