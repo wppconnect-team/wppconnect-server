@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.8.14",
-    "axios": "^0.21.1",
+    "axios": "^0.22.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
