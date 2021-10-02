@@ -47,6 +47,13 @@ export default class CreateSessionUtil {
         };
       }
 
+      if (req.serverOptions.saveUserDataDir) {
+        if (!req.serverOptions.createOptions) req.serverOptions.createOptions = {};
+        req.serverOptions.createOptions.puppeteerOptions = {
+          userDataDir: './userData/' + session,
+        };
+      }
+
       let wppClient = await create(
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
           session: session,

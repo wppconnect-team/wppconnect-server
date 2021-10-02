@@ -3,6 +3,7 @@ import FileTokenStore from './fileTokenStory';
 import MongodbTokenStore from './mongodbTokenStory';
 import RedisTokenStore from './redisTokenStory';
 import FirebaseTokenStore from './firebaseTokenStory';
+import DataDirTokenStore from './dataDirTokenStore';
 
 var Factory = function () {
   this.createTokenStory = function (client) {
@@ -15,6 +16,8 @@ var Factory = function () {
       myTokenStore = new RedisTokenStore(client);
     } else if (type === 'firebase') {
       myTokenStore = new FirebaseTokenStore();
+    } else if (type === 'dataDir') {
+      myTokenStore = new DataDirTokenStore();
     } else {
       myTokenStore = new FileTokenStore(client);
     }
