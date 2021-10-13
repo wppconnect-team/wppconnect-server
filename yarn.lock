@@ -1559,19 +1559,19 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.9.1":
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.9.1.tgz#1c004b0684af36ca53f42c27964eff406ca9cdbf"
-  integrity sha512-0YLeFiwKWovpokB5b53Zl7jLtJ3HZh66s4WnOht2egvqoQWuqv4LDD9WHMcjAg8Mz4C0wQl8V8wt+yjvu1B43Q==
+"@wppconnect-team/wppconnect@^1.9.2":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.9.2.tgz#e7a6d421654fd116121a05cf891329baa79df4fe"
+  integrity sha512-+8Tm+QnQqXr2/CizOebunSBWVWIBjf5CGqJe9RBul/V9i+DtyTFS25/zt3LXSJWMDosTyrCk6gsgzTUtVL3zHA==
   dependencies:
-    "@wppconnect/wa-js" "^1.0.4"
+    "@wppconnect/wa-js" "^1.0.6"
     "@wppconnect/wa-version" "^1.1.14"
     atob "^2.1.2"
     axios "^0.22.0"
     boxen "^5.1.2"
     catch-exit "^1.1.0"
     chalk "^4.0.0"
-    chrome-launcher "^0.14.0"
+    chrome-launcher "^0.14.1"
     execa "^5.0.0"
     file-type "^16.5.3"
     futoin-hkdf "^1.3.2"
@@ -1581,7 +1581,7 @@
     mime-types "^2.1.33"
     puppeteer "*"
     puppeteer-extra "^3.2.3"
-    puppeteer-extra-plugin-stealth "^2.8.1"
+    puppeteer-extra-plugin-stealth "^2.8.2"
     puppeteer-extra-plugin-user-data-dir "^2.3.1"
     puppeteer-extra-plugin-user-preferences "^2.3.1"
     qrcode-terminal "^0.12.0"
@@ -1596,10 +1596,10 @@
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.0.4.tgz#c954e58164b32ab2e7d0166f74c1e91e8897588d"
-  integrity sha512-V/lNdCoofy6ohwk1qfeRPt7FgiADT1ODYJTySMCAtbjz+CKBTT/o66o91mgy2sPBsN865d7/HeDl0w9A61YvIg==
+"@wppconnect/wa-js@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.0.6.tgz#0b94db014391c9bfa2b0a8df58ed7d19816118f9"
+  integrity sha512-k8r8NuoHQrLB6GoiBFsrE5j65Xwbnxqn/IU9bVYJnj3kkNbuDJHjUGRYISHT+j4K3pp0GaIFQuVUCDhjdG7wyw==
 
 "@wppconnect/wa-version@^1.1.14":
   version "1.1.14"
@@ -2209,10 +2209,10 @@ chownr@^2.0.0:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
 
-chrome-launcher@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/chrome-launcher/-/chrome-launcher-0.14.0.tgz#de8d8a534ccaeea0f36ea8dc12dd99e3169f3320"
-  integrity sha512-W//HpflaW6qBGrmuskup7g+XJZN6w03ko9QSIe5CtcTal2u0up5SeReK3Ll1Why4Ey8dPkv8XSodZyHPnGbVHQ==
+chrome-launcher@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/chrome-launcher/-/chrome-launcher-0.14.1.tgz#e885e706f26cc7a07d348e730fe12f15e43b0881"
+  integrity sha512-iQ4s61NkIyaozsE2VKg1Vu3YGdD3JGw+fBBrt3FYJi7uflO9TvlTLW4MUq0fq3EKGhzB/QHPd5AsLb14+9++JQ==
   dependencies:
     "@types/node" "*"
     escape-string-regexp "^4.0.0"
@@ -5877,10 +5877,10 @@ pupa@^2.1.1:
   dependencies:
     escape-goat "^2.0.0"
 
-puppeteer-extra-plugin-stealth@^2.8.1:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-stealth/-/puppeteer-extra-plugin-stealth-2.8.1.tgz#14c5a2c760cea207632e4f29ccccdfb668553cba"
-  integrity sha512-UFCxt0+NkYROGzCK0voUwYA/WxC+m1jBYXasYZ6qxTcjIa3oN8f3Am6oGnhCPoO5OJv5QsDJA5lzZrGVqZ7NYw==
+puppeteer-extra-plugin-stealth@^2.8.2:
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-stealth/-/puppeteer-extra-plugin-stealth-2.8.2.tgz#2b9ffa56dab4aded459810d3be337d1e71b839aa"
+  integrity sha512-1WaiLKRSJ9IAnNS3jqHu9yg2O8CgSh3shPuEhhpgzVfICRb6D8JkrUBJW6UxOwI7/aQc9XSzf+lidIb9x9tj8w==
   dependencies:
     debug "^4.1.1"
     puppeteer-extra-plugin "^3.2.0"
