@@ -321,7 +321,7 @@ export async function blockContact(req, res) {
   const { phone } = req.body;
 
   try {
-    await req.client.blockContact(`${phone}@c.us`);
+    await req.client.blockContact(`${phone}`);
     return res.status(200).json({ status: 'success', response: { message: 'Contact blocked' } });
   } catch (e) {
     req.logger.error(e);
@@ -333,7 +333,7 @@ export async function unblockContact(req, res) {
   const { phone } = req.body;
 
   try {
-    await req.client.unblockContact(`${phone}@c.us`);
+    await req.client.unblockContact(`${phone}`);
     return res.status(200).json({ status: 'success', response: { message: 'Contact UnBlocked' } });
   } catch (e) {
     req.logger.error(e);
