@@ -1,3 +1,12 @@
+## 1.1.6 (2021-10-13)
+
+
+### Bug Fixes
+
+* block/unblock contato. ([9401b16](https://github.com/wppconnect-team/wppconnect-server/commit/9401b168ce08eb62c5ea392db82df34b69753775))
+
+
+
 ## 1.1.5 (2021-10-01)
 
 
