@@ -17,7 +17,7 @@
     "lint": "eslint --ext .js src",
     "prepare": "husky install",
     "release": "release-it",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/prepare_env.js ; node ./dist/server.js",
     "swagger:copy-assets": "shx cp -R ./node_modules/swagger-ui-dist ./swagger-docs",
     "swagger:copy-json": "shx cp ./src/swagger.json ./swagger-docs",
     "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
