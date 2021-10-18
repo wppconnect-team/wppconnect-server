@@ -24,7 +24,7 @@ export default class chatWootClient {
     this.config = config;
     this.sender = {
       pushname: `wppconnect`,
-      id: (!this.config.mobile_number) ? this.config.mobile_number : "5511999999999",
+      id: (this.config.mobile_number) ? this.config.mobile_number : "5511999999999",
     };
     this.account_id = this.config.account_id;
     this.inbox_id = this.config.inbox_id;
