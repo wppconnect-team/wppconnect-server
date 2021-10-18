@@ -21,11 +21,11 @@ import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
   constructor(config, session) {
+    this.config = config;
     this.sender = {
       pushname: `wppconnect`,
-      id: '5511999999999',
+      id: this.config.mobile_number,
     };
-    this.config = config;
     this.account_id = this.config.account_id;
     this.inbox_id = this.config.inbox_id;
     this.api = axios.create({
