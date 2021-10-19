@@ -22,9 +22,10 @@ import { eventEmitter } from './sessionUtil';
 export default class chatWootClient {
   constructor(config, session) {
     this.config = config;
+    this.mobile_name = (this.config.mobile_name) ? this.config.mobile_name : `WPPConnect`;
     this.mobile_number = (this.config.mobile_number) ? this.config.mobile_number : '5511999999999';
     this.sender = {
-      pushname: `wppconnect`,
+      pushname: this.mobile_name,
       id: this.mobile_number
     };
     this.account_id = this.config.account_id;
