@@ -652,7 +652,7 @@ export async function chatWoot(req, res) {
     if (await client.isConnected()) {
       const event = req.body.event;
 
-      if (event == 'conversation_status_changed') {
+      if (event == 'conversation_status_changed' || event == 'conversation_resolved') {
         return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
       }
 
