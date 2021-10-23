@@ -15,8 +15,10 @@ var RedisTokenStore = function (client) {
             return reject(err);
           }
           const object = JSON.parse(reply);
-          if (object.config && Object.keys(client.config).length === 0) client.config = object.config;
-          if (object.webhook && Object.keys(client.config).length === 0) client.config.webhook = object.webhook;
+          if (object) {
+            if (object.config && Object.keys(client.config).length === 0) client.config = object.config;
+            if (object.webhook && Object.keys(client.config).length === 0) client.config.webhook = object.webhook;
+          }
           resolve(object);
         });
       }),
