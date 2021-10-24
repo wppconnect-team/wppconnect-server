@@ -259,3 +259,69 @@ export async function sendMentioned(req, res) {
     return res.status(500).json({ status: 'error', message: 'Error on send message mentioned' });
   }
 }
+
+export async function sendTextStorie(req, res) {
+  const { text } = req.body;
+  
+  if (!text)
+  return res.status(401).send({
+    message: 'Text was not informed',
+  });
+  
+  try {
+    let results = [];
+    
+    results.push(await req.client.sendText('status@broadcast', text));
+     
+    if (results.length === 0) return res.status(400).json('Error sending the text of stories');
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
+export async function sendImageStorie(req, res) {
+  const { path, filename = 'image-storie', caption } = req.body;
+
+  if (!path && !req.file)
+    return res.status(401).send({
+      message: 'Sending the image is mandatory',
+    });
+
+  const pathFile = path || req.file.path;
+
+  try {
+    let results = [];
+   
+    results.push(await req.client.sendImage('status@broadcast', pathFile, filename, caption));
+    
+    if (results.length === 0) return res.status(400).json('Error sending the image of stories');
+    if (req.file) await unlinkAsync(pathFile);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
+export async function sendVideoStorie(req, res) {
+  const { path, filename = 'video', caption } = req.body;
+
+  if (!path && !req.file)
+    return res.status(401).send({
+      message: 'Sending the Video is mandatory',
+    });
+
+  const pathFile = path || req.file.path;
+
+  try {
+    let results = [];
+      
+    results.push(await req.client.sendFile('status@broadcast', pathFile, filename, caption));
+      
+    if (results.length === 0) return res.status(400).json('Error sending message');
+    if (req.file) await unlinkAsync(pathFile);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}

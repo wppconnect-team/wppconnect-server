@@ -181,6 +181,23 @@ routes.post('/api/:session/temporary-messages', verifyToken, statusConnection, D
 routes.post('/api/:session/typing', verifyToken, statusConnection, DeviceController.setTyping);
 routes.post('/api/:session/star-message', verifyToken, statusConnection, DeviceController.starMessage);
 
+// Status
+routes.post('/api/:session/send-text-storie', verifyToken, statusConnection, MessageController.sendTextStorie);
+routes.post(
+  '/api/:session/send-image-storie',
+  upload.single('file'),
+  verifyToken,
+  statusConnection,
+  MessageController.sendImageStorie
+);
+routes.post(
+  '/api/:session/send-video-storie',
+  upload.single('file'),
+  verifyToken,
+  statusConnection,
+  MessageController.sendVideoStorie
+);
+
 // Contact
 routes.get(
   '/api/:session/check-number-status/:phone',
