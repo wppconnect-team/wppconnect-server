@@ -40,6 +40,12 @@ export default class CreateSessionUtil {
       await myTokenStore.getToken(session);
       this.startChatWootClient(client);
 
+      if (req.serverOptions.customUserDataDir) {
+        req.serverOptions.createOptions.puppeteerOptions = {
+          userDataDir: req.serverOptions.customUserDataDir + session,
+        };
+      }
+
       let wppClient = await create(
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
           session: session,

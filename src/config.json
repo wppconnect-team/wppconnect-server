@@ -3,6 +3,7 @@
   "host": "http://localhost",
   "port": "21465",
   "startAllSession": true,
+  "customUserDataDir": "./userDataDir/",
   "tokenStoreType": "file",
   "webhook": {
     "url": null,
