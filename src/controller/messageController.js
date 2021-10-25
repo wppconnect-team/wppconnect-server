@@ -313,7 +313,7 @@ export async function sendVideoStorie(req, res) {
 
   try {
     let results = [];
-      
+
     results.push(await req.client.sendFile('status@broadcast', pathFile, filename, caption));
 
     if (results.length === 0) return res.status(400).json('Error sending message');
