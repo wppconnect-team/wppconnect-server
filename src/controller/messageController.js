@@ -262,17 +262,16 @@ export async function sendMentioned(req, res) {
 
 export async function sendTextStorie(req, res) {
   const { text } = req.body;
-  
+
   if (!text)
-  return res.status(401).send({
-    message: 'Text was not informed',
-  });
-  
+    return res.status(401).send({
+      message: 'Text was not informed',
+    });
+
   try {
     let results = [];
-    
     results.push(await req.client.sendText('status@broadcast', text));
-     
+
     if (results.length === 0) return res.status(400).json('Error sending the text of stories');
     returnSucess(res, results);
   } catch (error) {
@@ -292,9 +291,8 @@ export async function sendImageStorie(req, res) {
 
   try {
     let results = [];
-   
     results.push(await req.client.sendImage('status@broadcast', pathFile, filename, caption));
-    
+
     if (results.length === 0) return res.status(400).json('Error sending the image of stories');
     if (req.file) await unlinkAsync(pathFile);
     returnSucess(res, results);
@@ -317,7 +315,7 @@ export async function sendVideoStorie(req, res) {
     let results = [];
       
     results.push(await req.client.sendFile('status@broadcast', pathFile, filename, caption));
-      
+
     if (results.length === 0) return res.status(400).json('Error sending message');
     if (req.file) await unlinkAsync(pathFile);
     returnSucess(res, results);
