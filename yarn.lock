@@ -4683,9 +4683,9 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 license-check-and-add@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/license-check-and-add/-/license-check-and-add-4.0.2.tgz#780611c08717e769f2cbd85aae7790100f59ff14"
-  integrity sha512-Mb2QZiuuTJ/X/428KskTojPs9rSnUjzc6rMsj6QhNt5x5LtzcGgBxsZyBCOklha/iAscDTaRzmb+wXq39Du2Jw==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/license-check-and-add/-/license-check-and-add-4.0.3.tgz#c941288563da412c0dbdad2af3bea8485e4d0b62"
+  integrity sha512-2dFjAOviPmukS35Udy+D1fNnWeGbJaIfOM/fstsYlofnviyDJDSx1w++nStyxFffa2R9RIB0myH3Pvxv0q7jWA==
   dependencies:
     fs-extra "^8.1.0"
     gitignore-to-glob "^0.3.0"
