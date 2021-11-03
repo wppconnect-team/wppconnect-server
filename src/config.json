@@ -2,7 +2,7 @@
   "secretKey": "THISISMYSECURETOKEN",
   "host": "http://localhost",
   "port": "21465",
-  "deviceName" : "ZapEnvia",
+  "deviceName" : "WppConnect",
   "startAllSession": true,
   "tokenStoreType": "file",
   "webhook": {
