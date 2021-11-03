@@ -49,6 +49,7 @@ export default class CreateSessionUtil {
       let wppClient = await create(
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
           session: session,
+          deviceName: req.serverOptions.deviceName,
           catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
             this.exportQR(req, base64Qr, urlCode, client, res);
           },

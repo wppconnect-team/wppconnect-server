@@ -2,6 +2,7 @@
   "secretKey": "THISISMYSECURETOKEN",
   "host": "http://localhost",
   "port": "21465",
+  "deviceName" : "ZapEnvia",
   "startAllSession": true,
   "tokenStoreType": "file",
   "webhook": {
