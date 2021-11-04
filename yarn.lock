@@ -6860,9 +6860,9 @@ swagger-ui-dist@^3.18.1:
   integrity sha512-8z18eX8G/jbTXYzyNIaobrnD7PSN7yU/YkSasMmajrXtw0FGS64XjrKn5v37d36qmU3o1xLeuYnktshRr7uIFw==
 
 swagger-ui-dist@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.0.0.tgz#a097fe491b3979ed979475e4b2c0bdee9e6342cf"
-  integrity sha512-LF3BbDvOX+Fq4L81Wnw+ZwxY4DMqxzAeNXJYcaQXDj/jBqQ5EBrQ3roPKrMpU7JeWZ1pvi6UfqzkkBrBU3sWbQ==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.0.1.tgz#b488679a8d2165efff6874dc44afb82f751c86cc"
+  integrity sha512-w+h07I99e+vyaHRx3Hgo9ktnSjDzDITunFluSYOPOwjCTFHHtAtymU66ygyWY4Scjg1HelKIDssuzI6buz+Ffg==
 
 swagger-ui-express@^4.1.6:
   version "4.1.6"
