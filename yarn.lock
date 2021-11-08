@@ -6533,9 +6533,9 @@ socket.io-parser@~4.0.4:
     debug "~4.3.1"
 
 socket.io@^4.1.2:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.3.1.tgz#c0aa14f3f916a8ab713e83a5bd20c16600245763"
-  integrity sha512-HC5w5Olv2XZ0XJ4gOLGzzHEuOCfj3G0SmoW3jLHYYh34EVsIr3EkW9h6kgfW+K3TFEcmYy8JcPWe//KUkBp5jA==
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.3.2.tgz#85ae0cf5cf18acbce648ac9f48aba66df8cea6bf"
+  integrity sha512-6S5tV4jcY6dbZ/lLzD6EkvNWI3s81JO6ABP/EpvOlK1NPOcIj3AS4khi6xXw6JlZCASq82HQV4SapfmVMMl2dg==
   dependencies:
     accepts "~1.3.4"
     base64id "~2.0.0"
