@@ -1466,19 +1466,19 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.9.4":
-  version "1.9.4"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.9.4.tgz#5d6416d94544e4a67b1a85cab7571e5fd2413ca5"
-  integrity sha512-yYcMJHFbctcKavftXH1/YYQqoDP3RmQH1W7x6tpJratCL8VD+0P+p/eZVcMxJZtO7zoo7YkzV82x9AnNfAMrHw==
+"@wppconnect-team/wppconnect@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.10.0.tgz#5f3517627d4d4196964cd7a5ffe1a995851d4f6c"
+  integrity sha512-GhOUsypsxT0gXXDJDPDHKIkYCSivyyaNS7cngomNwGC2Aw+LW9F18l4pM9K1I09j6EbrCUHTkVuCeGGJs27HnA==
   dependencies:
-    "@wppconnect/wa-js" "^1.0.7"
-    "@wppconnect/wa-version" "^1.1.15"
+    "@wppconnect/wa-js" "^1.0.9"
+    "@wppconnect/wa-version" "^1.1.19"
     atob "^2.1.2"
-    axios "^0.23.0"
+    axios "^0.24.0"
     boxen "^5.1.2"
     catch-exit "^1.1.0"
     chalk "^4.0.0"
-    chrome-launcher "^0.14.1"
+    chrome-launcher "^0.14.2"
     execa "^5.0.0"
     file-type "^16.5.3"
     futoin-hkdf "^1.3.2"
@@ -1495,7 +1495,7 @@
     reflect-metadata "^0.1.13"
     rimraf "^3.0.2"
     sanitize-filename "^1.6.3"
-    sharp "^0.29.0"
+    sharp "^0.29.2"
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.3.3"
@@ -1503,17 +1503,17 @@
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.0.7.tgz#3cca187cf0439042051e0b7385160c58744a2e93"
-  integrity sha512-Cbb23N0++gP411uZUWOaRpoEiHfWUmTDWEyKMlwJaKi5igiuYhS3Nk8aV/9TcSMYnrw76MmEEcmPUEtRdy+AOw==
+"@wppconnect/wa-js@^1.0.9":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.0.10.tgz#e2a40a59b7372ffef7747f918832ac5cb90ba0c5"
+  integrity sha512-kb42fU1t5p1lbU7k/o+1SeehOJOLlTpcRpOjwdFge7FWX7W61zsy46wfl5RbqDhv1abBYoTLkN2ryJRbJphB1g==
 
-"@wppconnect/wa-version@^1.1.15":
-  version "1.1.15"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.15.tgz#e8306bc01b6cc45326bff8c2b6982fe4015c4a23"
-  integrity sha512-S6wO/xC3cKW2hpUi0dkqKzvXzg8t20beXn+8T9ZTneUFWAO+OZqO3IKAKvSw5t1+3XeU2JYKTnmxhue2Ve4wIA==
+"@wppconnect/wa-version@^1.1.19":
+  version "1.1.19"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.19.tgz#a076c4e1795332f223907433bbc4182c384a76d8"
+  integrity sha512-ECZZOof9daXTOg+iSl6PUa1GCoO2/8iYwYKUPwCDbPxKVgbSSm9P1K+0t5IlNZkqvQ72GvybGnHW+yWrPwUWvA==
   dependencies:
-    node-fetch "^2.6.5"
+    node-fetch "^2.6.6"
     semver "^7.3.5"
 
 JSONStream@^1.0.4:
@@ -1746,13 +1746,6 @@ aws-sdk@^2.903.0:
     url "0.10.3"
     uuid "3.3.2"
     xml2js "0.4.19"
-
-axios@^0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.23.0.tgz#b0fa5d0948a8d1d75e3d5635238b6c4625b05149"
-  integrity sha512-NmvAE4i0YAv5cKq8zlDoPd1VLKAqX5oLuZKs8xkJa4qi6RGn0uhCYFjWtHHC9EM/MwOwYWOs53W+V0aqEXq1sg==
-  dependencies:
-    follow-redirects "^1.14.4"
 
 axios@^0.24.0:
   version "0.24.0"
@@ -2116,10 +2109,10 @@ chownr@^2.0.0:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
 
-chrome-launcher@^0.14.1:
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/chrome-launcher/-/chrome-launcher-0.14.1.tgz#e885e706f26cc7a07d348e730fe12f15e43b0881"
-  integrity sha512-iQ4s61NkIyaozsE2VKg1Vu3YGdD3JGw+fBBrt3FYJi7uflO9TvlTLW4MUq0fq3EKGhzB/QHPd5AsLb14+9++JQ==
+chrome-launcher@^0.14.2:
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/chrome-launcher/-/chrome-launcher-0.14.2.tgz#5cb334794b9e83fad7303c96c131a4ec9e9f83a6"
+  integrity sha512-Nk8DUCIfPR6p9WClPPFeP2ztpAdkT8xueoiDS03csea1uoJjm4w0p5Oy1hjykyjT1EQ0MMrEshLD3C8gHXyiZw==
   dependencies:
     "@types/node" "*"
     escape-string-regexp "^4.0.0"
@@ -5150,10 +5143,10 @@ node-addon-api@^3.1.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.2.0.tgz#7028b56a7eb572b73873aed731a7f9c9365f5ee4"
   integrity sha512-kcwSAWhPi4+QzAtsL2+2s/awvDo2GKLsvMCwNRxb5BUshteXU8U97NCyvQDsGKs/m0He9WcG4YWew/BnuLx++w==
 
-node-addon-api@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-4.0.0.tgz#ac128f43eff7fac4b5f5ef2f39d6d7c2709efead"
-  integrity sha512-ALmRVBFzfwldBfk3SbKfl6+PVMXiCPKZBEfsJqB/EjXAMAI+MfFrEHR+GMRBuI162DihZ1QjEZ8ieYKuRCJ8Hg==
+node-addon-api@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-4.2.0.tgz#117cbb5a959dff0992e1c586ae0393573e4d2a87"
+  integrity sha512-eazsqzwG2lskuzBqCGPi7Ac2UgOoMz8JVOXVhTvvPDYhthvNpefx8jWD8Np7Gv+2Sz0FlPWZk0nJV0z598Wn8Q==
 
 node-environment-flags@^1.0.5:
   version "1.0.6"
@@ -5168,10 +5161,10 @@ node-fetch@2.6.1, node-fetch@^2.6.1:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
-node-fetch@^2.6.5:
-  version "2.6.5"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.5.tgz#42735537d7f080a7e5f78b6c549b7146be1742fd"
-  integrity sha512-mmlIVHJEu5rnIxgEgez6b9GgWXbkZj5YZ7fx+2r94a2E+Uirsp6HsPTPlomfdHtpt/B0cdKviwkoaM6pyvUOpQ==
+node-fetch@^2.6.6:
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.6.tgz#1751a7c01834e8e1697758732e9efb6eeadfaf89"
+  integrity sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA==
   dependencies:
     whatwg-url "^5.0.0"
 
@@ -6447,14 +6440,14 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-sharp@^0.29.0:
-  version "0.29.0"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.29.0.tgz#1fa302bd5f60292138c823aa0905609f64d710ba"
-  integrity sha512-mdN1Up0eN+SwyForPls59dWO0nx64J1XRQYy5ZiKSADAccGYCB10UAGJHSVG9VObzJdhHqrVJzQcq6gx8USyoA==
+sharp@^0.29.2:
+  version "0.29.2"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.29.2.tgz#e8c003cd9cb321585b32dbda6eed3baa7d6f2308"
+  integrity sha512-XWRdiYLIJ3tDUejRyG24KERnJzMfIoyiJBntd2S6/uj3NEeNgRFRLgiBlvPxMa8aml14dKKD98yHinSNKp1xzQ==
   dependencies:
     color "^4.0.1"
     detect-libc "^1.0.3"
-    node-addon-api "^4.0.0"
+    node-addon-api "^4.2.0"
     prebuild-install "^6.1.4"
     semver "^7.3.5"
     simple-get "^3.1.0"
