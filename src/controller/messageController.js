@@ -124,7 +124,7 @@ export async function sendVoice(req, res) {
 }
 
 
-export async function sendVoice(req, res) {
+export async function sendVoice64(req, res) {
   const { phone, url: base64Ptt } = req.body;
 
   try {
