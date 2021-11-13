@@ -71,6 +71,7 @@ routes.post(
 );
 routes.post('/api/:session/send-file-base64', verifyToken, statusConnection, MessageController.sendFile64);
 routes.post('/api/:session/send-voice', verifyToken, statusConnection, MessageController.sendVoice);
+routes.post('/api/:session/send-voice-base64', verifyToken, statusConnection, MessageController.sendVoice64);
 routes.post('/api/:session/send-status', verifyToken, statusConnection, MessageController.sendStatusText);
 routes.post('/api/:session/send-link-preview', verifyToken, statusConnection, MessageController.sendLinkPreview);
 routes.post('/api/:session/send-location', verifyToken, statusConnection, MessageController.sendLocation);

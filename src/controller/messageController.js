@@ -108,6 +108,23 @@ export async function sendFile64(req, res) {
 }
 
 export async function sendVoice(req, res) {
+  const { phone, path, filename = 'Voice Audio', message, quotedMessageId } = req.body;
+
+  try {
+    let results = [];
+    for (const contato of phone) {
+      results.push(await req.client.sendPtt(contato, path, filename, message, quotedMessageId));
+    }
+
+    if (results.length === 0) return res.status(400).json('Error sending message');
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
+
+export async function sendVoice(req, res) {
   const { phone, url: base64Ptt } = req.body;
 
   try {
