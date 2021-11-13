@@ -58,7 +58,7 @@ export async function sendImage(req, res) {
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');
-    if (req.file.path) await unlinkAsync(pathFile);
+    if (req.file) await unlinkAsync(pathFile);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
