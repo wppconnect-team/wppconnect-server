@@ -220,6 +220,7 @@ routes.post('/api/:session/unblock-contact', verifyToken, statusConnection, Devi
 // Device
 routes.get('/api/:session/get-battery-level', verifyToken, statusConnection, DeviceController.getBatteryLevel);
 routes.get('/api/:session/host-device', verifyToken, statusConnection, DeviceController.getHostDevice);
+routes.get('/api/:session/get-phone-number', verifyToken, statusConnection, DeviceController.getPhoneNumber);
 
 // Profile
 routes.post(

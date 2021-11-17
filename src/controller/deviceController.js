@@ -186,10 +186,21 @@ export async function getBatteryLevel(req, res) {
 export async function getHostDevice(req, res) {
   try {
     const response = await req.client.getHostDevice();
-    return res.status(200).json({ status: 'success', response: response, mapper: 'device' });
+    const phoneNumber = await req.client.getWid();
+    return res.status(200).json({ status: 'success', response: {...response, phoneNumber}, mapper: 'device' });
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Erro ao recuperar dados do telefone' });
+  }
+}
+
+export async function getPhoneNumber(req, res) {
+  try {
+    const phoneNumber = await req.client.getWid();
+    return res.status(200).json({ status: 'success', response: phoneNumber, mapper: 'device' });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error retrieving phone number' });
   }
 }
 
