@@ -187,7 +187,7 @@ export async function getHostDevice(req, res) {
   try {
     const response = await req.client.getHostDevice();
     const phoneNumber = await req.client.getWid();
-    return res.status(200).json({ status: 'success', response: {...response, phoneNumber }, mapper: 'device' });
+    return res.status(200).json({ status: 'success', response: { ...response, phoneNumber }, mapper: 'device' });
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({ status: 'error', message: 'Erro ao recuperar dados do telefone' });
