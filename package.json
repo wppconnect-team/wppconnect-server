@@ -69,7 +69,7 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.3.1",
     "pretty-quick": "^3.1.0",
-    "redis": "^3.1.2",
+    "redis": "^4.0.0",
     "release-it": "^14.8.0",
     "rimraf": "^3.0.2",
     "shx": "^0.3.3",
@@ -79,6 +79,6 @@
     "aws-sdk": "^2.903.0",
     "crypto-js": "^4.0.0",
     "mongoose": "^6.0.0",
-    "redis": "^3.1.2"
+    "redis": "^4.0.0"
   }
 }
