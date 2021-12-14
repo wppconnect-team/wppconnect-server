@@ -669,7 +669,7 @@ export async function chatWoot(req, res) {
 
       const {
         message_type,
-        phone = req.body.conversation.meta.sender.phone_number.replace('+',''),
+        phone = req.body.conversation.meta.sender.phone_number.replace('+', ''),
         message = req.body.conversation.messages[0],
       } = req.body;
 
