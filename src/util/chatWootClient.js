@@ -37,15 +37,17 @@ export default class chatWootClient {
 
     //assina o evento do qrcode
     eventEmitter.on(`qrcode-${session}`, (qrCode, urlCode, client) => {
-      this.sendMessage(client, {
-        sender: this.sender,
-        chatId: '',
-        type: 'image',
-        timestamp: 'qrcode',
-        mimetype: 'image/png',
-        caption: 'leia o qrCode',
-        qrCode: qrCode.replace('data:image/png;base64,', ''),
-      });
+      setTimeout(async () => {
+        this.sendMessage(client, {
+          sender: this.sender,
+          chatId: '',
+          type: 'image',
+          timestamp: 'qrcode',
+          mimetype: 'image/png',
+          caption: 'leia o qrCode',
+          qrCode: qrCode.replace('data:image/png;base64,', ''),
+        });
+      }, 1000);
     });
 
     //assiona o evento do status
