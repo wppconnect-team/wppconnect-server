@@ -68,7 +68,7 @@ export default class chatWootClient {
   async sendMessage(client, message) {
     if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
     let contact = await this.createContact(message);
-    let conversation = await this.createConversation(contact, message.id);
+    let conversation = await this.createConversation(contact, message.chatId.split('@')[0]);
 
     try {
       if (
