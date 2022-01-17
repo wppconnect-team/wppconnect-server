@@ -198,23 +198,32 @@ export async function checkConnectionSession(req, res) {
 }
 
 export async function downloadMediaByMessage(req, res) {
+  const client = req.client;
   const { messageId } = req.body;
 
-  let result = '';
+  let message;
 
-  if (messageId.isMedia === true) {
-    await download(messageId, req.client, req.logger, req.logger);
-    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
-      messageId.mimetype
-    )}`;
-  } else if (messageId.type === 'ptt' || messageId.type === 'sticker') {
-    await download(messageId, req.client);
-    result = `${req.serverOptions.host}:${req.serverOptions.port}/files/file${messageId.t}.${mime.extension(
-      messageId.mimetype
-    )}`;
+  if (!messageId.isMedia || !messageId.type) {
+    message = await client.getMessageById(messageId);
+  } else {
+    message = messageId;
   }
 
-  return res.status(200).json(result);
+  if (!message)
+    return res.status(400).json({
+      status: 'error',
+      message: 'Message not found',
+    });
+
+  if (!(message['mimetype'] || message.isMedia || message.isMMS))
+    return res.status(400).json({
+      status: 'error',
+      message: 'Message does not contain media',
+    });
+
+  const buffer = await client.decryptFile(message);
+
+  return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
 }
 
 export async function getMediaByMessage(req, res) {
@@ -238,7 +247,7 @@ export async function getMediaByMessage(req, res) {
 
     const buffer = await client.decryptFile(message);
 
-    return res.status(200).json(await buffer.toString('base64'));
+    return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
   } catch (ex) {
     req.logger.error(ex);
     return res.status(500).json({ status: 'error', message: 'The session is not active' });
