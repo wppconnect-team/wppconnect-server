@@ -59,7 +59,8 @@ export default class CreateSessionUtil {
               if (statusFind === 'autocloseCalled' || statusFind === 'desconnectedMobile') {
                 client.status = 'CLOSED';
                 client.qrcode = null;
-                client.waPage.close();
+                client.close();
+                clientsArray[session] = undefined;
               }
               callWebHook(client, req, 'status-find', { status: statusFind });
               req.logger.info(statusFind + '\n\n');
