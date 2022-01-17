@@ -33,7 +33,7 @@
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "dotenv": "^11.0.0",
+    "dotenv": "^14.1.0",
     "express": "^4.17.1",
     "form-data": "^4.0.0",
     "express-query-boolean": "^2.0.0",
