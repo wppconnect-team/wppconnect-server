@@ -220,34 +220,32 @@ export async function getBlockList(req, res) {
 }
 
 export async function deleteChat(req, res) {
-  const { phone, isGroup = false } = req.body;
+  const { phone } = req.body;
+  const session = req.session;
 
   try {
-    if (isGroup) {
-      await req.client.deleteChat(`${phone}@g.us`);
-    } else {
-      await req.client.deleteChat(`${phone}@c.us`);
+    let results = {};
+    for (const contato of phone) {
+      results[contato] = await req.client.deleteChat(contato);
     }
-    return res.status(200).json({ status: 'success', response: { message: 'Conversa deleteada com sucesso' } });
-  } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Erro ao deletada conversa' });
+    returnSucess(res, session, phone, results);
+  } catch (error) {
+    returnError(req, res, session, error);
   }
 }
 
 export async function clearChat(req, res) {
-  const { phone, isGroup = false } = req.body;
+  const { phone } = req.body;
+  const session = req.session;
 
   try {
-    if (isGroup) {
-      await req.client.clearChat(`${phone}@g.us`);
-    } else {
-      await req.client.clearChat(`${phone}@c.us`);
+    let results = {};
+    for (const contato of phone) {
+      results[contato] = await req.client.clearChat(contato);
     }
-    return res.status(200).json({ status: 'success', response: { message: 'Successfully cleared conversation' } });
-  } catch (e) {
-    req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error clearing conversation' });
+    returnSucess(res, session, phone, results);
+  } catch (error) {
+    returnError(req, res, session, error);
   }
 }
 
