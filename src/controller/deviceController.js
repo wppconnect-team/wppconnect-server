@@ -481,18 +481,17 @@ export async function sendMute(req, res) {
 }
 
 export async function sendSeen(req, res) {
-  const { phone, isGroup = false } = req.body;
+  const { phone } = req.body;
+  const session = req.session;
 
   try {
-    let response;
-    for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.sendSeen(`${contato}`);
+    let results = [];
+    for (const contato of phone) {
+      results.push(await req.client.sendSeen(contato));
     }
-
-    return res.status(200).json({ status: 'success', response: response });
+    returnSucess(res, session, phone, results);
   } catch (error) {
-    req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on send seen' });
+    returnError(req, res, session, error);
   }
 }
 
