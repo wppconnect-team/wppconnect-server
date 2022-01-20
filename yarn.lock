@@ -999,12 +999,12 @@
     ajv "^6.12.6"
 
 "@commitlint/cz-commitlint@^16.0.0":
-  version "16.0.3"
-  resolved "https://registry.yarnpkg.com/@commitlint/cz-commitlint/-/cz-commitlint-16.0.3.tgz#7172ebce4441eb6b9ede7e740098745c84b575b1"
-  integrity sha512-/jPNTFF3FN97s/l9wZts+2HKbkcUkOp+mTF6nKoo7Rwm3nGBtqCsb6LQ6w2FW4PBEZy53Ndxev4A4T1qUL7mfA==
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/cz-commitlint/-/cz-commitlint-16.1.0.tgz#e7ddc02f45e410a7b131c5446c09f75ac7b20884"
+  integrity sha512-TThglfXEBW8TZ99dvaeto1c6hU25ONqL9qkENle2+1OFI64NgbICjLsJq7SVzJd4Jn/yZDp4xNqoV53WJPJ9aA==
   dependencies:
     "@commitlint/ensure" "^16.0.0"
-    "@commitlint/load" "^16.0.0"
+    "@commitlint/load" "^16.1.0"
     "@commitlint/types" "^16.0.0"
     chalk "^4.1.0"
     lodash "^4.17.21"
