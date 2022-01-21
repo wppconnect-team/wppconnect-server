@@ -29,7 +29,7 @@
     }
   },
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.12.2",
+    "@wppconnect-team/wppconnect": "^1.12.3",
     "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
