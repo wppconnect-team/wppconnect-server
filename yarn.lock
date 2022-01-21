@@ -1049,7 +1049,7 @@
     "@commitlint/rules" "^16.0.0"
     "@commitlint/types" "^16.0.0"
 
-"@commitlint/load@>6.1.1", "@commitlint/load@^16.0.0", "@commitlint/load@^16.1.0":
+"@commitlint/load@>6.1.1", "@commitlint/load@^16.1.0":
   version "16.1.0"
   resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-16.1.0.tgz#7a884072ab915611080c5e99a1f1d999c05f4360"
   integrity sha512-MtlEhKjP8jAF85jjX4mw8DUUwCxKsCgAc865hhpnwxjrfBcmGP7Up2AFE/M3ZMGDmSl1X1TMybQk/zohj8Cqdg==
@@ -1554,15 +1554,15 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.12.2":
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.2.tgz#0097c53a8b2f618636c1f55f432b59dbfe64a4fe"
-  integrity sha512-w6nSVP64VJYPnv8cNPYvZBaVeFwvBq8ndvfYBPvxtujuvGJhB4+K60Fe7aZpA+FMAW5odY7Wm6vVEOMbXDXxdA==
+"@wppconnect-team/wppconnect@^1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.3.tgz#ce5a0d9d869fe55be9a2519c0b3ee06a7a638ed7"
+  integrity sha512-g2qYajOYXRKvOdi5wP74xf+irQlNoBOhBvG2D/Fbe0hGfcIPHKYmxGursWhxaWIsednsmmBxVnK5TxOBLAGEQw==
   dependencies:
-    "@wppconnect/wa-js" "^1.1.5"
+    "@wppconnect/wa-js" "^1.1.9"
     "@wppconnect/wa-version" "^1.1.27"
     atob "^2.1.2"
-    axios "^0.24.0"
+    axios "^0.25.0"
     boxen "^5.1.2"
     catch-exit "^1.1.0"
     chalk "~4.1.2"
@@ -1587,14 +1587,14 @@
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.4.0"
-    ws "^8.4.1"
+    ws "^8.4.2"
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.1.5.tgz#4831bdf15c9fc6c26dfb123071478b6e9ed450ea"
-  integrity sha512-YY9l2wdMz9z39m5B4n3CoK1Zpm2HCliOPLqimeH0vdZZZpkqnidTi/dn5plRBJ9MXrIBTglG4yHEf/TD2NH/9w==
+"@wppconnect/wa-js@^1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.1.9.tgz#96bb88a5b67e0c1bddb6621dc6dbdc90ee945269"
+  integrity sha512-by2WB9jeFWalbXT3Poa4p3CzhWDhTEnLpGvjmihy1jBXdOWzJF+M21wWVeIbIyrar36VSi61Q5Q6JT3g3Eid/g==
 
 "@wppconnect/wa-version@^1.1.27":
   version "1.1.27"
@@ -1827,13 +1827,6 @@ aws-sdk@^2.903.0:
     url "0.10.3"
     uuid "3.3.2"
     xml2js "0.4.19"
-
-axios@^0.24.0:
-  version "0.24.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
-  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
-  dependencies:
-    follow-redirects "^1.14.4"
 
 axios@^0.25.0:
   version "0.25.0"
@@ -3541,7 +3534,7 @@ fn.name@1.x.x:
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 
-follow-redirects@^1.14.4, follow-redirects@^1.14.7:
+follow-redirects@^1.14.7:
   version "1.14.7"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
   integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
@@ -7470,10 +7463,10 @@ ws@7.4.6:
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.6.tgz#5654ca8ecdeee47c33a9a4bf6d28e2be2980377c"
   integrity sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==
 
-ws@^8.4.1:
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.4.1.tgz#ce1a17e553d2b794e017fa94887808db5c67f614"
-  integrity sha512-6eqQ4yN2y2xv8b+BgbkUzPPyfo/PDl3VOWb06ZE0jIFYwuHMsMQN6F7o84yxJYCblfCRAxzpU59We4Rr4w0Luw==
+ws@^8.4.2:
+  version "8.4.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.4.2.tgz#18e749868d8439f2268368829042894b6907aa0b"
+  integrity sha512-Kbk4Nxyq7/ZWqr/tarI9yIt/+iNNFOjBXEWgTb4ydaNHBNGgvf2QHbS9fdfsndfjFlFwEd4Al+mw83YkaD10ZA==
 
 ws@~8.2.3:
   version "8.2.3"
