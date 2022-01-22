@@ -78,6 +78,8 @@ This server use config.json file to define some options, default values are:
   "secretKey": "THISISMYSECURETOKEN",
   "host": "http://localhost",
   "port": "21465",
+  // create userDataDir for each puppeteer instance for working with Multi Device
+  "customUserDataDir": "./userDataDir/",
   // starts all sessions when starting the server.
   "startAllSession": true,
   // sets the maximum global listeners. 0 = infinity.
