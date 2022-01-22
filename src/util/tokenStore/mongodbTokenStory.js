@@ -21,7 +21,7 @@ var MongodbTokenStore = function (client) {
 
       if (tk) {
         token._id = tk._id;
-        return (await token.updateOne()) ? true : false;
+        return (await Token.updateOne({ _id: tk._id }, token)) ? true : false;
       } else {
         return (await token.save()) ? true : false;
       }
