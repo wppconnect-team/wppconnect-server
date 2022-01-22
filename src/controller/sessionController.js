@@ -203,27 +203,35 @@ export async function downloadMediaByMessage(req, res) {
 
   let message;
 
-  if (!messageId.isMedia || !messageId.type) {
-    message = await client.getMessageById(messageId);
-  } else {
-    message = messageId;
+  try {
+    if (!messageId.isMedia || !messageId.type) {
+      message = await client.getMessageById(messageId);
+    } else {
+      message = messageId;
+    }
+
+    if (!message)
+      return res.status(400).json({
+        status: 'error',
+        message: 'Message not found',
+      });
+
+    if (!(message['mimetype'] || message.isMedia || message.isMMS))
+      return res.status(400).json({
+        status: 'error',
+        message: 'Message does not contain media',
+      });
+
+    const buffer = await client.decryptFile(message);
+
+    return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(400).json({
+      status: 'error',
+      message: 'Decrypt file error',
+    });
   }
-
-  if (!message)
-    return res.status(400).json({
-      status: 'error',
-      message: 'Message not found',
-    });
-
-  if (!(message['mimetype'] || message.isMedia || message.isMMS))
-    return res.status(400).json({
-      status: 'error',
-      message: 'Message does not contain media',
-    });
-
-  const buffer = await client.decryptFile(message);
-
-  return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
 }
 
 export async function getMediaByMessage(req, res) {
