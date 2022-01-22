@@ -19,6 +19,7 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { convert } from '../mapper/index';
 import config from '../config.json';
+import { eventEmitter } from './sessionUtil';
 
 let mime = config.webhook.uploadS3 ? require('mime-types') : null;
 let crypto = config.webhook.uploadS3 ? require('crypto') : null;
@@ -230,6 +231,12 @@ export function getIPAddress() {
     }
   }
   return '0.0.0.0';
+}
+
+export function setMaxListners(serverOptions) {
+  if (serverOptions && Number.isInteger(serverOptions.maxListeners)) {
+    process.setMaxListeners(serverOptions.maxListeners);
+  }
 }
 
 export let unlinkAsync = promisify(fs.unlink);

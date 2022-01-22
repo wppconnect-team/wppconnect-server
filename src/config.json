@@ -2,9 +2,10 @@
   "secretKey": "THISISMYSECURETOKEN",
   "host": "http://localhost",
   "port": "21465",
-  "deviceName" : "WppConnect",
+  "deviceName": "WppConnect",
   "startAllSession": true,
   "tokenStoreType": "file",
+  "maxListeners": 15,
   "webhook": {
     "url": null,
     "autoDownload": true,

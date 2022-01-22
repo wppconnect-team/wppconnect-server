@@ -17,7 +17,7 @@
 require('dotenv').config();
 
 import { createLogger } from './util/logger';
-import { createFolders, startAllSessions } from './util/functions';
+import { createFolders, setMaxListners, startAllSessions } from './util/functions';
 import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
@@ -36,6 +36,8 @@ export function initServer(serverOptions) {
   }
 
   serverOptions = mergeDeep({}, config, serverOptions);
+
+  setMaxListners(serverOptions);
 
   const logger = createLogger(serverOptions.log);
 
