@@ -171,8 +171,10 @@ async function archive(client, req) {
 
   try {
     let chats = await client.getAllChats();
-    chats = chats.filter((c) => !c.archive);
-    if (chats && chats.length > 0) {
+    if (chats && Array.isArray(chats) && chats.length > 0) {
+      chats = chats.filter((c) => !c.archive);
+    }
+    if (chats && Array.isArray(chats) && chats.length > 0) {
       for (let i = 0; i < chats.length; i++) {
         let date = new Date(chats[i].t * 1000);
 
