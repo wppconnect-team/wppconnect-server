@@ -235,7 +235,7 @@ export function getIPAddress() {
 
 export function setMaxListners(serverOptions) {
   if (serverOptions && Number.isInteger(serverOptions.maxListeners)) {
-    eventEmitter.setMaxListeners(serverOptions.maxListeners);
+    process.setMaxListeners(serverOptions.maxListeners);
   }
 }
 
