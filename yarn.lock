@@ -1554,12 +1554,12 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.12.3":
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.3.tgz#ce5a0d9d869fe55be9a2519c0b3ee06a7a638ed7"
-  integrity sha512-g2qYajOYXRKvOdi5wP74xf+irQlNoBOhBvG2D/Fbe0hGfcIPHKYmxGursWhxaWIsednsmmBxVnK5TxOBLAGEQw==
+"@wppconnect-team/wppconnect@^1.12.4":
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.4.tgz#ddc7acb047d0e68b4317ba808ebe48ccf1ca3499"
+  integrity sha512-p6qz5mPDZao5E8mKAU7tdst45IYCTaYaJcAwTRXBhyypf/5OKTovBez73KFyGqEL6en4kb1BSbTbD7QpKe4Ybg==
   dependencies:
-    "@wppconnect/wa-js" "^1.1.9"
+    "@wppconnect/wa-js" "^1.1.10"
     "@wppconnect/wa-version" "^1.1.27"
     atob "^2.1.2"
     axios "^0.25.0"
@@ -1591,10 +1591,10 @@
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.1.9.tgz#96bb88a5b67e0c1bddb6621dc6dbdc90ee945269"
-  integrity sha512-by2WB9jeFWalbXT3Poa4p3CzhWDhTEnLpGvjmihy1jBXdOWzJF+M21wWVeIbIyrar36VSi61Q5Q6JT3g3Eid/g==
+"@wppconnect/wa-js@^1.1.10":
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.1.11.tgz#aad776c9750285cd08dc273206da99d286c8aa4a"
+  integrity sha512-HHW6f+O4ip0gfKI2Qh58YuYsuEULy0Z6HkB5RKnWcSsuzIHvD2bhC3U/qcb7O8N6j1eUyF1qXhPze0rBIghePg==
 
 "@wppconnect/wa-version@^1.1.27":
   version "1.1.27"
