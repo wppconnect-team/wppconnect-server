@@ -2948,9 +2948,9 @@ dot-prop@^5.1.0, dot-prop@^5.2.0:
     is-obj "^2.0.0"
 
 dotenv@^14.1.0:
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-14.2.0.tgz#7e77fd5dd6cff5942c4496e1acf2d0f37a9e67aa"
-  integrity sha512-05POuPJyPpO6jqzTNweQFfAyMSD4qa4lvsMOWyTRTdpHKy6nnnN+IYWaXF+lHivhBH/ufDKlR4IWCAN3oPnHuw==
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-14.3.0.tgz#40f537fe90e229d35361c66cf432903e0db49001"
+  integrity sha512-PCTcOQSXVo9FI1dB7AichJXMEvmiGCq0gnCpjfDUc8505uR+2MeLXWe+Ue4PN5UXa2isHSa78sr7L59fk+2mnQ==
 
 duplexer3@^0.1.4:
   version "0.1.4"
