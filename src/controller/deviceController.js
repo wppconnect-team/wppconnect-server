@@ -220,32 +220,34 @@ export async function getBlockList(req, res) {
 }
 
 export async function deleteChat(req, res) {
-  const { phone } = req.body;
-  const session = req.session;
+  const { phone, isGroup = false } = req.body;
 
   try {
-    let results = {};
-    for (const contato of phone) {
-      results[contato] = await req.client.deleteChat(contato);
+    if (isGroup) {
+      await req.client.deleteChat(`${phone}@g.us`);
+    } else {
+      await req.client.deleteChat(`${phone}@c.us`);
     }
-    returnSucess(res, session, phone, results);
-  } catch (error) {
-    returnError(req, res, session, error);
+    return res.status(200).json({ status: 'success', response: { message: 'Conversa deleteada com sucesso' } });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Erro ao deletada conversa' });
   }
 }
 
 export async function clearChat(req, res) {
-  const { phone } = req.body;
-  const session = req.session;
+  const { phone, isGroup = false } = req.body;
 
   try {
-    let results = {};
-    for (const contato of phone) {
-      results[contato] = await req.client.clearChat(contato);
+    if (isGroup) {
+      await req.client.clearChat(`${phone}@g.us`);
+    } else {
+      await req.client.clearChat(`${phone}@c.us`);
     }
-    returnSucess(res, session, phone, results);
-  } catch (error) {
-    returnError(req, res, session, error);
+    return res.status(200).json({ status: 'success', response: { message: 'Successfully cleared conversation' } });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error clearing conversation' });
   }
 }
 
@@ -270,7 +272,7 @@ export async function deleteMessage(req, res) {
   const { phone, messageId } = req.body;
 
   try {
-    await req.client.deleteMessage(`${phone}@c.us`, [messageId]);
+    await req.client.deleteMessage(`${phone}`, [messageId]);
 
     return res.status(200).json({ status: 'success', response: { message: 'Message deleted' } });
   } catch (e) {
@@ -481,17 +483,18 @@ export async function sendMute(req, res) {
 }
 
 export async function sendSeen(req, res) {
-  const { phone } = req.body;
-  const session = req.session;
+  const { phone, isGroup = false } = req.body;
 
   try {
-    let results = [];
-    for (const contato of phone) {
-      results.push(await req.client.sendSeen(contato));
+    let response;
+    for (const contato of contactToArray(phone, isGroup)) {
+      response = await req.client.sendSeen(`${contato}`);
     }
-    returnSucess(res, session, phone, results);
+
+    return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
-    returnError(req, res, session, error);
+    req.logger.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error on send seen' });
   }
 }
 
@@ -660,13 +663,13 @@ export async function chatWoot(req, res) {
     if (await client.isConnected()) {
       const event = req.body.event;
 
-      if (event == 'conversation_status_changed' || event == 'conversation_resolved' || req.body.private) {
+      if (event == 'conversation_status_changed' || event == 'conversation_resolved') {
         return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
       }
 
       const {
         message_type,
-        phone = req.body.conversation.meta.sender.phone_number.replace('+', ''),
+        phone = req.body.conversation.meta.sender.phone_number,
         message = req.body.conversation.messages[0],
       } = req.body;
 
