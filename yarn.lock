@@ -5019,9 +5019,9 @@ mongodb@4.2.2:
     saslprep "^1.0.3"
 
 mongoose@^6.0.0:
-  version "6.1.8"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.1.8.tgz#8565c7610ceb81a9b0416ceb4bf0b709c8b83f6a"
-  integrity sha512-/voqwU2dtet3zAR73r8jdPhqluU1VzIAnk7ecXPJBgyXKREnwQrz40lfW7fLpaqhmMhsAbA+JQ7ICUn2vAVFLw==
+  version "6.1.9"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.1.9.tgz#1ac889dbee9651f274d83578c0189fcb3c356355"
+  integrity sha512-dh6ZeYNGUAW4Gc4MxxgPwU+0d1tZZgse6xTejDjFwyXJArBcyI4xLqNrO9W6Umu2iQzlT701RTtN+iJ0gipM4A==
   dependencies:
     "@types/node" "< 17.0.6"
     bson "^4.2.2"
