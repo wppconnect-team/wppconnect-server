@@ -2,7 +2,7 @@
   "name": "@wppconnect/server",
   "version": "1.1.20",
   "description": "Projeto feito para autenticar a automomacao do WhatsappWeb com multi-clientes de forma dinamica. Backend feito em Nodejs(express, socketio), FrontEnd (ReactJS)",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "author": "kingaspx",
   "license": "Apache-2.0",
   "scripts": {
@@ -17,7 +17,7 @@
     "lint": "eslint --ext .js src",
     "prepare": "husky install",
     "release": "release-it",
-    "start": "node ./dist/server.js",
+    "start": "node ./src/server.js",
     "swagger:copy-assets": "shx cp -R ./node_modules/swagger-ui-dist ./swagger-docs",
     "swagger:copy-json": "shx cp ./src/swagger.json ./swagger-docs",
     "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
