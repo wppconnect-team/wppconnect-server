@@ -1,8 +1,8 @@
 {
-  "secretKey": "THISISMYSECURETOKEN",
-  "host": "http://localhost",
-  "port": "21465",
-  "deviceName": "WppConnect",
+  "secretKey": "WPPDEALERCRMACEH",
+  "host": "https://mywppcrm.herokuapp.com",
+  "port": "80",
+  "deviceName": "WACRM",
   "startAllSession": true,
   "tokenStoreType": "file",
   "maxListeners": 15,
