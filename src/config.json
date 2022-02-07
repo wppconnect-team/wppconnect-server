@@ -68,5 +68,12 @@
     "redisPassword": "",
     "redisDb": 0,
     "redisPrefix": "docker"
+  },
+  "mysql" : {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "dialect": "mysql"
   }
 }
