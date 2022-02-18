@@ -1,0 +1,14 @@
+version: "3.4"
+
+volumes:
+  wppconnect_tokens: {}
+
+services:
+  wppconnect:
+    build:
+      context: .
+    volumes:
+      - ./config.json:/usr/src/wpp-server/config.json
+      - wppconnect_tokens:/usr/src/wpp-server/tokens
+    ports:
+      - "21465:21465"
