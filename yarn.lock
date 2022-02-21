@@ -5074,17 +5074,17 @@ mongodb@4.3.1:
     saslprep "^1.0.3"
 
 mongoose@^6.0.0:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.2.2.tgz#2e3a519ac79ef470c8a02c10f90de96c994cdfda"
-  integrity sha512-uiWCPydp83OdVQjp6rMCwB/CbITUbGlisGt1BdlYUDQJzPJVIxeojQXuors8coSeB2HnZrULHrLcm4FP106ehA==
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.2.3.tgz#146f718a8af95893827c5ab621697117be426256"
+  integrity sha512-FxF2D0MGGIw9bAJ57nSyM4Hs4tDHbu6dn9gQwT1J/lxmRB8jfaWWJ3FSJXTmeYlQ6BpyKeIaT8fj6SAX0YMNBA==
   dependencies:
     bson "^4.2.2"
     kareem "2.3.4"
     mongodb "4.3.1"
     mpath "0.8.4"
     mquery "4.0.2"
-    ms "2.1.2"
-    sift "13.5.2"
+    ms "2.1.3"
+    sift "16.0.0"
 
 mpath@0.8.4:
   version "0.8.4"
@@ -6527,10 +6527,10 @@ side-channel@^1.0.4:
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
 
-sift@13.5.2:
-  version "13.5.2"
-  resolved "https://registry.yarnpkg.com/sift/-/sift-13.5.2.tgz#24a715e13c617b086166cd04917d204a591c9da6"
-  integrity sha512-+gxdEOMA2J+AI+fVsCqeNn7Tgx3M9ZN9jdi95939l1IJ8cZsqS8sqpJyOkic2SJk+1+98Uwryt/gL6XDaV+UZA==
+sift@16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/sift/-/sift-16.0.0.tgz#447991577db61f1a8fab727a8a98a6db57a23eb8"
+  integrity sha512-ILTjdP2Mv9V1kIxWMXeMTIRbOBrqKc4JAXmFMnFq3fKeyQ2Qwa3Dw1ubcye3vR+Y6ofA0b9gNDr/y2t6eUeIzQ==
 
 signal-exit@^3.0.0, signal-exit@^3.0.2, signal-exit@^3.0.3:
   version "3.0.3"
