@@ -6875,9 +6875,9 @@ supports-color@^7.1.0:
     has-flag "^4.0.0"
 
 swagger-ui-dist@>=4.1.3, swagger-ui-dist@^4.0.0:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.5.2.tgz#1be01ef9f7b5e7c3fb7fa21806da64eedb016bf6"
-  integrity sha512-wV4w54eW9z+VKbYJBJfULfqO05otCbM9jwgRIkwRl9CrfTVKelDzyhhEvdUQkGUzro+Ir8TOZPiZgKIdIdolWQ==
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.6.0.tgz#559214db7338fbb5d77268e8bd9f69946488e693"
+  integrity sha512-E6nUkYup4EKuLbsVVbYD4J6UnbuvSaZ+D4Z7WP0kYVdywqunFu7XfCNDG5718Gsqau0AwhwHZ8Hx9i8YJlVm5g==
 
 swagger-ui-express@^4.1.6:
   version "4.3.0"
