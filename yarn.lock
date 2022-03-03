@@ -1597,12 +1597,12 @@
     "@types/node" "*"
 
 "@wppconnect-team/wppconnect@^1.12.6":
-  version "1.12.6"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.6.tgz#279befbf5e1d0889056c8dd54c9cc65e16d0079b"
-  integrity sha512-bfz4EwHbwXeMm0mNxKMS3HxkY6UZQMCbjJey5x9ppe4/CszKiikLm8/fSsHis+M3VDS5cblEiWIdUClUox3vyw==
+  version "1.12.7"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.7.tgz#33546ed778589ea528fdc7c22847774aa1bc31ab"
+  integrity sha512-3j7A99d8O2ErgiS0d94JGiSnZSc6KoOd0gYtb5BI+1TdhcwFN8YlAzcu/TAVu3szdGcPJD++Py4fXIFYmWO1aA==
   dependencies:
-    "@wppconnect/wa-js" "^1.1.18"
-    "@wppconnect/wa-version" "^1.1.31"
+    "@wppconnect/wa-js" "^1.2.0"
+    "@wppconnect/wa-version" "^1.1.39"
     atob "^2.1.2"
     axios "^0.26.0"
     boxen "^5.1.2"
@@ -1625,7 +1625,7 @@
     reflect-metadata "^0.1.13"
     rimraf "^3.0.2"
     sanitize-filename "^1.6.3"
-    sharp "^0.30.1"
+    sharp "^0.30.2"
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.6.0"
@@ -1633,15 +1633,15 @@
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^1.1.18":
-  version "1.1.18"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.1.18.tgz#06ee573a9972545b9a8736a028317dfbd687e5cd"
-  integrity sha512-lFWvD08nENcUUWdhOXKdxwxLTAULwLTRp9uvypZLfLrGNwfBQUeXRTqnBkqjMSUulmFqXYbFk9wcm0/K2FiFug==
+"@wppconnect/wa-js@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.2.0.tgz#d1fe312fa70b54aa5f4eb8920941cee49d8f6bd3"
+  integrity sha512-lZrBJKAl/FHccJCPO/uP08IwsWcYVc3chmVpQNGpgMRNa4jjtEGRbhp+CNR4AeNNk6Pro28rc6kiX6XmEE17mg==
 
-"@wppconnect/wa-version@^1.1.31":
-  version "1.1.31"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.31.tgz#d03b1f253dafa0f79ec01020fd2b3e43e67833a1"
-  integrity sha512-iiVlcEVzHsYitiBHA/m2o6cku4tyH1EsxhNAYEquhsr8RVjqxhibAdx1D5MlJKdm2cydS3UCJUA0LowdRkUmaQ==
+"@wppconnect/wa-version@^1.1.39":
+  version "1.1.39"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.39.tgz#7621586d65e0f1f84b7cbd2816556314a8701cab"
+  integrity sha512-+US0JE914xXBgqvgw9JXl2hoxd/RYekV6Lg7QsxAuMhCe7jbpiB8nRWJHxRFC3qu4uMui6sD3EGqcfA0RHfdfg==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.5"
@@ -2394,10 +2394,10 @@ color@3.0.x:
     color-convert "^1.9.1"
     color-string "^1.5.2"
 
-color@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/color/-/color-4.2.0.tgz#0c782459a3e98838ea01e4bc0fb43310ca35af78"
-  integrity sha512-hHTcrbvEnGjC7WBMk6ibQWFVDgEFTVmjrz2Q5HlU6ltwxv0JJN2Z8I7uRbWeQLF04dikxs8zgyZkazRJvSMtyQ==
+color@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/color/-/color-4.2.1.tgz#498aee5fce7fc982606c8875cab080ac0547c884"
+  integrity sha512-MFJr0uY4RvTQUKvPq7dh9grVOTYSFeXja2mBXioCGjnjJoXrAp9jJ1NQTDR73c9nwBSAQiNKloKl5zq9WB9UPw==
   dependencies:
     color-convert "^2.0.1"
     color-string "^1.9.0"
@@ -2949,6 +2949,11 @@ detect-libc@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.0.0.tgz#c528bc09bc6d1aa30149228240917c225448f204"
   integrity sha512-S55LzUl8HUav8l9E2PBTlC5PAJrHK7tkM+XXFGD+fbsbkTzhCpG6K05LxJcUOEWzMa4v6ptcMZ9s3fOdJDu0Zw==
+
+detect-libc@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.0.1.tgz#e1897aa88fa6ad197862937fbc0441ef352ee0cd"
+  integrity sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==
 
 devtools-protocol@0.0.901419:
   version "0.0.901419"
@@ -6463,13 +6468,13 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-sharp@^0.30.1:
-  version "0.30.1"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.30.1.tgz#203efaf9acfc5c15c8a343800254621e56011c12"
-  integrity sha512-ycpz81q8AeVjz1pGvvirQBeJcYE2sXAjcLXR/69LWOe/oxavBLOrenZcTzvTXn83jqAGqY+OuwF+2kFXzbKtDA==
+sharp@^0.30.2:
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.30.2.tgz#95b309b2740424702dc19b62a62595dd34a458b1"
+  integrity sha512-mrMeKI5ECTdYhslPlA2TbBtU3nZXMEBcQwI6qYXjPlu1LpW4HBZLFm6xshMI1HpIdEEJ3UcYp5AKifLT/fEHZQ==
   dependencies:
-    color "^4.2.0"
-    detect-libc "^2.0.0"
+    color "^4.2.1"
+    detect-libc "^2.0.1"
     node-addon-api "^4.3.0"
     prebuild-install "^7.0.1"
     semver "^7.3.5"
