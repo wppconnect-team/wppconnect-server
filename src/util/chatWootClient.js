@@ -40,7 +40,7 @@ export default class chatWootClient {
       setTimeout(async () => {
         this.sendMessage(client, {
           sender: this.sender,
-          chatId: '',
+          chatId: this.mobile_number + '@c.us',
           type: 'image',
           timestamp: 'qrcode',
           mimetype: 'image/png',
@@ -54,7 +54,7 @@ export default class chatWootClient {
     eventEmitter.on(`status-${session}`, (client, status) => {
       this.sendMessage(client, {
         sender: this.sender,
-        chatId: '',
+        chatId: this.mobile_number + '@c.us',
         body: `wppconnect status: ${status} `,
       });
     });
