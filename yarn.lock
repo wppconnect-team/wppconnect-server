@@ -1596,15 +1596,15 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.12.7":
-  version "1.12.7"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.7.tgz#33546ed778589ea528fdc7c22847774aa1bc31ab"
-  integrity sha512-3j7A99d8O2ErgiS0d94JGiSnZSc6KoOd0gYtb5BI+1TdhcwFN8YlAzcu/TAVu3szdGcPJD++Py4fXIFYmWO1aA==
+"@wppconnect-team/wppconnect@^1.12.8":
+  version "1.12.8"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.12.8.tgz#9ed385d33731a107318b5be7cf228ba9430ef1ae"
+  integrity sha512-fZFsjaFr5kPVKYlUfhWgu+qvJIDabhW10qUb29MvJ3cEKW6VyBZ2ayxaCyeKYDbg2xfytIeoJ05Av6mgq6Eo6Q==
   dependencies:
-    "@wppconnect/wa-js" "^1.2.0"
-    "@wppconnect/wa-version" "^1.1.39"
+    "@wppconnect/wa-js" "^1.2.2"
+    "@wppconnect/wa-version" "^1.1.40"
     atob "^2.1.2"
-    axios "^0.26.0"
+    axios "^0.26.1"
     boxen "^5.1.2"
     catch-exit "^1.1.0"
     chalk "~4.1.2"
@@ -1633,15 +1633,15 @@
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.2.0.tgz#d1fe312fa70b54aa5f4eb8920941cee49d8f6bd3"
-  integrity sha512-lZrBJKAl/FHccJCPO/uP08IwsWcYVc3chmVpQNGpgMRNa4jjtEGRbhp+CNR4AeNNk6Pro28rc6kiX6XmEE17mg==
+"@wppconnect/wa-js@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-1.2.2.tgz#00967916061fb270c323a25eb0ffd247ab258ace"
+  integrity sha512-CjAwSMe7KIeRyfgEc4pyA7/zfZN2hu5/x8NXf9hh20g+c/XszIVzd5MSm+XdMpdPVBEulJkoKLgl3mIYFv+yfg==
 
-"@wppconnect/wa-version@^1.1.39":
-  version "1.1.39"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.39.tgz#7621586d65e0f1f84b7cbd2816556314a8701cab"
-  integrity sha512-+US0JE914xXBgqvgw9JXl2hoxd/RYekV6Lg7QsxAuMhCe7jbpiB8nRWJHxRFC3qu4uMui6sD3EGqcfA0RHfdfg==
+"@wppconnect/wa-version@^1.1.40":
+  version "1.1.41"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.41.tgz#7bb5a58bf168afa13b751bc332dd5bd7f7b574d8"
+  integrity sha512-FWdQ7TF+sSPCyLGAlnWlaJWfm90Tcxy0OyrAdjookz+h/0llgjz8SQLXY9pqfXea4Qf+LBwmbLAYilkMeB639g==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.5"
@@ -1870,7 +1870,7 @@ aws-sdk@^2.903.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
-axios@^0.26.0:
+axios@^0.26.0, axios@^0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
   integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
