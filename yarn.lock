@@ -4840,9 +4840,9 @@ levn@~0.3.0:
     type-check "~0.3.2"
 
 license-check-and-add@^4.0.2:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/license-check-and-add/-/license-check-and-add-4.0.3.tgz#c941288563da412c0dbdad2af3bea8485e4d0b62"
-  integrity sha512-2dFjAOviPmukS35Udy+D1fNnWeGbJaIfOM/fstsYlofnviyDJDSx1w++nStyxFffa2R9RIB0myH3Pvxv0q7jWA==
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/license-check-and-add/-/license-check-and-add-4.0.5.tgz#ef820a78d59248327565ab5b7dec16776ac1ea4b"
+  integrity sha512-FySnMi3Kf/vO5jka8tcbVF1FhDFb8PWsQ8pg5Y7U/zkQgta+fIrJGcGHO58WFjfKlgvhneG1uQ00Fpxzhau3QA==
   dependencies:
     fs-extra "^8.1.0"
     gitignore-to-glob "^0.3.0"
