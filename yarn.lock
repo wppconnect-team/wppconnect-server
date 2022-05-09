@@ -5259,9 +5259,9 @@ mongodb@4.5.0:
     saslprep "^1.0.3"
 
 mongoose@^6.0.0:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.3.2.tgz#7cac2d11119896c8235ce03ae65c322257435142"
-  integrity sha512-4SEa8ynhJYkGMMbx6KOZ5kJz6qhKIYM8nAGufGq3xh+gNrKP3QwthNfc0X4DvTKhE0DQLMS1/Oy3cMl0AXm5RQ==
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.3.3.tgz#1ef1daa016ce5dfe4c905ce297a3770d62764e54"
+  integrity sha512-bAGuf+6mXuVjKReNcOGjdI05y9g0JXnRpZ3/PBN3kVXIn3rbhbFwR/lPbuwtsBsWhlblMK8tieDeFAVzV6yhww==
   dependencies:
     bson "^4.6.2"
     kareem "2.3.5"
