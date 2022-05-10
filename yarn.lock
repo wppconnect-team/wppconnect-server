@@ -1566,15 +1566,15 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.13.0.tgz#f430a9c5cb57e5d2954454250a663e25e7b0e3c8"
-  integrity sha512-CUPo4H/9n5nH416ZEWCUGuJGmU990phsb1vKw3Xrv71Ox/RbGO6Sa9lvw0aqAB3/1ERva1sv9QJ7mG9Qo+jyHQ==
+"@wppconnect-team/wppconnect@^1.13.1":
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.13.1.tgz#3a38ac76254f7b648870c1a4e86fe419217ae475"
+  integrity sha512-xZnsZkjH4TsxhQ7A80ZqoGOg3C2X0GmmUWOz30RHzBP4fRajl6ZwLANStPjrxwQPW1ZhUOHCGyrAyhiyUmRnow==
   dependencies:
-    "@wppconnect/wa-js" "^2.0.0"
-    "@wppconnect/wa-version" "^1.1.66"
+    "@wppconnect/wa-js" "^2.2.1"
+    "@wppconnect/wa-version" "^1.1.74"
     atob "^2.1.2"
-    axios "^0.26.1"
+    axios "^0.27.2"
     boxen "^5.1.2"
     catch-exit "^1.1.0"
     chalk "~4.1.2"
@@ -1599,16 +1599,16 @@
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.7.2"
-    ws "^8.5.0"
+    ws "^8.6.0"
   optionalDependencies:
     fsevents "^2.3.1"
 
-"@wppconnect/wa-js@^2.0.0":
+"@wppconnect/wa-js@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.2.1.tgz#fccefc1243856f3072d4927b98a914ce3337bbfb"
   integrity sha512-YJK96ld39+nZzN2nRTCGBMTD+xRMDfU7SzVN5p84+EhQqQNxC0UgqZ844acJ/UA58ES8pf4KZ/5s8cGeGl9JmQ==
 
-"@wppconnect/wa-version@^1.1.66":
+"@wppconnect/wa-version@^1.1.74":
   version "1.1.74"
   resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.74.tgz#f2aa6c273253ad755b95b7f4efbac40e520dbbba"
   integrity sha512-Jxse7EIztpNjf2SSlrLcCrAymBW7mFmeax+Ykx/Qk4d3KwowTkfI9xrK7b8BrbSv418d4k9s9zKB5Ywa0qNkQA==
@@ -1871,14 +1871,7 @@ aws-sdk@^2.903.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
-axios@^0.26.1:
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
-  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
-  dependencies:
-    follow-redirects "^1.14.8"
-
-axios@^0.27.0:
+axios@^0.27.0, axios@^0.27.2:
   version "0.27.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
   integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
@@ -3621,7 +3614,7 @@ fn.name@1.x.x:
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 
-follow-redirects@^1.14.8, follow-redirects@^1.14.9:
+follow-redirects@^1.14.9:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.0.tgz#06441868281c86d0dda4ad8bdaead2d02dca89d4"
   integrity sha512-aExlJShTV4qOUOL7yF1U5tvLCB0xQuudbf6toyYA0E/acBNw71mvjFTnLaRp50aQaYocMR0a/RMMBIHeZnGyjQ==
@@ -7715,7 +7708,7 @@ write-file-atomic@^3.0.0:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-ws@8.6.0, ws@^8.5.0:
+ws@8.6.0, ws@^8.6.0:
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.6.0.tgz#e5e9f1d9e7ff88083d0c0dd8281ea662a42c9c23"
   integrity sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==
