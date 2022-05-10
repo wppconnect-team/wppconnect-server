@@ -15596,11 +15596,13 @@
               },
               {
                 "id": "2",
-                "text": "Text 2"
+                "phoneNumber": "554498005216",
+                "text": "Call Us"
               },
               {
                 "id": "3",
-                "text": "Text 3"
+                "url": "https://wppconnect-team.github.io/",
+                "text": "Long Life WPPCONNECT"
               },
               {
                 "id": "4",
@@ -15611,8 +15613,8 @@
                 "text": "Text 5"
               }
             ],
-           "title": "Title text",
-           "footer": "Footer text"
+            "title": "Title text",
+            "footer": "Footer text"
           }
         }
       },      
