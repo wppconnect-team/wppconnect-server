@@ -27,7 +27,6 @@ import multer from 'multer';
 import uploadConfig from '../config/upload';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
-import { sendButtonsList } from '../controller/messageController';
 
 const upload = multer(uploadConfig);
 const routes = new Router();

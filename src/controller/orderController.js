@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import fs from 'fs';
-import { download } from './sessionController';
-import { contactToArray, unlinkAsync } from '../util/functions';
-import mime from 'mime-types';
-
 function returnSucess(res, session, phone, data) {
   res.status(201).json({
     status: 'Success',
