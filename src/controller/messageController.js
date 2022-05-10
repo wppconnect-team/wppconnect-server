@@ -27,10 +27,12 @@ async function returnSucess(res, data) {
 export async function sendMessage(req, res) {
   const { phone, message } = req.body;
 
+  const options = req.body.options || {};
+
   try {
     let results = [];
     for (const contato of phone) {
-      results.push(await req.client.sendText(contato, message));
+      results.push(await req.client.sendText(contato, message, options));
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');

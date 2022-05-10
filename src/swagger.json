@@ -19,9 +19,7 @@
   "paths": {
     "/{secretkey}/generate-token": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "generate-token (Gera token Bearer para sessão)",
         "operationId": "generate-token(GeratokenBearerparasessão)",
         "parameters": [
@@ -61,9 +59,7 @@
     },
     "/start-session": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "start-session (Retorna QRCode de login)",
         "description": "Inicializa a sessão",
         "operationId": "start-session(RetornaQRCodedelogin)",
@@ -94,9 +90,7 @@
     },
     "/status-session": {
       "get": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "status-session (Atualiza QRCode de login)",
         "description": "Retorna o status da session",
         "operationId": "status-session(AtualizaQRCodedelogin)",
@@ -113,9 +107,7 @@
     },
     "/qrcode-session": {
       "get": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "qrcode-session (Pegar qrCode de autenticação via stream)",
         "description": "Retorna o status da session",
         "operationId": "qrcode-session(PegarqrCodedeautenticaçãoviastream)",
@@ -132,9 +124,7 @@
     },
     "/check-connection-session": {
       "get": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "check-connection-session (status da conexão)",
         "description": "Verifica se a sessáo esta conectada",
         "operationId": "check-connection-session(statusdaconexão)",
@@ -151,9 +141,7 @@
     },
     "/close-session": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "close-session",
         "description": "finaliza a sessão",
         "operationId": "close-session",
@@ -170,9 +158,7 @@
     },
     "/all-chats": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "All Chats",
         "description": "Retrieves all chats",
         "operationId": "AllChats",
@@ -349,9 +335,7 @@
     },
     "/chat-by-id": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Chat By Id",
         "description": "Retrieves chat object of given contact id",
         "operationId": "ChatById",
@@ -1305,9 +1289,7 @@
     },
     "/chat-is-online": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Chat Is OnLine",
         "description": "Checks if a CHAT contact is online.",
         "operationId": "ChatIsOnLine",
@@ -1417,9 +1399,7 @@
     },
     "/all-chats-with-messages": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "All Chats Whit Messages",
         "description": "Retrieves all chats with messages",
         "operationId": "AllChatsWhitMessages",
@@ -1626,9 +1606,7 @@
     },
     "/all-messages-in-chat": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "All Messages in Chat",
         "description": "Retrieves all messages already loaded in a chat For loading every message use load Messages In Chat",
         "operationId": "AllMessagesinChat",
@@ -2264,9 +2242,7 @@
     },
     "/all-new-messages": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "All New Messages",
         "description": "Retrieves all new messages (where isNewMsg is true)\n\n*deprecated* Use getAllUnreadMessages",
         "operationId": "AllNewMessages",
@@ -2665,9 +2641,7 @@
     },
     "/unread-messages": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Unread Messages",
         "description": "Retorna o status da session",
         "operationId": "UnreadMessages",
@@ -2992,9 +2966,7 @@
     },
     "/all-unread-messages": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "All Unread Messages",
         "description": "Retorna o status da session",
         "operationId": "AllUnreadMessages",
@@ -3319,9 +3291,7 @@
     },
     "/last-seen": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Last Seen",
         "description": "Checks if a CHAT contact is online.",
         "operationId": "LastSeen",
@@ -3431,9 +3401,7 @@
     },
     "/list-mutes": {
       "get": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "List Mutes",
         "description": "Returns a list of mute and non-mute users\n\nTypes: all, toMute,noMute",
         "operationId": "ListMutes",
@@ -3539,9 +3507,7 @@
     },
     "/archive-chat": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Archive Chat",
         "description": "Archive and unarchive chat messages with true or false",
         "operationId": "ArchiveChat",
@@ -3654,9 +3620,7 @@
     },
     "/clear-chat": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Clear Chat",
         "description": "Deletes all messages of given chat",
         "operationId": "ClearChat",
@@ -3769,9 +3733,7 @@
     },
     "/delete-chat": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Delete Chat",
         "description": "Deletes the given chat",
         "operationId": "DeleteChat",
@@ -3883,9 +3845,7 @@
     },
     "/delete-message": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Delete Message",
         "description": "Deletes message of given message id",
         "operationId": "DeleteMessage",
@@ -3998,9 +3958,7 @@
     },
     "/mark-unseen": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Mark Unseen",
         "description": "puts the chat as unread",
         "operationId": "MarkUnseen",
@@ -4112,9 +4070,7 @@
     },
     "/pin-chat": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Pin Chat",
         "description": "puts the chat as unread",
         "operationId": "PinChat",
@@ -4227,9 +4183,7 @@
     },
     "/send-mute": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Send Mute",
         "description": "Mute a chat.\n\ntype: hours, minutes, year",
         "operationId": "SendMute",
@@ -4343,10 +4297,7 @@
                         "_serialized": "556592424425@c.us"
                       },
                       "connected": true,
-                      "protoVersion": [
-                        0,
-                        17
-                      ],
+                      "protoVersion": [0, 17],
                       "clientToken": "hdTL/zIDCji6tgK9HmpNZy6k3iH0ddaQJCHd2SdtFL8=",
                       "serverToken": "1@5TO8Gf1Qi73m23rF4UtAVb3cYCNsefP2jN2PBgQtIJ4Gukh02M0h2DD/o5kdOUo/flAZJz/6uC9cqA==",
                       "isResponse": "true",
@@ -4404,9 +4355,7 @@
     },
     "/chat-state": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Chat State",
         "description": "Sets the chat state\n\nchatstate: \n1 = paused\n2 = recording\n3 = typing",
         "operationId": "ChatState",
@@ -4437,9 +4386,7 @@
     },
     "/send-seen": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Send Seen",
         "description": "Mute a chat.\n\ntype: hours, minutes, year",
         "operationId": "SendSeen",
@@ -4551,9 +4498,7 @@
     },
     "/temporary-messages": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Temporary Messages",
         "description": "Enable or disable temporary messages with true or false",
         "operationId": "TemporaryMessages",
@@ -4666,9 +4611,7 @@
     },
     "/typing": {
       "post": {
-        "tags": [
-          "Chat"
-        ],
+        "tags": ["Chat"],
         "summary": "Set Typing",
         "description": "Start and Stop typing, passe valeu true os false",
         "operationId": "SetTyping",
@@ -4782,9 +4725,7 @@
     },
     "/send-file-base64": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send File",
         "description": "Envia um arquivo para um número de telefone.",
         "operationId": "SendFile",
@@ -4827,9 +4768,7 @@
     },
     "/send-reply": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Reply",
         "description": "Envia um arquivo para um número de telefone.",
         "operationId": "SendReply",
@@ -4873,9 +4812,7 @@
     },
     "/send-message": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Message",
         "description": "Envia uma mensagem de texto para um número de telefone. ",
         "operationId": "SendMessage",
@@ -4948,9 +4885,7 @@
     },    
     "/forwardMessages": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Forward Messages (Encaminhar mensagem)",
         "description": "Envia uma mensagem de texto para um número de telefone. ",
         "operationId": "ForwardMessages(Encaminharmensagem)",
@@ -4987,9 +4922,7 @@
     },
     "/contact-vcard": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Contact Vcard",
         "description": "Sends contact card to iven chat id",
         "operationId": "SendContactVcard",
@@ -5104,10 +5037,7 @@
                         "_serialized": "556592424425@c.us"
                       },
                       "connected": true,
-                      "protoVersion": [
-                        0,
-                        17
-                      ],
+                      "protoVersion": [0, 17],
                       "clientToken": "aeTnIxydmYIpKUsxG5q+iQRLMRsYMnXhpV1wqsdjQOw=",
                       "serverToken": "1@3jaCR5jbMKpeSBSt9HYs1OfpnCwnomoZpcnPMOkQOp8ibUglFUjN91I5w1bNHO9XafxYEXMqw6VmDw==",
                       "isResponse": "true",
@@ -5164,9 +5094,7 @@
     },
     "/send-link-preview": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Link Preview",
         "description": "Automatically sends a link with the auto generated link preview. You can also add a custom message to be added.",
         "operationId": "SendLinkPreview",
@@ -5280,9 +5208,7 @@
     },
     "/send-location": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Location",
         "description": "send location",
         "operationId": "SendLocation",
@@ -5397,9 +5323,7 @@
     },
     "/send-mentioned": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Mentioned",
         "description": "Sends text with tags",
         "operationId": "SendMentioned",
@@ -5414,9 +5338,7 @@
               "example": {
                 "phone": "556593077171-1620997998",
                 "message": "ola como isso funciona @556593077171@c.us",
-                "mentioned": [
-                  "@556593077171@c.us"
-                ],
+                "mentioned": ["@556593077171@c.us"],
                 "isGruop": true
               }
             }
@@ -5516,9 +5438,7 @@
     },
     "/change-username": {
       "post": {
-        "tags": [
-          "Profile"
-        ],
+        "tags": ["Profile"],
         "summary": "Change Username",
         "description": "Sets current user profile name",
         "operationId": "ChangeUsername",
@@ -5559,9 +5479,7 @@
     },
     "/change-profile-image": {
       "post": {
-        "tags": [
-          "Profile"
-        ],
+        "tags": ["Profile"],
         "summary": "Change Profile Image",
         "description": "Altera o nome de usuário do perfil do WhatsApp.",
         "operationId": "ChangeProfileImage",
@@ -5673,9 +5591,7 @@
     },
     "/profile-status": {
       "post": {
-        "tags": [
-          "Profile"
-        ],
+        "tags": ["Profile"],
         "summary": "Change Profile Status",
         "description": "Sets current user profile status",
         "operationId": "ChangeProfileStatus",
@@ -5786,9 +5702,7 @@
     },
     "/check-number-status": {
       "get": {
-        "tags": [
-          "Contact"
-        ],
+        "tags": ["Contact"],
         "summary": "Check Number Status",
         "description": "Checks if a number is a valid WA number",
         "operationId": "CheckNumberStatus",
@@ -5908,9 +5822,7 @@
     },
     "/all-contacts": {
       "get": {
-        "tags": [
-          "Contact"
-        ],
+        "tags": ["Contact"],
         "summary": "Get All Contacts",
         "description": "Retrieves all contacts",
         "operationId": "GetAllContacts",
@@ -6042,9 +5954,7 @@
     },
     "/contact/556593077171": {
       "get": {
-        "tags": [
-          "Contact"
-        ],
+        "tags": ["Contact"],
         "summary": "Get Contact",
         "description": "Retrieves contact detail object of given contact id",
         "operationId": "GetContact",
@@ -6187,9 +6097,7 @@
     },
     "/profile/556593077171": {
       "get": {
-        "tags": [
-          "Contact"
-        ],
+        "tags": ["Contact"],
         "summary": "Get Number Profile",
         "description": "Checks if a number is a valid whatsapp number",
         "operationId": "GetNumberProfile",
@@ -6309,9 +6217,7 @@
     },
     "/profile-pic/556593077171": {
       "get": {
-        "tags": [
-          "Contact"
-        ],
+        "tags": ["Contact"],
         "summary": "Get Profile Picture",
         "description": "Retrieves chat picture",
         "operationId": "GetProfilePicture",
@@ -6432,9 +6338,7 @@
     },
     "/profile-status/556593077171": {
       "get": {
-        "tags": [
-          "Contact"
-        ],
+        "tags": ["Contact"],
         "summary": "Get Profile Status",
         "description": "Retrieves chat picture",
         "operationId": "GetProfileStatus",
@@ -6547,9 +6451,7 @@
     },
     "/create-group": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Create Group",
         "description": "Cria um grupo no WhatsApp.",
         "operationId": "CreateGroup",
@@ -6591,9 +6493,7 @@
     },
     "/join-code": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Join Group by Code",
         "description": "Entra em um grupo de WhatsApp através do código de convite.",
         "operationId": "JoinGroupbyCode",
@@ -6634,9 +6534,7 @@
     },
     "/add-participant-group": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Add Participant",
         "description": "Adds participant to Group",
         "operationId": "AddParticipant",
@@ -6740,9 +6638,7 @@
                   "status": "Success",
                   "message": "Participante(s) adicionado(s) com sucesso",
                   "participants": "556593077171",
-                  "groups": [
-                    true
-                  ]
+                  "groups": [true]
                 }
               }
             }
@@ -6753,9 +6649,7 @@
     },
     "/demote-participant-group": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Demote Participant",
         "description": "Demotes admin privileges of participant",
         "operationId": "DemoteParticipant",
@@ -6859,9 +6753,7 @@
                   "status": "Success",
                   "message": "Admin do(s) participante(s) revogado(s) com sucesso",
                   "participants": "556593077171",
-                  "groups": [
-                    "556593077171-1620997998@g.us"
-                  ]
+                  "groups": ["556593077171-1620997998@g.us"]
                 }
               }
             }
@@ -6872,9 +6764,7 @@
     },
     "/promote-participant-group": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Promote Participant",
         "description": "Promotes admin privileges of participant",
         "operationId": "PromoteParticipant",
@@ -6978,9 +6868,7 @@
                   "status": "Success",
                   "message": "Participante(s) promovidos(s) com sucesso",
                   "participants": "556593077171",
-                  "groups": [
-                    "556593077171-1620997998@g.us"
-                  ]
+                  "groups": ["556593077171-1620997998@g.us"]
                 }
               }
             }
@@ -6991,9 +6879,7 @@
     },
     "/all-broadcast-list": {
       "get": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get All Broadcast List",
         "description": "Retrieve all broadcast list",
         "operationId": "GetAllBroadcastList",
@@ -7185,9 +7071,7 @@
     },
     "/all-groups": {
       "get": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get All Groups",
         "description": "Retrieve all groups",
         "operationId": "GetAllGroups",
@@ -7301,9 +7185,7 @@
     },
     "/group-admins/556593077171-1620997998": {
       "get": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get Group Admins",
         "description": "Retrieves group admins",
         "operationId": "GetGroupAdmins",
@@ -7424,9 +7306,7 @@
     },
     "/group-info-from-invite-link": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get Group Info From Invite Link",
         "description": "Generates group-invite link",
         "operationId": "GetGroupInfoFromInviteLink",
@@ -7570,9 +7450,7 @@
     },
     "/group-invite-link/556593077171-1620997998": {
       "get": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get Group Invite Link",
         "description": "Retrieves group admins",
         "operationId": "GetGroupInviteLink",
@@ -7682,9 +7560,7 @@
     },
     "/group-members-ids/556593077171-1620997998": {
       "get": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get Group Members Ids",
         "description": "Retrieves group members as [Id] objects",
         "operationId": "GetGroupMembersIds",
@@ -7805,9 +7681,7 @@
     },
     "/group-members/556593077171-1620997998": {
       "get": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Get Group Members",
         "description": "Returns group members [Contact] objects",
         "operationId": "GetGroupMembers",
@@ -7979,9 +7853,7 @@
     },
     "/leave-group": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Leave Group",
         "description": "Entra em um grupo de WhatsApp através do código de convite.",
         "operationId": "LeaveGroup",
@@ -8094,9 +7966,7 @@
     },
     "/remove-participant-group": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Remove Participant",
         "description": "Promotes admin privileges of participant",
         "operationId": "RemoveParticipant",
@@ -8200,9 +8070,7 @@
                   "status": "Success",
                   "message": "Participante(s) promovidos(s) com sucesso",
                   "participants": "556593077171",
-                  "groups": [
-                    "556593077171-1620997998@g.us"
-                  ]
+                  "groups": ["556593077171-1620997998@g.us"]
                 }
               }
             }
@@ -8213,9 +8081,7 @@
     },
     "/group-description": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Set Group Description",
         "description": "Set group description (if allowed)",
         "operationId": "SetGroupDescription",
@@ -8328,9 +8194,7 @@
     },
     "/group-property": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Set Group Property",
         "description": "Set group description (if allowed)",
         "operationId": "SetGroupProperty",
@@ -8444,9 +8308,7 @@
     },
     "/group-subject": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Set Group Subject",
         "description": "Set group description (if allowed)",
         "operationId": "SetGroupSubject",
@@ -8559,9 +8421,7 @@
     },
     "/messages-admins-only": {
       "post": {
-        "tags": [
-          "Group"
-        ],
+        "tags": ["Group"],
         "summary": "Set Messages Admins Only",
         "description": "Allow only admin to send messages with true or false",
         "operationId": "SetMessagesAdminsOnly",
@@ -8674,9 +8534,7 @@
     },
     "/get-battery-level": {
       "get": {
-        "tags": [
-          "Phone Status"
-        ],
+        "tags": ["Phone Status"],
         "summary": "Battery status",
         "description": "Retorna o status da session",
         "operationId": "Batterystatus",
@@ -8692,9 +8550,7 @@
     },
     "/block-contact": {
       "post": {
-        "tags": [
-          "Block list"
-        ],
+        "tags": ["Block list"],
         "summary": "Block contact",
         "description": "Receive all blocked contacts",
         "operationId": "Blockcontact",
@@ -8806,9 +8662,7 @@
     },
     "/unblock-contact": {
       "post": {
-        "tags": [
-          "Block list"
-        ],
+        "tags": ["Block list"],
         "summary": "UnBlock contact",
         "description": "UnBlock contact",
         "operationId": "UnBlockcontact",
@@ -8920,9 +8774,7 @@
     },
     "/blocklist": {
       "get": {
-        "tags": [
-          "Block list"
-        ],
+        "tags": ["Block list"],
         "summary": "Block list",
         "description": "UnBlock contact",
         "operationId": "Blocklist",
@@ -9039,12 +8891,7 @@
     "schemas": {
       "resultadocomsucessodacriaçãodotoken": {
         "title": "resultadocomsucessodacriaçãodotoken",
-        "required": [
-          "status",
-          "session",
-          "token",
-          "full"
-        ],
+        "required": ["status", "session", "token", "full"],
         "type": "object",
         "properties": {
           "status": {
@@ -9069,9 +8916,7 @@
       },
       "start-session(RetornaQRCodedelogin)Request": {
         "title": "start-session(RetornaQRCodedelogin)Request",
-        "required": [
-          "webhook"
-        ],
+        "required": ["webhook"],
         "type": "object",
         "properties": {
           "webhook": {
@@ -9084,10 +8929,7 @@
       },
       "AllChats": {
         "title": "AllChats",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -9337,11 +9179,7 @@
       },
       "Id": {
         "title": "Id",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -9477,14 +9315,7 @@
       },
       "ProfilePicThumbObj": {
         "title": "ProfilePicThumbObj",
-        "required": [
-          "eurl",
-          "id",
-          "img",
-          "imgFull",
-          "raw",
-          "tag"
-        ],
+        "required": ["eurl", "id", "img", "imgFull", "raw", "tag"],
         "type": "object",
         "properties": {
           "eurl": {
@@ -9522,10 +9353,7 @@
       },
       "Presence": {
         "title": "Presence",
-        "required": [
-          "id",
-          "chatstates"
-        ],
+        "required": ["id", "chatstates"],
         "type": "object",
         "properties": {
           "id": {
@@ -9550,10 +9378,7 @@
       },
       "ChatsById": {
         "title": "ChatsById",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -10743,11 +10568,7 @@
       },
       "ChatId": {
         "title": "ChatId",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -11052,12 +10873,7 @@
       },
       "LastReceivedKey": {
         "title": "LastReceivedKey",
-        "required": [
-          "fromMe",
-          "remote",
-          "id",
-          "_serialized"
-        ],
+        "required": ["fromMe", "remote", "id", "_serialized"],
         "type": "object",
         "properties": {
           "fromMe": {
@@ -11086,11 +10902,7 @@
       },
       "Remote": {
         "title": "Remote",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -11312,10 +11124,7 @@
       },
       "QuotedMsg": {
         "title": "QuotedMsg",
-        "required": [
-          "type",
-          "body"
-        ],
+        "required": ["type", "body"],
         "type": "object",
         "properties": {
           "type": {
@@ -11332,10 +11141,7 @@
       },
       "ChatIsOnLine": {
         "title": "ChatIsOnLine",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -11352,10 +11158,7 @@
       },
       "AllChatsWhitMessages": {
         "title": "AllChatsWhitMessages",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -11774,12 +11577,7 @@
       },
       "Id16": {
         "title": "Id16",
-        "required": [
-          "fromMe",
-          "remote",
-          "id",
-          "_serialized"
-        ],
+        "required": ["fromMe", "remote", "id", "_serialized"],
         "type": "object",
         "properties": {
           "fromMe": {
@@ -11804,10 +11602,7 @@
       },
       "AllMessagesinChat": {
         "title": "AllMessagesinChat",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -13153,10 +12948,7 @@
       },
       "AllNewMessages": {
         "title": "AllNewMessages",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -13764,10 +13556,7 @@
       },
       "UnreadMessages": {
         "title": "UnreadMessages",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -14653,10 +14442,7 @@
       },
       "ListMutes": {
         "title": "ListMutes",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -14696,9 +14482,7 @@
       },
       "ArchiveChatRequest": {
         "title": "ArchiveChatRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14711,11 +14495,7 @@
       },
       "ArchiveChat": {
         "title": "ArchiveChat",
-        "required": [
-          "status",
-          "message",
-          "response"
-        ],
+        "required": ["status", "message", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -14736,9 +14516,7 @@
       },
       "ClearChatRequest": {
         "title": "ClearChatRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14751,9 +14529,7 @@
       },
       "DeleteChatRequest": {
         "title": "DeleteChatRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14766,10 +14542,7 @@
       },
       "DeleteChat": {
         "title": "DeleteChat",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -14786,10 +14559,7 @@
       },
       "DeleteMessageRequest": {
         "title": "DeleteMessageRequest",
-        "required": [
-          "phone",
-          "messageId"
-        ],
+        "required": ["phone", "messageId"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14806,10 +14576,7 @@
       },
       "DeleteMessage": {
         "title": "DeleteMessage",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -14826,9 +14593,7 @@
       },
       "MarkUnseenRequest": {
         "title": "MarkUnseenRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14841,10 +14606,7 @@
       },
       "MarkUnseen": {
         "title": "MarkUnseen",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -14861,10 +14623,7 @@
       },
       "PinChatRequest": {
         "title": "PinChatRequest",
-        "required": [
-          "phone",
-          "messageId"
-        ],
+        "required": ["phone", "messageId"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14881,11 +14640,7 @@
       },
       "SendMuteRequest": {
         "title": "SendMuteRequest",
-        "required": [
-          "phone",
-          "time",
-          "type"
-        ],
+        "required": ["phone", "time", "type"],
         "type": "object",
         "properties": {
           "phone": {
@@ -14907,10 +14662,7 @@
       },
       "SendMute": {
         "title": "SendMute",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -14933,10 +14685,7 @@
                 "_serialized": "556592424425@c.us"
               },
               "connected": true,
-              "protoVersion": [
-                0,
-                17
-              ],
+              "protoVersion": [0, 17],
               "clientToken": "hdTL/zIDCji6tgK9HmpNZy6k3iH0ddaQJCHd2SdtFL8=",
               "serverToken": "1@5TO8Gf1Qi73m23rF4UtAVb3cYCNsefP2jN2PBgQtIJ4Gukh02M0h2DD/o5kdOUo/flAZJz/6uC9cqA==",
               "isResponse": "true",
@@ -14988,16 +14737,7 @@
       },
       "Response8": {
         "title": "Response8",
-        "required": [
-          "me",
-          "to",
-          "erro",
-          "text",
-          "status",
-          "type",
-          "time",
-          "timeType"
-        ],
+        "required": ["me", "to", "erro", "text", "status", "type", "time", "timeType"],
         "type": "object",
         "properties": {
           "me": {
@@ -15039,10 +14779,7 @@
               "_serialized": "556592424425@c.us"
             },
             "connected": true,
-            "protoVersion": [
-              0,
-              17
-            ],
+            "protoVersion": [0, 17],
             "clientToken": "hdTL/zIDCji6tgK9HmpNZy6k3iH0ddaQJCHd2SdtFL8=",
             "serverToken": "1@5TO8Gf1Qi73m23rF4UtAVb3cYCNsefP2jN2PBgQtIJ4Gukh02M0h2DD/o5kdOUo/flAZJz/6uC9cqA==",
             "isResponse": "true",
@@ -15209,10 +14946,7 @@
             "_serialized": "556592424425@c.us"
           },
           "connected": true,
-          "protoVersion": [
-            0,
-            17
-          ],
+          "protoVersion": [0, 17],
           "clientToken": "hdTL/zIDCji6tgK9HmpNZy6k3iH0ddaQJCHd2SdtFL8=",
           "serverToken": "1@5TO8Gf1Qi73m23rF4UtAVb3cYCNsefP2jN2PBgQtIJ4Gukh02M0h2DD/o5kdOUo/flAZJz/6uC9cqA==",
           "isResponse": "true",
@@ -15242,11 +14976,7 @@
       },
       "Wid": {
         "title": "Wid",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -15312,16 +15042,7 @@
       },
       "To": {
         "title": "To",
-        "required": [
-          "fromMe",
-          "remote",
-          "id",
-          "_serialized",
-          "formattedName",
-          "isBusiness",
-          "isMyContact",
-          "pushname"
-        ],
+        "required": ["fromMe", "remote", "id", "_serialized", "formattedName", "isBusiness", "isMyContact", "pushname"],
         "type": "object",
         "properties": {
           "fromMe": {
@@ -15366,10 +15087,7 @@
       },
       "ChatStateRequest": {
         "title": "ChatStateRequest",
-        "required": [
-          "phone",
-          "chatstate"
-        ],
+        "required": ["phone", "chatstate"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15387,9 +15105,7 @@
       },
       "SendSeenRequest": {
         "title": "SendSeenRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15402,10 +15118,7 @@
       },
       "SendSeen": {
         "title": "SendSeen",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -15422,10 +15135,7 @@
       },
       "TemporaryMessagesRequest": {
         "title": "TemporaryMessagesRequest",
-        "required": [
-          "phone",
-          "value"
-        ],
+        "required": ["phone", "value"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15442,10 +15152,7 @@
       },
       "TemporaryMessages": {
         "title": "TemporaryMessages",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -15462,11 +15169,7 @@
       },
       "SetTypingRequest": {
         "title": "SetTypingRequest",
-        "required": [
-          "phone",
-          "value",
-          "isGrup"
-        ],
+        "required": ["phone", "value", "isGrup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15487,11 +15190,7 @@
       },
       "SendFileRequest": {
         "title": "SendFileRequest",
-        "required": [
-          "phone",
-          "base64",
-          "isGroup"
-        ],
+        "required": ["phone", "base64", "isGroup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15512,12 +15211,7 @@
       },
       "SendReplyRequest": {
         "title": "SendReplyRequest",
-        "required": [
-          "phone",
-          "message",
-          "messageId",
-          "isGroup"
-        ],
+        "required": ["phone", "message", "messageId", "isGroup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15542,11 +15236,7 @@
       },
       "SendMessageRequest": {
         "title": "SendMessageRequest",
-        "required": [
-          "phone",
-          "message",
-          "isGroup"
-        ],
+        "required": ["phone", "message", "isGroup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15557,6 +15247,9 @@
           },
           "isGroup": {
             "type": "boolean"
+          },
+          "options": {
+            "type": "object"
           }
         },
         "example": {
@@ -15620,10 +15313,7 @@
       },      
       "ForwardMessages(Encaminharmensagem)Request": {
         "title": "ForwardMessages(Encaminharmensagem)Request",
-        "required": [
-          "phone",
-          "messageId"
-        ],
+        "required": ["phone", "messageId"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15640,10 +15330,7 @@
       },
       "SendContactVcardRequest": {
         "title": "SendContactVcardRequest",
-        "required": [
-          "phone",
-          "contactsId"
-        ],
+        "required": ["phone", "contactsId"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15660,10 +15347,7 @@
       },
       "SendContactVcard": {
         "title": "SendContactVcard",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -15686,10 +15370,7 @@
                 "_serialized": "556592424425@c.us"
               },
               "connected": true,
-              "protoVersion": [
-                0,
-                17
-              ],
+              "protoVersion": [0, 17],
               "clientToken": "aeTnIxydmYIpKUsxG5q+iQRLMRsYMnXhpV1wqsdjQOw=",
               "serverToken": "1@3jaCR5jbMKpeSBSt9HYs1OfpnCwnomoZpcnPMOkQOp8ibUglFUjN91I5w1bNHO9XafxYEXMqw6VmDw==",
               "isResponse": "true",
@@ -15740,15 +15421,7 @@
       },
       "Response9": {
         "title": "Response9",
-        "required": [
-          "me",
-          "to",
-          "erro",
-          "text",
-          "status",
-          "from",
-          "type"
-        ],
+        "required": ["me", "to", "erro", "text", "status", "from", "type"],
         "type": "object",
         "properties": {
           "me": {
@@ -15785,10 +15458,7 @@
               "_serialized": "556592424425@c.us"
             },
             "connected": true,
-            "protoVersion": [
-              0,
-              17
-            ],
+            "protoVersion": [0, 17],
             "clientToken": "aeTnIxydmYIpKUsxG5q+iQRLMRsYMnXhpV1wqsdjQOw=",
             "serverToken": "1@3jaCR5jbMKpeSBSt9HYs1OfpnCwnomoZpcnPMOkQOp8ibUglFUjN91I5w1bNHO9XafxYEXMqw6VmDw==",
             "isResponse": "true",
@@ -15838,11 +15508,7 @@
       },
       "SendLinkPreviewRequest": {
         "title": "SendLinkPreviewRequest",
-        "required": [
-          "phone",
-          "url",
-          "caption"
-        ],
+        "required": ["phone", "url", "caption"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15863,10 +15529,7 @@
       },
       "SendLinkPreview": {
         "title": "SendLinkPreview",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -15883,12 +15546,7 @@
       },
       "SendLocationRequest": {
         "title": "SendLocationRequest",
-        "required": [
-          "phone",
-          "lat",
-          "lng",
-          "title"
-        ],
+        "required": ["phone", "lat", "lng", "title"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15913,10 +15571,7 @@
       },
       "SendLocation": {
         "title": "SendLocation",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -15933,12 +15588,7 @@
       },
       "SendMentionedRequest": {
         "title": "SendMentionedRequest",
-        "required": [
-          "phone",
-          "message",
-          "mentioned",
-          "isGruop"
-        ],
+        "required": ["phone", "message", "mentioned", "isGruop"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15961,17 +15611,13 @@
         "example": {
           "phone": "556593077171-1620997998",
           "message": "ola como isso funciona @556593077171@c.us",
-          "mentioned": [
-            "@556593077171@c.us"
-          ],
+          "mentioned": ["@556593077171@c.us"],
           "isGruop": true
         }
       },
       "ChangeUsernameRequest": {
         "title": "ChangeUsernameRequest",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "type": "object",
         "properties": {
           "name": {
@@ -15984,9 +15630,7 @@
       },
       "ChangeProfileImageRequest": {
         "title": "ChangeProfileImageRequest",
-        "required": [
-          "path"
-        ],
+        "required": ["path"],
         "type": "object",
         "properties": {
           "path": {
@@ -15999,10 +15643,7 @@
       },
       "ChangeProfileImage": {
         "title": "ChangeProfileImage",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -16019,9 +15660,7 @@
       },
       "ChangeProfileStatusRequest": {
         "title": "ChangeProfileStatusRequest",
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "type": "object",
         "properties": {
           "status": {
@@ -16034,9 +15673,7 @@
       },
       "ChangeProfileStatus": {
         "title": "ChangeProfileStatus",
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "type": "object",
         "properties": {
           "status": {
@@ -16049,10 +15686,7 @@
       },
       "CheckNumberStatus": {
         "title": "CheckNumberStatus",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -16079,13 +15713,7 @@
       },
       "Response10": {
         "title": "Response10",
-        "required": [
-          "id",
-          "status",
-          "isBusiness",
-          "canReceiveMessage",
-          "numberExists"
-        ],
+        "required": ["id", "status", "isBusiness", "canReceiveMessage", "numberExists"],
         "type": "object",
         "properties": {
           "id": {
@@ -16119,10 +15747,7 @@
       },
       "GetAllContacts": {
         "title": "GetAllContacts",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -16259,10 +15884,7 @@
       },
       "GetContact": {
         "title": "GetContact",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -16427,10 +16049,7 @@
       },
       "GetNumberProfile": {
         "title": "GetNumberProfile",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -16457,10 +16076,7 @@
       },
       "GetProfilePicture": {
         "title": "GetProfilePicture",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -16488,14 +16104,7 @@
       },
       "Response14": {
         "title": "Response14",
-        "required": [
-          "eurl",
-          "id",
-          "img",
-          "imgFull",
-          "raw",
-          "tag"
-        ],
+        "required": ["eurl", "id", "img", "imgFull", "raw", "tag"],
         "type": "object",
         "properties": {
           "eurl": {
@@ -16533,10 +16142,7 @@
       },
       "GetProfileStatus": {
         "title": "GetProfileStatus",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -16556,10 +16162,7 @@
       },
       "Response15": {
         "title": "Response15",
-        "required": [
-          "id",
-          "status"
-        ],
+        "required": ["id", "status"],
         "type": "object",
         "properties": {
           "id": {
@@ -16576,10 +16179,7 @@
       },
       "CreateGroupRequest": {
         "title": "CreateGroupRequest",
-        "required": [
-          "groupname",
-          "phone"
-        ],
+        "required": ["groupname", "phone"],
         "type": "object",
         "properties": {
           "groupname": {
@@ -16596,9 +16196,7 @@
       },
       "JoinGroupbyCodeRequest": {
         "title": "JoinGroupbyCodeRequest",
-        "required": [
-          "inviteCode"
-        ],
+        "required": ["inviteCode"],
         "type": "object",
         "properties": {
           "inviteCode": {
@@ -16611,10 +16209,7 @@
       },
       "AddParticipantRequest": {
         "title": "AddParticipantRequest",
-        "required": [
-          "groupId",
-          "phone"
-        ],
+        "required": ["groupId", "phone"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -16631,12 +16226,7 @@
       },
       "AddParticipant": {
         "title": "AddParticipant",
-        "required": [
-          "status",
-          "message",
-          "participants",
-          "groups"
-        ],
+        "required": ["status", "message", "participants", "groups"],
         "type": "object",
         "properties": {
           "status": {
@@ -16660,17 +16250,12 @@
           "status": "Success",
           "message": "Participante(s) adicionado(s) com sucesso",
           "participants": "556593077171",
-          "groups": [
-            true
-          ]
+          "groups": [true]
         }
       },
       "DemoteParticipantRequest": {
         "title": "DemoteParticipantRequest",
-        "required": [
-          "groupId",
-          "phone"
-        ],
+        "required": ["groupId", "phone"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -16687,12 +16272,7 @@
       },
       "DemoteParticipant": {
         "title": "DemoteParticipant",
-        "required": [
-          "status",
-          "message",
-          "participants",
-          "groups"
-        ],
+        "required": ["status", "message", "participants", "groups"],
         "type": "object",
         "properties": {
           "status": {
@@ -16716,17 +16296,12 @@
           "status": "Success",
           "message": "Admin do(s) participante(s) revogado(s) com sucesso",
           "participants": "556593077171",
-          "groups": [
-            "556593077171-1620997998@g.us"
-          ]
+          "groups": ["556593077171-1620997998@g.us"]
         }
       },
       "PromoteParticipantRequest": {
         "title": "PromoteParticipantRequest",
-        "required": [
-          "groupId",
-          "phone"
-        ],
+        "required": ["groupId", "phone"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -16743,12 +16318,7 @@
       },
       "PromoteParticipant": {
         "title": "PromoteParticipant",
-        "required": [
-          "status",
-          "message",
-          "participants",
-          "groups"
-        ],
+        "required": ["status", "message", "participants", "groups"],
         "type": "object",
         "properties": {
           "status": {
@@ -16772,17 +16342,12 @@
           "status": "Success",
           "message": "Participante(s) promovidos(s) com sucesso",
           "participants": "556593077171",
-          "groups": [
-            "556593077171-1620997998@g.us"
-          ]
+          "groups": ["556593077171-1620997998@g.us"]
         }
       },
       "GetAllBroadcastList": {
         "title": "GetAllBroadcastList",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17106,10 +16671,7 @@
       },
       "ProfilePicThumbObj18": {
         "title": "ProfilePicThumbObj18",
-        "required": [
-          "id",
-          "tag"
-        ],
+        "required": ["id", "tag"],
         "type": "object",
         "properties": {
           "id": {
@@ -17131,11 +16693,7 @@
       },
       "GroupMetadata": {
         "title": "GroupMetadata",
-        "required": [
-          "id",
-          "participants",
-          "pendingParticipants"
-        ],
+        "required": ["id", "participants", "pendingParticipants"],
         "type": "object",
         "properties": {
           "id": {
@@ -17183,9 +16741,7 @@
       },
       "Participant": {
         "title": "Participant",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "type": "object",
         "properties": {
           "id": {
@@ -17202,9 +16758,7 @@
       },
       "GetAllGroups": {
         "title": "GetAllGroups",
-        "required": [
-          "groups"
-        ],
+        "required": ["groups"],
         "type": "object",
         "properties": {
           "groups": {
@@ -17226,10 +16780,7 @@
       },
       "Group": {
         "title": "Group",
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -17246,11 +16797,7 @@
       },
       "GetGroupAdmins": {
         "title": "GetGroupAdmins",
-        "required": [
-          "status",
-          "participants",
-          "groups"
-        ],
+        "required": ["status", "participants", "groups"],
         "type": "object",
         "properties": {
           "status": {
@@ -17285,9 +16832,7 @@
       },
       "Participants": {
         "title": "Participants",
-        "required": [
-          "556593077171-1620997998@g.us"
-        ],
+        "required": ["556593077171-1620997998@g.us"],
         "type": "object",
         "properties": {
           "556593077171-1620997998@g.us": {
@@ -17308,9 +16853,7 @@
       },
       "5565930771711620997998GU": {
         "title": "5565930771711620997998GU",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "type": "object",
         "properties": {
           "id": {
@@ -17323,9 +16866,7 @@
       },
       "Group1": {
         "title": "Group1",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "type": "object",
         "properties": {
           "id": {
@@ -17338,9 +16879,7 @@
       },
       "GetGroupInfoFromInviteLinkRequest": {
         "title": "GetGroupInfoFromInviteLinkRequest",
-        "required": [
-          "invitecode"
-        ],
+        "required": ["invitecode"],
         "type": "object",
         "properties": {
           "invitecode": {
@@ -17353,10 +16892,7 @@
       },
       "PromoteParticipantCopy": {
         "title": "PromoteParticipantCopy",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17490,11 +17026,7 @@
       },
       "Owner": {
         "title": "Owner",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -17515,11 +17047,7 @@
       },
       "Participants1": {
         "title": "Participants1",
-        "required": [
-          "id",
-          "isAdmin",
-          "isSuperAdmin"
-        ],
+        "required": ["id", "isAdmin", "isSuperAdmin"],
         "type": "object",
         "properties": {
           "id": {
@@ -17544,11 +17072,7 @@
       },
       "SubjectOwner": {
         "title": "SubjectOwner",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -17569,10 +17093,7 @@
       },
       "GetGroupInviteLink": {
         "title": "GetGroupInviteLink",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17589,10 +17110,7 @@
       },
       "GetGroupMembersIds": {
         "title": "GetGroupMembersIds",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17624,11 +17142,7 @@
       },
       "Response18": {
         "title": "Response18",
-        "required": [
-          "server",
-          "user",
-          "_serialized"
-        ],
+        "required": ["server", "user", "_serialized"],
         "type": "object",
         "properties": {
           "server": {
@@ -17649,10 +17163,7 @@
       },
       "GetGroupMembers": {
         "title": "GetGroupMembers",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17843,9 +17354,7 @@
       },
       "LeaveGroupRequest": {
         "title": "LeaveGroupRequest",
-        "required": [
-          "groupId"
-        ],
+        "required": ["groupId"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -17858,11 +17367,7 @@
       },
       "LeaveGroup": {
         "title": "LeaveGroup",
-        "required": [
-          "status",
-          "messages",
-          "group"
-        ],
+        "required": ["status", "messages", "group"],
         "type": "object",
         "properties": {
           "status": {
@@ -17883,10 +17388,7 @@
       },
       "RemoveParticipantRequest": {
         "title": "RemoveParticipantRequest",
-        "required": [
-          "groupId",
-          "phone"
-        ],
+        "required": ["groupId", "phone"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -17903,10 +17405,7 @@
       },
       "SetGroupDescriptionRequest": {
         "title": "SetGroupDescriptionRequest",
-        "required": [
-          "groupId",
-          "description"
-        ],
+        "required": ["groupId", "description"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -17923,10 +17422,7 @@
       },
       "SetGroupDescription": {
         "title": "SetGroupDescription",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17943,11 +17439,7 @@
       },
       "SetGroupPropertyRequest": {
         "title": "SetGroupPropertyRequest",
-        "required": [
-          "groupId",
-          "property",
-          "value"
-        ],
+        "required": ["groupId", "property", "value"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -17968,10 +17460,7 @@
       },
       "SetGroupProperty": {
         "title": "SetGroupProperty",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -17988,10 +17477,7 @@
       },
       "SetGroupSubjectRequest": {
         "title": "SetGroupSubjectRequest",
-        "required": [
-          "groupId",
-          "title"
-        ],
+        "required": ["groupId", "title"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -18008,10 +17494,7 @@
       },
       "SetGroupSubject": {
         "title": "SetGroupSubject",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -18028,10 +17511,7 @@
       },
       "SetMessagesAdminsOnlyRequest": {
         "title": "SetMessagesAdminsOnlyRequest",
-        "required": [
-          "groupId",
-          "value"
-        ],
+        "required": ["groupId", "value"],
         "type": "object",
         "properties": {
           "groupId": {
@@ -18048,10 +17528,7 @@
       },
       "SetMessagesAdminsOnly": {
         "title": "SetMessagesAdminsOnly",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -18068,11 +17545,7 @@
       },
       "BatterystatusCopy": {
         "title": "BatterystatusCopy",
-        "required": [
-          "connected",
-          "locales",
-          "pushname"
-        ],
+        "required": ["connected", "locales", "pushname"],
         "type": "object",
         "properties": {
           "connected": {
@@ -18093,9 +17566,7 @@
       },
       "BlockcontactRequest": {
         "title": "BlockcontactRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -18108,10 +17579,7 @@
       },
       "Blockcontact": {
         "title": "Blockcontact",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -18128,9 +17596,7 @@
       },
       "UnBlockcontactRequest": {
         "title": "UnBlockcontactRequest",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
@@ -18143,10 +17609,7 @@
       },
       "UnBlockcontact": {
         "title": "UnBlockcontact",
-        "required": [
-          "status",
-          "message"
-        ],
+        "required": ["status", "message"],
         "type": "object",
         "properties": {
           "status": {
@@ -18163,10 +17626,7 @@
       },
       "Blocklist": {
         "title": "Blocklist",
-        "required": [
-          "status",
-          "response"
-        ],
+        "required": ["status", "response"],
         "type": "object",
         "properties": {
           "status": {
@@ -18191,9 +17651,7 @@
       },
       "Response20": {
         "title": "Response20",
-        "required": [
-          "phone"
-        ],
+        "required": ["phone"],
         "type": "object",
         "properties": {
           "phone": {
