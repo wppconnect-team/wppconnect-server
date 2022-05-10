@@ -19,7 +19,6 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { convert } from '../mapper/index';
 import config from '../config.json';
-import { eventEmitter } from './sessionUtil';
 
 let mime = config.webhook.uploadS3 ? require('mime-types') : null;
 let crypto = config.webhook.uploadS3 ? require('crypto') : null;
