@@ -6,6 +6,7 @@
   "startAllSession": true,
   "tokenStoreType": "file",
   "maxListeners": 15,
+  "customUserDataDir": "./userDataDir/",
   "webhook": {
     "url": null,
     "autoDownload": true,
