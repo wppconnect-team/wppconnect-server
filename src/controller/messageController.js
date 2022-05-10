@@ -180,11 +180,8 @@ export async function sendButtons(req, res) {
     let results = [];
 
     for (const contact of phone) {
-      results.push(
-        await req.client.sendText(contact, message, options)
-      );
+      results.push(await req.client.sendText(contact, message, options));
     }
-    
 
     if (results.length === 0) return returnError(req, res, 'Error sending message with buttons');
 
