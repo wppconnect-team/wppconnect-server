@@ -172,23 +172,19 @@ export async function sendLocation(req, res) {
 }
 
 export async function sendButtons(req, res) {
-  const { phone, message = null, title, footer = null, dynamic_reply = true, buttons } = req.body;
+  const { phone, message, options } = req.body;
 
   try {
     let results = [];
 
     for (const contact of phone) {
       results.push(
-        await req.client.sendMessageOptions(contact, message, {
-          title: title,
-          footer: footer,
-          isDynamicReplyButtonsMsg: dynamic_reply,
-          dynamicReplyButtons: buttons,
-        })
+        await req.client.sendText(contact, message, options)
       );
     }
+    
 
-    if (results.length === 0) return returnError(req, res, 'Error sending message');
+    if (results.length === 0) return returnError(req, res, 'Error sending message with buttons');
 
     returnSucess(res, phone, results);
   } catch (error) {
