@@ -1,3 +1,12 @@
+# 1.3.0 (2022-05-10)
+
+
+### Features
+
+* Updated all packages ([5e7b9f2](https://github.com/wppconnect-team/wppconnect-server/commit/5e7b9f2240ccc0e44a129296e92dd6fb5393380e))
+
+
+
 # 1.2.0 (2022-04-25)
 
 
