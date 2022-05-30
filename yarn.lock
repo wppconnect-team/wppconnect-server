@@ -1620,24 +1620,24 @@
     "@types/node" "*"
 
 "@wppconnect-team/wppconnect@^1.13.1":
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.13.1.tgz#3a38ac76254f7b648870c1a4e86fe419217ae475"
-  integrity sha512-xZnsZkjH4TsxhQ7A80ZqoGOg3C2X0GmmUWOz30RHzBP4fRajl6ZwLANStPjrxwQPW1ZhUOHCGyrAyhiyUmRnow==
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.13.2.tgz#f7736fbf9d502b4d74234553d1e2724b44bd2f2c"
+  integrity sha512-fT32ET5tC3/UyeffRqajf7nqcOT02Kzqj8hTTaDOA+fRr3bDgn3H76iq8j/ylQzsb2Qz4JzO20YR90FIdMWThQ==
   dependencies:
-    "@wppconnect/wa-js" "^2.2.1"
-    "@wppconnect/wa-version" "^1.1.74"
+    "@wppconnect/wa-js" "^2.4.0"
+    "@wppconnect/wa-version" "^1.1.88"
     atob "^2.1.2"
     axios "^0.27.2"
     boxen "^5.1.2"
-    catch-exit "^1.1.0"
+    catch-exit "^1.2.2"
     chalk "~4.1.2"
     chrome-launcher "^0.15.0"
-    execa "^5.0.0"
+    execa "^5.1.1"
     file-type "~16.5.3"
-    futoin-hkdf "^1.5.0"
+    futoin-hkdf "^1.5.1"
     latest-version "^5.1.0"
     logform "^2.4.0"
-    lookpath "^1.2.0"
+    lookpath "^1.2.2"
     mime-types "^2.1.35"
     puppeteer "*"
     puppeteer-extra "^3.2.3"
@@ -1648,23 +1648,23 @@
     reflect-metadata "^0.1.13"
     rimraf "^3.0.2"
     sanitize-filename "^1.6.3"
-    sharp "^0.30.4"
+    sharp "^0.30.5"
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.7.2"
-    ws "^8.6.0"
+    ws "^8.7.0"
   optionalDependencies:
-    fsevents "^2.3.1"
+    fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.2.1.tgz#fccefc1243856f3072d4927b98a914ce3337bbfb"
-  integrity sha512-YJK96ld39+nZzN2nRTCGBMTD+xRMDfU7SzVN5p84+EhQqQNxC0UgqZ844acJ/UA58ES8pf4KZ/5s8cGeGl9JmQ==
+"@wppconnect/wa-js@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.4.0.tgz#ebf9606f5767e95a27c90edb582f38eedf413cb8"
+  integrity sha512-XkPG0CxAb19zl2e55NOsQg76FO6FP42SYlDSoB8HwABz+q6ScoIJsPD5UWCIVXmp8R37CWy/flzb8Md+J85XXg==
 
-"@wppconnect/wa-version@^1.1.74":
-  version "1.1.74"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.74.tgz#f2aa6c273253ad755b95b7f4efbac40e520dbbba"
-  integrity sha512-Jxse7EIztpNjf2SSlrLcCrAymBW7mFmeax+Ykx/Qk4d3KwowTkfI9xrK7b8BrbSv418d4k9s9zKB5Ywa0qNkQA==
+"@wppconnect/wa-version@^1.1.88":
+  version "1.1.88"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.88.tgz#61fb8f8db0a5125c8a4282bb09b35ff1ed36d4ba"
+  integrity sha512-UVT9B5DM9Wi8rekZemLuRM0nQmKIgyC1Gdk2QQ4Y9f7g9NOHIx+Z3knuRDrPl/7y7UQtNRE0lpLSfYZetZPz+w==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.7"
@@ -2210,7 +2210,7 @@ caniuse-lite@^1.0.30001332:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001338.tgz#b5dd7a7941a51a16480bdf6ff82bded1628eec0d"
   integrity sha512-1gLHWyfVoRDsHieO+CaeYe7jSo/MT7D7lhaXUiwwbuR5BwQxORs0f1tAwUSQr3YbxRXJvxHM/PA5FfPQRnsPeQ==
 
-catch-exit@^1.1.0:
+catch-exit@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/catch-exit/-/catch-exit-1.2.2.tgz#46f902fe632106665248b557a7cc48882795bb88"
   integrity sha512-7rZ3CgzR3L3fDcEjtxj0bV6/zEhf9P7jkjm7ucMSTqBVhvCrwp+/Dbq26AqC+O0HxpIqY+pz9O+xKlvGqUBDmg==
@@ -3753,7 +3753,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
-fsevents@^2.3.1, fsevents@~2.3.2:
+fsevents@^2.3.2, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
@@ -3791,10 +3791,10 @@ functions-have-names@^1.2.2:
   resolved "https://registry.yarnpkg.com/functions-have-names/-/functions-have-names-1.2.3.tgz#0404fe4ee2ba2f607f0e0ec3c80bae994133b834"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
-futoin-hkdf@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/futoin-hkdf/-/futoin-hkdf-1.5.0.tgz#f10cc4d32f1e26568ded58d5a6535a97aa3a064c"
-  integrity sha512-4CerDhtTgx4i5PKccQIpEp4T9wqmosPIP9Kep35SdCpYkQeriD3zddUVhrO1Fc4QvGhsAnd2rXyoOr5047mJEg==
+futoin-hkdf@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/futoin-hkdf/-/futoin-hkdf-1.5.1.tgz#141f00427bc9950b38a42aa786b99c318b9b688d"
+  integrity sha512-g5d0Qp7ks55hYmYmfqn4Nz18XH49lcCR+vvIvHT92xXnsJaGZmY1EtWQWilJ6BQp57heCIXM/rRo+AFep8hGgg==
 
 gauge@^3.0.0:
   version "3.0.2"
@@ -5016,7 +5016,7 @@ longest@^2.0.1:
   resolved "https://registry.yarnpkg.com/longest/-/longest-2.0.1.tgz#781e183296aa94f6d4d916dc335d0d17aefa23f8"
   integrity sha1-eB4YMpaqlPbU2RbcM10NF676I/g=
 
-lookpath@^1.2.0:
+lookpath@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/lookpath/-/lookpath-1.2.2.tgz#bddcd1440b6643e07495138376d43aed38bcd454"
   integrity sha512-k2Gmn8iV6qdME3ztZC2spubmQISimFOPLuQKiPaLcVdRz0IpdxrNClVepMlyTJlhodm/zG/VfbkWERm3kUIh+Q==
@@ -5426,10 +5426,10 @@ node-addon-api@^3.1.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-3.2.1.tgz#81325e0a2117789c0128dab65e7e38f07ceba161"
   integrity sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==
 
-node-addon-api@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-4.3.0.tgz#52a1a0b475193e0928e98e0426a0d1254782b77f"
-  integrity sha512-73sE9+3UaLYYFmDsFZnqCInzPyh3MqIwZO9cw58yIqAZhONrrabrYyYe3TuIqtIiOuTXVhsGau8hcrhhwSsDIQ==
+node-addon-api@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-5.0.0.tgz#7d7e6f9ef89043befdb20c1989c905ebde18c501"
+  integrity sha512-CvkDw2OEnme7ybCykJpVcKH+uAOLV2qLqiyla128dN9TkEWfrYmxG6C2boDe5KcNQqZF3orkqzGgOMvZ/JNekA==
 
 node-environment-flags@^1.0.5:
   version "1.0.6"
@@ -5966,7 +5966,7 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-prebuild-install@^7.0.1:
+prebuild-install@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-7.1.0.tgz#991b6ac16c81591ba40a6d5de93fb33673ac1370"
   integrity sha512-CNcMgI1xBypOyGqjp3wOc8AAo1nMhZS3Cwd3iHIxOdAUbb+YxdNuM4Z5iIrZ8RLvOsf3F3bl7b7xGq6DjQoNYA==
@@ -6726,15 +6726,15 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-sharp@^0.30.4:
-  version "0.30.4"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.30.4.tgz#73d9daa63bbc20da189c9328d75d5d395fc8fb73"
-  integrity sha512-3Onig53Y6lji4NIZo69s14mERXXY/GV++6CzOYx/Rd8bnTwbhFbL09WZd7Ag/CCnA0WxFID8tkY0QReyfL6v0Q==
+sharp@^0.30.5:
+  version "0.30.6"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.30.6.tgz#02264e9826b5f1577509f70bb627716099778873"
+  integrity sha512-lSdVxFxcndzcXggDrak6ozdGJgmIgES9YVZWtAFrwi+a/H5vModaf51TghBtMPw+71sLxUsTy2j+aB7qLIODQg==
   dependencies:
     color "^4.2.3"
     detect-libc "^2.0.1"
-    node-addon-api "^4.3.0"
-    prebuild-install "^7.0.1"
+    node-addon-api "^5.0.0"
+    prebuild-install "^7.1.0"
     semver "^7.3.7"
     simple-get "^4.0.1"
     tar-fs "^2.1.1"
@@ -7761,10 +7761,15 @@ write-file-atomic@^3.0.0:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-ws@8.6.0, ws@^8.6.0:
+ws@8.6.0:
   version "8.6.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.6.0.tgz#e5e9f1d9e7ff88083d0c0dd8281ea662a42c9c23"
   integrity sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==
+
+ws@^8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.7.0.tgz#eaf9d874b433aa00c0e0d8752532444875db3957"
+  integrity sha512-c2gsP0PRwcLFzUiA8Mkr37/MI7ilIlHQxaEAtd0uNMbVMoy8puJyafRlm0bV9MbGSabUPeLrRRaqIBcFcA2Pqg==
 
 ws@~8.2.3:
   version "8.2.3"
