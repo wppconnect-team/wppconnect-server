@@ -1619,7 +1619,7 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.13.1":
+"@wppconnect-team/wppconnect@^1.13.2":
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.13.2.tgz#f7736fbf9d502b4d74234553d1e2724b44bd2f2c"
   integrity sha512-fT32ET5tC3/UyeffRqajf7nqcOT02Kzqj8hTTaDOA+fRr3bDgn3H76iq8j/ylQzsb2Qz4JzO20YR90FIdMWThQ==
