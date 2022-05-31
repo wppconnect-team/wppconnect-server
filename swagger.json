@@ -4848,6 +4848,41 @@
         "deprecated": false
       }
     },
+    "/send-buttons": {
+      "post": {
+        "tags": [
+          "Send Message"
+        ],
+        "summary": "Send Message Button",
+        "description": "Envia uma mensagem de botões para um número de telefone. ",
+        "operationId": "SendMessageWithButton",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequestWithButton"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },    
     "/forwardMessages": {
       "post": {
         "tags": ["Send Message"],
@@ -15223,6 +15258,59 @@
           "isGroup": false
         }
       },
+      "SendMessageRequestWithButton": {
+        "title": "SendMessageRequestWithButton",
+        "required": [
+          "phone",
+          "message",
+          "options"
+        ],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "options": {
+            "type": "any"
+          }
+        },
+        "example": {
+          "phone": "554498005216",
+          "message": "Hello World",
+          "options": {
+            "useTemplateButtons": "true",
+            "buttons": [
+              {
+                "id": "1",
+                "text": "Text 1"
+              },
+              {
+                "id": "2",
+                "phoneNumber": "554498005216",
+                "text": "Call Us"
+              },
+              {
+                "id": "3",
+                "url": "https://wppconnect-team.github.io/",
+                "text": "Long Life WPPCONNECT"
+              },
+              {
+                "id": "4",
+                "text": "Text 4"
+              },
+              {
+                "id": "5",
+                "text": "Text 5"
+              }
+            ],
+            "title": "Title text",
+            "footer": "Footer text"
+          }
+        }
+      },      
       "ForwardMessages(Encaminharmensagem)Request": {
         "title": "ForwardMessages(Encaminharmensagem)Request",
         "required": ["phone", "messageId"],
