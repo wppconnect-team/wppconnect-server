@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":prConcurrentLimitNone",
+    ":prHourlyLimitNone",
+    ":prNotPending",
+    ":semanticCommits"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "description": "Use bump strategy",
+      "matchPackagePatterns": ["*"],
+      "rangeStrategy": "bump",
+      "semanticCommitType": "build"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "semanticCommitType": "ci"
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "semanticCommitScope": "deps-dev"
+    },
+    {
+      "description": "Show in changelog package updates",
+      "matchPackagePatterns": ["^@wppconnect/", "^@wppconnect-team/"],
+      "semanticCommitType": "fix"
+    },
+    {
+      "description": "Automatically merge minor and patch-level updates",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "automergeStrategy": "squash",
+      "automergeType": "pr"
+    }
+  ]
+}
