@@ -4904,7 +4904,7 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-license-check-and-add@^4.0.2:
+license-check-and-add@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/license-check-and-add/-/license-check-and-add-4.0.5.tgz#ef820a78d59248327565ab5b7dec16776ac1ea4b"
   integrity sha512-FySnMi3Kf/vO5jka8tcbVF1FhDFb8PWsQ8pg5Y7U/zkQgta+fIrJGcGHO58WFjfKlgvhneG1uQ00Fpxzhau3QA==
