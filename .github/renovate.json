@@ -16,11 +16,17 @@
       "description": "Use bump strategy",
       "matchPackagePatterns": ["*"],
       "rangeStrategy": "bump",
-      "semanticCommitType": "build"
+      "semanticCommitType": "build",
+      "labels": ["dependencies"]
     },
     {
       "matchManagers": ["github-actions"],
-      "semanticCommitType": "ci"
+      "semanticCommitType": "ci",
+      "addLabels": ["github_actions"]
+    },
+    {
+      "matchManagers": ["npm"],
+      "addLabels": ["javascript"]
     },
     {
       "matchDepTypes": ["devDependencies"],
