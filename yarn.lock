@@ -7142,7 +7142,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-swagger-ui-dist@>=4.11.0, swagger-ui-dist@^4.0.0:
+swagger-ui-dist@>=4.11.0, swagger-ui-dist@^4.11.1:
   version "4.11.1"
   resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.11.1.tgz#1e9c0e62bdac632f7b206c95ef9cbe986097606a"
   integrity sha512-pf3kfSTYdF9mYFY2VnfJ51wnXlSVhEGdtymhpHzfbFw2jTbiEWgBoVz5EB9aW2EaJvUGTM1YHAXYZX7Jk4RdAQ==
