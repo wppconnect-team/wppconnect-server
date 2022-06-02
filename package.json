@@ -61,7 +61,7 @@
     "conventional-changelog-cli": "^2.2.2",
     "crypto-js": "^4.1.1",
     "eslint": "^8.16.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^8.0.1",
     "license-check-and-add": "^4.0.2",
