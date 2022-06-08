@@ -1619,13 +1619,13 @@
   dependencies:
     "@types/node" "*"
 
-"@wppconnect-team/wppconnect@^1.13.3":
-  version "1.13.3"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.13.3.tgz#66c116fd5b4f800fe298f310bbf11793755db195"
-  integrity sha512-HtXgjqv6mX3pmGOVLHm5yPnJaVmSShDi3tQpb/Ph10XyqB65lQQcl0Q5xfBqh+TI5D9sfy0g62FwWau+lY0LpQ==
+"@wppconnect-team/wppconnect@^1.14.1":
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.14.1.tgz#ea6b91fb378112599da5f4785af5faada4578c86"
+  integrity sha512-gG/4/+ExFbrJpsCUJc8Qs69vu/z84wnMmJyBERuJvqg8gwU3njRLe5eDijoio/xnvGVJ2vtcJfQIyOQFfTLbkg==
   dependencies:
-    "@wppconnect/wa-js" "^2.4.1"
-    "@wppconnect/wa-version" "^1.1.88"
+    "@wppconnect/wa-js" "^2.6.0"
+    "@wppconnect/wa-version" "^1.1.89"
     atob "^2.1.2"
     axios "^0.27.2"
     boxen "^5.1.2"
@@ -1656,15 +1656,15 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.4.1.tgz#7188dede942222660054de60ed818096edcad8cd"
-  integrity sha512-5g3mfbqaEg8gWOGpz0qCIx6sCouWhTJCBfEraJMNFEdb6FkV8KktA5xCm7PWGPWudFWlY8fQHB49s10cUHkcXw==
+"@wppconnect/wa-js@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.6.0.tgz#e1cc83c56ef9403b15b3840b90f7e852c353eb51"
+  integrity sha512-PCQV1c7fl8BvaFLUtek+zMYOkk2kquAoa2Su0vwAhBs5j0BZtfm3cM9+Q0D9lEI7U7K3lrUCLZBZsQIaI0IahA==
 
-"@wppconnect/wa-version@^1.1.88":
-  version "1.1.88"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.88.tgz#61fb8f8db0a5125c8a4282bb09b35ff1ed36d4ba"
-  integrity sha512-UVT9B5DM9Wi8rekZemLuRM0nQmKIgyC1Gdk2QQ4Y9f7g9NOHIx+Z3knuRDrPl/7y7UQtNRE0lpLSfYZetZPz+w==
+"@wppconnect/wa-version@^1.1.89":
+  version "1.1.92"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.92.tgz#604ea9f2c9c759eb605b9724d67468e8dbdc92f5"
+  integrity sha512-KlnG9PkGxh8Y72QWbCZQLkiy4XfSpDqpeAGUnwQ6A/MZGrmA94jbK3wdxSXWbfZTRGbMsZhZTNtngqoH0K7x4Q==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.7"
