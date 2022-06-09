@@ -126,7 +126,7 @@ export async function sendVoice(req, res) {
 }
 
 export async function sendVoice64(req, res) {
-  const { phone, url: base64Ptt } = req.body;
+  const { phone, base64Ptt } = req.body;
 
   try {
     let results = [];
