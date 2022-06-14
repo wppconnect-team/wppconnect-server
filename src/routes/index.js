@@ -161,7 +161,7 @@ routes.get(
   DeviceController.loadAndGetAllMessagesInChat
 );
 routes.get(
-  '/api/:session/load-earlier-messages/:phone',
+  '/api/:session/load-earlier-messages/:phone/:id/:direction/:count',
   verifyToken,
   statusConnection,
   DeviceController.loadEarlierMessages

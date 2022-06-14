@@ -438,13 +438,10 @@ export async function loadAndGetAllMessagesInChat(req, res) {
   }
 }
 export async function loadEarlierMessages(req, res) {
-  console.log(req.body);
-  console.log(req.params);
-  const { phone } = req.params;
-  const { count = 20, direction = 'before', id = null } = req.body;
+  const { phone, count = 20, direction = 'before', id = null } = req.params;
   try {
     const response = await req.client.getMessages(`${phone}`, {
-      count: count,
+      count: parseInt(count),
       direction: direction,
       id: id,
     });
