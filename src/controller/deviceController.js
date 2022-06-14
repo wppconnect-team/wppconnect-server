@@ -438,10 +438,16 @@ export async function loadAndGetAllMessagesInChat(req, res) {
   }
 }
 export async function loadEarlierMessages(req, res) {
-  const { phone, includeMe = true, includeNotifications = false } = req.params;
-
+  console.log(req.body);
+  console.log(req.params);
+  const { phone } = req.params;
+  const { count = 20, direction = 'before', id = null } = req.body;
   try {
-    const response = await req.client.loadEarlierMessages(`${phone}`, includeMe, includeNotifications);
+    const response = await req.client.getMessages(`${phone}`, {
+      count: count,
+      direction: direction,
+      id: id,
+    });
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
