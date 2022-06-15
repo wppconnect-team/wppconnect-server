@@ -437,8 +437,9 @@ export async function loadAndGetAllMessagesInChat(req, res) {
     return res.status(500).json({ status: 'error', response: 'Error on open list' });
   }
 }
-export async function loadEarlierMessages(req, res) {
-  const { phone, count = 20, direction = 'before', id = null } = req.params;
+export async function getMessages(req, res) {
+  const { phone } = req.params;
+  const { count = 20, direction = 'before', id = 0 } = req.query;
   try {
     const response = await req.client.getMessages(`${phone}`, {
       count: parseInt(count),
