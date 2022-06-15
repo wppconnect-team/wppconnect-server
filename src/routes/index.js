@@ -160,12 +160,8 @@ routes.get(
   statusConnection,
   DeviceController.loadAndGetAllMessagesInChat
 );
-routes.get(
-  '/api/:session/load-earlier-messages/:phone',
-  verifyToken,
-  statusConnection,
-  DeviceController.loadEarlierMessages
-);
+routes.get('/api/:session/get-messages/:phone', verifyToken, statusConnection, DeviceController.getMessages);
+
 routes.post('/api/:session/archive-chat', verifyToken, statusConnection, DeviceController.archiveChat);
 routes.post('/api/:session/clear-chat', verifyToken, statusConnection, DeviceController.clearChat);
 routes.post('/api/:session/delete-chat', verifyToken, statusConnection, DeviceController.deleteChat);

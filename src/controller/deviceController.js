@@ -437,11 +437,15 @@ export async function loadAndGetAllMessagesInChat(req, res) {
     return res.status(500).json({ status: 'error', response: 'Error on open list' });
   }
 }
-export async function loadEarlierMessages(req, res) {
-  const { phone, includeMe = true, includeNotifications = false } = req.params;
-
+export async function getMessages(req, res) {
+  const { phone } = req.params;
+  const { count = 20, direction = 'before', id = 0 } = req.query;
   try {
-    const response = await req.client.loadEarlierMessages(`${phone}`, includeMe, includeNotifications);
+    const response = await req.client.getMessages(`${phone}`, {
+      count: parseInt(count),
+      direction: direction,
+      id: id,
+    });
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
