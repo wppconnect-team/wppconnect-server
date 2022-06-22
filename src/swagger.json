@@ -6617,8 +6617,8 @@
                 "$ref": "#/components/schemas/CreateGroupRequest"
               },
               "example": {
-                "groupname": "This is My Group",
-                "phone": "5511912345678"
+                "name": "This is My Group",
+                "participants": "5521999898825@c.us,5521985783689@c.us"
               }
             }
           },
