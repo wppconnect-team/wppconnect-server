@@ -176,6 +176,7 @@ routes.post('/api/:session/chat-state', verifyToken, statusConnection, DeviceCon
 routes.post('/api/:session/temporary-messages', verifyToken, statusConnection, DeviceController.setTemporaryMessages);
 routes.post('/api/:session/typing', verifyToken, statusConnection, DeviceController.setTyping);
 routes.post('/api/:session/star-message', verifyToken, statusConnection, DeviceController.starMessage);
+routes.post('/api/:session/reject-call', verifyToken, statusConnection, DeviceController.rejectCall);
 
 // Status
 routes.post('/api/:session/send-text-storie', verifyToken, statusConnection, MessageController.sendTextStorie);
