@@ -643,6 +643,17 @@ export async function setProfileStatus(req, res) {
     return res.status(500).json({ status: 'error', message: 'Error on set profile status' });
   }
 }
+export async function rejectCall(req, res) {
+  const { callId } = req.body;
+  try {
+    let response = await req.client.rejectCall(callId);
+
+    return res.status(200).json({ status: 'success', response: response });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error on rejectCall' });
+  }
+}
 
 export async function starMessage(req, res) {
   const { messageId, star = true } = req.body;
