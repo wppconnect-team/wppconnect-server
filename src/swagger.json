@@ -6618,7 +6618,7 @@
               },
               "example": {
                 "name": "This is My Group",
-                "participants": "5521999898825@c.us,5521985783689@c.us"
+                "participants": "5521999898825,5521985783689"
               }
             }
           },
