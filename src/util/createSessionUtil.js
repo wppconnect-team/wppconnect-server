@@ -169,18 +169,21 @@ export default class CreateSessionUtil {
     });
 
     await client.onIncomingCall(async (call) => {
+      req.io.emit('incomingcall', call);
       callWebHook(client, req, 'incomingcall', call);
     });
   }
 
   async listenAcks(client, req) {
     await client.onAck(async (ack) => {
+      req.io.emit('onack', ack);
       callWebHook(client, req, 'onack', ack);
     });
   }
 
   async onPresenceChanged(client, req) {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
+      req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
     });
   }
