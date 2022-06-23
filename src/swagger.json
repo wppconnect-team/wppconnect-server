@@ -5673,9 +5673,15 @@
         "requestBody": {
           "description": "",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ChangeProfileImageRequest"
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "base64"
+                  }
+                }
               },
               "example": {
                 "file": "Send a file format with FormData"
@@ -5765,8 +5771,10 @@
                   "$ref": "#/components/schemas/ChangeProfileImage"
                 },
                 "example": {
-                  "status": "Success",
-                  "message": "Foto de perfil alterada com sucesso"
+                  "status": "success",
+                  "response": {
+                    "message": "Profile photo successfully changed"
+                  }
                 }
               }
             }
@@ -15885,14 +15893,14 @@
       "ChangeProfileImageRequest": {
         "title": "ChangeProfileImageRequest",
         "required": ["file"],
-        "type": "object",
+        "type": "file",
         "properties": {
-          "path": {
+          "file": {
             "type": "file"
           }
         },
         "example": {
-          "path": "file"
+          "file": "file"
         }
       },
       "ChangeProfileImage": {
