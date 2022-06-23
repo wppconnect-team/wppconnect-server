@@ -311,14 +311,10 @@ export async function forwardMessages(req, res) {
 }
 
 export async function markUnseenMessage(req, res) {
-  const { phone, isGroup = false } = req.body;
+  const { phone } = req.body;
 
   try {
-    if (isGroup) {
-      await req.client.markUnseenMessage(`${phone}@g.us`);
-    } else {
-      await req.client.markUnseenMessage(`${phone}@c.us`);
-    }
+    await req.client.markUnseenMessage(`${phone}`);
     return res.status(200).json({ status: 'success', response: { message: 'unseen checked' } });
   } catch (e) {
     req.logger.error(e);

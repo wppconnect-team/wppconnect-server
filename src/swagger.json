@@ -3971,7 +3971,8 @@
                 "$ref": "#/components/schemas/MarkUnseenRequest"
               },
               "example": {
-                "phone": "556593077171"
+                "phone": "556593077171",
+                "isGroup": false
               }
             }
           },
@@ -14784,10 +14785,14 @@
         "properties": {
           "phone": {
             "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
           }
         },
         "example": {
-          "phone": "556593077171"
+          "phone": "556593077171",
+          "isGroup": "false"
         }
       },
       "MarkUnseen": {
