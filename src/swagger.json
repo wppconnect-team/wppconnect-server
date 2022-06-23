@@ -5664,22 +5664,28 @@
         "deprecated": false
       }
     },
-    "/change-profile-image": {
+    "/set-profile-pic": {
       "post": {
         "tags": ["Profile"],
         "summary": "Change Profile Image",
-        "description": "Altera o nome de usuário do perfil do WhatsApp.",
+        "description": "Altera a foto do usuário do perfil do WhatsApp.",
         "operationId": "ChangeProfileImage",
         "parameters": [],
         "requestBody": {
           "description": "",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ChangeProfileImageRequest"
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "base64"
+                  }
+                }
               },
               "example": {
-                "path": "veniam in"
+                "file": "Send a file format with FormData"
               }
             }
           },
@@ -5766,8 +5772,10 @@
                   "$ref": "#/components/schemas/ChangeProfileImage"
                 },
                 "example": {
-                  "status": "Success",
-                  "message": "Foto de perfil alterada com sucesso"
+                  "status": "success",
+                  "response": {
+                    "message": "Profile photo successfully changed"
+                  }
                 }
               }
             }
@@ -15889,15 +15897,15 @@
       },
       "ChangeProfileImageRequest": {
         "title": "ChangeProfileImageRequest",
-        "required": ["path"],
-        "type": "object",
+        "required": ["file"],
+        "type": "file",
         "properties": {
-          "path": {
-            "type": "string"
+          "file": {
+            "type": "file"
           }
         },
         "example": {
-          "path": "veniam in"
+          "file": "file"
         }
       },
       "ChangeProfileImage": {
