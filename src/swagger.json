@@ -5036,6 +5036,39 @@
         "deprecated": false
       }
     },
+    "/send-list-message": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Message Button with sections",
+        "description": "Envia uma mensagem de botões para um número de telefone ou grupo, com seções. ",
+        "operationId": "SendMessageWithButtonSections",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequestWithButtonSections"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/forwardMessages": {
       "post": {
         "tags": ["Send Message"],
@@ -15491,6 +15524,44 @@
             ],
             "title": "Title text",
             "footer": "Footer text"
+          }
+        }
+      },
+      "SendMessageRequestWithButtonSections": {
+        "title": "SendMessageRequestWithButtonSections",
+        "required": ["phone", "sections"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "options": {
+            "type": "any"
+          }
+        },
+        "example": {
+          "isGroup": "false",
+          "phone": "554498005216",
+          "buttonText": "CLIQUE AQUI",
+          "description": "Hello World",
+          "sections": {
+            "sections": [
+              {
+                "title": "Section 1",
+                "rows": [
+                  {
+                    "rowId": "my_custom_id",
+                    "title": "Test 1",
+                    "description": "Description 1"
+                  },
+                  {
+                    "rowId": "2",
+                    "title": "Test 2",
+                    "description": "Description 2"
+                  }
+                ]
+              }
+            ]
           }
         }
       },

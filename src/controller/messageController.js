@@ -191,27 +191,18 @@ export async function sendButtons(req, res) {
   }
 }
 
-export async function sendButtonsList(req, res) {
-  const { phone, message = '', title, buttons, buttonText = 'SELECIONE UMA OPÇÃO' } = req.body;
+export async function sendListMessage(req, res) {
+  const { phone, description = '', sections, buttonText = 'SELECIONE UMA OPÇÃO' } = req.body;
 
   try {
     let results = [];
 
     for (const contact of phone) {
       results.push(
-        await req.client.sendMessageOptions(contact, null, {
-          type: 'list',
-          list: {
-            listType: 1,
-            title: title,
-            description: message,
-            buttonText: buttonText,
-            sections: [
-              {
-                rows: buttons,
-              },
-            ],
-          },
+        await req.client.sendListMessage(contact, {
+          buttonText: buttonText,
+          description: description,
+          sections: sections,
         })
       );
     }
