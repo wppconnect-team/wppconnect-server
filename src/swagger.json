@@ -3520,7 +3520,8 @@
                 "$ref": "#/components/schemas/ArchiveChatRequest"
               },
               "example": {
-                "phone": "556593077171"
+                "phone": "556593077171",
+                "isGroup": false
               }
             }
           },

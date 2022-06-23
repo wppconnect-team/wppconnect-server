@@ -254,11 +254,7 @@ export async function archiveChat(req, res) {
 
   try {
     let response;
-    if (isGroup) {
-      response = await req.client.archiveChat(`${phone}@g.us`, value);
-    } else {
-      response = await req.client.archiveChat(`${phone}@c.us`, value);
-    }
+    response = await req.client.archiveChat(`${phone}`, value);
     return res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
