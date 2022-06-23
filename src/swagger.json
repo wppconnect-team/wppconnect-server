@@ -5663,11 +5663,11 @@
         "deprecated": false
       }
     },
-    "/change-profile-image": {
+    "/set-profile-pic": {
       "post": {
         "tags": ["Profile"],
         "summary": "Change Profile Image",
-        "description": "Altera o nome de usuário do perfil do WhatsApp.",
+        "description": "Altera a foto do usuário do perfil do WhatsApp.",
         "operationId": "ChangeProfileImage",
         "parameters": [],
         "requestBody": {
@@ -5678,7 +5678,7 @@
                 "$ref": "#/components/schemas/ChangeProfileImageRequest"
               },
               "example": {
-                "path": "veniam in"
+                "file": "Send a file format with FormData"
               }
             }
           },
@@ -15884,15 +15884,15 @@
       },
       "ChangeProfileImageRequest": {
         "title": "ChangeProfileImageRequest",
-        "required": ["path"],
+        "required": ["file"],
         "type": "object",
         "properties": {
           "path": {
-            "type": "string"
+            "type": "file"
           }
         },
         "example": {
-          "path": "veniam in"
+          "path": "file"
         }
       },
       "ChangeProfileImage": {
