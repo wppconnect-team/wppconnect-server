@@ -30,7 +30,6 @@ import mergeDeep from 'merge-deep';
 import { convert } from './mapper/index';
 
 export function initServer(serverOptions) {
-  const __dirname = path.resolve(path.dirname(''));
   if (typeof serverOptions !== 'object') {
     serverOptions = {};
   }
