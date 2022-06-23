@@ -30,7 +30,6 @@ import mergeDeep from 'merge-deep';
 import { convert } from './mapper/index';
 
 export function initServer(serverOptions) {
-  const __dirname = path.resolve(path.dirname(''));
   if (typeof serverOptions !== 'object') {
     serverOptions = {};
   }
@@ -53,7 +52,7 @@ export function initServer(serverOptions) {
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
-  app.use('/files', express.static(path.resolve(__dirname, '..', 'WhatsAppImages')));
+  app.use('/files', express.static('WhatsAppImages'));
   app.use(boolParser());
 
   // Add request options
