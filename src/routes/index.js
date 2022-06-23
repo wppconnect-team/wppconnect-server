@@ -220,7 +220,7 @@ routes.get('/api/:session/get-phone-number', verifyToken, statusConnection, Devi
 
 // Profile
 routes.post(
-  '/api/:session/profile-pic',
+  '/api/:session/set-profile-pic',
   upload.single('file'),
   verifyToken,
   statusConnection,
