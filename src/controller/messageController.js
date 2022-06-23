@@ -191,7 +191,7 @@ export async function sendButtons(req, res) {
   }
 }
 
-export async function sendButtonsList(req, res) {
+export async function sendListMessage(req, res) {
   const { phone, description = '', sections, buttonText = 'SELECIONE UMA OPÇÃO' } = req.body;
 
   try {

@@ -5036,7 +5036,7 @@
         "deprecated": false
       }
     },
-    "/send-buttons-list": {
+    "/send-list-message": {
       "post": {
         "tags": ["Send Message"],
         "summary": "Send Message Button with sections",
