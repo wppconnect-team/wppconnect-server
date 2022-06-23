@@ -4723,6 +4723,118 @@
         "deprecated": false
       }
     },
+
+    "/reject-call": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Reject call",
+        "description": "Reject a call by callId",
+        "operationId": "rejectCall",
+        "parameters": [],
+        "requestBody": {
+          "description": "When receive a call, you can reject call by callId",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/rejectCallRequest"
+              },
+              "example": {
+                "callId": "898989047464654645678787EAS56"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "36"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"24-Xm9Fmv/piJ8aftrp5VK0tqiuuAc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 13:37:24 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/rejectCallRequest"
+                },
+                "example": {
+                  "status": "success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/send-file-base64": {
       "post": {
         "tags": ["Send Message"],
@@ -4893,9 +5005,7 @@
     },
     "/send-buttons": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Message Button",
         "description": "Envia uma mensagem de botões para um número de telefone. ",
         "operationId": "SendMessageWithButton",
@@ -4925,7 +5035,7 @@
         },
         "deprecated": false
       }
-    },    
+    },
     "/forwardMessages": {
       "post": {
         "tags": ["Send Message"],
@@ -6507,8 +6617,8 @@
                 "$ref": "#/components/schemas/CreateGroupRequest"
               },
               "example": {
-                "groupname": "This is My Group",
-                "phone": "5511912345678"
+                "name": "This is My Group",
+                "participants": "5521999898825,5521985783689"
               }
             }
           },
@@ -15231,6 +15341,19 @@
           "isGrup": false
         }
       },
+      "rejectCallRequest": {
+        "title": "rejectCallRequest",
+        "required": ["callId"],
+        "type": "object",
+        "properties": {
+          "callId": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "callId": "89898ADSd5456SD5656DSADSAD322"
+        }
+      },
       "SendFileRequest": {
         "title": "SendFileRequest",
         "required": ["phone", "base64", "isGroup"],
@@ -15324,11 +15447,7 @@
       },
       "SendMessageRequestWithButton": {
         "title": "SendMessageRequestWithButton",
-        "required": [
-          "phone",
-          "message",
-          "options"
-        ],
+        "required": ["phone", "message", "options"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15374,7 +15493,7 @@
             "footer": "Footer text"
           }
         }
-      },      
+      },
       "ForwardMessages(Encaminharmensagem)Request": {
         "title": "ForwardMessages(Encaminharmensagem)Request",
         "required": ["phone", "messageId"],
