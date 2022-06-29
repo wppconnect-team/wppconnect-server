@@ -92,14 +92,14 @@ export async function sendFile(req, res) {
 }
 
 export async function sendFile64(req, res) {
-  const { base64, phone, filename = 'file', message } = req.body;
+  const { base64, phone, options } = req.body;
 
   if (!base64) return res.status(401).send({ message: 'The base64 of the file was not informed' });
 
   try {
     let results = [];
     for (const contato of phone) {
-      results.push(await req.client.sendFileFromBase64(contato, base64, filename, message));
+      results.push(await req.client.sendFile(contato, base64, options));
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');
