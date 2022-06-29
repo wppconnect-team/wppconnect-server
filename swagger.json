@@ -3520,7 +3520,8 @@
                 "$ref": "#/components/schemas/ArchiveChatRequest"
               },
               "example": {
-                "phone": "556593077171"
+                "phone": "556593077171",
+                "isGroup": false
               }
             }
           },
@@ -3971,7 +3972,8 @@
                 "$ref": "#/components/schemas/MarkUnseenRequest"
               },
               "example": {
-                "phone": "556593077171"
+                "phone": "556593077171",
+                "isGroup": false
               }
             }
           },
@@ -4723,6 +4725,118 @@
         "deprecated": false
       }
     },
+
+    "/reject-call": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Reject call",
+        "description": "Reject a call by callId",
+        "operationId": "rejectCall",
+        "parameters": [],
+        "requestBody": {
+          "description": "When receive a call, you can reject call by callId",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/rejectCallRequest"
+              },
+              "example": {
+                "callId": "898989047464654645678787EAS56"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "36"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"24-Xm9Fmv/piJ8aftrp5VK0tqiuuAc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 13:37:24 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/rejectCallRequest"
+                },
+                "example": {
+                  "status": "success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/send-file-base64": {
       "post": {
         "tags": ["Send Message"],
@@ -4893,9 +5007,7 @@
     },
     "/send-buttons": {
       "post": {
-        "tags": [
-          "Send Message"
-        ],
+        "tags": ["Send Message"],
         "summary": "Send Message Button",
         "description": "Envia uma mensagem de botões para um número de telefone. ",
         "operationId": "SendMessageWithButton",
@@ -4925,7 +5037,40 @@
         },
         "deprecated": false
       }
-    },    
+    },
+    "/send-list-message": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Message Button with sections",
+        "description": "Envia uma mensagem de botões para um número de telefone ou grupo, com seções. ",
+        "operationId": "SendMessageWithButtonSections",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequestWithButtonSections"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/forwardMessages": {
       "post": {
         "tags": ["Send Message"],
@@ -5520,22 +5665,28 @@
         "deprecated": false
       }
     },
-    "/change-profile-image": {
+    "/set-profile-pic": {
       "post": {
         "tags": ["Profile"],
         "summary": "Change Profile Image",
-        "description": "Altera o nome de usuário do perfil do WhatsApp.",
+        "description": "Altera a foto do usuário do perfil do WhatsApp.",
         "operationId": "ChangeProfileImage",
         "parameters": [],
         "requestBody": {
           "description": "",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/ChangeProfileImageRequest"
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "base64"
+                  }
+                }
               },
               "example": {
-                "path": "veniam in"
+                "file": "Send a file format with FormData"
               }
             }
           },
@@ -5622,8 +5773,10 @@
                   "$ref": "#/components/schemas/ChangeProfileImage"
                 },
                 "example": {
-                  "status": "Success",
-                  "message": "Foto de perfil alterada com sucesso"
+                  "status": "success",
+                  "response": {
+                    "message": "Profile photo successfully changed"
+                  }
                 }
               }
             }
@@ -6507,8 +6660,8 @@
                 "$ref": "#/components/schemas/CreateGroupRequest"
               },
               "example": {
-                "groupname": "This is My Group",
-                "phone": "5511912345678"
+                "name": "This is My Group",
+                "participants": "5521999898825,5521985783689"
               }
             }
           },
@@ -14641,10 +14794,14 @@
         "properties": {
           "phone": {
             "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
           }
         },
         "example": {
-          "phone": "556593077171"
+          "phone": "556593077171",
+          "isGroup": "false"
         }
       },
       "MarkUnseen": {
@@ -15231,6 +15388,19 @@
           "isGrup": false
         }
       },
+      "rejectCallRequest": {
+        "title": "rejectCallRequest",
+        "required": ["callId"],
+        "type": "object",
+        "properties": {
+          "callId": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "callId": "89898ADSd5456SD5656DSADSAD322"
+        }
+      },
       "SendFileRequest": {
         "title": "SendFileRequest",
         "required": ["phone", "base64", "isGroup"],
@@ -15324,11 +15494,7 @@
       },
       "SendMessageRequestWithButton": {
         "title": "SendMessageRequestWithButton",
-        "required": [
-          "phone",
-          "message",
-          "options"
-        ],
+        "required": ["phone", "message", "options"],
         "type": "object",
         "properties": {
           "phone": {
@@ -15374,7 +15540,45 @@
             "footer": "Footer text"
           }
         }
-      },      
+      },
+      "SendMessageRequestWithButtonSections": {
+        "title": "SendMessageRequestWithButtonSections",
+        "required": ["phone", "sections"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "options": {
+            "type": "any"
+          }
+        },
+        "example": {
+          "isGroup": "false",
+          "phone": "554498005216",
+          "buttonText": "CLIQUE AQUI",
+          "description": "Hello World",
+          "sections": {
+            "sections": [
+              {
+                "title": "Section 1",
+                "rows": [
+                  {
+                    "rowId": "my_custom_id",
+                    "title": "Test 1",
+                    "description": "Description 1"
+                  },
+                  {
+                    "rowId": "2",
+                    "title": "Test 2",
+                    "description": "Description 2"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
       "ForwardMessages(Encaminharmensagem)Request": {
         "title": "ForwardMessages(Encaminharmensagem)Request",
         "required": ["phone", "messageId"],
@@ -15694,15 +15898,15 @@
       },
       "ChangeProfileImageRequest": {
         "title": "ChangeProfileImageRequest",
-        "required": ["path"],
-        "type": "object",
+        "required": ["file"],
+        "type": "file",
         "properties": {
-          "path": {
-            "type": "string"
+          "file": {
+            "type": "file"
           }
         },
         "example": {
-          "path": "veniam in"
+          "file": "file"
         }
       },
       "ChangeProfileImage": {
