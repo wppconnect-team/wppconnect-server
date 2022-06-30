@@ -95,6 +95,7 @@ export async function sendFile64(req, res) {
   const { base64, phone } = req.body;
 
   if (!base64) return res.status(401).send({ message: 'The base64 of the file was not informed' });
+
   const options = req.body.options || {};
 
   try {
