@@ -62,7 +62,7 @@
     "crypto-js": "^4.1.1",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
     "license-check-and-add": "^4.0.5",
     "mongoose": "^6.4.2",
