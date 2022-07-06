@@ -15554,29 +15554,27 @@
           }
         },
         "example": {
-          "isGroup": "false",
+          "isGroup": false,
           "phone": "554498005216",
           "buttonText": "CLIQUE AQUI",
           "description": "Hello World",
-          "sections": {
-            "sections": [
-              {
-                "title": "Section 1",
-                "rows": [
-                  {
-                    "rowId": "my_custom_id",
-                    "title": "Test 1",
-                    "description": "Description 1"
-                  },
-                  {
-                    "rowId": "2",
-                    "title": "Test 2",
-                    "description": "Description 2"
-                  }
-                ]
-              }
-            ]
-          }
+          "sections": [
+            {
+              "title": "Section 1",
+              "rows": [
+                {
+                  "rowId": "my_custom_id",
+                  "title": "Test 1",
+                  "description": "Description 1"
+                },
+                {
+                  "rowId": "2",
+                  "title": "Test 2",
+                  "description": "Description 2"
+                }
+              ]
+            }
+          ]
         }
       },
       "ForwardMessages(Encaminharmensagem)Request": {
