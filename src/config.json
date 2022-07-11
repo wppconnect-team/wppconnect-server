@@ -3,6 +3,7 @@
   "host": "http://localhost",
   "port": "21465",
   "deviceName": "WppConnect",
+  "poweredBy": "WPPConnect-Server",
   "startAllSession": true,
   "tokenStoreType": "file",
   "maxListeners": 15,

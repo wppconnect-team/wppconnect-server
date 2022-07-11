@@ -50,6 +50,7 @@ export default class CreateSessionUtil {
         Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
           session: session,
           deviceName: req.serverOptions.deviceName,
+          poweredBy: req.serverOptions.poweredBy || 'WPPConnect-Server',
           catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
             this.exportQR(req, base64Qr, urlCode, client, res);
           },
