@@ -262,6 +262,19 @@ export async function archiveChat(req, res) {
   }
 }
 
+export async function archiveAllChats(req, res) {
+  try {
+    const chats = await req.client.getAllChats();
+    for (const chat of chats) {
+      await req.client.archiveChat(`${chat.chatId}`, true);
+    }
+    return res.status(201).json({ status: 'success' });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error on archive all chats' });
+  }
+}
+
 export async function deleteMessage(req, res) {
   const { phone, messageId } = req.body;
 

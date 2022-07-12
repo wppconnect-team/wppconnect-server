@@ -3619,6 +3619,116 @@
         "deprecated": false
       }
     },
+
+    "/archive-all-chats": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Archive all chats",
+        "description": "Archive all chats in device",
+        "operationId": "archiveAllChats",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/archiveAllChatsRequest"
+              },
+              "example": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "36"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"24-Xm9Fmv/piJ8aftrp5VK0tqiuuAc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 13:37:24 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/archiveAllChatsRequest"
+                },
+                "example": {
+                  "status": "success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/clear-chat": {
       "post": {
         "tags": ["Chat"],
@@ -15400,6 +15510,13 @@
         "example": {
           "callId": "89898ADSd5456SD5656DSADSAD322"
         }
+      },
+      "archiveAllChatsRequest": {
+        "title": "archiveAllChatsRequest",
+        "required": [""],
+        "type": "object",
+        "properties": {},
+        "example": {}
       },
       "SendFileRequest": {
         "title": "SendFileRequest",
