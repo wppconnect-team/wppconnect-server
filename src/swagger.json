@@ -3954,6 +3954,116 @@
         "deprecated": false
       }
     },
+    "/delete-all-chats": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Delete all Chat",
+        "description": "Deletes all chats",
+        "operationId": "DeleteAllChats",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAllChatsRequest"
+              },
+              "example": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "63"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"3f-q668acKEQBOoHvDmmrr2pSlP/zk\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:26:37 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteChat"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "Conversas deleteadas com sucesso"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/delete-message": {
       "post": {
         "tags": ["Chat"],
@@ -14846,6 +14956,13 @@
         "example": {
           "phone": "556593077171"
         }
+      },
+      "DeleteAllChatsRequest": {
+        "title": "DeleteAllChatsRequest",
+        "required": [""],
+        "type": "object",
+        "properties": {},
+        "example": {}
       },
       "DeleteChat": {
         "title": "DeleteChat",

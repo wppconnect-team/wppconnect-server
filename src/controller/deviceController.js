@@ -233,6 +233,18 @@ export async function deleteChat(req, res) {
     returnError(req, res, session, error);
   }
 }
+export async function deleteAllChats(req, res) {
+  try {
+    const chats = await req.client.getAllChats();
+    for (const chat of chats) {
+      await req.client.deleteChat(chat.chatId);
+    }
+    return res.status(200).json({ status: 'success' });
+  } catch (error) {
+    req.logger.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error on delete all chats' });
+  }
+}
 
 export async function clearChat(req, res) {
   const { phone } = req.body;

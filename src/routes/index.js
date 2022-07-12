@@ -163,8 +163,10 @@ routes.get(
 routes.get('/api/:session/get-messages/:phone', verifyToken, statusConnection, DeviceController.getMessages);
 
 routes.post('/api/:session/archive-chat', verifyToken, statusConnection, DeviceController.archiveChat);
+routes.post('/api/:session/archive-all-chats', verifyToken, statusConnection, DeviceController.archiveAllChats);
 routes.post('/api/:session/clear-chat', verifyToken, statusConnection, DeviceController.clearChat);
 routes.post('/api/:session/delete-chat', verifyToken, statusConnection, DeviceController.deleteChat);
+routes.post('/api/:session/delete-all-chats', verifyToken, statusConnection, DeviceController.deleteAllChats);
 routes.post('/api/:session/delete-message', verifyToken, statusConnection, DeviceController.deleteMessage);
 routes.post('/api/:session/forward-messages', verifyToken, statusConnection, DeviceController.forwardMessages);
 routes.post('/api/:session/mark-unseen', verifyToken, statusConnection, DeviceController.markUnseenMessage);
