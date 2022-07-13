@@ -43,7 +43,7 @@
     "moment": "^2.29.4",
     "multer": "^1.4.4",
     "socket.io": "^4.5.1",
-    "swagger-ui-express": "^4.4.0"
+    "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.6",
