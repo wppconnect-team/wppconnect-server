@@ -60,6 +60,20 @@ routes.post(
   statusConnection,
   MessageController.sendImage
 );
+routes.post(
+  '/api/:session/send-sticker',
+  upload.single('file'),
+  verifyToken,
+  statusConnection,
+  MessageController.sendImageAsSticker
+);
+routes.post(
+  '/api/:session/send-sticker-gif',
+  upload.single('file'),
+  verifyToken,
+  statusConnection,
+  MessageController.sendImageAsStickerGif
+);
 routes.post('/api/:session/send-reply', verifyToken, statusConnection, MessageController.replyMessage);
 routes.post(
   '/api/:session/send-file',

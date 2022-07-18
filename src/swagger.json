@@ -5748,7 +5748,235 @@
                 "phone": "556593077171-1620997998",
                 "message": "ola como isso funciona @556593077171@c.us",
                 "mentioned": ["@556593077171@c.us"],
-                "isGruop": true
+                "isGroup": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "64"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"40-aUMmvTS4ltJXN27NdzhnICW9ZI4\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 12:58:33 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendLinkPreview"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "O link foi enviado com sucesso."
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-sticker": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Sticker",
+        "description": "Sends sticker",
+        "operationId": "SendSticker",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendStickerRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "path": "https://www.camarabracodotrombudo.sc.gov.br/media/noticia/link-para-participacao-da-audiencia-publica-54.jpg",
+                "isGroup": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "64"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"40-aUMmvTS4ltJXN27NdzhnICW9ZI4\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 12:58:33 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendLinkPreview"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "O link foi enviado com sucesso."
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-sticker-gif": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Sticker",
+        "description": "Sends sticker gif",
+        "operationId": "SendStickerGif",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendStickerGifRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "path": "https://media.giphy.com/media/hpXFi66bfQm7e81ohw/giphy.gif",
+                "isGroup": false
               }
             }
           },
@@ -16206,7 +16434,7 @@
       },
       "SendMentionedRequest": {
         "title": "SendMentionedRequest",
-        "required": ["phone", "message", "mentioned", "isGruop"],
+        "required": ["phone", "message", "mentioned", "isGroup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -16222,7 +16450,7 @@
             },
             "description": ""
           },
-          "isGruop": {
+          "isGroup": {
             "type": "boolean"
           }
         },
@@ -16230,7 +16458,49 @@
           "phone": "556593077171-1620997998",
           "message": "ola como isso funciona @556593077171@c.us",
           "mentioned": ["@556593077171@c.us"],
-          "isGruop": true
+          "isGroup": true
+        }
+      },
+      "SendStickerRequest": {
+        "title": "SendStickerRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "path": "https://www.camarabracodotrombudo.sc.gov.br/media/noticia/link-para-participacao-da-audiencia-publica-54.jpg",
+          "isGroup": false
+        }
+      },
+      "SendStickerGifRequest": {
+        "title": "SendStickerGifRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "path": "https://media.giphy.com/media/hpXFi66bfQm7e81ohw/giphy.gif",
+          "isGroup": false
         }
       },
       "ChangeUsernameRequest": {

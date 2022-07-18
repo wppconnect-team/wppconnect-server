@@ -327,3 +327,49 @@ export async function sendVideoStorie(req, res) {
     returnError(req, res, error);
   }
 }
+export async function sendImageAsSticker(req, res) {
+  const { phone, path } = req.body;
+
+  if (!path && !req.file)
+    return res.status(401).send({
+      message: 'Sending the file is mandatory',
+    });
+
+  const pathFile = path || req.file.path;
+
+  try {
+    let results = [];
+    for (const contato of phone) {
+      results.push(await req.client.sendImageAsSticker(contato, pathFile));
+    }
+
+    if (results.length === 0) return res.status(400).json('Error sending message');
+    if (req.file) await unlinkAsync(pathFile);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+export async function sendImageAsStickerGif(req, res) {
+  const { phone, path } = req.body;
+
+  if (!path && !req.file)
+    return res.status(401).send({
+      message: 'Sending the file is mandatory',
+    });
+
+  const pathFile = path || req.file.path;
+
+  try {
+    let results = [];
+    for (const contato of phone) {
+      results.push(await req.client.sendImageAsStickerGif(contato, pathFile));
+    }
+
+    if (results.length === 0) return res.status(400).json('Error sending message');
+    if (req.file) await unlinkAsync(pathFile);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
