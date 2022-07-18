@@ -6117,6 +6117,119 @@
         "deprecated": false
       }
     },
+    "/subscribe-presence": {
+      "post": {
+        "tags": ["Contact"],
+        "summary": "Subscribe presente for contact",
+        "description": "Subscribe presence of a contact or group to receive in onPresenceChanged (socket or webhook) ",
+        "operationId": "SubscribePresenceContact",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscribePresenceRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "isGroup": false,
+                "all": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/check-number-status": {
       "get": {
         "tags": ["Contact"],
@@ -16174,6 +16287,27 @@
         },
         "example": {
           "status": "My new status"
+        }
+      },
+      "SubscribePresenceRequest": {
+        "title": "SubscribePresenceRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          },
+          "all": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "isGroup": false,
+          "all": false
         }
       },
       "ChangeProfileStatus": {
