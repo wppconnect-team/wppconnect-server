@@ -2237,7 +2237,7 @@
             }
           }
         },
-        "deprecated": false
+        "deprecated": true
       }
     },
     "/all-new-messages": {
@@ -9296,6 +9296,22 @@
         "summary": "Battery status",
         "description": "Retorna o status da session",
         "operationId": "Batterystatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/host-device": {
+      "get": {
+        "tags": ["Phone Status"],
+        "summary": "Get WID and data of connected device",
+        "description": "Get WID and data of connected device",
+        "operationId": "HostDevice",
         "parameters": [],
         "responses": {
           "200": {
