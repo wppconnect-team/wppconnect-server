@@ -1608,7 +1608,7 @@
       "get": {
         "tags": ["Chat"],
         "summary": "All Messages in Chat",
-        "description": "Retrieves all messages already loaded in a chat For loading every message use load Messages In Chat",
+        "description": "Depreceated in favor of /get-messages. Retrieves all messages already loaded in a chat For loading every message use load Messages In Chat",
         "operationId": "AllMessagesinChat",
         "parameters": [
           {

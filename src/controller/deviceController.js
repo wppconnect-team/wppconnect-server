@@ -86,7 +86,9 @@ export async function getAllChatsWithMessages(req, res) {
     return res.status(500).json({ status: 'error', message: 'Error on get all chats whit messages' });
   }
 }
-
+/**
+ * Depreciado em favor de getMessages
+ */
 export async function getAllMessagesInChat(req, res) {
   try {
     let { phone } = req.params;
