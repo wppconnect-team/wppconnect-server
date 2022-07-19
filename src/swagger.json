@@ -6460,7 +6460,7 @@
     },
     "/send-image-storie": {
       "post": {
-        "tags": ["Profile"],
+        "tags": ["Status"],
         "summary": "Send Image Storie ",
         "description": "Send Image Storie",
         "operationId": "SendImageStorie",
@@ -6571,7 +6571,7 @@
     },
     "/send-video-storie": {
       "post": {
-        "tags": ["Profile"],
+        "tags": ["Status"],
         "summary": "Send Video Storie ",
         "description": "Send Video Storie",
         "operationId": "SendVideoStorie",
@@ -6682,7 +6682,7 @@
     },
     "/send-text-storie": {
       "post": {
-        "tags": ["Profile"],
+        "tags": ["Status"],
         "summary": "Send Text Storie ",
         "description": "Send Text Storie",
         "operationId": "SendTextStorie",
@@ -17183,6 +17183,26 @@
           "path": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg"
         }
       },
+      "GetMyStatusRequest": {
+        "title": "GetMyStatusRequest",
+        "required": [""],
+        "type": "object",
+        "properties": {},
+        "example": {}
+      },
+      "GetStatusRequest": {
+        "title": "GetStatusRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "phone": "5561988888988"
+        }
+      },
       "SendVideoStorieRequest": {
         "title": "SendVideoStorieRequest",
         "required": ["path"],
@@ -19289,6 +19309,10 @@
     {
       "name": "Profile",
       "description": "Profile Methods"
+    },
+    {
+      "name": "Status",
+      "description": "Status Stories Methods"
     },
     {
       "name": "Contact",

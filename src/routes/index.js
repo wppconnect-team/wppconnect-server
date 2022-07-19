@@ -16,6 +16,7 @@
 import { Router } from 'express';
 import { encryptSession } from '../controller/encryptController';
 import * as MessageController from '../controller/messageController';
+import * as StatusController from '../controller/statusController';
 import * as GroupController from '../controller/groupController';
 import * as DeviceController from '../controller/deviceController';
 import * as SessionController from '../controller/sessionController';
@@ -196,20 +197,20 @@ routes.post('/api/:session/star-message', verifyToken, statusConnection, DeviceC
 routes.post('/api/:session/reject-call', verifyToken, statusConnection, DeviceController.rejectCall);
 
 // Status
-routes.post('/api/:session/send-text-storie', verifyToken, statusConnection, MessageController.sendTextStorie);
+routes.post('/api/:session/send-text-storie', verifyToken, statusConnection, StatusController.sendTextStorie);
 routes.post(
   '/api/:session/send-image-storie',
   upload.single('file'),
   verifyToken,
   statusConnection,
-  MessageController.sendImageStorie
+  StatusController.sendImageStorie
 );
 routes.post(
   '/api/:session/send-video-storie',
   upload.single('file'),
   verifyToken,
   statusConnection,
-  MessageController.sendVideoStorie
+  StatusController.sendVideoStorie
 );
 
 // Contact
