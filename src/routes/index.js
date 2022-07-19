@@ -182,6 +182,7 @@ routes.post('/api/:session/clear-chat', verifyToken, statusConnection, DeviceCon
 routes.post('/api/:session/delete-chat', verifyToken, statusConnection, DeviceController.deleteChat);
 routes.post('/api/:session/delete-all-chats', verifyToken, statusConnection, DeviceController.deleteAllChats);
 routes.post('/api/:session/delete-message', verifyToken, statusConnection, DeviceController.deleteMessage);
+routes.post('/api/:session/react-message', verifyToken, statusConnection, DeviceController.reactMessage);
 routes.post('/api/:session/forward-messages', verifyToken, statusConnection, DeviceController.forwardMessages);
 routes.post('/api/:session/mark-unseen', verifyToken, statusConnection, DeviceController.markUnseenMessage);
 routes.post('/api/:session/pin-chat', verifyToken, statusConnection, DeviceController.pinChat);

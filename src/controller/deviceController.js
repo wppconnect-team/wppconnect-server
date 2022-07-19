@@ -301,6 +301,18 @@ export async function deleteMessage(req, res) {
     return res.status(500).json({ status: 'error', message: 'Error on delete message' });
   }
 }
+export async function reactMessage(req, res) {
+  const { msgId, reaction } = req.body;
+
+  try {
+    await req.client.sendReactionToMessage(msgId, reaction);
+
+    return res.status(200).json({ status: 'success', response: { message: 'Reaction sended' } });
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({ status: 'error', message: 'Error on send reaction to message' });
+  }
+}
 
 export async function reply(req, res) {
   const { phone, text, messageid } = req.body;

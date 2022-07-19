@@ -4177,6 +4177,119 @@
         "deprecated": false
       }
     },
+    "/react-message": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "React Message",
+        "description": "React Message with Emoji",
+        "operationId": "ReactMessage",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReactMessageRequest"
+              },
+              "example": {
+                "msgId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+                "reaction": "🤯"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "48"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"30-qy+RPELj2ZbNf7LuA11j8OW31yc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:35:24 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactMessage"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "Reação enviada"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/mark-unseen": {
       "post": {
         "tags": ["Chat"],
@@ -15484,6 +15597,40 @@
         "example": {
           "status": "Success",
           "message": "Message deleted"
+        }
+      },
+      "ReactMessageRequest": {
+        "title": "ReactMessageRequest",
+        "required": ["msgId", "reaction"],
+        "type": "object",
+        "properties": {
+          "msgId": {
+            "type": "string"
+          },
+          "reaction": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "phone": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+          "messageId": "🤯"
+        }
+      },
+      "ReactMessage": {
+        "title": "ReactMessage",
+        "required": ["status", "message"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "status": "Success",
+          "message": "Reação enviada"
         }
       },
       "MarkUnseenRequest": {
