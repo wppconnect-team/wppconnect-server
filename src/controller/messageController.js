@@ -265,7 +265,7 @@ export async function sendMentioned(req, res) {
 }
 
 export async function sendTextStorie(req, res) {
-  const { text } = req.body;
+  const { text, options } = req.body;
 
   if (!text)
     return res.status(401).send({
@@ -274,7 +274,7 @@ export async function sendTextStorie(req, res) {
 
   try {
     let results = [];
-    results.push(await req.client.sendText('status@broadcast', text));
+    results.push(await req.client.sendTextStatus(text, options));
 
     if (results.length === 0) return res.status(400).json('Error sending the text of stories');
     returnSucess(res, results);
@@ -284,21 +284,13 @@ export async function sendTextStorie(req, res) {
 }
 
 export async function sendImageStorie(req, res) {
-  const { path, filename = 'image-storie', caption } = req.body;
-
-  if (!path && !req.file)
-    return res.status(401).send({
-      message: 'Sending the image is mandatory',
-    });
-
-  const pathFile = path || req.file.path;
+  const { path, options } = req.body;
 
   try {
     let results = [];
-    results.push(await req.client.sendImage('status@broadcast', pathFile, filename, caption));
+    results.push(await req.client.sendImageStatus(path, options));
 
     if (results.length === 0) return res.status(400).json('Error sending the image of stories');
-    if (req.file) await unlinkAsync(pathFile);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);

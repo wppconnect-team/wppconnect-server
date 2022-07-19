@@ -6458,6 +6458,229 @@
         "deprecated": false
       }
     },
+    "/send-image-storie": {
+      "post": {
+        "tags": ["Profile"],
+        "summary": "Send Image Storie ",
+        "description": "Send Image Storie",
+        "operationId": "SendImageStorie",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendImageStorieRequest"
+              },
+              "example": {
+                "path": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-text-storie": {
+      "post": {
+        "tags": ["Profile"],
+        "summary": "Send Text Storie ",
+        "description": "Send Text Storie",
+        "operationId": "SendTextStorie",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendTextStorieRequest"
+              },
+              "example": {
+                "text": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg",
+                "options": { "backgroundColor": "#0275d8", "font": 2 }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/subscribe-presence": {
       "post": {
         "tags": ["Contact"],
@@ -16834,6 +17057,36 @@
         },
         "example": {
           "status": "My new status"
+        }
+      },
+      "SendImageStorieRequest": {
+        "title": "SendImageStorieRequest",
+        "required": ["path"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "path": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg"
+        }
+      },
+      "SendTextStorieRequest": {
+        "title": "SendTextStorieRequest",
+        "required": ["text", "options"],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "text": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg",
+          "options": { "backgroundColor": "#0275d8", "font": 2 }
         }
       },
       "SubscribePresenceRequest": {
