@@ -9290,6 +9290,120 @@
         "deprecated": false
       }
     },
+    "/group-pic": {
+      "post": {
+        "tags": ["Group"],
+        "summary": "Set Profile Pic for group",
+        "description": "Change Profile Pic of Group",
+        "operationId": "SetGroupProfilePic",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetGroupProfilePicRequest"
+              },
+              "example": {
+                "phone": "120363025416793270@g.us",
+                "path": "https://cdn.pixabay.com/photo/2016/02/10/21/57/heart-1192662__340.jpg",
+                "isGroup": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "36"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"24-Xm9Fmv/piJ8aftrp5VK0tqiuuAc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 15:31:41 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetGroupProfilePicRequest"
+                },
+                "example": {
+                  "status": "success",
+                  "response": true
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/get-battery-level": {
       "get": {
         "tags": ["Phone Status"],
@@ -18449,6 +18563,43 @@
         "example": {
           "groupId": "556593077171-1620997998",
           "value": true
+        }
+      },
+      "SetGroupProfilePicRequest": {
+        "title": "SetGroupProfilePicRequest",
+        "required": ["phone", "path", "isGroup"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "120363025416793270@g.us",
+          "path": "https://www.camarabracodotrombudo.sc.gov.br/media/noticia/link-para-participacao-da-audiencia-publica-54.jpg"
+        }
+      },
+      "SetGroupProfilePic": {
+        "title": "SetGroupProfilePic",
+        "required": ["status", "response"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "response": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "status": "success",
+          "response": true
         }
       },
       "SetMessagesAdminsOnly": {

@@ -16,7 +16,8 @@
     "allUnreadOnStart": false,
     "listenAcks": true,
     "onPresenceChanged": true,
-    "onParticipantsChanged": true
+    "onParticipantsChanged": true,
+    "onReactionMessage": true
   },
   "archive": {
     "enable": false,

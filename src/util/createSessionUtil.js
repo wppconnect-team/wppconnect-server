@@ -76,6 +76,10 @@ export default class CreateSessionUtil {
       if (req.serverOptions.webhook.onParticipantsChanged) {
         await this.onParticipantsChanged(req, client);
       }
+
+      if (req.serverOptions.webhook.onReactionMessage) {
+        await this.onReactionMessage(client, req);
+      }
     } catch (e) {
       req.logger.error(e);
     }
@@ -186,6 +190,14 @@ export default class CreateSessionUtil {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
       req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
+    });
+  }
+
+  async onReactionMessage(client, req) {
+    await client.isConnected();
+    await client.onReactionMessage(async (reaction) => {
+      req.io.emit('onreactionmessage', reaction);
+      callWebHook(client, req, 'onreactionmessage', reaction);
     });
   }
 
