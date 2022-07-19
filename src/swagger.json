@@ -6460,7 +6460,7 @@
     },
     "/send-image-storie": {
       "post": {
-        "tags": ["Status"],
+        "tags": ["Status Stories"],
         "summary": "Send Image Storie ",
         "description": "Send Image Storie",
         "operationId": "SendImageStorie",
@@ -6571,7 +6571,7 @@
     },
     "/send-video-storie": {
       "post": {
-        "tags": ["Status"],
+        "tags": ["Status Stories"],
         "summary": "Send Video Storie ",
         "description": "Send Video Storie",
         "operationId": "SendVideoStorie",
@@ -6682,7 +6682,7 @@
     },
     "/send-text-storie": {
       "post": {
-        "tags": ["Status"],
+        "tags": ["Status Stories"],
         "summary": "Send Text Storie ",
         "description": "Send Text Storie",
         "operationId": "SendTextStorie",
@@ -6784,6 +6784,204 @@
                 },
                 "example": {
                   "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/add-new-label": {
+      "post": {
+        "tags": ["Labels"],
+        "summary": "Add New Label",
+        "description": "Cria uma nova etiqueta",
+        "operationId": "AddNewLabel",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewLabelRequest"
+              },
+              "example": {
+                "name": "Farmacias",
+                "options": { "labelColor": "#dfaef0" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/add-or-remove-label": {
+      "post": {
+        "tags": ["Labels"],
+        "summary": "Add or Remove Labels of chats",
+        "description": "Edita as etiquetas de seus chats",
+        "operationId": "AddOrRemoveLabelRequest",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOrRemoveLabelRequest"
+              },
+              "example": {
+                "chatIds": ["5521988887878"],
+                "options": [
+                  { "labelId": "76", "type": "add" },
+                  { "labelId": "75", "type": "remove" }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+
+    "/get-all-labels": {
+      "get": {
+        "tags": ["Labels"],
+        "summary": "All Labels",
+        "description": "Retrieves all labels",
+        "operationId": "AllLabels",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "253700"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"3df04-fmRGRGQv4jrWL17uvMt/S9zRjmY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:40:25 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllChats"
+                },
+                "example": {
+                  "status": "success",
+                  "response": [{}]
                 }
               }
             }
@@ -17233,6 +17431,43 @@
           "options": { "backgroundColor": "#0275d8", "font": 2 }
         }
       },
+      "AddNewLabelRequest": {
+        "title": "AddNewLabelRequest",
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Farmácia",
+          "options": { "labelColor": "#dfaef0" }
+        }
+      },
+      "AddOrRemoveLabelRequest": {
+        "title": "AddOrRemoveLabelRequest",
+        "required": ["name", "options"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "chatIds": ["5521988887878"],
+          "options": [
+            { "labelId": "76", "type": "add" },
+            { "labelId": "75", "type": "remove" }
+          ]
+        }
+      },
       "SubscribePresenceRequest": {
         "title": "SubscribePresenceRequest",
         "required": ["phone"],
@@ -19313,6 +19548,10 @@
     {
       "name": "Status Stories",
       "description": "Status Stories Methods"
+    },
+    {
+      "name": "Labels",
+      "description": "Labels Methods"
     },
     {
       "name": "Contact",

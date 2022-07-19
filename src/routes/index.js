@@ -17,6 +17,7 @@ import { Router } from 'express';
 import { encryptSession } from '../controller/encryptController';
 import * as MessageController from '../controller/messageController';
 import * as StatusController from '../controller/statusController';
+import * as LabelsController from '../controller/labelsController';
 import * as GroupController from '../controller/groupController';
 import * as DeviceController from '../controller/deviceController';
 import * as SessionController from '../controller/sessionController';
@@ -212,6 +213,13 @@ routes.post(
   statusConnection,
   StatusController.sendVideoStorie
 );
+
+// Labels
+routes.post('/api/:session/add-new-label', verifyToken, statusConnection, LabelsController.addNewLabel);
+routes.post('/api/:session/add-or-remove-label', verifyToken, statusConnection, LabelsController.addOrRemoveLabels);
+routes.get('/api/:session/get-all-labels', verifyToken, statusConnection, LabelsController.getAllLabels);
+routes.put('/api/:session/delete-all-labels', verifyToken, statusConnection, LabelsController.deleteAllLabels);
+routes.put('/api/:session/delete-label/:id', verifyToken, statusConnection, LabelsController.deleteLabel);
 
 // Contact
 routes.get(
