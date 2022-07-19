@@ -298,7 +298,7 @@ export async function sendImageStorie(req, res) {
 }
 
 export async function sendVideoStorie(req, res) {
-  const { path, filename = 'video', caption } = req.body;
+  const { path } = req.body;
 
   if (!path && !req.file)
     return res.status(401).send({
@@ -310,7 +310,7 @@ export async function sendVideoStorie(req, res) {
   try {
     let results = [];
 
-    results.push(await req.client.sendFile('status@broadcast', pathFile, filename, caption));
+    results.push(await req.client.sendVideoStatus(pathFile));
 
     if (results.length === 0) return res.status(400).json('Error sending message');
     if (req.file) await unlinkAsync(pathFile);

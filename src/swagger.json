@@ -6569,6 +6569,117 @@
         "deprecated": false
       }
     },
+    "/send-video-storie": {
+      "post": {
+        "tags": ["Profile"],
+        "summary": "Send Video Storie ",
+        "description": "Send Video Storie",
+        "operationId": "SendVideoStorie",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendVideoStorieRequest"
+              },
+              "example": {
+                "path": "https://file-examples.com/storage/fe21590a2962d597a9a51ad/2017/04/file_example_MP4_480_1_5MG.mp4"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/send-text-storie": {
       "post": {
         "tags": ["Profile"],
@@ -17070,6 +17181,19 @@
         },
         "example": {
           "path": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg"
+        }
+      },
+      "SendVideoStorieRequest": {
+        "title": "SendVideoStorieRequest",
+        "required": ["path"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "path": "https://file-examples.com/storage/fe21590a2962d597a9a51ad/2017/04/file_example_MP4_480_1_5MG.mp4"
         }
       },
       "SendTextStorieRequest": {
