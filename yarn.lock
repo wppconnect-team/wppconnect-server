@@ -1619,10 +1619,10 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.7.0.tgz"
   integrity sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==
 
-"@wppconnect-team/wppconnect@^1.14.5":
-  version "1.14.5"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.14.5.tgz#e99d3a8547020ea5b3014604d208d6b02ef0dfa4"
-  integrity sha512-YHvTGYjrigdd+sU/06JqJT/Y0UIjNzlR7c9HQ1wq635VLiotf353Hu83EPB7LbI82xMTqxDLkaFAC/uJfXNEkg==
+"@wppconnect-team/wppconnect@^1.15.0":
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.15.0.tgz#a2dc055d03b39b488ed12fee95d8878c49509fcf"
+  integrity sha512-49nQiur/VrajzA7ax+0MXbKllpSF2O1xzO2N7+y+fVvQDzvmtjXgKC6/SPSiuDt2dc9+fqP3Onx44I19v3dVCQ==
   dependencies:
     "@wppconnect/wa-js" "^2.8.1"
     "@wppconnect/wa-version" "^1.1.104"
@@ -1641,9 +1641,9 @@
     mime-types "^2.1.35"
     puppeteer "*"
     puppeteer-extra "^3.3.4"
-    puppeteer-extra-plugin-stealth "^2.10.1"
-    puppeteer-extra-plugin-user-data-dir "^2.3.1"
-    puppeteer-extra-plugin-user-preferences "^2.3.1"
+    puppeteer-extra-plugin-stealth "^2.11.0"
+    puppeteer-extra-plugin-user-data-dir "^2.4.0"
+    puppeteer-extra-plugin-user-preferences "^2.4.0"
     qrcode-terminal "^0.12.0"
     reflect-metadata "^0.1.13"
     rimraf "^3.0.2"
@@ -1652,7 +1652,7 @@
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.8.1"
-    ws "^8.8.0"
+    ws "^8.8.1"
   optionalDependencies:
     fsevents "^2.3.2"
 
@@ -6235,7 +6235,7 @@ pupa@^3.1.0:
   dependencies:
     escape-goat "^4.0.0"
 
-puppeteer-extra-plugin-stealth@^2.10.1:
+puppeteer-extra-plugin-stealth@^2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-stealth/-/puppeteer-extra-plugin-stealth-2.11.0.tgz#727cf1edcac98a9f05be609c880cf0383e214f84"
   integrity sha512-BqckPV95MHP25quZgzBnZJD8S38ZYP4B3HJ3Kr/vibqxJxhK6L1VQ6jnu/JcFKV0wzCIQPrCiiavZnwE5u1C2A==
@@ -6244,7 +6244,7 @@ puppeteer-extra-plugin-stealth@^2.10.1:
     puppeteer-extra-plugin "^3.2.2"
     puppeteer-extra-plugin-user-preferences "^2.4.0"
 
-puppeteer-extra-plugin-user-data-dir@^2.3.1, puppeteer-extra-plugin-user-data-dir@^2.4.0:
+puppeteer-extra-plugin-user-data-dir@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-user-data-dir/-/puppeteer-extra-plugin-user-data-dir-2.4.0.tgz#20e87582482b61e497abd96fec452f63bd2d9123"
   integrity sha512-qrhYPTGIqzL2hpeJ5DXjf8xMy5rt1UvcqSgpGTTOUOjIMz1ROWnKHjBoE9fNBJ4+ToRZbP8MzIDXWlEk/e1zJA==
@@ -6254,7 +6254,7 @@ puppeteer-extra-plugin-user-data-dir@^2.3.1, puppeteer-extra-plugin-user-data-di
     puppeteer-extra-plugin "^3.2.2"
     rimraf "^3.0.2"
 
-puppeteer-extra-plugin-user-preferences@^2.3.1, puppeteer-extra-plugin-user-preferences@^2.4.0:
+puppeteer-extra-plugin-user-preferences@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-user-preferences/-/puppeteer-extra-plugin-user-preferences-2.4.0.tgz#8b75bc39c3de9913e236ae1d982a24711d84ba6f"
   integrity sha512-4XxMhMkJ+qqLsPY9ULF90qS9Bj1Qrwwgp1TY9zTdp1dJuy7QSgYE7xlyamq3cKrRuzg3QUOqygJo52sVeXSg5A==
@@ -7971,7 +7971,7 @@ ws@8.8.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.8.0.tgz#8e71c75e2f6348dbf8d78005107297056cb77769"
   integrity sha512-JDAgSYQ1ksuwqfChJusw1LSJ8BizJ2e/vVu5Lxjq3YvNJNlROv1ui4i+c/kUUrPheBvQl4c5UbERhTwKa6QBJQ==
 
-ws@^8.8.0:
+ws@^8.8.1:
   version "8.8.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.8.1.tgz#5dbad0feb7ade8ecc99b830c1d77c913d4955ff0"
   integrity sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==
