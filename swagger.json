@@ -1608,7 +1608,7 @@
       "get": {
         "tags": ["Chat"],
         "summary": "All Messages in Chat",
-        "description": "Retrieves all messages already loaded in a chat For loading every message use load Messages In Chat",
+        "description": "Depreceated in favor of /get-messages. Retrieves all messages already loaded in a chat For loading every message use load Messages In Chat",
         "operationId": "AllMessagesinChat",
         "parameters": [
           {
@@ -2237,7 +2237,7 @@
             }
           }
         },
-        "deprecated": false
+        "deprecated": true
       }
     },
     "/all-new-messages": {
@@ -4177,6 +4177,119 @@
         "deprecated": false
       }
     },
+    "/react-message": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "React Message",
+        "description": "React Message with Emoji",
+        "operationId": "ReactMessage",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReactMessageRequest"
+              },
+              "example": {
+                "msgId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+                "reaction": "🤯"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "48"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"30-qy+RPELj2ZbNf7LuA11j8OW31yc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:35:24 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReactMessage"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "Reação enviada"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/mark-unseen": {
       "post": {
         "tags": ["Chat"],
@@ -5748,7 +5861,235 @@
                 "phone": "556593077171-1620997998",
                 "message": "ola como isso funciona @556593077171@c.us",
                 "mentioned": ["@556593077171@c.us"],
-                "isGruop": true
+                "isGroup": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "64"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"40-aUMmvTS4ltJXN27NdzhnICW9ZI4\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 12:58:33 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendLinkPreview"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "O link foi enviado com sucesso."
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-sticker": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Sticker",
+        "description": "Sends sticker",
+        "operationId": "SendSticker",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendStickerRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "path": "https://www.camarabracodotrombudo.sc.gov.br/media/noticia/link-para-participacao-da-audiencia-publica-54.jpg",
+                "isGroup": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "64"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"40-aUMmvTS4ltJXN27NdzhnICW9ZI4\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 12:58:33 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendLinkPreview"
+                },
+                "example": {
+                  "status": "Success",
+                  "message": "O link foi enviado com sucesso."
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-sticker-gif": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Sticker",
+        "description": "Sends sticker gif",
+        "operationId": "SendStickerGif",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendStickerGifRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "path": "https://media.giphy.com/media/hpXFi66bfQm7e81ohw/giphy.gif",
+                "isGroup": false
               }
             }
           },
@@ -6022,6 +6363,651 @@
               },
               "example": {
                 "status": "My new status"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-image-storie": {
+      "post": {
+        "tags": ["Status Stories"],
+        "summary": "Send Image Storie ",
+        "description": "Send Image Storie",
+        "operationId": "SendImageStorie",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendImageStorieRequest"
+              },
+              "example": {
+                "path": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-video-storie": {
+      "post": {
+        "tags": ["Status Stories"],
+        "summary": "Send Video Storie ",
+        "description": "Send Video Storie",
+        "operationId": "SendVideoStorie",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendVideoStorieRequest"
+              },
+              "example": {
+                "path": "https://file-examples.com/storage/fe21590a2962d597a9a51ad/2017/04/file_example_MP4_480_1_5MG.mp4"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/send-text-storie": {
+      "post": {
+        "tags": ["Status Stories"],
+        "summary": "Send Text Storie ",
+        "description": "Send Text Storie",
+        "operationId": "SendTextStorie",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendTextStorieRequest"
+              },
+              "example": {
+                "text": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg",
+                "options": { "backgroundColor": "#0275d8", "font": 2 }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "20"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"14-Aecwmfr5xTp+PReMihhLNM3Z9mY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 18:12:58 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeProfileStatus"
+                },
+                "example": {
+                  "status": "Success"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/add-new-label": {
+      "post": {
+        "tags": ["Labels"],
+        "summary": "Add New Label",
+        "description": "Cria uma nova etiqueta",
+        "operationId": "AddNewLabel",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNewLabelRequest"
+              },
+              "example": {
+                "name": "Farmacias",
+                "options": { "labelColor": "#dfaef0" }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/add-or-remove-label": {
+      "post": {
+        "tags": ["Labels"],
+        "summary": "Add or Remove Labels of chats",
+        "description": "Edita as etiquetas de seus chats",
+        "operationId": "AddOrRemoveLabelRequest",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOrRemoveLabelRequest"
+              },
+              "example": {
+                "chatIds": ["5521988887878"],
+                "options": [
+                  { "labelId": "76", "type": "add" },
+                  { "labelId": "75", "type": "remove" }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+
+    "/get-all-labels": {
+      "get": {
+        "tags": ["Labels"],
+        "summary": "All Labels",
+        "description": "Retrieves all labels",
+        "operationId": "AllLabels",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "253700"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"3df04-fmRGRGQv4jrWL17uvMt/S9zRjmY\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:40:25 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllChats"
+                },
+                "example": {
+                  "status": "success",
+                  "response": [{}]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/subscribe-presence": {
+      "post": {
+        "tags": ["Contact"],
+        "summary": "Subscribe presente for contact",
+        "description": "Subscribe presence of a contact or group to receive in onPresenceChanged (socket or webhook) ",
+        "operationId": "SubscribePresenceContact",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscribePresenceRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "isGroup": false,
+                "all": false
               }
             }
           },
@@ -8949,12 +9935,142 @@
         "deprecated": false
       }
     },
+    "/group-pic": {
+      "post": {
+        "tags": ["Group"],
+        "summary": "Set Profile Pic for group",
+        "description": "Change Profile Pic of Group",
+        "operationId": "SetGroupProfilePic",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetGroupProfilePicRequest"
+              },
+              "example": {
+                "phone": "120363025416793270@g.us",
+                "path": "https://cdn.pixabay.com/photo/2016/02/10/21/57/heart-1192662__340.jpg",
+                "isGroup": true
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "36"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"24-Xm9Fmv/piJ8aftrp5VK0tqiuuAc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 15:31:41 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetGroupProfilePicRequest"
+                },
+                "example": {
+                  "status": "success",
+                  "response": true
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/get-battery-level": {
       "get": {
         "tags": ["Phone Status"],
         "summary": "Battery status",
         "description": "Retorna o status da session",
         "operationId": "Batterystatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/host-device": {
+      "get": {
+        "tags": ["Phone Status"],
+        "summary": "Get WID and data of connected device",
+        "description": "Get WID and data of connected device",
+        "operationId": "HostDevice",
         "parameters": [],
         "responses": {
           "200": {
@@ -15015,6 +16131,40 @@
           "message": "Message deleted"
         }
       },
+      "ReactMessageRequest": {
+        "title": "ReactMessageRequest",
+        "required": ["msgId", "reaction"],
+        "type": "object",
+        "properties": {
+          "msgId": {
+            "type": "string"
+          },
+          "reaction": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "phone": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+          "messageId": "🤯"
+        }
+      },
+      "ReactMessage": {
+        "title": "ReactMessage",
+        "required": ["status", "message"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "status": "Success",
+          "message": "Reação enviada"
+        }
+      },
       "MarkUnseenRequest": {
         "title": "MarkUnseenRequest",
         "required": ["phone"],
@@ -16093,7 +17243,7 @@
       },
       "SendMentionedRequest": {
         "title": "SendMentionedRequest",
-        "required": ["phone", "message", "mentioned", "isGruop"],
+        "required": ["phone", "message", "mentioned", "isGroup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -16109,7 +17259,7 @@
             },
             "description": ""
           },
-          "isGruop": {
+          "isGroup": {
             "type": "boolean"
           }
         },
@@ -16117,7 +17267,49 @@
           "phone": "556593077171-1620997998",
           "message": "ola como isso funciona @556593077171@c.us",
           "mentioned": ["@556593077171@c.us"],
-          "isGruop": true
+          "isGroup": true
+        }
+      },
+      "SendStickerRequest": {
+        "title": "SendStickerRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "path": "https://www.camarabracodotrombudo.sc.gov.br/media/noticia/link-para-participacao-da-audiencia-publica-54.jpg",
+          "isGroup": false
+        }
+      },
+      "SendStickerGifRequest": {
+        "title": "SendStickerGifRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "path": "https://media.giphy.com/media/hpXFi66bfQm7e81ohw/giphy.gif",
+          "isGroup": false
         }
       },
       "ChangeUsernameRequest": {
@@ -16174,6 +17366,127 @@
         },
         "example": {
           "status": "My new status"
+        }
+      },
+      "SendImageStorieRequest": {
+        "title": "SendImageStorieRequest",
+        "required": ["path"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "path": "https://pbs.twimg.com/profile_images/549882655932948480/LCZWmFyW_400x400.jpeg"
+        }
+      },
+      "GetMyStatusRequest": {
+        "title": "GetMyStatusRequest",
+        "required": [""],
+        "type": "object",
+        "properties": {},
+        "example": {}
+      },
+      "GetStatusRequest": {
+        "title": "GetStatusRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "phone": "5561988888988"
+        }
+      },
+      "SendVideoStorieRequest": {
+        "title": "SendVideoStorieRequest",
+        "required": ["path"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "path": "https://file-examples.com/storage/fe21590a2962d597a9a51ad/2017/04/file_example_MP4_480_1_5MG.mp4"
+        }
+      },
+      "SendTextStorieRequest": {
+        "title": "SendTextStorieRequest",
+        "required": ["text", "options"],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "text": "Test Text Storye",
+          "options": { "backgroundColor": "#0275d8", "font": 2 }
+        }
+      },
+      "AddNewLabelRequest": {
+        "title": "AddNewLabelRequest",
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Farmácia",
+          "options": { "labelColor": "#dfaef0" }
+        }
+      },
+      "AddOrRemoveLabelRequest": {
+        "title": "AddOrRemoveLabelRequest",
+        "required": ["name", "options"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "chatIds": ["5521988887878"],
+          "options": [
+            { "labelId": "76", "type": "add" },
+            { "labelId": "75", "type": "remove" }
+          ]
+        }
+      },
+      "SubscribePresenceRequest": {
+        "title": "SubscribePresenceRequest",
+        "required": ["phone"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          },
+          "all": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "isGroup": false,
+          "all": false
         }
       },
       "ChangeProfileStatus": {
@@ -18031,6 +19344,43 @@
           "value": true
         }
       },
+      "SetGroupProfilePicRequest": {
+        "title": "SetGroupProfilePicRequest",
+        "required": ["phone", "path", "isGroup"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "120363025416793270@g.us",
+          "path": "https://www.camarabracodotrombudo.sc.gov.br/media/noticia/link-para-participacao-da-audiencia-publica-54.jpg"
+        }
+      },
+      "SetGroupProfilePic": {
+        "title": "SetGroupProfilePic",
+        "required": ["status", "response"],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "response": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "status": "success",
+          "response": true
+        }
+      },
       "SetMessagesAdminsOnly": {
         "title": "SetMessagesAdminsOnly",
         "required": ["status", "response"],
@@ -18194,6 +19544,14 @@
     {
       "name": "Profile",
       "description": "Profile Methods"
+    },
+    {
+      "name": "Status Stories",
+      "description": "Status Stories Methods"
+    },
+    {
+      "name": "Labels",
+      "description": "Labels Methods"
     },
     {
       "name": "Contact",
