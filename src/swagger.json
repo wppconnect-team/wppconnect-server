@@ -4080,7 +4080,8 @@
               },
               "example": {
                 "phone": "556593077171",
-                "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47"
+                "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+                "isGroup": false
               }
             }
           },
@@ -16111,7 +16112,8 @@
         },
         "example": {
           "phone": "556593077171",
-          "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47"
+          "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+          "isGroup": false
         }
       },
       "DeleteMessage": {
