@@ -31,9 +31,16 @@ export async function sendTextStorie(req, res) {
 export async function sendImageStorie(req, res) {
   const { path, options } = req.body;
 
+  if (!path && !req.file)
+    return res.status(401).send({
+      message: 'Sending the image is mandatory',
+    });
+
+  const pathFile = path || req.file.path;
+
   try {
     let results = [];
-    results.push(await req.client.sendImageStatus(path, options));
+    results.push(await req.client.sendImageStatus(pathFile, options));
 
     if (results.length === 0) return res.status(400).json('Error sending the image of stories');
     returnSucess(res, results);
