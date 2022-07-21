@@ -578,6 +578,22 @@ export async function setTyping(req, res) {
   }
 }
 
+export async function setRecording(req, res) {
+  const { phone, value = true, duration, isGroup = false } = req.body;
+  try {
+    let response;
+    for (const contato of contactToArray(phone, isGroup)) {
+      if (value) response = await req.client.startRecording(contato, duration);
+      else response = await req.client.stopRecoring(contato);
+    }
+
+    return res.status(200).json({ status: 'success', response: response });
+  } catch (error) {
+    req.logger.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error on set recording' });
+  }
+}
+
 export async function checkNumberStatus(req, res) {
   const { phone } = req.params;
   try {

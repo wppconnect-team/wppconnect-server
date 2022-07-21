@@ -194,6 +194,7 @@ routes.post('/api/:session/send-seen', verifyToken, statusConnection, DeviceCont
 routes.post('/api/:session/chat-state', verifyToken, statusConnection, DeviceController.setChatState);
 routes.post('/api/:session/temporary-messages', verifyToken, statusConnection, DeviceController.setTemporaryMessages);
 routes.post('/api/:session/typing', verifyToken, statusConnection, DeviceController.setTyping);
+routes.post('/api/:session/recording', verifyToken, statusConnection, DeviceController.setRecording);
 routes.post('/api/:session/star-message', verifyToken, statusConnection, DeviceController.starMessage);
 routes.post('/api/:session/reject-call', verifyToken, statusConnection, DeviceController.rejectCall);
 
