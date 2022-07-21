@@ -54,7 +54,11 @@ const verifyToken = (req, res, next) => {
         req.session = formatSession(req.params.session);
         req.token = tokenDecrypt;
         req.client = clientsArray[req.session];
-        next();
+        if (!req.client || req.client.status === null) {
+          res.status(401).json({ error: 'Your session is not connected' });
+        } else {
+          next();
+        }
       } else {
         return res.status(401).json({ error: 'Check that the Session and Token are correct' });
       }
