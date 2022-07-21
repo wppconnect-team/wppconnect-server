@@ -293,7 +293,7 @@ export async function deleteMessage(req, res) {
   const { phone, messageId } = req.body;
 
   try {
-    await req.client.deleteMessage(`${phone}@c.us`, [messageId]);
+    await req.client.deleteMessage(`${phone}`, [messageId]);
 
     return res.status(200).json({ status: 'success', response: { message: 'Message deleted' } });
   } catch (e) {
