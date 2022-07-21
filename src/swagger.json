@@ -4717,7 +4717,7 @@
             "headers": {}
           }
         },
-        "deprecated": false
+        "deprecated": true
       }
     },
     "/send-seen": {
