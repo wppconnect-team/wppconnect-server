@@ -58,7 +58,7 @@
     "@commitlint/config-conventional": "^17.0.3",
     "@commitlint/cz-commitlint": "^17.0.3",
     "aws-sdk": "^2.1176.0",
-    "commitizen": "^4.2.4",
+    "commitizen": "^4.2.5",
     "conventional-changelog-cli": "^2.2.2",
     "crypto-js": "^4.1.1",
     "eslint": "^8.20.0",
