@@ -1,10 +1,17 @@
 # WPPConnect Team
 
-access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
 
 ## _WPPConnect Server_
 
+[![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
+[![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/project/wppconnect-team/wppconnect-server 'Average time to resolve an issue')
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg 'Percentage of issues still open')
+[![Build Status](https://img.shields.io/github/workflow/status/wppconnect-team/wppconnect-server/build.svg)](https://github.com/wppconnect-team/wppconnect-serer/actions)
+[![release-it](https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-release--it-e10079.svg)](https://github.com/release-it/release-it)
 [![Build](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml)
+
+Access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
 
 Wppconnect Server is a ready-to-use API, just download, install, and start using, simple as that.
 
