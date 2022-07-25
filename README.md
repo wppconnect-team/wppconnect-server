@@ -27,7 +27,10 @@ Wppconnect Server is a ready-to-use API, just download, install, and start using
 [![YouTube](https://img.shields.io/youtube/channel/subscribers/UCD7J9LG08PmGQrF5IS7Yv9A?label=YouTube)](https://www.youtube.com/c/wppconnect)
 
 ## Documentations
-Access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ) | Access our documentation on [Swagger](https://wppconnect.io/swagger/wppconnect-server)
+Access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ) 
+
+Access our documentation on [Swagger](https://wppconnect.io/swagger/wppconnect-server)
+
 Or Swagger UI in your server. Acess router: "IP:PORT/api-docs"
 
 ## Features
