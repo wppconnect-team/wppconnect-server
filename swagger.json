@@ -3,7 +3,7 @@
   "info": {
     "title": "WPPConnect API REST",
     "contact": {},
-    "version": "1.0"
+    "version": "1.1.0"
   },
   "servers": [
     {
@@ -4080,7 +4080,8 @@
               },
               "example": {
                 "phone": "556593077171",
-                "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47"
+                "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+                "isGroup": false
               }
             }
           },
@@ -4716,7 +4717,7 @@
             "headers": {}
           }
         },
-        "deprecated": false
+        "deprecated": true
       }
     },
     "/send-seen": {
@@ -4961,7 +4962,121 @@
               "example": {
                 "phone": "556593077171",
                 "value": true,
-                "isGrup": false
+                "isGroup": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "36"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"24-Xm9Fmv/piJ8aftrp5VK0tqiuuAc\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 13:37:24 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemporaryMessages"
+                },
+                "example": {
+                  "status": "success",
+                  "response": true
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/recording": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Set Recording",
+        "description": "Start and Stop Recording, passe valeu true os false",
+        "operationId": "SetRecording",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRecordingRequest"
+              },
+              "example": {
+                "phone": "556593077171",
+                "value": true,
+                "isGroup": false
               }
             }
           },
@@ -16111,7 +16226,8 @@
         },
         "example": {
           "phone": "556593077171",
-          "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47"
+          "messageId": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+          "isGroup": false
         }
       },
       "DeleteMessage": {
@@ -16747,7 +16863,7 @@
       },
       "SetTypingRequest": {
         "title": "SetTypingRequest",
-        "required": ["phone", "value", "isGrup"],
+        "required": ["phone", "value", "isGroup"],
         "type": "object",
         "properties": {
           "phone": {
@@ -16763,7 +16879,28 @@
         "example": {
           "phone": "556593077171",
           "value": true,
-          "isGrup": false
+          "isGroup": false
+        }
+      },
+      "SetRecordingRequest": {
+        "title": "SetRecordingRequest",
+        "required": ["phone", "value", "isGroup"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "value": {
+            "type": "boolean"
+          },
+          "isGrup": {
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "phone": "556593077171",
+          "value": true,
+          "isGroup": false
         }
       },
       "rejectCallRequest": {
