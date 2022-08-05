@@ -1,3 +1,12 @@
+## 1.6.1 (2022-08-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @wppconnect-team/wppconnect to ^1.16.0 ([#860](https://github.com/wppconnect-team/wppconnect-server/issues/860)) ([5f72973](https://github.com/wppconnect-team/wppconnect-server/commit/5f72973788d2844d2297acd73b96e76001b70c37))
+
+
+
 # 1.6.0 (2022-07-20)
 
 
