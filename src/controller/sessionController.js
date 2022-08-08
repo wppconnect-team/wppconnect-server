@@ -19,6 +19,7 @@ import CreateSessionUtil from '../util/createSessionUtil';
 import getAllTokens from '../util/getAllTokens';
 import fs from 'fs';
 import mime from 'mime-types';
+import { version } from '../../package.json';
 
 const SessionUtil = new CreateSessionUtil();
 
@@ -278,6 +279,7 @@ export async function getSessionState(req, res) {
         status: client.status,
         qrcode: client.qrcode,
         urlcode: client.urlcode,
+        version: version,
       });
   } catch (ex) {
     req.logger.error(ex);
