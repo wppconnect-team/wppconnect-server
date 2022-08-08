@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { contactToArray, groupNameToArray, groupToArray, unlinkAsync } from '../util/functions';
+import { contactToArray, groupNameToArray, groupToArray } from '../util/functions';
 
 export async function getAllGroups(req, res) {
   try {

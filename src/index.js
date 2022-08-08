@@ -23,7 +23,6 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server as Socket } from 'socket.io';
 import routes from './routes';
-import path from 'path';
 import config from './config.json';
 import boolParser from 'express-query-boolean';
 import mergeDeep from 'merge-deep';

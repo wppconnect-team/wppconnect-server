@@ -264,7 +264,7 @@ export async function clearChat(req, res) {
 }
 
 export async function archiveChat(req, res) {
-  const { phone, value = true, isGroup = false } = req.body;
+  const { phone, value = true } = req.body;
 
   try {
     let response;
