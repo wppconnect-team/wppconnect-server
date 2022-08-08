@@ -470,11 +470,11 @@ export async function loadAndGetAllMessagesInChat(req, res) {
 }
 export async function getMessages(req, res) {
   const { phone } = req.params;
-  const { count = 20, direction = 'before', id = 0 } = req.query;
+  const { count = 20, direction = 'before', id = null } = req.query;
   try {
     const response = await req.client.getMessages(`${phone}`, {
       count: parseInt(count),
-      direction: direction,
+      direction: direction.toString(),
       id: id,
     });
     return res.status(200).json({ status: 'success', response: response });

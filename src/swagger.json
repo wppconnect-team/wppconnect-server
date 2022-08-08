@@ -1604,7 +1604,7 @@
         "deprecated": false
       }
     },
-    "/get-messages": {
+    "/get-messages/{phone}": {
       "get": {
         "tags": ["Chat"],
         "summary": "Get messages in Chat",
@@ -1622,6 +1622,16 @@
               "example": "application/json"
             }
           },
+          {
+            "in": "path",
+            "name": "phone",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The contact ID, with @c.us or @g.us"
+          },
+
           {
             "name": "count",
             "in": "query",
