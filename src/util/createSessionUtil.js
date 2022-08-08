@@ -54,6 +54,9 @@ export default class CreateSessionUtil {
           catchQR: (base64Qr, asciiQR, attempt, urlCode) => {
             this.exportQR(req, base64Qr, urlCode, client, res);
           },
+          onLoadingScreen: (percent, message) => {
+            req.logger.info(`[${session}] ${percent}% - ${message}`);
+          },
           statusFind: (statusFind) => {
             try {
               eventEmitter.emit(`status-${client.session}`, client, statusFind);
