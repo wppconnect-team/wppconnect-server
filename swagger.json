@@ -1604,6 +1604,685 @@
         "deprecated": false
       }
     },
+    "/get-messages/{phone}": {
+      "get": {
+        "tags": ["Chat"],
+        "summary": "Get messages in Chat",
+        "description": "Get messages in chat.",
+        "operationId": "GetMessages",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            }
+          },
+          {
+            "in": "path",
+            "name": "phone",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The contact ID, with @c.us or @g.us"
+          },
+
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Quantity of messages. Specify -1 to get everything (may take a long time).",
+            "required": false,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "example": "20"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Get messages after/before this message ID.",
+            "required": false,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": ""
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Specify the direction in which the messages are gonna be retrieved. If present, must be 'after' or 'before'",
+            "required": false,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "before"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "14300"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"37dc-Gh3xKCwbIdtSuq3hb/nlZD5wjYE\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:34:45 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllMessagesinChat"
+                },
+                "example": {
+                  "status": "success",
+                  "response": [
+                    {
+                      "id": "true_556593077171@c.us_3EB02AA63F5EF81C3EA5",
+                      "body": "mensagem de resposta",
+                      "type": "chat",
+                      "t": 1620745135,
+                      "notifyName": "",
+                      "from": "556592424425@c.us",
+                      "to": "556593077171@c.us",
+                      "self": "in",
+                      "ack": 3,
+                      "invis": true,
+                      "star": false,
+                      "isFromTemplate": false,
+                      "thumbnail": "",
+                      "richPreviewType": 0,
+                      "quotedMsg": {
+                        "type": "chat",
+                        "body": "Oi oi oi"
+                      },
+                      "quotedStanzaID": "BA86D62376F08B22171EB46A18B23B13",
+                      "quotedParticipant": "556593077171@c.us",
+                      "mentionedJidList": [],
+                      "isVcardOverMmsDocument": false,
+                      "labels": [],
+                      "isDynamicReplyButtonsMsg": false,
+                      "chatId": {
+                        "server": "c.us",
+                        "user": "556593077171",
+                        "_serialized": "556593077171@c.us"
+                      },
+                      "fromMe": true,
+                      "sender": {
+                        "id": {
+                          "server": "c.us",
+                          "user": "556592424425",
+                          "_serialized": "556592424425@c.us"
+                        },
+                        "type": "in",
+                        "formattedName": "Você",
+                        "isMe": true,
+                        "isMyContact": false,
+                        "isPSA": false,
+                        "isUser": true,
+                        "isWAContact": true,
+                        "profilePicThumbObj": {
+                          "eurl": "https://pps.whatsapp.net/v/t61.24694-24/186785458_1803385806500761_5876885036408672004_n.jpg?ccb=11-4&oh=3d92276120fc2ac1675cd4c7e4525151&oe=60A1F201",
+                          "id": {
+                            "server": "c.us",
+                            "user": "556592424425",
+                            "_serialized": "556592424425@c.us"
+                          },
+                          "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F186785458_1803385806500761_5876885036408672004_n.jpg%3Fccb%3D11-4%26oh%3D3d92276120fc2ac1675cd4c7e4525151%26oe%3D60A1F201&t=s&u=556592424425%40c.us&i=1620929335&n=oRzYouRjXhp0to8ecMKtlUAbYfCIU1r%2BPEkB4MiTDts%3D",
+                          "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F186785458_1803385806500761_5876885036408672004_n.jpg%3Fccb%3D11-4%26oh%3D3d92276120fc2ac1675cd4c7e4525151%26oe%3D60A1F201&t=l&u=556592424425%40c.us&i=1620929335&n=oRzYouRjXhp0to8ecMKtlUAbYfCIU1r%2BPEkB4MiTDts%3D",
+                          "raw": null,
+                          "tag": "1620929335"
+                        },
+                        "msgs": null
+                      },
+                      "timestamp": 1620745135,
+                      "content": "mensagem de resposta",
+                      "isGroupMsg": false,
+                      "isMedia": false,
+                      "isNotification": false,
+                      "isPSA": false,
+                      "chat": {
+                        "id": {
+                          "server": "c.us",
+                          "user": "556593077171",
+                          "_serialized": "556593077171@c.us"
+                        },
+                        "pendingMsgs": false,
+                        "t": 1620851002,
+                        "unreadCount": 0,
+                        "archive": false,
+                        "isReadOnly": false,
+                        "muteExpiration": 0,
+                        "name": "Anselmo",
+                        "notSpam": true,
+                        "pin": 0,
+                        "ephemeralDuration": 0,
+                        "ephemeralSettingTimestamp": 0,
+                        "msgs": null,
+                        "kind": "chat",
+                        "isBroadcast": false,
+                        "isGroup": false,
+                        "isUser": true,
+                        "contact": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "name": "Eu",
+                          "shortName": "Eu",
+                          "pushname": "Anselmo Schaefler",
+                          "type": "in",
+                          "isBusiness": false,
+                          "isEnterprise": false,
+                          "statusMute": false,
+                          "labels": [],
+                          "formattedName": "Eu",
+                          "isMe": false,
+                          "isMyContact": true,
+                          "isPSA": false,
+                          "isUser": true,
+                          "isWAContact": true,
+                          "profilePicThumbObj": {
+                            "eurl": "https://pps.whatsapp.net/v/t61.24694-24/69632581_431433907486875_637018468327096320_n.jpg?ccb=11-4&oh=d50ef70e6638d3121639ab454604becb&oe=60A1D0D6",
+                            "id": {
+                              "server": "c.us",
+                              "user": "556593077171",
+                              "_serialized": "556593077171@c.us"
+                            },
+                            "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=s&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=l&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "raw": null,
+                            "tag": "1570738292"
+                          },
+                          "msgs": null
+                        },
+                        "groupMetadata": null,
+                        "presence": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "chatstates": []
+                        }
+                      },
+                      "quotedMsgObj": {
+                        "id": "false_556593077171@c.us_BA86D62376F08B22171EB46A18B23B13",
+                        "body": "Oi oi oi",
+                        "type": "chat",
+                        "from": "556593077171@c.us",
+                        "to": "556592424425@c.us",
+                        "author": "556593077171@c.us",
+                        "self": "in",
+                        "star": false,
+                        "isFromTemplate": false,
+                        "mentionedJidList": [],
+                        "isVcardOverMmsDocument": false,
+                        "isForwarded": false,
+                        "isDynamicReplyButtonsMsg": false,
+                        "chatId": {
+                          "server": "c.us",
+                          "user": "556593077171",
+                          "_serialized": "556593077171@c.us"
+                        },
+                        "fromMe": false,
+                        "sender": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "name": "Eu",
+                          "shortName": "Eu",
+                          "pushname": "Anselmo Schaefler",
+                          "type": "in",
+                          "isBusiness": false,
+                          "isEnterprise": false,
+                          "statusMute": false,
+                          "labels": [],
+                          "formattedName": "Eu",
+                          "isMe": false,
+                          "isMyContact": true,
+                          "isPSA": false,
+                          "isUser": true,
+                          "isWAContact": true,
+                          "profilePicThumbObj": {
+                            "eurl": "https://pps.whatsapp.net/v/t61.24694-24/69632581_431433907486875_637018468327096320_n.jpg?ccb=11-4&oh=d50ef70e6638d3121639ab454604becb&oe=60A1D0D6",
+                            "id": {
+                              "server": "c.us",
+                              "user": "556593077171",
+                              "_serialized": "556593077171@c.us"
+                            },
+                            "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=s&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=l&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "raw": null,
+                            "tag": "1570738292"
+                          },
+                          "msgs": null
+                        },
+                        "content": "Oi oi oi",
+                        "isGroupMsg": false,
+                        "isMedia": false,
+                        "isNotification": false,
+                        "isPSA": false,
+                        "chat": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "pendingMsgs": false,
+                          "t": 1620851002,
+                          "unreadCount": 0,
+                          "archive": false,
+                          "isReadOnly": false,
+                          "muteExpiration": 0,
+                          "name": "Anselmo",
+                          "notSpam": true,
+                          "pin": 0,
+                          "ephemeralDuration": 0,
+                          "ephemeralSettingTimestamp": 0,
+                          "msgs": null,
+                          "kind": "chat",
+                          "isBroadcast": false,
+                          "isGroup": false,
+                          "isUser": true,
+                          "contact": {
+                            "id": {
+                              "server": "c.us",
+                              "user": "556593077171",
+                              "_serialized": "556593077171@c.us"
+                            },
+                            "name": "Eu",
+                            "shortName": "Eu",
+                            "pushname": "Anselmo Schaefler",
+                            "type": "in",
+                            "isBusiness": false,
+                            "isEnterprise": false,
+                            "statusMute": false,
+                            "labels": [],
+                            "formattedName": "Eu",
+                            "isMe": false,
+                            "isMyContact": true,
+                            "isPSA": false,
+                            "isUser": true,
+                            "isWAContact": true,
+                            "profilePicThumbObj": {
+                              "eurl": "https://pps.whatsapp.net/v/t61.24694-24/69632581_431433907486875_637018468327096320_n.jpg?ccb=11-4&oh=d50ef70e6638d3121639ab454604becb&oe=60A1D0D6",
+                              "id": {
+                                "server": "c.us",
+                                "user": "556593077171",
+                                "_serialized": "556593077171@c.us"
+                              },
+                              "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=s&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                              "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=l&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                              "raw": null,
+                              "tag": "1570738292"
+                            },
+                            "msgs": null
+                          },
+                          "groupMetadata": null,
+                          "presence": {
+                            "id": {
+                              "server": "c.us",
+                              "user": "556593077171",
+                              "_serialized": "556593077171@c.us"
+                            },
+                            "chatstates": []
+                          }
+                        },
+                        "quotedMsgObj": null,
+                        "mediaData": {},
+                        "reply": {}
+                      },
+                      "mediaData": {},
+                      "reply": {}
+                    },
+                    {
+                      "id": "false_556593077171@c.us_1B69CFDC0BDBAB37B2B628D90CBA0F47",
+                      "body": "Dhdh",
+                      "type": "chat",
+                      "t": 1620850522,
+                      "notifyName": "",
+                      "from": "556593077171@c.us",
+                      "to": "556592424425@c.us",
+                      "self": "in",
+                      "ack": 0,
+                      "invis": true,
+                      "star": false,
+                      "isFromTemplate": false,
+                      "broadcast": false,
+                      "mentionedJidList": [],
+                      "isVcardOverMmsDocument": false,
+                      "isForwarded": false,
+                      "labels": [],
+                      "ephemeralOutOfSync": false,
+                      "isDynamicReplyButtonsMsg": false,
+                      "chatId": {
+                        "server": "c.us",
+                        "user": "556593077171",
+                        "_serialized": "556593077171@c.us"
+                      },
+                      "fromMe": false,
+                      "sender": {
+                        "id": {
+                          "server": "c.us",
+                          "user": "556593077171",
+                          "_serialized": "556593077171@c.us"
+                        },
+                        "name": "Eu",
+                        "shortName": "Eu",
+                        "pushname": "Anselmo Schaefler",
+                        "type": "in",
+                        "isBusiness": false,
+                        "isEnterprise": false,
+                        "statusMute": false,
+                        "labels": [],
+                        "formattedName": "Eu",
+                        "isMe": false,
+                        "isMyContact": true,
+                        "isPSA": false,
+                        "isUser": true,
+                        "isWAContact": true,
+                        "profilePicThumbObj": {
+                          "eurl": "https://pps.whatsapp.net/v/t61.24694-24/69632581_431433907486875_637018468327096320_n.jpg?ccb=11-4&oh=d50ef70e6638d3121639ab454604becb&oe=60A1D0D6",
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=s&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                          "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=l&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                          "raw": null,
+                          "tag": "1570738292"
+                        },
+                        "msgs": null
+                      },
+                      "timestamp": 1620850522,
+                      "content": "Dhdh",
+                      "isGroupMsg": false,
+                      "isMedia": false,
+                      "isNotification": false,
+                      "isPSA": false,
+                      "chat": {
+                        "id": {
+                          "server": "c.us",
+                          "user": "556593077171",
+                          "_serialized": "556593077171@c.us"
+                        },
+                        "pendingMsgs": false,
+                        "t": 1620851002,
+                        "unreadCount": 0,
+                        "archive": false,
+                        "isReadOnly": false,
+                        "muteExpiration": 0,
+                        "name": "Anselmo",
+                        "notSpam": true,
+                        "pin": 0,
+                        "ephemeralDuration": 0,
+                        "ephemeralSettingTimestamp": 0,
+                        "msgs": null,
+                        "kind": "chat",
+                        "isBroadcast": false,
+                        "isGroup": false,
+                        "isUser": true,
+                        "contact": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "name": "Eu",
+                          "shortName": "Eu",
+                          "pushname": "Anselmo Schaefler",
+                          "type": "in",
+                          "isBusiness": false,
+                          "isEnterprise": false,
+                          "statusMute": false,
+                          "labels": [],
+                          "formattedName": "Eu",
+                          "isMe": false,
+                          "isMyContact": true,
+                          "isPSA": false,
+                          "isUser": true,
+                          "isWAContact": true,
+                          "profilePicThumbObj": {
+                            "eurl": "https://pps.whatsapp.net/v/t61.24694-24/69632581_431433907486875_637018468327096320_n.jpg?ccb=11-4&oh=d50ef70e6638d3121639ab454604becb&oe=60A1D0D6",
+                            "id": {
+                              "server": "c.us",
+                              "user": "556593077171",
+                              "_serialized": "556593077171@c.us"
+                            },
+                            "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=s&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=l&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "raw": null,
+                            "tag": "1570738292"
+                          },
+                          "msgs": null
+                        },
+                        "groupMetadata": null,
+                        "presence": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "chatstates": []
+                        }
+                      },
+                      "quotedMsgObj": null,
+                      "mediaData": {},
+                      "reply": {}
+                    },
+                    {
+                      "id": "true_556593077171@c.us_3EB01FA502A921588DC7",
+                      "body": "ola tudo bem como vai",
+                      "type": "chat",
+                      "t": 1620851002,
+                      "notifyName": "",
+                      "from": "556592424425@c.us",
+                      "to": "556593077171@c.us",
+                      "self": "in",
+                      "ack": 3,
+                      "invis": true,
+                      "star": false,
+                      "isFromTemplate": false,
+                      "mentionedJidList": [],
+                      "isVcardOverMmsDocument": false,
+                      "isForwarded": false,
+                      "labels": [],
+                      "isDynamicReplyButtonsMsg": false,
+                      "chatId": {
+                        "server": "c.us",
+                        "user": "556593077171",
+                        "_serialized": "556593077171@c.us"
+                      },
+                      "fromMe": true,
+                      "sender": {
+                        "id": {
+                          "server": "c.us",
+                          "user": "556592424425",
+                          "_serialized": "556592424425@c.us"
+                        },
+                        "type": "in",
+                        "formattedName": "Você",
+                        "isMe": true,
+                        "isMyContact": false,
+                        "isPSA": false,
+                        "isUser": true,
+                        "isWAContact": true,
+                        "profilePicThumbObj": {
+                          "eurl": "https://pps.whatsapp.net/v/t61.24694-24/186785458_1803385806500761_5876885036408672004_n.jpg?ccb=11-4&oh=3d92276120fc2ac1675cd4c7e4525151&oe=60A1F201",
+                          "id": {
+                            "server": "c.us",
+                            "user": "556592424425",
+                            "_serialized": "556592424425@c.us"
+                          },
+                          "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F186785458_1803385806500761_5876885036408672004_n.jpg%3Fccb%3D11-4%26oh%3D3d92276120fc2ac1675cd4c7e4525151%26oe%3D60A1F201&t=s&u=556592424425%40c.us&i=1620929335&n=oRzYouRjXhp0to8ecMKtlUAbYfCIU1r%2BPEkB4MiTDts%3D",
+                          "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F186785458_1803385806500761_5876885036408672004_n.jpg%3Fccb%3D11-4%26oh%3D3d92276120fc2ac1675cd4c7e4525151%26oe%3D60A1F201&t=l&u=556592424425%40c.us&i=1620929335&n=oRzYouRjXhp0to8ecMKtlUAbYfCIU1r%2BPEkB4MiTDts%3D",
+                          "raw": null,
+                          "tag": "1620929335"
+                        },
+                        "msgs": null
+                      },
+                      "timestamp": 1620851002,
+                      "content": "ola tudo bem como vai",
+                      "isGroupMsg": false,
+                      "isMedia": false,
+                      "isNotification": false,
+                      "isPSA": false,
+                      "chat": {
+                        "id": {
+                          "server": "c.us",
+                          "user": "556593077171",
+                          "_serialized": "556593077171@c.us"
+                        },
+                        "pendingMsgs": false,
+                        "t": 1620851002,
+                        "unreadCount": 0,
+                        "archive": false,
+                        "isReadOnly": false,
+                        "muteExpiration": 0,
+                        "name": "Anselmo",
+                        "notSpam": true,
+                        "pin": 0,
+                        "ephemeralDuration": 0,
+                        "ephemeralSettingTimestamp": 0,
+                        "msgs": null,
+                        "kind": "chat",
+                        "isBroadcast": false,
+                        "isGroup": false,
+                        "isUser": true,
+                        "contact": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "name": "Eu",
+                          "shortName": "Eu",
+                          "pushname": "Anselmo Schaefler",
+                          "type": "in",
+                          "isBusiness": false,
+                          "isEnterprise": false,
+                          "statusMute": false,
+                          "labels": [],
+                          "formattedName": "Eu",
+                          "isMe": false,
+                          "isMyContact": true,
+                          "isPSA": false,
+                          "isUser": true,
+                          "isWAContact": true,
+                          "profilePicThumbObj": {
+                            "eurl": "https://pps.whatsapp.net/v/t61.24694-24/69632581_431433907486875_637018468327096320_n.jpg?ccb=11-4&oh=d50ef70e6638d3121639ab454604becb&oe=60A1D0D6",
+                            "id": {
+                              "server": "c.us",
+                              "user": "556593077171",
+                              "_serialized": "556593077171@c.us"
+                            },
+                            "img": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=s&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "imgFull": "https://web.whatsapp.com/pp?e=https%3A%2F%2Fpps.whatsapp.net%2Fv%2Ft61.24694-24%2F69632581_431433907486875_637018468327096320_n.jpg%3Fccb%3D11-4%26oh%3Dd50ef70e6638d3121639ab454604becb%26oe%3D60A1D0D6&t=l&u=556593077171%40c.us&i=1570738292&n=s8OQzBbanWyT1fpXxjaymfva028aImlAWhPuRa%2FFil8%3D",
+                            "raw": null,
+                            "tag": "1570738292"
+                          },
+                          "msgs": null
+                        },
+                        "groupMetadata": null,
+                        "presence": {
+                          "id": {
+                            "server": "c.us",
+                            "user": "556593077171",
+                            "_serialized": "556593077171@c.us"
+                          },
+                          "chatstates": []
+                        }
+                      },
+                      "quotedMsgObj": null,
+                      "mediaData": {},
+                      "reply": {}
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/all-messages-in-chat": {
       "get": {
         "tags": ["Chat"],
