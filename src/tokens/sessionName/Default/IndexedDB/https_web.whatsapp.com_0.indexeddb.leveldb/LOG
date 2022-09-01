@@ -1,0 +1,2 @@
+2022/08/31-12:56:49.174 17bf0 Creating DB /var/www/html/wppconnect-server/src/tokens/sessionName/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb since it was missing.
+2022/08/31-12:56:49.319 17bf0 Reusing MANIFEST /var/www/html/wppconnect-server/src/tokens/sessionName/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001

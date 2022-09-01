@@ -97,7 +97,7 @@ export async function callWebHook(client, req, event, data) {
           } catch (e) {}
         })
         .catch((e) => {
-          req.logger.warn('Error calling Webhook.', e);
+         // req.logger.warn('Error calling Webhook.', e);
         });
     } catch (e) {
       req.logger.error(e);

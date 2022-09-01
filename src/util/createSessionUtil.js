@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const {wppResponse} = require('../responseInteraction');
+const colors = require('colors/safe');
 import { clientsArray, eventEmitter } from './sessionUtil';
 import { create, SocketState } from '@wppconnect-team/wppconnect';
 import { callWebHook, startHelper } from './functions';
@@ -124,7 +126,7 @@ export default class CreateSessionUtil {
       await client.isConnected();
       Object.assign(client, { status: 'CONNECTED', qrcode: null });
 
-      req.logger.info(`Started Session: ${client.session}`);
+      req.logger.info(`Started Session: ${colors.red(client.session)}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
       req.io.emit('session-logged', { status: true, session: client.session });
       startHelper(client, req);
@@ -132,7 +134,8 @@ export default class CreateSessionUtil {
       req.logger.error(error);
       req.io.emit('session-error', client.session);
     }
-
+     
+    await wppResponse(client)
     await this.checkStateSession(client, req);
     await this.listenMessages(client, req);
 
@@ -168,10 +171,12 @@ export default class CreateSessionUtil {
 
     await client.onAnyMessage((message) => {
       message.session = client.session;
-
+   
       if (message.type === 'sticker') {
         download(message, client, req.logger);
       }
+
+      
 
       req.io.emit('received-message', { response: message });
     });
