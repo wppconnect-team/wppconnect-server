@@ -86,7 +86,7 @@ const erroMessage = async (number) => {
 }
 /*=====================================================================*/
 const abracadabra = async (number) => {
-    const res = await executeFetch(`/schedule/lessmonth/${number}`,datas,'',1).catch(e => false)
+    const res = await executeFetch(`/schedule/lessmonth/${number}`,'','',1).catch(e => false)
     if(!res || res.content.length == 0) return
     
     const schedule = await res.content.reduce((prev,e) => {                                                        
