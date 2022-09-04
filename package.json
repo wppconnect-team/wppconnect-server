@@ -57,7 +57,7 @@
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
     "@commitlint/cz-commitlint": "^17.1.2",
-    "aws-sdk": "^2.1204.0",
+    "aws-sdk": "^2.1209.0",
     "commitizen": "^4.2.5",
     "conventional-changelog-cli": "^2.2.2",
     "crypto-js": "^4.1.1",
@@ -78,7 +78,7 @@
     "webpack-cli": "^4.10.0"
   },
   "peerDependencies": {
-    "aws-sdk": "^2.1204.0",
+    "aws-sdk": "^2.1209.0",
     "crypto-js": "^4.1.1",
     "mongoose": "^6.5.4",
     "redis": "^4.3.0"
