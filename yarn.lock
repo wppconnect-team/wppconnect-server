@@ -1849,13 +1849,13 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.7.0.tgz"
   integrity sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==
 
-"@wppconnect-team/wppconnect@^1.16.1":
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.16.1.tgz#29743f8cf64f440f9a23063ff9b1ab700412dd24"
-  integrity sha512-w7Ij79iDfGihDXazAkwR3XiutNO8cET+HpyRtnVKBCNgqJOlQya0gAtRPbGDpYJQtJ8Xd2ZgUIYs9rMBVwiGTw==
+"@wppconnect-team/wppconnect@^1.17.0":
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.17.0.tgz#cd45c6389fe04c011f50a0bbff1e0301037343b9"
+  integrity sha512-JWmKKwzEZnP0Bp8N7tmS/iGFLtj32gYuNQ5vFKwjDjT6q9Oe+hWSTzBFO6ob0/9wkVOaneicHbDNR+OCMMhJtw==
   dependencies:
-    "@wppconnect/wa-js" "^2.10.1"
-    "@wppconnect/wa-version" "^1.1.123"
+    "@wppconnect/wa-js" "^2.12.0"
+    "@wppconnect/wa-version" "^1.1.154"
     atob "^2.1.2"
     axios "^0.27.2"
     boxen "^5.1.2"
@@ -1871,30 +1871,30 @@
     mime-types "^2.1.35"
     puppeteer "*"
     puppeteer-extra "^3.3.4"
-    puppeteer-extra-plugin-stealth "^2.11.0"
+    puppeteer-extra-plugin-stealth "^2.11.1"
     puppeteer-extra-plugin-user-data-dir "^2.4.0"
     puppeteer-extra-plugin-user-preferences "^2.4.0"
     qrcode-terminal "^0.12.0"
     reflect-metadata "^0.1.13"
     rimraf "^3.0.2"
     sanitize-filename "^1.6.3"
-    sharp "^0.30.7"
+    sharp "^0.31.0"
     tmp "^0.2.1"
     tree-kill "^1.2.2"
-    winston "^3.8.1"
+    winston "^3.8.2"
     ws "^8.8.1"
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.10.1":
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.10.1.tgz#1dedabad8ef8653fbb23bea1c5375062114934d5"
-  integrity sha512-IpSS5mozLSgLUqp18nlAdoL+jaIP6lD6SPwQuOw603k+Hl7E+3X12RGr12Wv6/q6vEpfrUFbLktgZchV/fwdiA==
+"@wppconnect/wa-js@^2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.12.0.tgz#899aa40e50fc5d67a41236f39c7aa0c6e32ca7a0"
+  integrity sha512-vBsS0SEhegxcUfdtzH+lRs6W99ZKsC2FE3K9IxHTnBgvTpEdAZruAEsN+6/OB/DMzt+IPlqZEUYakObmGJylww==
 
-"@wppconnect/wa-version@^1.1.123":
-  version "1.1.124"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.124.tgz#255de85d21bcf371f90245d75ea49ff362a296b8"
-  integrity sha512-YQvx7YVYAIQem+yvT8m0oMB31E22Y8e32/2+KJGKQbifdChoiTJp4DcyYsXNgpWu9nW86/CNWU6zhYl5RPHWtA==
+"@wppconnect/wa-version@^1.1.154":
+  version "1.1.156"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.156.tgz#8f94f5fca5abfb08adbdf3b3a8d1657f1da67bb4"
+  integrity sha512-pA4eEnHZ1Js/GBZjfxoht3Lg97whMUMZX3vfvU7qa1GXjWTm8iWMdUXe+0b9L/UYWrPRJcXk9LhbHPPtxmuoZw==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.7"
@@ -6519,10 +6519,10 @@ pupa@^3.1.0:
   dependencies:
     escape-goat "^4.0.0"
 
-puppeteer-extra-plugin-stealth@^2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-stealth/-/puppeteer-extra-plugin-stealth-2.11.0.tgz#727cf1edcac98a9f05be609c880cf0383e214f84"
-  integrity sha512-BqckPV95MHP25quZgzBnZJD8S38ZYP4B3HJ3Kr/vibqxJxhK6L1VQ6jnu/JcFKV0wzCIQPrCiiavZnwE5u1C2A==
+puppeteer-extra-plugin-stealth@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-extra-plugin-stealth/-/puppeteer-extra-plugin-stealth-2.11.1.tgz#7d56a27a986cb5eb69dca3c65695ad6444f4e822"
+  integrity sha512-n0wdC0Ilc9tk5L6FWLyd0P2gT8b2fp+2NuB+KB0oTSw3wXaZ0D6WNakjJsayJ4waGzIJFCUHkmK9zgx5NKMoFw==
   dependencies:
     debug "^4.1.1"
     puppeteer-extra-plugin "^3.2.2"
@@ -7148,10 +7148,10 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-sharp@^0.30.7:
-  version "0.30.7"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.30.7.tgz#7862bda98804fdd1f0d5659c85e3324b90d94c7c"
-  integrity sha512-G+MY2YW33jgflKPTXXptVO28HvNOo9G3j0MybYAHeEmby+QuD2U98dT6ueht9cv/XDqZspSpIhoSW+BAKJ7Hig==
+sharp@^0.31.0:
+  version "0.31.0"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.0.tgz#ce9b5202a5667486721cf07fd5b52360b1c2275a"
+  integrity sha512-ft96f8WzGxavg0rkLpMw90MTPMUZDyf0tHjPPh8Ob59xt6KzX8EqtotcqZGUm7kwqpX2pmYiyYX2LL0IZ/FDEw==
   dependencies:
     color "^4.2.3"
     detect-libc "^2.0.1"
@@ -8175,22 +8175,6 @@ winston-transport@^4.5.0:
     logform "^2.3.2"
     readable-stream "^3.6.0"
     triple-beam "^1.3.0"
-
-winston@^3.8.1:
-  version "3.8.1"
-  resolved "https://registry.npmjs.org/winston/-/winston-3.8.1.tgz"
-  integrity sha512-r+6YAiCR4uI3N8eQNOg8k3P3PqwAm20cLKlzVD9E66Ch39+LZC+VH1UKf9JemQj2B3QoUHfKD7Poewn0Pr3Y1w==
-  dependencies:
-    "@dabh/diagnostics" "^2.0.2"
-    async "^3.2.3"
-    is-stream "^2.0.0"
-    logform "^2.4.0"
-    one-time "^1.0.0"
-    readable-stream "^3.4.0"
-    safe-stable-stringify "^2.3.1"
-    stack-trace "0.0.x"
-    triple-beam "^1.3.0"
-    winston-transport "^4.5.0"
 
 winston@^3.8.2:
   version "3.8.2"
