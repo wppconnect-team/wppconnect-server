@@ -101,7 +101,7 @@ export async function sendFile64(req, res) {
   try {
     let results = [];
     for (const contato of phone) {
-      results.push(await req.client.sendFile(contato, base64, options.length > 0 ? options : filename));
+      results.push(await req.client.sendFile(contato, base64, Object.keys(options).length > 0 ? options : filename));
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');
