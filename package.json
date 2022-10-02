@@ -74,7 +74,7 @@
     "release-it": "^15.4.2",
     "rimraf": "^3.0.2",
     "shx": "^0.3.4",
-    "swagger-ui-dist": "^4.14.1",
+    "swagger-ui-dist": "^4.14.2",
     "webpack-cli": "^4.10.0"
   },
   "peerDependencies": {
