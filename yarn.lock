@@ -1872,13 +1872,13 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.7.0.tgz"
   integrity sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==
 
-"@wppconnect-team/wppconnect@^1.17.0":
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.17.0.tgz#cd45c6389fe04c011f50a0bbff1e0301037343b9"
-  integrity sha512-JWmKKwzEZnP0Bp8N7tmS/iGFLtj32gYuNQ5vFKwjDjT6q9Oe+hWSTzBFO6ob0/9wkVOaneicHbDNR+OCMMhJtw==
+"@wppconnect-team/wppconnect@^1.17.1":
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.17.1.tgz#e64aef8b882d90ab40b6f99928ba83dd0a8ea272"
+  integrity sha512-QkGuN0WC63Ut+C00HKVCICsh2XI51xEwiw/c14QbWLjKQvf6s9TtTy7cBnGsU0mffYEpQJLcdKhe4rpfpxMScg==
   dependencies:
-    "@wppconnect/wa-js" "^2.12.0"
-    "@wppconnect/wa-version" "^1.1.154"
+    "@wppconnect/wa-js" "^2.13.1"
+    "@wppconnect/wa-version" "^1.1.168"
     atob "^2.1.2"
     axios "^0.27.2"
     boxen "^5.1.2"
@@ -1901,23 +1901,23 @@
     reflect-metadata "^0.1.13"
     rimraf "^3.0.2"
     sanitize-filename "^1.6.3"
-    sharp "^0.31.0"
+    sharp "^0.31.1"
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.8.2"
-    ws "^8.8.1"
+    ws "^8.9.0"
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.12.0.tgz#899aa40e50fc5d67a41236f39c7aa0c6e32ca7a0"
-  integrity sha512-vBsS0SEhegxcUfdtzH+lRs6W99ZKsC2FE3K9IxHTnBgvTpEdAZruAEsN+6/OB/DMzt+IPlqZEUYakObmGJylww==
+"@wppconnect/wa-js@^2.13.1":
+  version "2.13.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.13.1.tgz#ed61ead373f90e9b295935b52db115cb839abd33"
+  integrity sha512-c7T/GYRo774aZ4kdJGNFjy6lbsVB/BaXetT9sHXkQUx7nhblQGluyo0SkG3Bfd86QOvymGDPYqN261IclpjZqg==
 
-"@wppconnect/wa-version@^1.1.154":
-  version "1.1.156"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.156.tgz#8f94f5fca5abfb08adbdf3b3a8d1657f1da67bb4"
-  integrity sha512-pA4eEnHZ1Js/GBZjfxoht3Lg97whMUMZX3vfvU7qa1GXjWTm8iWMdUXe+0b9L/UYWrPRJcXk9LhbHPPtxmuoZw==
+"@wppconnect/wa-version@^1.1.168":
+  version "1.1.168"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.168.tgz#8590580c651cbfdd2d18177bc9b5d98dd000d36e"
+  integrity sha512-SAnJtA3i71p0KPqp7pgSqYPiDiXDYSbwfqJ2T34WHmYgJKUTZI50OOHzZ/j6LGVDZ0fC8CZ3ZCyxoTNM+CYFlA==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.7"
@@ -7200,10 +7200,10 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-sharp@^0.31.0:
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.0.tgz#ce9b5202a5667486721cf07fd5b52360b1c2275a"
-  integrity sha512-ft96f8WzGxavg0rkLpMw90MTPMUZDyf0tHjPPh8Ob59xt6KzX8EqtotcqZGUm7kwqpX2pmYiyYX2LL0IZ/FDEw==
+sharp@^0.31.1:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.31.1.tgz#b2f7076d381a120761aa93700cadefcf90a22458"
+  integrity sha512-GR8M1wBwOiFKLkm9JPun27OQnNRZdHfSf9VwcdZX6UrRmM1/XnOrLFTF0GAil+y/YK4E6qcM/ugxs80QirsHxg==
   dependencies:
     color "^4.2.3"
     detect-libc "^2.0.1"
@@ -8302,10 +8302,10 @@ ws@8.8.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.8.0.tgz#8e71c75e2f6348dbf8d78005107297056cb77769"
   integrity sha512-JDAgSYQ1ksuwqfChJusw1LSJ8BizJ2e/vVu5Lxjq3YvNJNlROv1ui4i+c/kUUrPheBvQl4c5UbERhTwKa6QBJQ==
 
-ws@^8.8.1:
-  version "8.8.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.8.1.tgz#5dbad0feb7ade8ecc99b830c1d77c913d4955ff0"
-  integrity sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==
+ws@^8.9.0:
+  version "8.9.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.9.0.tgz#2a994bb67144be1b53fe2d23c53c028adeb7f45e"
+  integrity sha512-Ja7nszREasGaYUYCI2k4lCKIRTt+y7XuqVoHR44YpI49TtryyqbqvDMn5eqfW7e6HzTukDRIsXqzVHScqRcafg==
 
 ws@~8.2.3:
   version "8.2.3"
