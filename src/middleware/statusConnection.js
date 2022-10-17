@@ -29,7 +29,7 @@ export default async function statusConnection(req, res, next) {
           localArr[index] = contact;
         } else if (numbers.indexOf(contact) < 0) {
           let profile = await req.client.checkNumberStatus(contact).catch((error) => console.log(error));
-          if (!profile.numberExists) {
+          if (!profile?.numberExists) {
             const num = contact.split('@')[0];
             return res.status(400).json({
               response: null,
