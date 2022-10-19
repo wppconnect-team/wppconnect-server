@@ -1,4 +1,4 @@
-FROM node:14-alpine as base
+FROM node:19-alpine as base
 WORKDIR /usr/src/wpp-server
 ENV NODE_ENV=production PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY package.json yarn.lock ./
