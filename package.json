@@ -61,7 +61,7 @@
     "commitizen": "^4.2.5",
     "conventional-changelog-cli": "^2.2.2",
     "crypto-js": "^4.1.1",
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
