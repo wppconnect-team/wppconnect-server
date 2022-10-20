@@ -1886,10 +1886,10 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.7.0.tgz"
   integrity sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==
 
-"@wppconnect-team/wppconnect@^1.18.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.18.0.tgz#2c8985163608c63a7290045b1d8e81c7a94ca311"
-  integrity sha512-+XOI9SBniCoZLvLRtm6KpD2jCqkQuujRb3a61g2xw6/KmEUyt1xqXQocYc+/2h95R/NpfsoNSDyG4ZWzezCeiQ==
+"@wppconnect-team/wppconnect@^1.18.1":
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.18.1.tgz#61868e58fc105662ff857c39306f47c7e23dcc3f"
+  integrity sha512-AIunXocyTe1nUj6dTPnHjKKlQ/I8lZlUJWQuIDeMf0UYf8ivb+jQaON8tVfeK3vMo/Qk669nFC9VdMexfjHcyQ==
   dependencies:
     "@wppconnect/wa-js" "^2.13.3"
     "@wppconnect/wa-version" "^1.1.175"
