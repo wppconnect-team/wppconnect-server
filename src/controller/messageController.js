@@ -217,6 +217,24 @@ export async function sendListMessage(req, res) {
   }
 }
 
+export async function sendPollMessage(req, res) {
+  const { phone, name, choices, options } = req.body;
+
+  try {
+    let results = [];
+
+    for (const contact of phone) {
+      results.push(await req.client.sendPollMessage(contact, name, choices, options));
+    }
+
+    if (results.length === 0) return returnError(req, res, 'Error sending poll message');
+
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
 export async function sendStatusText(req, res) {
   const { message } = req.body;
 
