@@ -119,7 +119,12 @@ export async function addParticipant(req, res) {
 
     return res.status(201).json({
       status: 'success',
-      response: { message: 'Participant(s) added successfully', participants: phone, groups: arrayGroups },
+      response: {
+        message: 'Addition to group attempted.',
+        participants: phone,
+        groups: groupToArray(groupId),
+        result: arrayGroups,
+      },
     });
   } catch (e) {
     req.logger.error(e);
