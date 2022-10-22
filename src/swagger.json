@@ -6199,6 +6199,39 @@
         "deprecated": false
       }
     },
+    "/send-poll-message": {
+      "post": {
+        "tags": ["Send Message"],
+        "summary": "Send Poll Message for groups",
+        "description": "Envia uma mensagem de enquete para um grupo selecionado. ",
+        "operationId": "SendMessageWithButtonSections",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequestPoll"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/forwardMessages": {
       "post": {
         "tags": ["Send Message"],
@@ -17780,6 +17813,38 @@
               ]
             }
           ]
+        }
+      },
+
+      "SendMessageRequestPoll": {
+        "title": "SendMessageRequestPoll",
+        "required": ["phone", "isGroup", "name", "choices"],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "isGroup": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "phone": "120363044958541548@g.us",
+          "isGroup": true,
+          "name": "Enquete de teste",
+          "choices": ["Option 1", "Option 2", "Option 3"],
+          "options": {
+            "selectableCount": 1
+          }
         }
       },
       "ForwardMessages(Encaminharmensagem)Request": {

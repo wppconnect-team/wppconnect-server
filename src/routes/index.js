@@ -15,6 +15,7 @@
  */
 import { Router } from 'express';
 import { encryptSession } from '../controller/encryptController';
+import * as CatalogController from '../controller/catalogController';
 import * as MessageController from '../controller/messageController';
 import * as StatusController from '../controller/statusController';
 import * as LabelsController from '../controller/labelsController';
@@ -93,6 +94,7 @@ routes.post('/api/:session/send-location', verifyToken, statusConnection, Messag
 routes.post('/api/:session/send-mentioned', verifyToken, statusConnection, MessageController.sendMentioned);
 routes.post('/api/:session/send-buttons', verifyToken, statusConnection, MessageController.sendButtons);
 routes.post('/api/:session/send-list-message', verifyToken, statusConnection, MessageController.sendListMessage);
+routes.post('/api/:session/send-poll-message', verifyToken, statusConnection, MessageController.sendPollMessage);
 
 // Group
 routes.get('/api/:session/all-broadcast-list', verifyToken, statusConnection, GroupController.getAllBroadcastList);
@@ -198,6 +200,26 @@ routes.post('/api/:session/typing', verifyToken, statusConnection, DeviceControl
 routes.post('/api/:session/recording', verifyToken, statusConnection, DeviceController.setRecording);
 routes.post('/api/:session/star-message', verifyToken, statusConnection, DeviceController.starMessage);
 routes.post('/api/:session/reject-call', verifyToken, statusConnection, DeviceController.rejectCall);
+
+// Catalog
+routes.get('/api/:session/get-products', verifyToken, statusConnection, CatalogController.getProducts);
+routes.get('/api/:session/get-product-by-id', verifyToken, statusConnection, CatalogController.getProductById);
+routes.post('/api/:session/edit-product', verifyToken, statusConnection, CatalogController.editProduct);
+routes.post('/api/:session/del-products', verifyToken, statusConnection, CatalogController.delProducts);
+routes.post('/api/:session/change-product-image', verifyToken, statusConnection, CatalogController.changeProductImage);
+routes.post('/api/:session/add-product-image', verifyToken, statusConnection, CatalogController.addProductImage);
+routes.post('/api/:session/remove-product-image', verifyToken, statusConnection, CatalogController.removeProductImage);
+routes.get('/api/:session/get-collections', verifyToken, statusConnection, CatalogController.getCollections);
+routes.post('/api/:session/create-collection', verifyToken, statusConnection, CatalogController.createCollection);
+routes.post('/api/:session/edit-collection', verifyToken, statusConnection, CatalogController.editCollection);
+routes.post('/api/:session/del-collection', verifyToken, statusConnection, CatalogController.deleteCollection);
+routes.post(
+  '/api/:session/set-product-visibility',
+  verifyToken,
+  statusConnection,
+  CatalogController.setProductVisibility
+);
+routes.post('/api/:session/set-cart-enabled', verifyToken, statusConnection, CatalogController.updateCartEnabled);
 
 // Status
 routes.post('/api/:session/send-text-storie', verifyToken, statusConnection, StatusController.sendTextStorie);
