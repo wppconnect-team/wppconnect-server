@@ -120,7 +120,7 @@ export async function startAllSessions(req: Request, res: Response) {
     await util.opendata(req, session);
   });
 
-  return await res.status(201).json({ status: 'success', message: 'Starting all sessions' });
+  return res.status(201).json({ status: 'success', message: 'Starting all sessions' });
 }
 
 export async function showAllSessions(req: Request, res: Response) {

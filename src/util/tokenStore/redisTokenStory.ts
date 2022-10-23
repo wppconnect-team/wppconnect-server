@@ -1,57 +1,73 @@
-import redisClient from '../db/redis/db';
+import { RedisClient } from '../db/redis/db';
 import config from '../../config.json';
 import { getIPAddress } from '../functions';
 import { ClientWhatsAppTypes } from '../../types/client-types';
 
-export const RedisTokenStore = function (client: ClientWhatsAppTypes) {
-  let prefix = config.db.redisPrefix || '';
-  if (prefix === 'docker') {
-    prefix = getIPAddress();
+export default class RedisTokenStore {
+  declare client;
+  declare prefix;
+
+  constructor(client: ClientWhatsAppTypes) {
+    this.client = client;
+
+    this.prefix = config.db.redisPrefix || '';
+    if (this.prefix === 'docker') {
+      this.prefix = getIPAddress();
+    }
   }
-  const tokenStore = {
-    getToken: (sessionName: string) =>
-      new Promise((resolve, reject) => {
-        redisClient.get(prefix + sessionName, (err: any, reply: any) => {
-          if (err) {
-            return reject(err);
-          }
-          const object = JSON.parse(reply);
+  tokenStore = {
+    getToken: async (sessionName: string) =>
+      new Promise(async (resolve, reject) => {
+        try {
+          const value = await RedisClient.get(this.prefix + sessionName);
+          const object = JSON.parse(value as any);
           if (object) {
-            if (object.config && Object.keys(client.config).length === 0) client.config = object.config;
-            if (object.webhook && Object.keys(client.config).length === 0) client.config.webhook = object.webhook;
+            if (object.config && Object.keys(this.client.config).length === 0) this.client.config = object.config;
+            if (object.webhook && Object.keys(this.client.config).length === 0)
+              this.client.config.webhook = object.webhook;
           }
           resolve(object);
-        });
+        } catch (error: any) {
+          reject(error);
+        }
       }),
     setToken: (sessionName: string, tokenData: any) =>
-      new Promise((resolve) => {
-        tokenData.sessionName = sessionName;
-        tokenData.config = client.config;
-        redisClient.set(prefix + sessionName, JSON.stringify(tokenData), (err: any) => {
-          return resolve(err ? false : true);
-        });
+      new Promise(async (resolve, reject) => {
+        try {
+          tokenData.sessionName = sessionName;
+          tokenData.config = this.client.config;
+          const value = await RedisClient.set(this.prefix + sessionName, JSON.stringify(tokenData));
+          resolve(value);
+        } catch (error: any) {
+          reject(error);
+        }
       }),
     removeToken: (sessionName: string) =>
-      new Promise((resolve) => {
-        redisClient.del(prefix + sessionName, (err: any) => {
-          return resolve(err ? false : true);
-        });
+      new Promise(async (resolve, reject) => {
+        try {
+          const value = await RedisClient.del(this.prefix + sessionName);
+          resolve(value);
+        } catch (error: any) {
+          reject(error);
+        }
       }),
     listTokens: () =>
-      new Promise((resolve) => {
-        redisClient.keys(prefix + '*', (err: any, keys: any) => {
-          if (err) {
-            return resolve([]);
+      new Promise(async (resolve, reject) => {
+        try {
+          const value = await RedisClient.keys(this.prefix + '*');
+          if (value.values.length > 0) {
+            value.forEach((item: any, indice: any) => {
+              if (this.prefix !== '' && item.includes(this.prefix)) {
+                value[indice] = item.substring(item.indexOf(this.prefix) + this.prefix.length);
+              }
+            });
+            resolve(value);
+          } else {
+            resolve([]);
           }
-          keys.forEach((item: any, indice: any) => {
-            if (prefix !== '' && item.includes(prefix)) {
-              keys[indice] = item.substring(item.indexOf(prefix) + prefix.length);
-            }
-          });
-          return resolve(keys);
-        });
+        } catch (error: any) {
+          reject(error);
+        }
       }),
   };
-};
-
-module.exports = RedisTokenStore;
+}

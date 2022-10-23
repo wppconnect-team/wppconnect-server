@@ -1,22 +1,33 @@
 import { ClientWhatsAppTypes } from '../../types/client-types';
-import { Token } from './model/token';
+import Token from './model/token';
 
-export const MongodbTokenStore = function (client: ClientWhatsAppTypes) {
-  const tokenStore = {
+declare interface Resultado {
+  config: any;
+}
+export default class MongodbTokenStore {
+  declare client;
+
+  constructor(client: ClientWhatsAppTypes) {
+    this.client = client;
+  }
+  tokenStore = {
     getToken: async (sessionName: string) => {
       let result = await Token.findOne({ sessionName });
-      if (result === null) return result;
-      result = JSON.parse(JSON.stringify(result));
-      result.config = JSON.parse(result.config);
-      result.config.webhook = result.webhook;
-      client.config = result.config;
-      return result;
+      if (result === null) {
+        return result;
+      } else if (result) {
+        const resultado = JSON.parse(JSON.stringify(result));
+        resultado.config = JSON.parse(result.config as string);
+        resultado.config.webhook = result.webhook;
+        this.client.config = result.config;
+        return resultado;
+      }
     },
     setToken: async (sessionName: string, tokenData: any) => {
       const token = new Token(tokenData);
       token.sessionName = sessionName;
-      token.webhook = client.config.webhook;
-      token.config = JSON.stringify(client.config);
+      token.webhook = this.client.config.webhook;
+      token.config = JSON.stringify(this.client.config);
 
       let tk = await Token.findOne({ sessionName });
 
@@ -35,4 +46,4 @@ export const MongodbTokenStore = function (client: ClientWhatsAppTypes) {
       return result.map((m: any) => m.sessionName);
     },
   };
-};
+}

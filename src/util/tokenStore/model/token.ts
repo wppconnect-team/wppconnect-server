@@ -1,17 +1,15 @@
 import config from '../../../config.json';
+import mongoose from '../../db/mongodb/db';
 
-let mongoose = config.tokenStoreType === 'mongodb' ? require('../../db/mongodb/db') : null;
-export let Token = null;
+const TokenSchema = new mongoose.Schema({
+  WABrowserId: String,
+  WASecretBundle: String,
+  WAToken1: String,
+  WAToken2: String,
+  webhook: String,
+  config: String,
+  sessionName: String,
+});
+const Token = mongoose.model('Token', TokenSchema);
 
-if (config.tokenStoreType === 'mongodb') {
-  const TokenSchema = new mongoose.Schema({
-    WABrowserId: String,
-    WASecretBundle: String,
-    WAToken1: String,
-    WAToken2: String,
-    webhook: String,
-    config: String,
-    sessionName: String,
-  });
-  Token = mongoose.model('Token', TokenSchema);
-}
+export default Token;

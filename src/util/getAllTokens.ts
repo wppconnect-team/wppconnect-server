@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Factory from './tokenStore/factory';
+import { Factory } from './tokenStore/factory';
 
-export default async function getAllTokens(req: any) {
+export default async function getAllTokens(req: any): Promise<any> {
   const tokenStore = new Factory();
   const myTokenStore = tokenStore.createTokenStory(null);
   try {

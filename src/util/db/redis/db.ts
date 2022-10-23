@@ -1,10 +1,11 @@
 import config from '../../../config.json';
-let redis = config.tokenStoreType === 'redis' ? require('redis') : null;
-export let RedisClient = null;
+import redis from 'redis';
 
-if (config.tokenStoreType === 'redis') {
-  RedisClient = redis.createClient(config.db.redisPort, config.db.redisHost, {
-    password: config.db.redisPassword,
-    db: config.db.redisDb,
-  });
-}
+export const RedisClient = redis.createClient({
+  socket: {
+    host: config.db.redisHost,
+    port: config.db.redisPort,
+  },
+  database: config.db.redisDb,
+  password: config.db.redisPassword,
+});

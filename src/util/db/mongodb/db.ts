@@ -1,25 +1,24 @@
 //import mongoose from 'mongoose';
 import config from '../../../config.json';
 
-export let mongoose = config.tokenStoreType === 'mongodb' ? require('mongoose') : null;
+import mongoose from 'mongoose';
 
 if (config.tokenStoreType === 'mongodb') {
-  mongoose.Promise = global.Promise;
-  const userAndPassword =
-    config.db.mongodbUser && config.db.mongodbPassword ? `${config.db.mongodbUser}:${config.db.mongodbPassword}@` : '';
+  (async function connect() {
+    mongoose.Promise = global.Promise;
+    const userAndPassword =
+      config.db.mongodbUser && config.db.mongodbPassword
+        ? `${config.db.mongodbUser}:${config.db.mongodbPassword}@`
+        : '';
 
-  if (!config.db.mongoIsRemote) {
-    mongoose.connect(
-      `mongodb://${userAndPassword}${config.db.mongodbHost}:${config.db.mongodbPort}/${config.db.mongodbDatabase}`,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
-  } else {
-    mongoose.connect(config.db.mongoURLRemote, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  }
+    if (!config.db.mongoIsRemote) {
+      await mongoose.connect(
+        `mongodb://${userAndPassword}${config.db.mongodbHost}:${config.db.mongodbPort}/${config.db.mongodbDatabase}`
+      );
+    } else {
+      await mongoose.connect(config.db.mongoURLRemote);
+    }
+  })();
 }
+
+export default mongoose;
