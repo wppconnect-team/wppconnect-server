@@ -272,7 +272,7 @@ export async function getSessionState(req, res) {
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
-    const qr = await QRCode.toDataURL(client.urlcode);
+    const qr = client.urlcode ? await QRCode.toDataURL(client.urlcode) : null;
 
     if ((client == null || client.status == null) && !waitQrCode)
       return res.status(200).json({ status: 'CLOSED', qrcode: null });
@@ -291,14 +291,18 @@ export async function getSessionState(req, res) {
 
 export async function getQrCode(req, res) {
   try {
-    const qr = await QRCode.toDataURL(req.client.urlcode);
-    const img = Buffer.from(qr.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
+    if (req.client.urlcode) {
+      const qr = req.client.urlcode ? await QRCode.toDataURL(req.client.urlcode) : null;
+      const img = Buffer.from(qr.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
 
-    res.writeHead(200, {
-      'Content-Type': 'image/png',
-      'Content-Length': img.length,
-    });
-    res.end(img);
+      res.writeHead(200, {
+        'Content-Type': 'image/png',
+        'Content-Length': img.length,
+      });
+      res.end(img);
+    } else {
+      return res.status(200).json({ status: req.client.status, message: 'QRCode is not available...' });
+    }
   } catch (ex) {
     req.logger.error(ex);
     return res.status(500).json({ status: 'error', message: 'Error retrieving QRCode' });
