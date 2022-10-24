@@ -42,6 +42,18 @@ function returnError(req: Request, res: Response, session: string, error: any) {
 }
 
 export async function getBusinessProfilesProducts(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const session = req.session;
   const { phone } = req.body;
 
@@ -58,6 +70,18 @@ export async function getBusinessProfilesProducts(req: Request, res: Response) {
   }
 }
 export async function getOrderbyMsg(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const session = req.session;
   const { messageId } = req.body;
 

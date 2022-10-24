@@ -49,6 +49,18 @@ function returnError(req: Request, res: Response, session: string, error: any) {
 }
 
 export async function setProfileName(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Profile'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { name } = req.body;
 
   if (!name) return res.status(400).json({ status: 'error', message: 'Parameter name is required!' });
@@ -73,6 +85,18 @@ export async function showAllContacts(req: Request, res: Response) {
 }
 
 export async function getAllChats(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const response = await req.client?.getAllChats();
     return res.status(200).json({ status: 'success', response: response, mapper: 'chat' });
@@ -83,6 +107,18 @@ export async function getAllChats(req: Request, res: Response) {
 }
 
 export async function getAllChatsWithMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const response = await req.client?.getAllChatsWithMessages();
     return res.status(200).json({ status: 'success', response: response });
@@ -95,6 +131,19 @@ export async function getAllChatsWithMessages(req: Request, res: Response) {
  * Depreciado em favor de getMessages
  */
 export async function getAllMessagesInChat(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+    #swagger.deprecated = true
+  */
   try {
     let { phone } = req.params;
     const { isGroup = false, includeMe = true, includeNotifications = true } = req.query;
@@ -112,6 +161,19 @@ export async function getAllMessagesInChat(req: Request, res: Response) {
 }
 
 export async function getAllNewMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+    #swagger.deprecated = true
+  */
   try {
     const response = await req.client?.getAllNewMessages();
     return res.status(200).json({ status: 'success', response: response });
@@ -122,6 +184,18 @@ export async function getAllNewMessages(req: Request, res: Response) {
 }
 
 export async function getAllUnreadMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const response = await req.client?.getAllUnreadMessages();
     return res.status(200).json({ status: 'success', response: response });
@@ -132,6 +206,18 @@ export async function getAllUnreadMessages(req: Request, res: Response) {
 }
 
 export async function getChatById(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.params;
   const { isGroup } = req.query;
 
@@ -166,6 +252,18 @@ export async function getChatById(req: Request, res: Response) {
 }
 
 export async function getMessageById(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const session = req.session;
   const { messageId } = req.params;
 
@@ -181,6 +279,18 @@ export async function getMessageById(req: Request, res: Response) {
 }
 
 export async function getBatteryLevel(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Phone Status'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     let response = await req.client?.getBatteryLevel();
     return res.status(200).json({ status: 'Success', response: response });
@@ -191,6 +301,18 @@ export async function getBatteryLevel(req: Request, res: Response) {
 }
 
 export async function getHostDevice(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Phone Status'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const response = await req.client?.getHostDevice();
     const phoneNumber = await req.client?.getWid();
@@ -202,6 +324,18 @@ export async function getHostDevice(req: Request, res: Response) {
 }
 
 export async function getPhoneNumber(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Phone Status'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const phoneNumber = await req.client?.getWid();
     return res.status(200).json({ status: 'success', response: phoneNumber, mapper: 'device' });
@@ -212,6 +346,18 @@ export async function getPhoneNumber(req: Request, res: Response) {
 }
 
 export async function getBlockList(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Blocklist'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   let response = await req.client?.getBlockList();
 
   try {
@@ -227,6 +373,18 @@ export async function getBlockList(req: Request, res: Response) {
 }
 
 export async function deleteChat(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.body;
   const session = req.session;
 
@@ -241,6 +399,18 @@ export async function deleteChat(req: Request, res: Response) {
   }
 }
 export async function deleteAllChats(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const chats: any = await req.client?.getAllChats();
     for (const chat of chats) {
@@ -254,6 +424,18 @@ export async function deleteAllChats(req: Request, res: Response) {
 }
 
 export async function clearChat(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.body;
   const session = req.session;
 
@@ -269,6 +451,18 @@ export async function clearChat(req: Request, res: Response) {
 }
 
 export async function clearAllChats(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const chats: any = await req.client?.getAllChats();
     for (const chat of chats) {
@@ -282,6 +476,18 @@ export async function clearAllChats(req: Request, res: Response) {
 }
 
 export async function archiveChat(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, value = true } = req.body;
 
   try {
@@ -295,6 +501,18 @@ export async function archiveChat(req: Request, res: Response) {
 }
 
 export async function archiveAllChats(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const chats: any = await req.client?.getAllChats();
     for (const chat of chats) {
@@ -308,6 +526,18 @@ export async function archiveAllChats(req: Request, res: Response) {
 }
 
 export async function deleteMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, messageId } = req.body;
 
   try {
@@ -320,6 +550,18 @@ export async function deleteMessage(req: Request, res: Response) {
   }
 }
 export async function reactMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { msgId, reaction } = req.body;
 
   try {
@@ -345,6 +587,18 @@ export async function reply(req: Request, res: Response) {
 }
 
 export async function forwardMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
@@ -364,6 +618,18 @@ export async function forwardMessages(req: Request, res: Response) {
 }
 
 export async function markUnseenMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.body;
 
   try {
@@ -376,6 +642,18 @@ export async function markUnseenMessage(req: Request, res: Response) {
 }
 
 export async function blockContact(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Blocklist'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.body;
 
   try {
@@ -388,6 +666,18 @@ export async function blockContact(req: Request, res: Response) {
 }
 
 export async function unblockContact(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Blocklist'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.body;
 
   try {
@@ -400,6 +690,18 @@ export async function unblockContact(req: Request, res: Response) {
 }
 
 export async function pinChat(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, state } = req.body;
 
   try {
@@ -415,6 +717,18 @@ export async function pinChat(req: Request, res: Response) {
 }
 
 export async function setProfilePic(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Profile'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   if (!req.file) return res.status(400).json({ status: 'Error', message: 'File parameter is required!' });
 
   try {
@@ -431,6 +745,19 @@ export async function setProfilePic(req: Request, res: Response) {
 }
 
 export async function getUnreadMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+    #swagger.deprecated = true
+  */
   try {
     const response = await req.client?.getUnreadMessages(false, false, true);
     return res.status(200).json({ status: 'success', response: response });
@@ -441,6 +768,18 @@ export async function getUnreadMessages(req: Request, res: Response) {
 }
 
 export async function getChatIsOnline(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.params;
   try {
     const response = await req.client?.getChatIsOnline(`${phone}@c.us`);
@@ -452,6 +791,18 @@ export async function getChatIsOnline(req: Request, res: Response) {
 }
 
 export async function getLastSeen(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.params;
   try {
     const response = await req.client?.getLastSeen(`${phone}@c.us`);
@@ -464,6 +815,18 @@ export async function getLastSeen(req: Request, res: Response) {
 }
 
 export async function getListMutes(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { type = 'all' } = req.params;
   try {
     const response = await req.client?.getListMutes(type);
@@ -476,6 +839,19 @@ export async function getListMutes(req: Request, res: Response) {
 }
 
 export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+    #swagger.deprecated = true
+  */
   const { phone, includeMe = true, includeNotifications = false } = req.params;
   try {
     const response = await req.client?.loadAndGetAllMessagesInChat(
@@ -491,6 +867,18 @@ export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
   }
 }
 export async function getMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.params;
   const { count = 20, direction = 'before', id = null } = req.query;
   const dir: 'before' | 'after' | undefined = direction.toString() as any;
@@ -508,6 +896,18 @@ export async function getMessages(req: Request, res: Response) {
 }
 
 export async function sendContactVcard(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, contactsId, name = null, isGroup = false } = req.body;
   try {
     let response;
@@ -523,6 +923,18 @@ export async function sendContactVcard(req: Request, res: Response) {
 }
 
 export async function sendMute(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, time, type = 'hours', isGroup = false } = req.body;
 
   try {
@@ -539,6 +951,18 @@ export async function sendMute(req: Request, res: Response) {
 }
 
 export async function sendSeen(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.body;
   const session = req.session;
 
@@ -554,6 +978,19 @@ export async function sendSeen(req: Request, res: Response) {
 }
 
 export async function setChatState(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+    #swagger.deprecated = true
+  */
   const { phone, chatstate, isGroup = false } = req.body;
 
   try {
@@ -570,6 +1007,18 @@ export async function setChatState(req: Request, res: Response) {
 }
 
 export async function setTemporaryMessages(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, value = true, isGroup = false } = req.body;
 
   try {
@@ -586,6 +1035,18 @@ export async function setTemporaryMessages(req: Request, res: Response) {
 }
 
 export async function setTyping(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, value = true, isGroup = false } = req.body;
   try {
     let response;
@@ -602,6 +1063,18 @@ export async function setTyping(req: Request, res: Response) {
 }
 
 export async function setRecording(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, value = true, duration, isGroup = false } = req.body;
   try {
     let response;
@@ -618,6 +1091,18 @@ export async function setRecording(req: Request, res: Response) {
 }
 
 export async function checkNumberStatus(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone } = req.params;
   try {
     let response;
@@ -633,6 +1118,18 @@ export async function checkNumberStatus(req: Request, res: Response) {
 }
 
 export async function getContact(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone = true } = req.params;
   try {
     let response;
@@ -648,6 +1145,18 @@ export async function getContact(req: Request, res: Response) {
 }
 
 export async function getAllContacts(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const response = await req.client?.getAllContacts();
 
@@ -659,6 +1168,18 @@ export async function getAllContacts(req: Request, res: Response) {
 }
 
 export async function getNumberProfile(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone = true } = req.params;
   try {
     let response;
@@ -674,6 +1195,18 @@ export async function getNumberProfile(req: Request, res: Response) {
 }
 
 export async function getProfilePicFromServer(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone = true } = req.params;
   try {
     let response;
@@ -689,6 +1222,18 @@ export async function getProfilePicFromServer(req: Request, res: Response) {
 }
 
 export async function getStatus(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone = true } = req.params;
   try {
     let response;
@@ -703,6 +1248,18 @@ export async function getStatus(req: Request, res: Response) {
 }
 
 export async function setProfileStatus(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Profile'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { status } = req.body;
   try {
     let response = await req.client?.setProfileStatus(status);
@@ -714,6 +1271,18 @@ export async function setProfileStatus(req: Request, res: Response) {
   }
 }
 export async function rejectCall(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { callId } = req.body;
   try {
     let response = await req.client?.rejectCall(callId);
@@ -726,6 +1295,18 @@ export async function rejectCall(req: Request, res: Response) {
 }
 
 export async function starMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { messageId, star = true } = req.body;
   try {
     let response = await req.client?.starMessage(messageId, star);
@@ -738,6 +1319,18 @@ export async function starMessage(req: Request, res: Response) {
 }
 
 export async function chatWoot(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['System'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { session } = req.params;
   const sessao: any = session;
   const client: ClientWhatsAppTypes = clientsArray[sessao];

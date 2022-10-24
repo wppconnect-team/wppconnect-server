@@ -18,6 +18,18 @@ import { Response } from 'express';
 import { Request } from '../types/request-types';
 
 export async function getAllGroups(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const response = await req.client?.getAllGroups();
 
@@ -29,6 +41,18 @@ export async function getAllGroups(req: Request, res: Response) {
 }
 
 export async function joinGroupByCode(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { inviteCode } = req.body;
 
   if (!inviteCode) return res.status(400).send({ message: 'Invitation Code is required' });
@@ -46,6 +70,18 @@ export async function joinGroupByCode(req: Request, res: Response) {
 }
 
 export async function createGroup(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { participants, name } = req.body;
 
   try {
@@ -75,6 +111,18 @@ export async function createGroup(req: Request, res: Response) {
 }
 
 export async function leaveGroup(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId } = req.body;
 
   try {
@@ -93,6 +141,18 @@ export async function leaveGroup(req: Request, res: Response) {
 }
 
 export async function getGroupMembers(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId } = req.params;
 
   try {
@@ -108,6 +168,18 @@ export async function getGroupMembers(req: Request, res: Response) {
 }
 
 export async function addParticipant(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, phone } = req.body;
 
   try {
@@ -135,6 +207,18 @@ export async function addParticipant(req: Request, res: Response) {
 }
 
 export async function removeParticipant(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, phone } = req.body;
 
   try {
@@ -157,6 +241,18 @@ export async function removeParticipant(req: Request, res: Response) {
 }
 
 export async function promoteParticipant(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, phone } = req.body;
 
   try {
@@ -177,6 +273,18 @@ export async function promoteParticipant(req: Request, res: Response) {
 }
 
 export async function demoteParticipant(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, phone } = req.body;
 
   try {
@@ -197,6 +305,18 @@ export async function demoteParticipant(req: Request, res: Response) {
 }
 
 export async function getGroupAdmins(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId } = req.params;
 
   try {
@@ -216,6 +336,18 @@ export async function getGroupAdmins(req: Request, res: Response) {
 }
 
 export async function getGroupInviteLink(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId } = req.params;
   try {
     let response: any = {};
@@ -231,6 +363,18 @@ export async function getGroupInviteLink(req: Request, res: Response) {
 }
 
 export async function revokeGroupInviteLink(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId } = req.params;
 
   let response: any = {};
@@ -251,6 +395,18 @@ export async function revokeGroupInviteLink(req: Request, res: Response) {
 }
 
 export async function getAllBroadcastList(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     let response = await req.client?.getAllBroadcastList();
     return res.status(200).json({ status: 'success', response: response });
@@ -261,6 +417,18 @@ export async function getAllBroadcastList(req: Request, res: Response) {
 }
 
 export async function getGroupInfoFromInviteLink(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const { invitecode } = req.body;
     let response = await req.client?.getGroupInfoFromInviteLink(invitecode);
@@ -272,6 +440,18 @@ export async function getGroupInfoFromInviteLink(req: Request, res: Response) {
 }
 
 export async function getGroupMembersIds(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId } = req.params;
   let response: any = {};
   try {
@@ -286,6 +466,18 @@ export async function getGroupMembersIds(req: Request, res: Response) {
 }
 
 export async function setGroupDescription(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, description } = req.body;
 
   let response: any = {};
@@ -303,6 +495,18 @@ export async function setGroupDescription(req: Request, res: Response) {
 }
 
 export async function setGroupProperty(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, property, value = true } = req.body;
 
   let response: any = {};
@@ -320,6 +524,18 @@ export async function setGroupProperty(req: Request, res: Response) {
 }
 
 export async function setGroupSubject(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, title } = req.body;
 
   let response: any = {};
@@ -337,6 +553,18 @@ export async function setGroupSubject(req: Request, res: Response) {
 }
 
 export async function setMessagesAdminsOnly(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, value = true } = req.body;
 
   let response: any = {};
@@ -354,6 +582,18 @@ export async function setMessagesAdminsOnly(req: Request, res: Response) {
 }
 
 export async function changePrivacyGroup(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { groupId, status } = req.body;
 
   try {
@@ -369,6 +609,18 @@ export async function changePrivacyGroup(req: Request, res: Response) {
 }
 
 export async function setGroupProfilePic(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Group'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, path } = req.body;
 
   if (!path && !req.file)

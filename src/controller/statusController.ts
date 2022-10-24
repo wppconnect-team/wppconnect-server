@@ -13,6 +13,18 @@ async function returnSucess(res: Response, data: any) {
 }
 
 export async function sendTextStorie(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Status Stories'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { text, options } = req.body;
 
   if (!text)
@@ -32,6 +44,18 @@ export async function sendTextStorie(req: Request, res: Response) {
 }
 
 export async function sendImageStorie(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Status Stories'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { path, options } = req.body;
 
   if (!path && !req.file)
@@ -53,6 +77,18 @@ export async function sendImageStorie(req: Request, res: Response) {
 }
 
 export async function sendVideoStorie(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Status Stories'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { path } = req.body;
 
   if (!path && !req.file)

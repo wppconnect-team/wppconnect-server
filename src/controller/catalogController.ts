@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-import { Response, NextFunction } from 'express';
+import { Response } from 'express';
 import { Request } from '../types/request-types';
 
 export async function getProducts(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, qnt } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -33,6 +45,18 @@ export async function getProducts(req: Request, res: Response) {
 }
 
 export async function getProductById(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, id } = req.query;
   if (!phone || !id)
     return res.status(401).send({
@@ -47,6 +71,18 @@ export async function getProductById(req: Request, res: Response) {
   }
 }
 export async function editProduct(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -62,6 +98,18 @@ export async function editProduct(req: Request, res: Response) {
 }
 
 export async function delProducts(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -77,6 +125,18 @@ export async function delProducts(req: Request, res: Response) {
 }
 
 export async function changeProductImage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -92,6 +152,18 @@ export async function changeProductImage(req: Request, res: Response) {
 }
 
 export async function addProductImage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -107,6 +179,18 @@ export async function addProductImage(req: Request, res: Response) {
 }
 
 export async function removeProductImage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id, index } = req.body;
   if (!id || !index)
     return res.status(401).send({
@@ -122,6 +206,18 @@ export async function removeProductImage(req: Request, res: Response) {
 }
 
 export async function getCollections(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, qnt, max } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -137,6 +233,18 @@ export async function getCollections(req: Request, res: Response) {
 }
 
 export async function createCollection(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { name, products } = req.body;
   if (!name || !products)
     return res.status(401).send({
@@ -152,6 +260,18 @@ export async function createCollection(req: Request, res: Response) {
 }
 
 export async function editCollection(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -167,6 +287,18 @@ export async function editCollection(req: Request, res: Response) {
 }
 
 export async function deleteCollection(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -182,6 +314,18 @@ export async function deleteCollection(req: Request, res: Response) {
 }
 
 export async function setProductVisibility(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { id, value } = req.body;
   if (!id || !value)
     return res.status(401).send({
@@ -197,6 +341,18 @@ export async function setProductVisibility(req: Request, res: Response) {
 }
 
 export async function updateCartEnabled(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Catalog & Products'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { enabled } = req.body;
   if (!enabled)
     return res.status(401).send({

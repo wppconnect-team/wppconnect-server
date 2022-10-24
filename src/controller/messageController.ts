@@ -27,6 +27,18 @@ async function returnSucess(res: Response, data: any) {
 }
 
 export async function sendMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, message } = req.body;
 
   const options = req.body.options || {};
@@ -46,6 +58,18 @@ export async function sendMessage(req: Request, res: Response) {
 }
 
 export async function sendImage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, filename = 'image-api.jpg', caption, path } = req.body;
 
   if (!path && !req.file)
@@ -70,6 +94,18 @@ export async function sendImage(req: Request, res: Response) {
 }
 
 export async function sendFile(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, path, filename = 'file', message } = req.body;
 
   if (!path && !req.file)
@@ -94,6 +130,18 @@ export async function sendFile(req: Request, res: Response) {
 }
 
 export async function sendFile64(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { base64, phone, filename } = req.body;
 
   if (!base64) return res.status(401).send({ message: 'The base64 of the file was not informed' });
@@ -114,6 +162,18 @@ export async function sendFile64(req: Request, res: Response) {
 }
 
 export async function sendVoice(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, path, filename = 'Voice Audio', message, quotedMessageId } = req.body;
 
   try {
@@ -130,6 +190,18 @@ export async function sendVoice(req: Request, res: Response) {
 }
 
 export async function sendVoice64(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, base64Ptt } = req.body;
 
   try {
@@ -146,6 +218,18 @@ export async function sendVoice64(req: Request, res: Response) {
 }
 
 export async function sendLinkPreview(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, url, caption } = req.body;
 
   try {
@@ -162,6 +246,18 @@ export async function sendLinkPreview(req: Request, res: Response) {
 }
 
 export async function sendLocation(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, lat, lng, title } = req.body;
 
   try {
@@ -178,6 +274,18 @@ export async function sendLocation(req: Request, res: Response) {
 }
 
 export async function sendButtons(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, message, options } = req.body;
 
   try {
@@ -196,6 +304,18 @@ export async function sendButtons(req: Request, res: Response) {
 }
 
 export async function sendListMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, description = '', sections, buttonText = 'SELECIONE UMA OPÇÃO' } = req.body;
 
   try {
@@ -220,6 +340,18 @@ export async function sendListMessage(req: Request, res: Response) {
 }
 
 export async function sendPollMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, name, choices, options } = req.body;
 
   try {
@@ -238,6 +370,18 @@ export async function sendPollMessage(req: Request, res: Response) {
 }
 
 export async function sendStatusText(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { message } = req.body;
 
   try {
@@ -252,6 +396,18 @@ export async function sendStatusText(req: Request, res: Response) {
 }
 
 export async function replyMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, message, messageId } = req.body;
 
   try {
@@ -269,6 +425,18 @@ export async function replyMessage(req: Request, res: Response) {
 }
 
 export async function sendMentioned(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, message, mentioned } = req.body;
 
   try {
@@ -284,6 +452,18 @@ export async function sendMentioned(req: Request, res: Response) {
   }
 }
 export async function sendImageAsSticker(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, path } = req.body;
 
   if (!path && !req.file)
@@ -307,6 +487,18 @@ export async function sendImageAsSticker(req: Request, res: Response) {
   }
 }
 export async function sendImageAsStickerGif(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Send Message'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const { phone, path } = req.body;
 
   if (!path && !req.file)

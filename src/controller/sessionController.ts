@@ -94,6 +94,18 @@ export async function download(message: Message, client: ClientWhatsAppTypes, lo
 }
 
 export async function startAllSessions(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "secretkey",
+        "default": "THISISMYSECURETOKEN",
+        "in": "path",
+        "description": "(Required) chave do admin",
+        "required": true,
+      }
+    ]
+  */
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
   const Token: any = token;
@@ -124,6 +136,18 @@ export async function startAllSessions(req: Request, res: Response) {
 }
 
 export async function showAllSessions(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "secretkey",
+        "default": "THISISMYSECURETOKEN",
+        "in": "path",
+        "description": "(Required) chave do admin",
+        "required": true,
+      }
+    ]
+  */
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
   const Token: any = token;
@@ -153,6 +177,18 @@ export async function showAllSessions(req: Request, res: Response) {
 }
 
 export async function startSession(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const session = req.session;
   const { waitQrCode = false } = req.body;
 
@@ -161,6 +197,18 @@ export async function startSession(req: Request, res: Response) {
 }
 
 export async function closeSession(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const session: any = req.session;
   try {
     if (clientsArray[session].status === null) {
@@ -184,6 +232,18 @@ export async function closeSession(req: Request, res: Response) {
 }
 
 export async function logOutSession(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const session = req.session;
     await req.client?.logout();
@@ -202,6 +262,18 @@ export async function logOutSession(req: Request, res: Response) {
 }
 
 export async function checkConnectionSession(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     await req.client?.isConnected();
 
@@ -212,6 +284,18 @@ export async function checkConnectionSession(req: Request, res: Response) {
 }
 
 export async function downloadMediaByMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const client = req.client;
   const { messageId } = req.body;
 
@@ -249,6 +333,18 @@ export async function downloadMediaByMessage(req: Request, res: Response) {
 }
 
 export async function getMediaByMessage(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Chat'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   const client = req.client;
   const { messageId } = req.params;
 
@@ -277,6 +373,18 @@ export async function getMediaByMessage(req: Request, res: Response) {
 }
 
 export async function getSessionState(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
@@ -298,6 +406,18 @@ export async function getSessionState(req: Request, res: Response) {
 }
 
 export async function getQrCode(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Auth'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const qr = await QRCode.toDataURL(req.client?.urlcode as string);
     const img = Buffer.from(qr.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
@@ -315,6 +435,18 @@ export async function getQrCode(req: Request, res: Response) {
 
 // not implemented on @wppconnect-team/wppconnect
 export async function killServiceWorker(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['System'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     return res.status(200).json({ status: 'success', response: null });
   } catch (ex) {
@@ -325,6 +457,18 @@ export async function killServiceWorker(req: Request, res: Response) {
 
 // not implemented on @wppconnect-team/wppconnect
 export async function restartService(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['System'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     return res.status(200).json({ status: 'success', response: null });
   } catch (ex) {
@@ -334,6 +478,18 @@ export async function restartService(req: Request, res: Response) {
 }
 
 export async function subscribePresence(req: Request, res: Response) {
+  /* 
+    #swagger.tags = ['Contact'] 
+    #swagger.parameters = [
+      {
+        "name": "session",
+        "default": "NERDWHATS_AMERICA",
+        "in": "path",
+        "description": "Nome da sessão",
+        "required": true,
+      },
+    ]
+  */
   try {
     const { phone, isGroup = false, all = false } = req.body;
 
