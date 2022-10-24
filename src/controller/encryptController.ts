@@ -20,25 +20,6 @@ import { Request } from '../types/request-types';
 const saltRounds = 10;
 
 export async function encryptSession(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['Auth'] 
-    #swagger.parameters = [
-      {
-        "name": "session",
-        "default": "NERDWHATS_AMERICA",
-        "in": "path",
-        "description": "Nome da sessão",
-        "required": true,
-      },
-      {
-        "name": "secretkey",
-        "default": "THISISMYSECURETOKEN",
-        "in": "path",
-        "description": "(Required) chave do admin",
-        "required": true,
-      }
-    ]
-  */
   const { session, secretkey } = req.params;
   const { authorization: token } = req.headers;
   const secureTokenEnv = req.serverOptions.secretKey;

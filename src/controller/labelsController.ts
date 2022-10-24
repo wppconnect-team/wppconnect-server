@@ -18,18 +18,6 @@ import { Response } from 'express';
 import { Request } from '../types/request-types';
 
 export async function addNewLabel(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['Labels'] 
-    #swagger.parameters = [
-      {
-        "name": "session",
-        "default": "NERDWHATS_AMERICA",
-        "in": "path",
-        "description": "Nome da sessão",
-        "required": true,
-      },
-    ]
-  */
   const { name, options } = req.body;
   if (!name)
     return res.status(401).send({
@@ -45,18 +33,6 @@ export async function addNewLabel(req: Request, res: Response) {
 }
 
 export async function addOrRemoveLabels(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['Labels'] 
-    #swagger.parameters = [
-      {
-        "name": "session",
-        "default": "NERDWHATS_AMERICA",
-        "in": "path",
-        "description": "Nome da sessão",
-        "required": true,
-      },
-    ]
-  */
   const { chatIds, options } = req.body;
   if (!chatIds || !options)
     return res.status(401).send({
@@ -72,18 +48,6 @@ export async function addOrRemoveLabels(req: Request, res: Response) {
 }
 
 export async function getAllLabels(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['Labels'] 
-    #swagger.parameters = [
-      {
-        "name": "session",
-        "default": "NERDWHATS_AMERICA",
-        "in": "path",
-        "description": "Nome da sessão",
-        "required": true,
-      },
-    ]
-  */
   try {
     const result = await req.client?.getAllLabels();
     res.status(201).json({ status: 'success', response: result });
@@ -93,18 +57,6 @@ export async function getAllLabels(req: Request, res: Response) {
 }
 
 export async function deleteAllLabels(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['Labels'] 
-    #swagger.parameters = [
-      {
-        "name": "session",
-        "default": "NERDWHATS_AMERICA",
-        "in": "path",
-        "description": "Nome da sessão",
-        "required": true,
-      },
-    ]
-  */
   try {
     const result = await req.client?.deleteAllLabels();
     res.status(201).json({ status: 'success', response: result });
@@ -114,18 +66,6 @@ export async function deleteAllLabels(req: Request, res: Response) {
 }
 
 export async function deleteLabel(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['Labels'] 
-    #swagger.parameters = [
-      {
-        "name": "session",
-        "default": "NERDWHATS_AMERICA",
-        "in": "path",
-        "description": "Nome da sessão",
-        "required": true,
-      },
-    ]
-  */
   const { id } = req.params;
   try {
     const result = await req.client?.deleteLabel(id);

@@ -16,9 +16,6 @@
 import { Request, Response } from 'express';
 
 export async function healthz(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['System'] 
-  */
   const healthcheck: any = {
     uptime: process.uptime(),
     message: 'OK',
@@ -33,9 +30,6 @@ export async function healthz(req: Request, res: Response) {
 }
 
 export async function unhealthy(req: Request, res: Response) {
-  /* 
-    #swagger.tags = ['System'] 
-  */
   res.status(503).send();
   process.exit();
 }
