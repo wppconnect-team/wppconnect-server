@@ -52,7 +52,7 @@
     "@babel/core": "^7.19.6",
     "@babel/eslint-parser": "^7.19.1",
     "@babel/eslint-plugin": "^7.19.1",
-    "@babel/node": "^7.19.1",
+    "@babel/node": "^7.20.0",
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
     "@commitlint/cli": "^17.1.2",
