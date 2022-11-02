@@ -2139,24 +2139,24 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
-"@redis/bloom@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@redis/bloom/-/bloom-1.0.2.tgz"
-  integrity sha512-EBw7Ag1hPgFzdznK2PBblc1kdlj5B5Cw3XwI9/oG7tSn85/HKy3X9xHy/8tm/eNXJYHLXHJL/pkwBpFMVVefkw==
+"@redis/bloom@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@redis/bloom/-/bloom-1.1.0.tgz#64e310ddee72010676e14296076329e594a1f6c7"
+  integrity sha512-9QovlxmpRtvxVbN0UBcv8WfdSMudNZZTFqCsnBszcQXqaZb/TVe30ScgGEO7u1EAIacTPAo7/oCYjYAxiHLanQ==
 
-"@redis/client@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@redis/client/-/client-1.3.0.tgz"
-  integrity sha512-XCFV60nloXAefDsPnYMjHGtvbtHR8fV5Om8cQ0JYqTNbWcQo/4AryzJ2luRj4blveWazRK/j40gES8M7Cp6cfQ==
+"@redis/client@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@redis/client/-/client-1.3.1.tgz#ac30e068a9fcfea48ad310898ed15e8e4198fa7a"
+  integrity sha512-FKEHpOu7Q4+cuM6VWjA54988K5jkqOxvhvj2hEGSx086lvKwXyjzO7Lya7hcirZ0/Db8FLBJN7UXsJuyoNWPJg==
   dependencies:
-    cluster-key-slot "1.1.0"
-    generic-pool "3.8.2"
+    cluster-key-slot "1.1.1"
+    generic-pool "3.9.0"
     yallist "4.0.0"
 
-"@redis/graph@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@redis/graph/-/graph-1.0.1.tgz"
-  integrity sha512-oDE4myMCJOCVKYMygEMWuriBgqlS5FqdWerikMoJxzmmTUErnTRRgmIDa2VcgytACZMFqpAOWDzops4DOlnkfQ==
+"@redis/graph@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@redis/graph/-/graph-1.1.0.tgz#cc2b82e5141a29ada2cce7d267a6b74baa6dd519"
+  integrity sha512-16yZWngxyXPd+MJxeSr0dqh2AIOi8j9yXKcKCwVaKDbH3HTuETpDVPcLujhFYVPtYrngSco31BUcSa9TH31Gqg==
 
 "@redis/json@1.0.4":
   version "1.0.4"
@@ -2363,13 +2363,13 @@
   resolved "https://registry.npmjs.org/@webpack-cli/serve/-/serve-1.7.0.tgz"
   integrity sha512-oxnCNGj88fL+xzV+dacXs44HcDwf1ovs3AuEzvP7mqXw7fQntqIhQ1BRmynh4qEKQSSSRSWVyXRjmTbZIX9V2Q==
 
-"@wppconnect-team/wppconnect@^1.18.1":
-  version "1.18.1"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.18.1.tgz#61868e58fc105662ff857c39306f47c7e23dcc3f"
-  integrity sha512-AIunXocyTe1nUj6dTPnHjKKlQ/I8lZlUJWQuIDeMf0UYf8ivb+jQaON8tVfeK3vMo/Qk669nFC9VdMexfjHcyQ==
+"@wppconnect-team/wppconnect@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.19.0.tgz#e87fd9221ba69599c56b187dc6bfda1fcf8186d7"
+  integrity sha512-952+B35ZeFjUDC/CcWzkzi90SL5JJDPxP28DHYOLJ6cTG8p+g3RizqW1f6JyvFgrj/pGJwpmxrAOI0/hVOet3w==
   dependencies:
-    "@wppconnect/wa-js" "^2.13.3"
-    "@wppconnect/wa-version" "^1.1.175"
+    "@wppconnect/wa-js" "^2.14.1"
+    "@wppconnect/wa-version" "^1.1.183"
     atob "^2.1.2"
     axios "^0.27.2"
     boxen "^5.1.2"
@@ -2396,19 +2396,19 @@
     tmp "^0.2.1"
     tree-kill "^1.2.2"
     winston "^3.8.2"
-    ws "^8.9.0"
+    ws "^8.10.0"
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.13.3":
-  version "2.13.3"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.13.3.tgz#a46e54ddb2a2c57e1dc86c006cd5770eee2d17af"
-  integrity sha512-kMM1ttoJAE8DiSjAZxBNkY4NVBXyVjHsdj9zXIjHi3uFuysDvTI4Hs/3ck+cWmc/XGuEj7ABihojtjRNow/AYw==
+"@wppconnect/wa-js@^2.14.1":
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.14.1.tgz#394341c87087533f6c18f158830ca1573cf11c1b"
+  integrity sha512-diyv2g6osU7xHsZBZgle+sqNFQk8kcEg+cbMDOqqQ1SifR3JMthhaYLGgh4YUprEOqWCPAqIHkx9+M70L/xBQQ==
 
-"@wppconnect/wa-version@^1.1.175":
-  version "1.1.177"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.177.tgz#ec87b9f05b05011c920036b83b86d13c2f8384b7"
-  integrity sha512-kYZcjT4fJQqP/cFv08r0gbh2Jnm0vzr4oHjfsZgbZI+EoQXKDycHorQkYzmdGgMDKfbAMgpq1TmZ4HiwEO2OcA==
+"@wppconnect/wa-version@^1.1.183":
+  version "1.1.183"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.183.tgz#0bc0ecb1707b89af73811d22cf6d82896fbd4688"
+  integrity sha512-PMYwmoaXJW6F2/PT2bzVfeMQiRm9DvTM2BXde12swX5JnB1o/huK6cnjVbj2hVGrxIxOj1Xk6oWJx8pA1yl8NQ==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.8"
@@ -2668,10 +2668,10 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-aws-sdk@^2.1244.0:
-  version "2.1244.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1244.0.tgz#1cb889c0fdcaa28b66b912eacddf87f59403727a"
-  integrity sha512-V7uXdz3Koti2FfU07Xj6SGnv4UVIGcw03aEGLiidieilQYYVrny828pn2Pl2X9AWJJczE/iLzge/ITTJ7ZPwZQ==
+aws-sdk@^2.1245.0:
+  version "2.1245.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1245.0.tgz#cee09dd6a83badbe7692cb512cbce5e9daa0c702"
+  integrity sha512-LXNmuT33+k4ymWijm6dhLRm0OX14ki9OOK1BYn8AUWWPuh+GMlFIuIFH+sWORVdhZqaQNsvF72cB6CeMBqaJWg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -3200,10 +3200,10 @@ clone@^1.0.2:
   resolved "https://registry.npmjs.org/clone/-/clone-1.0.4.tgz"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
-cluster-key-slot@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/cluster-key-slot/-/cluster-key-slot-1.1.0.tgz"
-  integrity sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==
+cluster-key-slot@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/cluster-key-slot/-/cluster-key-slot-1.1.1.tgz#10ccb9ded0729464b6d2e7d714b100a2d1259d43"
+  integrity sha512-rwHwUfXL40Chm1r08yrhU3qpUvdVlgkKNeyeGPOxnW8/SyVDvgRaed/Uz54AqWNaTCAThlj6QAs3TZcKI0xDEw==
 
 color-convert@^1.9.0, color-convert@^1.9.3:
   version "1.9.3"
@@ -4723,10 +4723,10 @@ gauge@^3.0.0:
     strip-ansi "^6.0.1"
     wide-align "^1.1.2"
 
-generic-pool@3.8.2:
-  version "3.8.2"
-  resolved "https://registry.npmjs.org/generic-pool/-/generic-pool-3.8.2.tgz"
-  integrity sha512-nGToKy6p3PAbYQ7p1UlWl6vSPwfwU6TMSWK7TTu+WUY4ZjyZQGniGGt2oNVvyNSpyZYSB43zMXVLcBm08MTMkg==
+generic-pool@3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-3.9.0.tgz#36f4a678e963f4fdb8707eab050823abc4e8f5e4"
+  integrity sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==
 
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
@@ -7311,14 +7311,14 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-redis@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.npmjs.org/redis/-/redis-4.3.1.tgz"
-  integrity sha512-cM7yFU5CA6zyCF7N/+SSTcSJQSRMEKN0k0Whhu6J7n9mmXRoXugfWDBo5iOzGwABmsWKSwGPTU5J4Bxbl+0mrA==
+redis@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/redis/-/redis-4.4.0.tgz#bd73fe74e910ecff6bbe89c7e50887c09b3df6e2"
+  integrity sha512-tQyFG6O9iewLxxHYRyirJNklhe2QI7M/0o8q0jk7D9Z/Cxh/7oZrQyHKyjWz0TkkCls8ool/xvhL9K8zRnkaYQ==
   dependencies:
-    "@redis/bloom" "1.0.2"
-    "@redis/client" "1.3.0"
-    "@redis/graph" "1.0.1"
+    "@redis/bloom" "1.1.0"
+    "@redis/client" "1.3.1"
+    "@redis/graph" "1.1.0"
     "@redis/json" "1.0.4"
     "@redis/search" "1.1.0"
     "@redis/time-series" "1.0.3"
@@ -8842,10 +8842,15 @@ write-file-atomic@^3.0.3:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-ws@8.9.0, ws@^8.9.0:
+ws@8.9.0:
   version "8.9.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.9.0.tgz#2a994bb67144be1b53fe2d23c53c028adeb7f45e"
   integrity sha512-Ja7nszREasGaYUYCI2k4lCKIRTt+y7XuqVoHR44YpI49TtryyqbqvDMn5eqfW7e6HzTukDRIsXqzVHScqRcafg==
+
+ws@^8.10.0:
+  version "8.10.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.10.0.tgz#00a28c09dfb76eae4eb45c3b565f771d6951aa51"
+  integrity sha512-+s49uSmZpvtAsd2h37vIPy1RBusaLawVe8of+GyEPsaJTCMpj/2v8NpeK1SHXjBlQ95lQTmQofOJnFiLoaN3yw==
 
 ws@~8.2.3:
   version "8.2.3"
