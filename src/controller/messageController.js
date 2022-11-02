@@ -160,12 +160,12 @@ export async function sendLinkPreview(req, res) {
 }
 
 export async function sendLocation(req, res) {
-  const { phone, lat, lng, title } = req.body;
+  const { phone, lat, lng, title, address } = req.body;
 
   try {
     let results = [];
     for (const contato of phone) {
-      results.push(await req.client.sendLocation(contato, lat, lng, title));
+      results.push(await req.client.sendLocation(contato, { lat: lat, lng: lng, address: address, name: title }));
     }
 
     if (results.length === 0) return res.status(400).json('Error sending message');
