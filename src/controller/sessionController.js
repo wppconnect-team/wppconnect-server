@@ -272,7 +272,7 @@ export async function getSessionState(req, res) {
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
-    const qr = client.urlcode ? await QRCode.toDataURL(client.urlcode) : null;
+    const qr = client?.urlcode != null && client?.urlcode != '' ? await QRCode.toDataURL(client.urlcode) : null;
 
     if ((client == null || client.status == null) && !waitQrCode)
       return res.status(200).json({ status: 'CLOSED', qrcode: null });
