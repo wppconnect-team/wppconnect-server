@@ -8196,10 +8196,10 @@ swagger-ui-dist@>=4.11.0:
   resolved "https://registry.npmjs.org/swagger-ui-dist/-/swagger-ui-dist-4.14.3.tgz"
   integrity sha512-Y7Sta24I9r+G6dX3ZTIq9Psr55cDC3myCB0E00ZnVkB0Wn3cO77NdLXSM0f90WZh9VpgTetKpMPR3n2VqKr+lQ==
 
-swagger-ui-dist@^4.15.2:
-  version "4.15.2"
-  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.15.2.tgz#9cc1d18ad089cdda30b1d570a8950be382cac730"
-  integrity sha512-sanLAioshpa+Q0PpPxD86uo4labSqeIxtjLoC7xoce3HTnECPoQwY7PUVOiGMZ4dnEnROZPLUTloCEM86jZc1Q==
+swagger-ui-dist@^4.15.5:
+  version "4.15.5"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.15.5.tgz#cda226a79db2a9192579cc1f37ec839398a62638"
+  integrity sha512-V3eIa28lwB6gg7/wfNvAbjwJYmDXy1Jo1POjyTzlB6wPcHiGlRxq39TSjYGVjQrUSAzpv+a7nzp7mDxgNy57xA==
 
 swagger-ui-express@^4.6.0:
   version "4.6.0"
