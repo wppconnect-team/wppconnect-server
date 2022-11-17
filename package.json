@@ -76,7 +76,7 @@
     "rimraf": "^3.0.2",
     "shx": "^0.3.4",
     "swagger-ui-dist": "^4.15.5",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^5.0.0"
   },
   "peerDependencies": {
     "aws-sdk": "^2.1254.0",
