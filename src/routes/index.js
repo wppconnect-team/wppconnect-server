@@ -61,7 +61,7 @@ routes.post(
   upload.single('file'),
   verifyToken,
   statusConnection,
-  MessageController.sendImage
+  MessageController.sendFile
 );
 routes.post(
   '/api/:session/send-sticker',
@@ -85,7 +85,7 @@ routes.post(
   statusConnection,
   MessageController.sendFile
 );
-routes.post('/api/:session/send-file-base64', verifyToken, statusConnection, MessageController.sendFile64);
+routes.post('/api/:session/send-file-base64', verifyToken, statusConnection, MessageController.sendFile);
 routes.post('/api/:session/send-voice', verifyToken, statusConnection, MessageController.sendVoice);
 routes.post('/api/:session/send-voice-base64', verifyToken, statusConnection, MessageController.sendVoice64);
 routes.post('/api/:session/send-status', verifyToken, statusConnection, MessageController.sendStatusText);
