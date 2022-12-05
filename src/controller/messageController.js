@@ -16,7 +16,6 @@
 import { unlinkAsync } from '../util/functions';
 
 function returnError(req, res, error) {
-  console.log(error);
   req.logger.error(error);
   res.status(500).json({ status: 'Error', message: 'Erro ao enviar a mensagem.' });
 }
