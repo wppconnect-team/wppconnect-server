@@ -168,7 +168,7 @@ export async function sendListMessage(req, res) {
 
     if (results.length === 0) return returnError(req, res, 'Error sending list buttons');
 
-    returnSucess(res, phone, results);
+    returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
   }
