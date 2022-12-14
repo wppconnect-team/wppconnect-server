@@ -7975,7 +7975,7 @@
         "deprecated": false
       }
     },
-    "/check-number-status": {
+    "/check-number-status/{Phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Check Number Status",
@@ -7991,6 +7991,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "Phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
