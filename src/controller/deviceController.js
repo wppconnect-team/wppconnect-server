@@ -727,6 +727,29 @@ export async function starMessage(req, res) {
   }
 }
 
+export async function getReactions(req, res) {
+  const messageId = req.params.id;
+  try {
+    let response = await req.client.getReactions(messageId);
+
+    return res.status(200).json({ status: 'success', response: response });
+  } catch (error) {
+    req.logger.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error on get reactions' });
+  }
+}
+
+export async function getVotes(req, res) {
+  const messageId = req.params.id;
+  try {
+    let response = await req.client.getVotes(messageId);
+
+    return res.status(200).json({ status: 'success', response: response });
+  } catch (error) {
+    req.logger.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error on get votes' });
+  }
+}
 export async function chatWoot(req, res) {
   const { session } = req.params;
   const client = clientsArray[session];
