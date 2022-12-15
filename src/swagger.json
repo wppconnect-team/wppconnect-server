@@ -8238,7 +8238,7 @@
         "deprecated": false
       }
     },
-    "/contact/556593077171": {
+    "/contact/{Phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Contact",
@@ -8254,6 +8254,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "Phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8381,7 +8392,7 @@
         "deprecated": false
       }
     },
-    "/profile/556593077171": {
+    "/profile/{Phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Number Profile",
@@ -8397,6 +8408,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "Phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8501,7 +8523,7 @@
         "deprecated": false
       }
     },
-    "/profile-pic/556593077171": {
+    "/profile-pic/{Phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Profile Picture",
@@ -8517,6 +8539,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "Phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8622,7 +8655,7 @@
         "deprecated": false
       }
     },
-    "/profile-status/556593077171": {
+    "/profile-status/{Phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Profile Status",
@@ -8638,6 +8671,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "Phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -9469,7 +9513,7 @@
         "deprecated": false
       }
     },
-    "/group-admins/556593077171-1620997998": {
+    "/group-admins/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Admins",
@@ -9485,6 +9529,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
@@ -9734,7 +9789,7 @@
         "deprecated": false
       }
     },
-    "/group-invite-link/556593077171-1620997998": {
+    "/group-invite-link/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Invite Link",
@@ -9750,6 +9805,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
@@ -9844,7 +9910,128 @@
         "deprecated": false
       }
     },
-    "/group-members-ids/556593077171-1620997998": {
+    "/group-revoke-link/{groupId}": {
+      "get": {
+        "tags": ["Group"],
+        "summary": "Revoke Group Invite Link",
+        "description": "Retrieves new group invite link",
+        "operationId": "GetGroupRevokeLink",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "82"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"52-RkAUXK7SSmyLIbu6xIAjKO8zC/k\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 14:59:06 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupRevokeLink"
+                },
+                "example": {
+                  "status": "Success",
+                  "response": "https://chat.whatsapp.com/JKtZlEMwvMZ2z4Po9sDI8P"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/group-members-ids/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Members Ids",
@@ -9860,6 +10047,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
@@ -9965,7 +10163,7 @@
         "deprecated": false
       }
     },
-    "/group-members/556593077171-1620997998": {
+    "/group-members/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Members",
@@ -9981,6 +10179,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
