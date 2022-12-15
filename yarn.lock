@@ -2506,13 +2506,13 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.1.tgz#34bdc31727a1889198855913db2f270ace6d7bf8"
   integrity sha512-0G7tNyS+yW8TdgHwZKlDWYXFA6OJQnoLCQvYKkQP0Q2X205PSQ6RNUj0M+1OB/9gRQaUZ/ccYfaxd0nhaWKfjw==
 
-"@wppconnect-team/wppconnect@^1.19.2":
-  version "1.19.2"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.19.2.tgz#30f9744dfe8a3be5a46e562a1f18d3a363d48f3b"
-  integrity sha512-o1o9HoCZPywQYtXEAC6k520Lx3JuNylasY0jlZlpvoU4NAC2LQmp36IZ+FRzNUOHsAGYP3cAqXKWuHpYoYS2WQ==
+"@wppconnect-team/wppconnect@^1.20.0":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.20.0.tgz#6512ca11fcda13c344d4f292107ef86083e9de0b"
+  integrity sha512-sLkzS4zVtdMoRXAOyjluhhC6feBH3Oz0n9wQDd66wU24UNAA1sV3KOSgnWI5PdmEnWNmcj24B7BzKWkV9BKXBw==
   dependencies:
-    "@wppconnect/wa-js" "^2.17.0"
-    "@wppconnect/wa-version" "^1.1.208"
+    "@wppconnect/wa-js" "^2.18.0"
+    "@wppconnect/wa-version" "^1.1.213"
     atob "^2.1.2"
     axios "^1.2.1"
     boxen "^5.1.2"
@@ -2543,15 +2543,15 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.17.0":
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.17.0.tgz#ff167d8d81203dd917ad44a190187088e00a2da0"
-  integrity sha512-tteq0kkV2gaW6sisoxL7yDL4T+Tr0x01g1n5AoXCsPS/XUG9FRd0xoNsK5SUX2R1QULBD60NrxodFwDxNfiw5g==
+"@wppconnect/wa-js@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.18.0.tgz#6cebc2c2e362bad02417f3f9f4dfbfc65c7ba0f4"
+  integrity sha512-ssb+8sBd3xeZQVtlRyDrlVBGoFPLRkqfuYu0a/Mgy8pE4Z4AhEPmMZqVukZzxZdYrRWDZnfcyVg098c0m8Ot4A==
 
-"@wppconnect/wa-version@^1.1.208":
-  version "1.1.208"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.208.tgz#42dfe89a3f85a615eda25686f1f45b1bc06bffed"
-  integrity sha512-i5jTMws3w1Heiw5iCJr3Aym033BreD4625vH03FKnfsPcJVq8aCf1eGH3SB0sp42ag+HskuMwdLTsL5bhSdY/Q==
+"@wppconnect/wa-version@^1.1.213":
+  version "1.1.213"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.213.tgz#3214635e57822b66aec1f06078418e54379b7bdb"
+  integrity sha512-Cxj+YjX6vuTCGWjRCcYYLvcmg5RLOA5aPH5Vi3JSdEDupFVYNwlGcXvotRadG3PQxGYrM3Zz1JnDTytiOX+4Cg==
   dependencies:
     node-fetch "^2.6.7"
     semver "^7.3.8"
