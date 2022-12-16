@@ -333,7 +333,7 @@
         "deprecated": false
       }
     },
-    "/chat-by-id": {
+    "/chat-by-id/{phone}": {
       "get": {
         "tags": ["Chat"],
         "summary": "Chat By Id",
@@ -350,6 +350,28 @@
               "type": "string",
               "example": "application/json"
             }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "556593077171"
+            },
+            "required": true,
+            "description": "Phone without @c.us"
+          },
+          {
+            "name": "isGroup",
+            "in": "query",
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "false"
+            },
+            "required": true,
+            "description": "Indicate that phone id given is group or not"
           }
         ],
         "responses": {
@@ -1287,7 +1309,7 @@
         "deprecated": false
       }
     },
-    "/chat-is-online": {
+    "/chat-is-online/{phone}": {
       "get": {
         "tags": ["Chat"],
         "summary": "Chat Is OnLine",
@@ -1304,7 +1326,19 @@
               "type": "string",
               "example": "application/json"
             }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
+            }
           }
+          
         ],
         "responses": {
           "200": {
@@ -2276,6 +2310,126 @@
                     }
                   ]
                 }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/get-media-by-message/{msgId}": {
+      "get": {
+        "tags": ["Chat"],
+        "summary": "Get Media Data",
+        "description": "Retrieves Base64 data media and mimetype",
+        "operationId": "GetMediaByMessage",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            }
+          },
+          {
+            "in": "path",
+            "name": "msgId",
+            "schema": {
+              "type": "string",
+              "example": "true_62895808067171@c.us_3EB07058C5DEACB799EB"
+            },
+            "required": true,
+            "description": "The message id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "7702"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"1e16-+kfdHrgq80yaFEsLbRTkYpchCb4\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Thu, 13 May 2021 19:46:56 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMediaByMessage"
+                },
+                "example": {
+                  "base64": "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",
+                  "mimetype": "image/jpeg"
+              }
               }
             }
           }
@@ -3968,7 +4122,7 @@
         "deprecated": false
       }
     },
-    "/last-seen": {
+    "/last-seen/{phone}": {
       "get": {
         "tags": ["Chat"],
         "summary": "Last Seen",
@@ -3984,6 +4138,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8213,7 +8378,7 @@
         "deprecated": false
       }
     },
-    "/check-number-status/{Phone}": {
+    "/check-number-status/{phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Check Number Status",
@@ -8232,7 +8397,7 @@
             }
           },
           {
-            "name": "Phone",
+            "name": "phone",
             "in": "path",
             "description": "",
             "required": true,
@@ -8476,7 +8641,7 @@
         "deprecated": false
       }
     },
-    "/contact/556593077171": {
+    "/contact/{phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Contact",
@@ -8492,6 +8657,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8619,7 +8795,7 @@
         "deprecated": false
       }
     },
-    "/profile/556593077171": {
+    "/profile/{phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Number Profile",
@@ -8635,6 +8811,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8739,7 +8926,7 @@
         "deprecated": false
       }
     },
-    "/profile-pic/556593077171": {
+    "/profile-pic/{phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Profile Picture",
@@ -8755,6 +8942,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -8860,7 +9058,7 @@
         "deprecated": false
       }
     },
-    "/profile-status/556593077171": {
+    "/profile-status/{phone}": {
       "get": {
         "tags": ["Contact"],
         "summary": "Get Profile Status",
@@ -8876,6 +9074,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171"
             }
           }
         ],
@@ -9707,7 +9916,7 @@
         "deprecated": false
       }
     },
-    "/group-admins/556593077171-1620997998": {
+    "/group-admins/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Admins",
@@ -9723,6 +9932,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
@@ -9972,7 +10192,7 @@
         "deprecated": false
       }
     },
-    "/group-invite-link/556593077171-1620997998": {
+    "/group-invite-link/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Invite Link",
@@ -9988,6 +10208,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
@@ -10082,7 +10313,128 @@
         "deprecated": false
       }
     },
-    "/group-members-ids/556593077171-1620997998": {
+    "/group-revoke-link/{groupId}": {
+      "get": {
+        "tags": ["Group"],
+        "summary": "Revoke Group Invite Link",
+        "description": "Retrieves new group invite link",
+        "operationId": "GetGroupRevokeLink",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string",
+              "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Powered-By": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Express"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "*"
+                  }
+                }
+              },
+              "Content-Length": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "82"
+                  }
+                }
+              },
+              "ETag": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "W/\"52-RkAUXK7SSmyLIbu6xIAjKO8zC/k\""
+                  }
+                }
+              },
+              "Date": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "Fri, 14 May 2021 14:59:06 GMT"
+                  }
+                }
+              },
+              "Connection": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "keep-alive"
+                  }
+                }
+              },
+              "Keep-Alive": {
+                "content": {
+                  "text/plain": {
+                    "schema": {
+                      "type": "string"
+                    },
+                    "example": "timeout=5"
+                  }
+                }
+              }
+            },
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupRevokeLink"
+                },
+                "example": {
+                  "status": "Success",
+                  "response": "https://chat.whatsapp.com/JKtZlEMwvMZ2z4Po9sDI8P"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/group-members-ids/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Members Ids",
@@ -10098,6 +10450,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
@@ -10203,7 +10566,7 @@
         "deprecated": false
       }
     },
-    "/group-members/556593077171-1620997998": {
+    "/group-members/{groupId}": {
       "get": {
         "tags": ["Group"],
         "summary": "Get Group Members",
@@ -10219,6 +10582,17 @@
             "schema": {
               "type": "string",
               "example": "application/json"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "number",
+              "example": "556593077171-1620997998"
             }
           }
         ],
