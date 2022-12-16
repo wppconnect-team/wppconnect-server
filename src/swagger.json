@@ -371,7 +371,7 @@
               "example": "false"
             },
             "required": true,
-            "description": "Indicate that that phone id given is group or not"
+            "description": "Indicate that phone id given is group or not"
           }
         ],
         "responses": {
