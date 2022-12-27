@@ -83,10 +83,6 @@ export default class CreateSessionUtil {
       if (req.serverOptions.webhook.onReactionMessage) {
         await this.onReactionMessage(client, req);
       }
-
-      if (req.serverOptions.webhook.onPollResponse) {
-        await this.onPollResponse(client, req);
-      }
     } catch (e) {
       req.logger.error(e);
     }
@@ -205,14 +201,6 @@ export default class CreateSessionUtil {
     await client.onReactionMessage(async (reaction) => {
       req.io.emit('onreactionmessage', reaction);
       callWebHook(client, req, 'onreactionmessage', reaction);
-    });
-  }
-
-  async onPollResponse(client, req) {
-    await client.isConnected();
-    await client.onPollResponse(async (response) => {
-      req.io.emit('onpollresponse', response);
-      callWebHook(client, req, 'onpollresponse', response);
     });
   }
 

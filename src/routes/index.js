@@ -199,8 +199,6 @@ routes.post('/api/:session/temporary-messages', verifyToken, statusConnection, D
 routes.post('/api/:session/typing', verifyToken, statusConnection, DeviceController.setTyping);
 routes.post('/api/:session/recording', verifyToken, statusConnection, DeviceController.setRecording);
 routes.post('/api/:session/star-message', verifyToken, statusConnection, DeviceController.starMessage);
-routes.get('/api/:session/reactions/:id', verifyToken, statusConnection, DeviceController.getReactions);
-routes.get('/api/:session/votes/:id', verifyToken, statusConnection, DeviceController.getVotes);
 routes.post('/api/:session/reject-call', verifyToken, statusConnection, DeviceController.rejectCall);
 
 // Catalog
