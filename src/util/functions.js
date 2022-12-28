@@ -30,11 +30,7 @@ export function contactToArray(number, isGroup) {
     for (let contact of number) {
       while (! /^[a-zA-Z0-9]+$/.test(contact))
       {
-        contact = contact?.split('@')[0]?.split(':')[0]?.replace('+', '')
-        .replace(' ', '')
-        .replace('(', '')
-        .replace(')', '')
-        .replace('-', '')
+        contact = contact?.split('@')[0]?.split(':')[0]?.replace(/\D/g,'');
       }
       if (contact !== '')
         if (isGroup) localArr.push(`${contact}@g.us`);
@@ -45,11 +41,7 @@ export function contactToArray(number, isGroup) {
     for (let contact of arrContacts) {
       while (! /^[a-zA-Z0-9]+$/.test(contact))
       {
-        contact = contact?.split('@')[0]?.split(':')[0]?.replace('+', '')
-        .replace(' ', '')
-        .replace('(', '')
-        .replace(')', '')
-        .replace('-', '')
+        contact = contact?.split('@')[0]?.split(':')[0]?.replace(/\D/g,'');
       }
       if (contact !== '')
         if (isGroup) localArr.push(`${contact}@g.us`);
@@ -66,11 +58,7 @@ export function groupToArray(group) {
     for (let contact of group) {
       while (! /^[a-zA-Z0-9]+$/.test(contact))
       {
-        contact = contact?.split('@')[0]?.split(':')[0]?.replace('+', '')
-        .replace(' ', '')
-        .replace('(', '')
-        .replace(')', '')
-        .replace('-', '')
+        contact = contact?.split('@')[0]?.split(':')[0]?.replace(/\D/g,'');
       }
       if (contact !== '') localArr.push(`${contact}@g.us`);
     }
@@ -79,11 +67,7 @@ export function groupToArray(group) {
     for (let contact of arrContacts) {
       while (! /^[a-zA-Z0-9]+$/.test(contact))
       {
-        contact = contact?.split('@')[0]?.split(':')[0]?.replace('+', '')
-        .replace(' ', '')
-        .replace('(', '')
-        .replace(')', '')
-        .replace('-', '')
+        contact = contact?.split('@')[0]?.split(':')[0]?.replace(/\D/g,'');
       }
       if (contact !== '') localArr.push(`${contact}@g.us`);
     }
