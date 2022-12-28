@@ -4802,7 +4802,7 @@ form-data-encoder@^2.1.2:
   resolved "https://registry.npmjs.org/form-data-encoder/-/form-data-encoder-2.1.3.tgz"
   integrity sha512-KqU0nnPMgIJcCOFTNJFEA8epcseEaoox4XZffTgy8jlI6pL/5EFyR54NRG7CnCJN0biY7q52DO3MH6/sJ/TKlQ==
 
-form-data@4.0.0, form-data@^4.0.0:
+form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/form-data/-/form-data-4.0.0.tgz"
   integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
@@ -7700,10 +7700,10 @@ regjsparser@^0.8.2:
   dependencies:
     jsesc "~0.5.0"
 
-release-it@^15.5.1:
-  version "15.5.1"
-  resolved "https://registry.yarnpkg.com/release-it/-/release-it-15.5.1.tgz#bce504bef6fefd42bf54c84320ed1145f72a2681"
-  integrity sha512-1X1oyqay/amJh/V+xkSU9zN6LqGmLQJ0Q40+FaHE6+Pu6QCmgX9HbrpHxvF0HZeXkB5cdhHjmYsPbHnUQLRnYg==
+release-it@^15.6.0:
+  version "15.6.0"
+  resolved "https://registry.yarnpkg.com/release-it/-/release-it-15.6.0.tgz#db6c35088c29e5ca9d2c6d26cdce1010e49e30e7"
+  integrity sha512-NXewgzO8QV1LOFjn2K7/dgE1Y1cG+2JiLOU/x9X/Lq9UdFn2hTH1r9SSrufCxG+y/Rp+oN8liYTsNptKrj92kg==
   dependencies:
     "@iarna/toml" "2.2.5"
     "@octokit/rest" "19.0.5"
@@ -7711,7 +7711,6 @@ release-it@^15.5.1:
     chalk "5.1.2"
     cosmiconfig "8.0.0"
     execa "6.1.0"
-    form-data "4.0.0"
     git-url-parse "13.1.0"
     globby "13.1.2"
     got "12.5.3"
