@@ -52,13 +52,10 @@ export async function createGroup(req, res) {
 
     for (const group of groupNameToArray(name)) {
       response = await req.client.createGroup(group, contactToArray(participants));
-
       infoGroup.push({
         name: group,
         id: response.gid.user,
-        participants: response.participants.map((user) => {
-          return { user: Object.keys(user)[0] };
-        }),
+        participants: response.participants,
       });
     }
 
