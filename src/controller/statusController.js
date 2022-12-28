@@ -2,7 +2,7 @@ import { unlinkAsync } from '../util/functions';
 
 function returnError(req, res, error) {
   req.logger.error(error);
-  res.status(500).json({ status: 'Error', message: 'Erro ao enviar status.' });
+  res.status(500).json({ status: 'Error', message: 'Erro ao enviar status.', error: error });
 }
 
 async function returnSucess(res, data) {

@@ -17,7 +17,7 @@ import { unlinkAsync } from '../util/functions';
 
 function returnError(req, res, error) {
   req.logger.error(error);
-  res.status(500).json({ status: 'Error', message: 'Erro ao enviar a mensagem.' });
+  res.status(500).json({ status: 'Error', message: 'Erro ao enviar a mensagem.', error: error });
 }
 
 async function returnSucess(res, data) {
@@ -235,7 +235,7 @@ export async function sendMentioned(req, res) {
     return res.status(201).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on send message mentioned' });
+    return res.status(500).json({ status: 'error', message: 'Error on send message mentioned', error: error });
   }
 }
 export async function sendImageAsSticker(req, res) {

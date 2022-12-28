@@ -9,7 +9,7 @@ export async function addNewLabel(req, res) {
     const result = await req.client.addNewLabel(name, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao adicionar etiqueta.' });
+    res.status(500).json({ status: 'Error', message: 'Erro ao adicionar etiqueta.', error: error });
   }
 }
 
@@ -24,7 +24,7 @@ export async function addOrRemoveLabels(req, res) {
     const result = await req.client.addOrRemoveLabels(chatIds, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao adicionar/deletar etiqueta.' });
+    res.status(500).json({ status: 'Error', message: 'Erro ao adicionar/deletar etiqueta.', error: error });
   }
 }
 
@@ -33,7 +33,7 @@ export async function getAllLabels(req, res) {
     const result = await req.client.getAllLabels();
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao buscar etiquetas.' });
+    res.status(500).json({ status: 'Error', message: 'Erro ao buscar etiquetas.', error: error });
   }
 }
 
@@ -42,7 +42,7 @@ export async function deleteAllLabels(req, res) {
     const result = await req.client.deleteAllLabels();
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao deletar todas as etiquetas.' });
+    res.status(500).json({ status: 'Error', message: 'Erro ao deletar todas as etiquetas.', error: error });
   }
 }
 
@@ -52,6 +52,6 @@ export async function deleteLabel(req, res) {
     const result = await req.client.deleteLabel(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao deletar etiqueta.' });
+    res.status(500).json({ status: 'Error', message: 'Erro ao deletar etiqueta.', error: error });
   }
 }

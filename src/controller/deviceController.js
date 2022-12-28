@@ -53,7 +53,7 @@ export async function setProfileName(req, res) {
     return res.status(200).json({ status: 'success', response: result });
   } catch (error) {
     req.logger.error(error);
-    res.status(500).json({ status: 'error', message: 'Error on set profile name.' });
+    res.status(500).json({ status: 'error', message: 'Error on set profile name.', error: error });
   }
 }
 
@@ -63,7 +63,7 @@ export async function showAllContacts(req, res) {
     res.status(200).json({ status: 'success', response: contacts });
   } catch (error) {
     req.logger.error(error);
-    res.status(500).json({ status: 'error', message: 'Error fetching contacts' });
+    res.status(500).json({ status: 'error', message: 'Error fetching contacts', error: error });
   }
 }
 
@@ -83,7 +83,7 @@ export async function getAllChatsWithMessages(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on get all chats whit messages' });
+    return res.status(500).json({ status: 'error', message: 'Error on get all chats whit messages', error: e });
   }
 }
 /**
@@ -102,7 +102,7 @@ export async function getAllMessagesInChat(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on get all messages in chat' });
+    return res.status(500).json({ status: 'error', message: 'Error on get all messages in chat', error: e });
   }
 }
 
@@ -112,7 +112,7 @@ export async function getAllNewMessages(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on get all messages in chat' });
+    return res.status(500).json({ status: 'error', message: 'Error on get all messages in chat', error: e });
   }
 }
 
@@ -122,7 +122,7 @@ export async function getAllUnreadMessages(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on get all messages in chat' });
+    return res.status(500).json({ status: 'error', message: 'Error on get all messages in chat', error: e });
   }
 }
 
@@ -156,7 +156,7 @@ export async function getChatById(req, res) {
     return res.status(200).json({ status: 'success', response: allMessages });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error changing chat by Id' });
+    return res.status(500).json({ status: 'error', message: 'Error changing chat by Id', error: e });
   }
 }
 
@@ -181,7 +181,7 @@ export async function getBatteryLevel(req, res) {
     return res.status(200).json({ status: 'Success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error retrieving battery status' });
+    return res.status(500).json({ status: 'error', message: 'Error retrieving battery status', error: e });
   }
 }
 
@@ -192,7 +192,7 @@ export async function getHostDevice(req, res) {
     return res.status(200).json({ status: 'success', response: { ...response, phoneNumber }, mapper: 'device' });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Erro ao recuperar dados do telefone' });
+    return res.status(500).json({ status: 'error', message: 'Erro ao recuperar dados do telefone', error: e });
   }
 }
 
@@ -202,7 +202,7 @@ export async function getPhoneNumber(req, res) {
     return res.status(200).json({ status: 'success', response: phoneNumber, mapper: 'device' });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error retrieving phone number' });
+    return res.status(500).json({ status: 'error', message: 'Error retrieving phone number', error: e });
   }
 }
 
@@ -217,7 +217,7 @@ export async function getBlockList(req, res) {
     return res.status(200).json({ status: 'success', response: blocked });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error retrieving blocked contact list' });
+    return res.status(500).json({ status: 'error', message: 'Error retrieving blocked contact list', error: e });
   }
 }
 
@@ -244,7 +244,7 @@ export async function deleteAllChats(req, res) {
     return res.status(200).json({ status: 'success' });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on delete all chats' });
+    return res.status(500).json({ status: 'error', message: 'Error on delete all chats', error: error });
   }
 }
 
@@ -272,7 +272,7 @@ export async function clearAllChats(req, res) {
     return res.status(201).json({ status: 'success' });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on clear all chats' });
+    return res.status(500).json({ status: 'error', message: 'Error on clear all chats', error: e });
   }
 }
 
@@ -285,7 +285,7 @@ export async function archiveChat(req, res) {
     return res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on archive chat' });
+    return res.status(500).json({ status: 'error', message: 'Error on archive chat', error: e });
   }
 }
 
@@ -298,7 +298,7 @@ export async function archiveAllChats(req, res) {
     return res.status(201).json({ status: 'success' });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on archive all chats' });
+    return res.status(500).json({ status: 'error', message: 'Error on archive all chats', error: e });
   }
 }
 
@@ -311,7 +311,7 @@ export async function deleteMessage(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'Message deleted' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on delete message' });
+    return res.status(500).json({ status: 'error', message: 'Error on delete message', error: e });
   }
 }
 export async function reactMessage(req, res) {
@@ -323,7 +323,7 @@ export async function reactMessage(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'Reaction sended' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on send reaction to message' });
+    return res.status(500).json({ status: 'error', message: 'Error on send reaction to message', error: e });
   }
 }
 
@@ -335,7 +335,7 @@ export async function reply(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error replying message' });
+    return res.status(500).json({ status: 'error', message: 'Error replying message', error: e });
   }
 }
 
@@ -354,7 +354,7 @@ export async function forwardMessages(req, res) {
     return res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error forwarding message' });
+    return res.status(500).json({ status: 'error', message: 'Error forwarding message', error: e });
   }
 }
 
@@ -366,7 +366,7 @@ export async function markUnseenMessage(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'unseen checked' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on mark unseen' });
+    return res.status(500).json({ status: 'error', message: 'Error on mark unseen', error: e });
   }
 }
 
@@ -378,7 +378,7 @@ export async function blockContact(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'Contact blocked' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on block contact' });
+    return res.status(500).json({ status: 'error', message: 'Error on block contact', error: e });
   }
 }
 
@@ -390,7 +390,7 @@ export async function unblockContact(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'Contact UnBlocked' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on unlock contact' });
+    return res.status(500).json({ status: 'error', message: 'Error on unlock contact', error: e });
   }
 }
 
@@ -405,7 +405,7 @@ export async function pinChat(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'Chat fixed' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: e.text || 'Error on pin chat' });
+    return res.status(500).json({ status: 'error', message: e.text || 'Error on pin chat', error: e });
   }
 }
 
@@ -421,7 +421,7 @@ export async function setProfilePic(req, res) {
     return res.status(200).json({ status: 'success', response: { message: 'Profile photo successfully changed' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error changing profile photo' });
+    return res.status(500).json({ status: 'error', message: 'Error changing profile photo', error: e });
   }
 }
 
@@ -431,7 +431,7 @@ export async function getUnreadMessages(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', response: 'Error on open list' });
+    return res.status(500).json({ status: 'error', response: 'Error on open list', error: e });
   }
 }
 
@@ -442,7 +442,7 @@ export async function getChatIsOnline(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', response: 'Error on get chat is online' });
+    return res.status(500).json({ status: 'error', response: 'Error on get chat is online', error: e });
   }
 }
 
@@ -454,7 +454,7 @@ export async function getLastSeen(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', response: 'Error on get chat last seen' });
+    return res.status(500).json({ status: 'error', response: 'Error on get chat last seen', error: error });
   }
 }
 
@@ -466,7 +466,7 @@ export async function getListMutes(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', response: 'Error on get list mutes' });
+    return res.status(500).json({ status: 'error', response: 'Error on get list mutes', error: error });
   }
 }
 
@@ -478,7 +478,7 @@ export async function loadAndGetAllMessagesInChat(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', response: 'Error on open list' });
+    return res.status(500).json({ status: 'error', response: 'Error on open list', error: error });
   }
 }
 export async function getMessages(req, res) {
@@ -493,7 +493,7 @@ export async function getMessages(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(401).json({ status: 'error', response: 'Error on open list' });
+    return res.status(401).json({ status: 'error', response: 'Error on open list', error: e });
   }
 }
 
@@ -508,7 +508,7 @@ export async function sendContactVcard(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on send contact vcard' });
+    return res.status(500).json({ status: 'error', message: 'Error on send contact vcard', error: error });
   }
 }
 
@@ -524,7 +524,7 @@ export async function sendMute(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on send mute' });
+    return res.status(500).json({ status: 'error', message: 'Error on send mute', error: error });
   }
 }
 
@@ -555,7 +555,7 @@ export async function setChatState(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on send chat state' });
+    return res.status(500).json({ status: 'error', message: 'Error on send chat state', error: error });
   }
 }
 
@@ -571,7 +571,7 @@ export async function setTemporaryMessages(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on set temporary messages' });
+    return res.status(500).json({ status: 'error', message: 'Error on set temporary messages', error: error });
   }
 }
 
@@ -587,7 +587,7 @@ export async function setTyping(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on set typing' });
+    return res.status(500).json({ status: 'error', message: 'Error on set typing', error: error });
   }
 }
 
@@ -603,7 +603,7 @@ export async function setRecording(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on set recording' });
+    return res.status(500).json({ status: 'error', message: 'Error on set recording', error: error });
   }
 }
 
@@ -618,7 +618,7 @@ export async function checkNumberStatus(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on check number status' });
+    return res.status(500).json({ status: 'error', message: 'Error on check number status', error: error });
   }
 }
 
@@ -633,7 +633,7 @@ export async function getContact(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on get contact' });
+    return res.status(500).json({ status: 'error', message: 'Error on get contact', error: error });
   }
 }
 
@@ -644,7 +644,7 @@ export async function getAllContacts(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on get all constacts' });
+    return res.status(500).json({ status: 'error', message: 'Error on get all constacts', error: error });
   }
 }
 
@@ -659,7 +659,7 @@ export async function getNumberProfile(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on get number profile' });
+    return res.status(500).json({ status: 'error', message: 'Error on get number profile', error: error });
   }
 }
 
@@ -674,7 +674,7 @@ export async function getProfilePicFromServer(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on  get profile pic' });
+    return res.status(500).json({ status: 'error', message: 'Error on  get profile pic', error: error });
   }
 }
 
@@ -688,7 +688,7 @@ export async function getStatus(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on  get status' });
+    return res.status(500).json({ status: 'error', message: 'Error on  get status', error: error });
   }
 }
 
@@ -711,7 +711,7 @@ export async function rejectCall(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({ status: 'error', message: 'Error on rejectCall' });
+    return res.status(500).json({ status: 'error', message: 'Error on rejectCall', error: e });
   }
 }
 
@@ -723,7 +723,7 @@ export async function starMessage(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on  start message' });
+    return res.status(500).json({ status: 'error', message: 'Error on  start message', error: error });
   }
 }
 
@@ -735,7 +735,7 @@ export async function getReactions(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on get reactions' });
+    return res.status(500).json({ status: 'error', message: 'Error on get reactions', error: error });
   }
 }
 
@@ -747,7 +747,7 @@ export async function getVotes(req, res) {
     return res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({ status: 'error', message: 'Error on get votes' });
+    return res.status(500).json({ status: 'error', message: 'Error on get votes', error: error });
   }
 }
 export async function chatWoot(req, res) {
@@ -785,6 +785,6 @@ export async function chatWoot(req, res) {
     }
   } catch (e) {
     console.log(e);
-    return res.status(400).json({ status: 'error', message: 'Error on  receive chatwoot' });
+    return res.status(400).json({ status: 'error', message: 'Error on  receive chatwoot', error: e });
   }
 }

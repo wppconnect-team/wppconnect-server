@@ -236,6 +236,7 @@ export async function downloadMediaByMessage(req, res) {
     return res.status(400).json({
       status: 'error',
       message: 'Decrypt file error',
+      error: e,
     });
   }
 }
@@ -264,7 +265,7 @@ export async function getMediaByMessage(req, res) {
     return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'The session is not active' });
+    return res.status(500).json({ status: 'error', message: 'The session is not active', error: ex });
   }
 }
 
@@ -285,7 +286,7 @@ export async function getSessionState(req, res) {
       });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'The session is not active' });
+    return res.status(500).json({ status: 'error', message: 'The session is not active', error: ex });
   }
 }
 
@@ -305,7 +306,7 @@ export async function getQrCode(req, res) {
     }
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'Error retrieving QRCode' });
+    return res.status(500).json({ status: 'error', message: 'Error retrieving QRCode', error: ex });
   }
 }
 
@@ -314,7 +315,7 @@ export async function killServiceWorker(req, res) {
     return res.status(200).json({ status: 'success', response: req.client.killServiceWorker() });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'The session is not active' });
+    return res.status(500).json({ status: 'error', message: 'The session is not active', error: ex });
   }
 }
 
@@ -323,7 +324,7 @@ export async function restartService(req, res) {
     return res.status(200).json({ status: 'success', response: req.client.restartService() });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', response: { message: 'The session is not active' } });
+    return res.status(500).json({ status: 'error', response: { message: 'The session is not active', error: ex } });
   }
 }
 
@@ -348,6 +349,6 @@ export async function subscribePresence(req, res) {
 
     return await res.status(200).json({ status: 'success', response: { message: 'Subscribe presence executed' } });
   } catch (error) {
-    return await res.status(500).json({ status: 'error', message: 'Error on subscribe presence', error });
+    return await res.status(500).json({ status: 'error', message: 'Error on subscribe presence', error: error });
   }
 }
