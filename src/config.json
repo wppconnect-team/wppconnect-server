@@ -18,7 +18,8 @@
     "onPresenceChanged": true,
     "onParticipantsChanged": true,
     "onReactionMessage": true,
-    "onPollResponse": true
+    "onPollResponse": true,
+    "onRevokedMessage": true
   },
   "archive": {
     "enable": false,

@@ -84,6 +84,10 @@ export default class CreateSessionUtil {
         await this.onReactionMessage(client, req);
       }
 
+      if (req.serverOptions.webhook.onRevokedMessage) {
+        await this.onRevokedMessage(client, req);
+      }
+
       if (req.serverOptions.webhook.onPollResponse) {
         await this.onPollResponse(client, req);
       }
@@ -208,6 +212,13 @@ export default class CreateSessionUtil {
     });
   }
 
+  async onRevokedMessage(client, req) {
+    await client.isConnected();
+    await client.onRevokedMessage(async (response) => {
+      req.io.emit('onrevokedmessage', response);
+      callWebHook(client, req, 'onrevokedmessage', response);
+    });
+  }
   async onPollResponse(client, req) {
     await client.isConnected();
     await client.onPollResponse(async (response) => {
