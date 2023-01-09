@@ -1833,14 +1833,14 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@commitlint/cli@^17.4.0":
-  version "17.4.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-17.4.0.tgz#14a5f9b713a5b60ff1a0cfce66b0bb207954c1ad"
-  integrity sha512-SEY4sYe8yVlgxPP7X0wJb96DBAGBPsCsy6QbqJt/UECbIAjDeDV5xXBV4jnS7T/qMC10sk6Ub9kDhEX0VWvblw==
+"@commitlint/cli@^17.4.1":
+  version "17.4.1"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-17.4.1.tgz#71086653a42abafe5519c6c5f8ada35b17f1dc53"
+  integrity sha512-W8OJwz+izY+fVwyUt1HveCDmABMZNRVZHSVPw/Bh9Y62tp11SmmQaycgbsYLMiMy7JGn4mAJqEGlSHS9Uti9ZQ==
   dependencies:
     "@commitlint/format" "^17.4.0"
     "@commitlint/lint" "^17.4.0"
-    "@commitlint/load" "^17.4.0"
+    "@commitlint/load" "^17.4.1"
     "@commitlint/read" "^17.4.0"
     "@commitlint/types" "^17.4.0"
     execa "^5.0.0"
@@ -1872,13 +1872,13 @@
     "@commitlint/types" "^17.4.0"
     ajv "^8.11.0"
 
-"@commitlint/cz-commitlint@^17.4.0":
-  version "17.4.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/cz-commitlint/-/cz-commitlint-17.4.0.tgz#49a3ca21c77faa084aa2a2c7d4a907aab3f76f42"
-  integrity sha512-yxId0+wvQHU62obySyEtBB8MKYJUJSXYGzHS7hM6Ke/hec5FwBcsFw0+076huAMC16xs2JkYPHCQwQ4xirMcVg==
+"@commitlint/cz-commitlint@^17.4.1":
+  version "17.4.1"
+  resolved "https://registry.yarnpkg.com/@commitlint/cz-commitlint/-/cz-commitlint-17.4.1.tgz#7b139054e96ec647f19612bde4af327c698a6a58"
+  integrity sha512-WsBqTZO93JtDAJYhZ95AtS7YHCU54J5pFSGhRbIHsPGY5R54h41/wi3cZP2c68KabzZLJZhyPIATFqpP88KZag==
   dependencies:
     "@commitlint/ensure" "^17.4.0"
-    "@commitlint/load" "^17.4.0"
+    "@commitlint/load" "^17.4.1"
     "@commitlint/types" "^17.4.0"
     chalk "^4.1.0"
     lodash.isplainobject "^4.0.6"
@@ -1950,15 +1950,16 @@
     ts-node "^10.8.1"
     typescript "^4.6.4"
 
-"@commitlint/load@^17.4.0":
-  version "17.4.0"
-  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-17.4.0.tgz#d0136d38f3d533e706340efbccc2fb38ebb97538"
-  integrity sha512-wDKNvAJqukqZqKmhRlf3KNo/12QGo1AQcd80EbV01SxtGvyHOsJ/g+/IbrZpopZv8rvzmEVktcpfDYH6ITepFA==
+"@commitlint/load@^17.4.1":
+  version "17.4.1"
+  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-17.4.1.tgz#e1073e0264c84b304f5ab22862217152daca5d27"
+  integrity sha512-6A7/LhIaQpL4ieciIDcVvK2d5z/UI1GBrtDaHm6sQSCL0265clB2/F7XKQNTJHXv9yG4LByT2r+QCpM4GugIfw==
   dependencies:
     "@commitlint/config-validator" "^17.4.0"
     "@commitlint/execute-rule" "^17.4.0"
     "@commitlint/resolve-extends" "^17.4.0"
     "@commitlint/types" "^17.4.0"
+    "@types/node" "*"
     chalk "^4.1.0"
     cosmiconfig "^8.0.0"
     cosmiconfig-typescript-loader "^4.0.0"
