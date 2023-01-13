@@ -1,3 +1,12 @@
+## 1.8.2 (2023-01-13)
+
+
+### Bug Fixes
+
+* Fixed send message to groups (close [#1049](https://github.com/wppconnect-team/wppconnect-server/issues/1049)) ([f8bc6e4](https://github.com/wppconnect-team/wppconnect-server/commit/f8bc6e4ee14b36e266b86bcf9998acf96629019f))
+
+
+
 ## 1.8.1 (2022-12-28)
 
 
