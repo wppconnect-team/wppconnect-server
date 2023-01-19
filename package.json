@@ -67,7 +67,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "license-check-and-add": "^4.0.5",
-    "mongoose": "^6.8.3",
+    "mongoose": "^6.8.4",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
     "pretty-quick": "^3.1.3",
@@ -81,7 +81,7 @@
   "peerDependencies": {
     "aws-sdk": "^2.1295.0",
     "crypto-js": "^4.1.1",
-    "mongoose": "^6.8.3",
+    "mongoose": "^6.8.4",
     "redis": "^4.5.1"
   }
 }
