@@ -154,6 +154,7 @@ export async function startSession(req, res) {
 
 export async function closeSession(req, res) {
   const session = req.session;
+  const { clearSession = true} = req.body;
   try {
     if (clientsArray[session].status === null) {
       return await res.status(200).json({ status: true, message: 'Session successfully closed' });
@@ -175,8 +176,6 @@ export async function closeSession(req, res) {
       catch {
         console.log('erro')
       }
-
-      await req.client.close();
 
       req.io.emit('whatsapp-status', false);
       callWebHook(req.client, req, 'closesession', {
