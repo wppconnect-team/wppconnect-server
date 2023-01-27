@@ -200,7 +200,7 @@ export async function updateCartEnabled(req, res) {
     });
 
   try {
-    const result = await req.client.setProductVisibility(enabled);
+    const result = await req.client.updateCartEnabled(enabled);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({ status: 'Error', message: 'Error on set enabled cart.', error: error });
