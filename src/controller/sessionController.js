@@ -162,8 +162,8 @@ export async function closeSession(req, res) {
 
       if (clearSession) {
         let sessionFolder = `${config.customUserDataDir}/${session}`
-        if (fs.existsSync(sessionFilder)) {
-          console.log('Deletando pasta: ' + sessionFilder);
+        if (fs.existsSync(sessionFolder)) {
+          console.log('Deletando pasta: ' + sessionFolder);
           fs.rmdirSync(sessionFolder, {recursive: true});
         }
 
