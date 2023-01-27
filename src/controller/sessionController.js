@@ -159,6 +159,23 @@ export async function closeSession(req, res) {
       return await res.status(200).json({ status: true, message: 'Session successfully closed' });
     } else {
       clientsArray[session] = { status: null };
+
+      if (clearSession) {
+        let sessionFolder = `${config.customUserDataDir}/${session}`
+        if (fs.existsSync(sessionFilder)) {
+          console.log('Deletando pasta: ' + sessionFilder);
+          fs.rmdirSync(sessionFolder, {recursive: true});
+        }
+
+      }
+
+      try {
+        await req.client.close();
+      }
+      catch {
+        console.log('erro')
+      }
+
       await req.client.close();
 
       req.io.emit('whatsapp-status', false);
