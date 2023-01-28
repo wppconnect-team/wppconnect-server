@@ -1,5 +1,5 @@
 //import mongoose from 'mongoose';
-import config from '../../../config.json';
+import config from '../../../config';
 
 const mongoose =
   config.tokenStoreType === 'mongodb' ? require('mongoose') : null;
