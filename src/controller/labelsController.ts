@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RequestWPP } from '../types/RequestWPP';
 import { Response } from 'express';
+
+import { RequestWPP } from '../types/RequestWPP';
 
 export async function addNewLabel(req: any, res: any) {
   const { name, options } = req.body;
@@ -27,7 +28,11 @@ export async function addNewLabel(req: any, res: any) {
     const result = await req.client.addNewLabel(name, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao adicionar etiqueta.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Erro ao adicionar etiqueta.',
+      error: error,
+    });
   }
 }
 
@@ -42,7 +47,11 @@ export async function addOrRemoveLabels(req: any, res: any) {
     const result = await req.client.addOrRemoveLabels(chatIds, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao adicionar/deletar etiqueta.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Erro ao adicionar/deletar etiqueta.',
+      error: error,
+    });
   }
 }
 
@@ -51,7 +60,11 @@ export async function getAllLabels(req: any, res: any) {
     const result = await req.client.getAllLabels();
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao buscar etiquetas.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Erro ao buscar etiquetas.',
+      error: error,
+    });
   }
 }
 
@@ -60,7 +73,11 @@ export async function deleteAllLabels(req: any, res: any) {
     const result = await req.client.deleteAllLabels();
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao deletar todas as etiquetas.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Erro ao deletar todas as etiquetas.',
+      error: error,
+    });
   }
 }
 
@@ -70,6 +87,10 @@ export async function deleteLabel(req: any, res: any) {
     const result = await req.client.deleteLabel(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Erro ao deletar etiqueta.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Erro ao deletar etiqueta.',
+      error: error,
+    });
   }
 }

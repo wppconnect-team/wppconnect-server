@@ -20,9 +20,11 @@ class FileTokenStore {
   }
 
   public decodeFunction(text: string, client: any) {
-    let object = JSON.parse(text);
-    if (object.config && Object.keys(client.config).length === 0) client.config = object.config;
-    if (object.webhook && Object.keys(client.config).length === 0) client.config.webhook = object.webhook;
+    const object = JSON.parse(text);
+    if (object.config && Object.keys(client.config).length === 0)
+      client.config = object.config;
+    if (object.webhook && Object.keys(client.config).length === 0)
+      client.config.webhook = object.webhook;
     return object;
   }
 }

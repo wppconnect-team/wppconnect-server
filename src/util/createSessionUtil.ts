@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clientsArray, eventEmitter } from './sessionUtil';
 import { create, SocketState } from '@wppconnect-team/wppconnect';
-import { callWebHook, startHelper } from './functions';
+
 import { download } from '../controller/sessionController';
-import Factory from './tokenStore/factory';
-import chatWootClient from './chatWootClient';
 import { RequestWPP } from '../types/RequestWPP';
 import { WhatsAppServer } from '../types/WhatsAppServer';
+import chatWootClient from './chatWootClient';
+import { callWebHook, startHelper } from './functions';
+import { clientsArray, eventEmitter } from './sessionUtil';
+import Factory from './tokenStore/factory';
 
 export default class CreateSessionUtil {
   startChatWootClient(client: any) {
     if (client.config.chatWoot && !client._chatWootClient)
-      client._chatWootClient = new chatWootClient(client.config.chatWoot, client.session);
+      client._chatWootClient = new chatWootClient(
+        client.config.chatWoot,
+        client.session
+      );
     return client._chatWootClient;
   }
 
-  async createSessionUtil(req: any, clientsArray: any, session: string, res?: any) {
+  async createSessionUtil(
+    req: any,
+    clientsArray: any,
+    session: string,
+    res?: any
+  ) {
     try {
       let client = this.getClient(session) as any;
       if (client.status != null && client.status !== 'CLOSED') return;
@@ -48,31 +57,48 @@ export default class CreateSessionUtil {
         };
       }
 
-      let wppClient = await create(
-        Object.assign({}, { tokenStore: myTokenStore }, req.serverOptions.createOptions, {
-          session: session,
-          deviceName: req.serverOptions.deviceName,
-          poweredBy: req.serverOptions.poweredBy || 'WPPConnect-Server',
-          catchQR: (base64Qr: any, asciiQR: any, attempt: any, urlCode: string) => {
-            this.exportQR(req, base64Qr, urlCode, client, res);
-          },
-          onLoadingScreen: (percent: string, message: string) => {
-            req.logger.info(`[${session}] ${percent}% - ${message}`);
-          },
-          statusFind: (statusFind: string) => {
-            try {
-              eventEmitter.emit(`status-${client.session}`, client, statusFind);
-              if (statusFind === 'autocloseCalled' || statusFind === 'desconnectedMobile') {
-                client.status = 'CLOSED';
-                client.qrcode = null;
-                client.close();
-                clientsArray[session] = undefined;
-              }
-              callWebHook(client, req, 'status-find', { status: statusFind });
-              req.logger.info(statusFind + '\n\n');
-            } catch (error) {}
-          },
-        })
+      const wppClient = await create(
+        Object.assign(
+          {},
+          { tokenStore: myTokenStore },
+          req.serverOptions.createOptions,
+          {
+            session: session,
+            deviceName: req.serverOptions.deviceName,
+            poweredBy: req.serverOptions.poweredBy || 'WPPConnect-Server',
+            catchQR: (
+              base64Qr: any,
+              asciiQR: any,
+              attempt: any,
+              urlCode: string
+            ) => {
+              this.exportQR(req, base64Qr, urlCode, client, res);
+            },
+            onLoadingScreen: (percent: string, message: string) => {
+              req.logger.info(`[${session}] ${percent}% - ${message}`);
+            },
+            statusFind: (statusFind: string) => {
+              try {
+                eventEmitter.emit(
+                  `status-${client.session}`,
+                  client,
+                  statusFind
+                );
+                if (
+                  statusFind === 'autocloseCalled' ||
+                  statusFind === 'desconnectedMobile'
+                ) {
+                  client.status = 'CLOSED';
+                  client.qrcode = null;
+                  client.close();
+                  clientsArray[session] = undefined;
+                }
+                callWebHook(client, req, 'status-find', { status: statusFind });
+                req.logger.info(statusFind + '\n\n');
+              } catch (error) {}
+            },
+          }
+        )
       );
 
       client = clientsArray[session] = Object.assign(wppClient, client);
@@ -102,7 +128,13 @@ export default class CreateSessionUtil {
     await this.createSessionUtil(req, clientsArray, session, res);
   }
 
-  exportQR(req: any, qrCode: any, urlCode: any, client: WhatsAppServer, res?: any) {
+  exportQR(
+    req: any,
+    qrCode: any,
+    urlCode: any,
+    client: WhatsAppServer,
+    res?: any
+  ) {
     eventEmitter.emit(`qrcode-${client.session}`, qrCode, urlCode, client);
     Object.assign(client, {
       status: 'QRCODE',
@@ -119,7 +151,10 @@ export default class CreateSessionUtil {
     });
 
     callWebHook(client, req, 'qrcode', { qrcode: qrCode, urlcode: urlCode });
-    if (res && !res._headerSent) res.status(200).json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
+    if (res && !res._headerSent)
+      res
+        .status(200)
+        .json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
   }
 
   async onParticipantsChanged(req: any, client: any) {
@@ -235,7 +270,7 @@ export default class CreateSessionUtil {
   }
 
   decodeFunction(text: any, client: any) {
-    let object = JSON.parse(text);
+    const object = JSON.parse(text);
     if (object.webhook && !client.webhook) client.webhook = object.webhook;
     delete object.webhook;
     return object;
@@ -244,7 +279,11 @@ export default class CreateSessionUtil {
   getClient(session: any) {
     let client = clientsArray[session] as any;
 
-    if (!client) client = (clientsArray as any)[session] = { status: null, session: session };
+    if (!client)
+      client = (clientsArray as any)[session] = {
+        status: null,
+        session: session,
+      };
     return client;
   }
 }

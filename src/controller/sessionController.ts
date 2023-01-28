@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { clientsArray } from '../util/sessionUtil';
-import { callWebHook, contactToArray } from '../util/functions';
-import CreateSessionUtil from '../util/createSessionUtil';
-import getAllTokens from '../util/getAllTokens';
+import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
+import { Response } from 'express';
 import fs from 'fs';
 import mime from 'mime-types';
-import { version } from '../../package.json';
 import QRCode from 'qrcode';
-import { RequestWPP } from '../types/RequestWPP';
-import { Response } from 'express';
-import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { Logger } from 'winston';
+
+import { version } from '../../package.json';
+import { RequestWPP } from '../types/RequestWPP';
+import CreateSessionUtil from '../util/createSessionUtil';
+import { callWebHook, contactToArray } from '../util/functions';
+import getAllTokens from '../util/getAllTokens';
+import { clientsArray } from '../util/sessionUtil';
 
 const SessionUtil = new CreateSessionUtil();
 
-async function downloadFileFunction(message: Message, client: Whatsapp, logger: Logger) {
+async function downloadFileFunction(
+  message: Message,
+  client: Whatsapp,
+  logger: Logger
+) {
   try {
     const buffer = await client.decryptFile(message);
 
-    let filename = `./WhatsAppImages/file${message.t}`;
+    const filename = `./WhatsAppImages/file${message.t}`;
     if (!fs.existsSync(filename)) {
       let result = '';
       if (message.type === 'ptt') {
@@ -53,7 +58,9 @@ async function downloadFileFunction(message: Message, client: Whatsapp, logger: 
     }
   } catch (e) {
     logger.error(e);
-    logger.warn('Erro ao descriptografar a midia, tentando fazer o download direto...');
+    logger.warn(
+      'Erro ao descriptografar a midia, tentando fazer o download direto...'
+    );
     try {
       const buffer = await client.downloadMedia(message);
       const filename = `./WhatsAppImages/file${message.t}`;
@@ -117,7 +124,9 @@ export async function startAllSessions(req: any, res: any) {
     await util.opendata(req, session);
   });
 
-  return await res.status(201).json({ status: 'success', message: 'Starting all sessions' });
+  return await res
+    .status(201)
+    .json({ status: 'success', message: 'Starting all sessions' });
 }
 
 export async function showAllSessions(req: any, res: any) {
@@ -160,7 +169,9 @@ export async function closeSession(req: any, res: any) {
   const session = req.session;
   try {
     if ((clientsArray as any)[session].status === null) {
-      return await res.status(200).json({ status: true, message: 'Session successfully closed' });
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
     } else {
       (clientsArray as any)[session] = { status: null };
       await req.client.close();
@@ -171,11 +182,15 @@ export async function closeSession(req: any, res: any) {
         connected: false,
       });
 
-      return await res.status(200).json({ status: true, message: 'Session successfully closed' });
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
     }
   } catch (error) {
     req.logger.error(error);
-    return await res.status(500).json({ status: false, message: 'Error closing session', error });
+    return await res
+      .status(500)
+      .json({ status: false, message: 'Error closing session', error });
   }
 }
 
@@ -190,10 +205,14 @@ export async function logOutSession(req: any, res: any) {
       connected: false,
     });
 
-    return await res.status(200).json({ status: true, message: 'Session successfully closed' });
+    return await res
+      .status(200)
+      .json({ status: true, message: 'Session successfully closed' });
   } catch (error) {
     req.logger.error(error);
-    return await res.status(500).json({ status: false, message: 'Error closing session', error });
+    return await res
+      .status(500)
+      .json({ status: false, message: 'Error closing session', error });
   }
 }
 
@@ -234,7 +253,9 @@ export async function downloadMediaByMessage(req: any, res: any) {
 
     const buffer = await client.decryptFile(message);
 
-    return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
+    return res
+      .status(200)
+      .json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
   } catch (e) {
     req.logger.error(e);
     return res.status(400).json({
@@ -266,10 +287,16 @@ export async function getMediaByMessage(req: any, res: any) {
 
     const buffer = await client.decryptFile(message);
 
-    return res.status(200).json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
+    return res
+      .status(200)
+      .json({ base64: buffer.toString('base64'), mimetype: message.mimetype });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'The session is not active', error: ex });
+    return res.status(500).json({
+      status: 'error',
+      message: 'The session is not active',
+      error: ex,
+    });
   }
 }
 
@@ -277,7 +304,10 @@ export async function getSessionState(req: any, res: any) {
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
-    const qr = client?.urlcode != null && client?.urlcode != '' ? await QRCode.toDataURL(client.urlcode) : null;
+    const qr =
+      client?.urlcode != null && client?.urlcode != ''
+        ? await QRCode.toDataURL(client.urlcode)
+        : null;
 
     if ((client == null || client.status == null) && !waitQrCode)
       return res.status(200).json({ status: 'CLOSED', qrcode: null });
@@ -290,15 +320,24 @@ export async function getSessionState(req: any, res: any) {
       });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'The session is not active', error: ex });
+    return res.status(500).json({
+      status: 'error',
+      message: 'The session is not active',
+      error: ex,
+    });
   }
 }
 
 export async function getQrCode(req: any, res: any) {
   try {
     if (req.client.urlcode) {
-      const qr = req.client.urlcode ? await QRCode.toDataURL(req.client.urlcode) : null;
-      const img = Buffer.from((qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
+      const qr = req.client.urlcode
+        ? await QRCode.toDataURL(req.client.urlcode)
+        : null;
+      const img = Buffer.from(
+        (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
+        'base64'
+      );
 
       res.writeHead(200, {
         'Content-Type': 'image/png',
@@ -306,29 +345,45 @@ export async function getQrCode(req: any, res: any) {
       });
       res.end(img);
     } else {
-      return res.status(200).json({ status: req.client.status, message: 'QRCode is not available...' });
+      return res.status(200).json({
+        status: req.client.status,
+        message: 'QRCode is not available...',
+      });
     }
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'Error retrieving QRCode', error: ex });
+    return res
+      .status(500)
+      .json({ status: 'error', message: 'Error retrieving QRCode', error: ex });
   }
 }
 
 export async function killServiceWorker(req: any, res: any) {
   try {
-    return res.status(200).json({ status: 'error', response: 'Not implemented yet' });
+    return res
+      .status(200)
+      .json({ status: 'error', response: 'Not implemented yet' });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', message: 'The session is not active', error: ex });
+    return res.status(500).json({
+      status: 'error',
+      message: 'The session is not active',
+      error: ex,
+    });
   }
 }
 
 export async function restartService(req: any, res: any) {
   try {
-    return res.status(200).json({ status: 'error', response: 'Not implemented yet' });
+    return res
+      .status(200)
+      .json({ status: 'error', response: 'Not implemented yet' });
   } catch (ex) {
     req.logger.error(ex);
-    return res.status(500).json({ status: 'error', response: { message: 'The session is not active', error: ex } });
+    return res.status(500).json({
+      status: 'error',
+      response: { message: 'The session is not active', error: ex },
+    });
   }
 }
 
@@ -351,8 +406,15 @@ export async function subscribePresence(req: any, res: any) {
         await req.client.subscribePresence(contato);
       }
 
-    return await res.status(200).json({ status: 'success', response: { message: 'Subscribe presence executed' } });
+    return await res.status(200).json({
+      status: 'success',
+      response: { message: 'Subscribe presence executed' },
+    });
   } catch (error) {
-    return await res.status(500).json({ status: 'error', message: 'Error on subscribe presence', error: error });
+    return await res.status(500).json({
+      status: 'error',
+      message: 'Error on subscribe presence',
+      error: error,
+    });
   }
 }
