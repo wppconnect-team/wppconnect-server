@@ -4,11 +4,23 @@
     "es6": true,
     "node": true
   },
-  "parser": "@babel/eslint-parser",
-  "plugins": ["@babel"],
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "simple-import-sort", "import"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error",
     "no-empty": ["error", { "allowEmptyCatch": true }],
-    "no-unused-vars": "warn"
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   }
 }
