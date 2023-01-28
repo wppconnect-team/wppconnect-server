@@ -15,6 +15,15 @@
           "node": "current"
         }
       }
+    ],
+    [
+      "@babel/preset-typescript",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "allowDeclareFields": true
+      }
     ]
   ],
   "env": {
