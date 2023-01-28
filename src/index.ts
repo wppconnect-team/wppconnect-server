@@ -21,7 +21,6 @@ import { createServer } from 'http';
 import mergeDeep from 'merge-deep';
 import { Server as Socket } from 'socket.io';
 
-import { version } from '../package.json';
 import config from './config';
 import { convert } from './mapper/index';
 import routes from './routes';
@@ -106,7 +105,7 @@ export function initServer(serverOptions: any) {
     logger.info(
       `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
     );
-    logger.info(`WPPConnect-Server version: ${version}`);
+    logger.info(`WPPConnect-Server version: `);
 
     if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
   });
