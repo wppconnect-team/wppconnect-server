@@ -16,12 +16,12 @@
 import fs from 'fs';
 import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { RequestWPP } from '../types/RequestWPP';
+import { Logger } from 'winston';
 import config from '../config';
 import mime from 'mime-types';
 import QRCode from 'qrcode';
 import { version } from '../../package.json';
 import { Response } from 'express';
-import { Logger } from 'winston';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
@@ -324,7 +324,7 @@ export async function getSessionState(req: any, res: any) {
         status: client.status,
         qrcode: qr,
         urlcode: client.urlcode,
-        version: version,
+        version: '',
       });
   } catch (ex) {
     req.logger.error(ex);
