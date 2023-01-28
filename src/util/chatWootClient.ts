@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import axios from 'axios';
+import toStream from 'buffer-to-stream';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
-import toStream from 'buffer-to-stream';
+
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
@@ -31,8 +32,12 @@ export default class chatWootClient {
 
   constructor(config: any, session: string) {
     this.config = config;
-    this.mobile_name = this.config.mobile_name ? this.config.mobile_name : `WPPConnect`;
-    this.mobile_number = this.config.mobile_number ? this.config.mobile_number : '5511999999999';
+    this.mobile_name = this.config.mobile_name
+      ? this.config.mobile_name
+      : `WPPConnect`;
+    this.mobile_number = this.config.mobile_number
+      ? this.config.mobile_number
+      : '5511999999999';
     this.sender = {
       pushname: this.mobile_name,
       id: this.mobile_number,
@@ -41,7 +46,10 @@ export default class chatWootClient {
     this.inbox_id = this.config.inbox_id;
     this.api = axios.create({
       baseURL: this.config.baseURL,
-      headers: { 'Content-Type': 'application/json;charset=utf-8', api_access_token: this.config.token },
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        api_access_token: this.config.token,
+      },
     });
 
     //assina o evento do qrcode
@@ -76,8 +84,11 @@ export default class chatWootClient {
 
   async sendMessage(client: any, message: any) {
     if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
-    let contact = await this.createContact(message);
-    let conversation = await this.createConversation(contact, message.chatId.split('@')[0]);
+    const contact = await this.createContact(message);
+    const conversation = await this.createConversation(
+      contact,
+      message.chatId.split('@')[0]
+    );
 
     try {
       if (
@@ -91,18 +102,18 @@ export default class chatWootClient {
       ) {
         if (message.mimetype == 'image/webp') message.mimetype = 'image/jpeg';
         const extension = mime.extension(message.mimetype);
-        let filename = `${message.timestamp}.${extension}`;
+        const filename = `${message.timestamp}.${extension}`;
         let b64;
 
         if (message.qrCode) b64 = message.qrCode;
         else {
-          let buffer = await client.decryptFile(message);
+          const buffer = await client.decryptFile(message);
           b64 = await buffer.toString('base64');
         }
 
-        let mediaData = Buffer.from(b64, 'base64');
+        const mediaData = Buffer.from(b64, 'base64');
 
-        let data = new FormData();
+        const data = new FormData();
         if (message.caption) {
           data.append('content', message.caption);
         }
@@ -113,7 +124,7 @@ export default class chatWootClient {
         data.append('message_type', 'incoming');
         data.append('private', 'false');
 
-        let configPost = Object.assign(
+        const configPost = Object.assign(
           {},
           {
             baseURL: this.config.baseURL,
@@ -125,7 +136,7 @@ export default class chatWootClient {
         );
         configPost.headers = { ...configPost.headers, ...data.getHeaders() };
 
-        var result = await axios.post(
+        const result = await axios.post(
           `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
           data,
           configPost
@@ -133,7 +144,7 @@ export default class chatWootClient {
 
         return result;
       } else {
-        let body = {
+        const body = {
           content: message.body,
           message_type: 'incoming',
         };
@@ -150,7 +161,9 @@ export default class chatWootClient {
 
   async findContact(query: string) {
     try {
-      const { data } = await this.api.get(`api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`);
+      const { data } = await this.api.get(
+        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`
+      );
       return data;
     } catch (e) {
       console.log(e);
@@ -159,19 +172,25 @@ export default class chatWootClient {
   }
 
   async createContact(message: any) {
-    let body = {
+    const body = {
       inbox_id: this.inbox_id,
       name: message.sender.isMyContact
         ? message.sender.formattedName
         : message.sender.pushname || message.sender.formattedName,
-      phone_number: typeof message.sender.id == 'object' ? message.sender.id.user : message.sender.id.split('@')[0],
+      phone_number:
+        typeof message.sender.id == 'object'
+          ? message.sender.id.user
+          : message.sender.id.split('@')[0],
     };
     body.phone_number = `+${body.phone_number}`;
-    var contact = await this.findContact(body.phone_number.replace('+', ''));
+    const contact = await this.findContact(body.phone_number.replace('+', ''));
     if (contact && contact.meta.count > 0) return contact.payload[0];
 
     try {
-      const data = await this.api.post(`api/v1/accounts/${this.account_id}/contacts`, body);
+      const data = await this.api.post(
+        `api/v1/accounts/${this.account_id}/contacts`,
+        body
+      );
       return data.data.payload.contact;
     } catch (e) {
       console.log(e);
@@ -184,7 +203,9 @@ export default class chatWootClient {
       const { data } = await this.api.get(
         `api/v1/accounts/${this.account_id}/conversations?inbox_id=${this.inbox_id}&status=all`
       );
-      return data.data.payload.find((e: any) => e.meta.sender.id == contact.id && e.status != 'resolved');
+      return data.data.payload.find(
+        (e: any) => e.meta.sender.id == contact.id && e.status != 'resolved'
+      );
     } catch (e) {
       console.log(e);
       return null;
@@ -192,10 +213,10 @@ export default class chatWootClient {
   }
 
   async createConversation(contact: any, source_id: any) {
-    var conversation = await this.findConversation(contact);
+    const conversation = await this.findConversation(contact);
     if (conversation) return conversation;
 
-    let body = {
+    const body = {
       source_id: source_id,
       inbox_id: this.inbox_id,
       contact_id: contact.id,
@@ -203,7 +224,10 @@ export default class chatWootClient {
     };
 
     try {
-      const { data } = await this.api.post(`api/v1/accounts/${this.account_id}/conversations`, body);
+      const { data } = await this.api.post(
+        `api/v1/accounts/${this.account_id}/conversations`,
+        body
+      );
       return data;
     } catch (e) {
       console.log(e);

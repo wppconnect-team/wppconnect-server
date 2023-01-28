@@ -5,9 +5,8 @@ import MongodbTokenStore from './mongodbTokenStory';
 import RedisTokenStore from './redisTokenStory';
 
 class Factory {
-  constructor() {}
   public createTokenStory(client: any) {
-    var myTokenStore;
+    let myTokenStore;
     const type = config.tokenStoreType;
 
     if (type === 'mongodb') {

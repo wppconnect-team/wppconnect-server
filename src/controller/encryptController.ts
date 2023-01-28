@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import bcrypt from 'bcrypt';
-import { RequestWPP } from '../types/RequestWPP';
 import { Response } from 'express';
+
+import { RequestWPP } from '../types/RequestWPP';
 
 const saltRounds = 10;
 

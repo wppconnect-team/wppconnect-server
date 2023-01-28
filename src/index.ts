@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-require('dotenv').config();
-
-import { createLogger } from './util/logger';
-import { createFolders, setMaxListners, startAllSessions } from './util/functions';
 import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
-import { Server as Socket } from 'socket.io';
-import routes from './routes';
-import config from './config';
 //import boolParser from 'express-query-boolean';
 import mergeDeep from 'merge-deep';
-import { convert } from './mapper/index';
+import { Server as Socket } from 'socket.io';
+
 import { version } from '../package.json';
+import config from './config';
+import { convert } from './mapper/index';
+import routes from './routes';
+import {
+  createFolders,
+  setMaxListners,
+  startAllSessions,
+} from './util/functions';
+import { createLogger } from './util/logger';
+
+//require('dotenv').config();
 
 export function initServer(serverOptions: any) {
   if (typeof serverOptions !== 'object') {
@@ -62,7 +67,7 @@ export function initServer(serverOptions: any) {
     req.logger = logger;
     req.io = io;
 
-    var oldSend = res.send;
+    const oldSend = res.send;
 
     res.send = async function (data: any) {
       const content = req.headers['content-type'];
@@ -70,7 +75,11 @@ export function initServer(serverOptions: any) {
         data = JSON.parse(data);
         if (!data.session) data.session = req.client ? req.client.session : '';
         if (data.mapper && req.serverOptions.mapper.enable) {
-          data.response = await convert(req.serverOptions.mapper.prefix, data.response, data.mapper);
+          data.response = await convert(
+            req.serverOptions.mapper.prefix,
+            data.response,
+            data.mapper
+          );
           delete data.mapper;
         }
       }
@@ -94,7 +103,9 @@ export function initServer(serverOptions: any) {
 
   http.listen(PORT, () => {
     logger.info(`Server is running on port: ${PORT}`);
-    logger.info(`\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`);
+    logger.info(
+      `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
+    );
     logger.info(`WPPConnect-Server version: ${version}`);
 
     if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);

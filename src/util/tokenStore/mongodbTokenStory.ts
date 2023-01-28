@@ -22,11 +22,13 @@ class MongodbTokenStore {
       token.webhook = this.client.config.webhook;
       token.config = JSON.stringify(this.client.config);
 
-      let tk = await (Token as any).findOne({ sessionName });
+      const tk = await (Token as any).findOne({ sessionName });
 
       if (tk) {
         token._id = tk._id;
-        return (await (Token as any).updateOne({ _id: tk._id }, token)) ? true : false;
+        return (await (Token as any).updateOne({ _id: tk._id }, token))
+          ? true
+          : false;
       } else {
         return (await token.save()) ? true : false;
       }

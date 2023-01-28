@@ -1,7 +1,8 @@
 import { Request } from 'express';
-import { Logger } from 'winston';
-import { ServerOptions } from './ServerOptions';
 import { Socket } from 'socket.io';
+import { Logger } from 'winston';
+
+import { ServerOptions } from './ServerOptions';
 import { WhatsAppServer } from './WhatsAppServer';
 
 export interface RequestWPP extends Request {

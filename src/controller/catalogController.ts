@@ -13,22 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RequestWPP } from '../types/RequestWPP';
 import { Response } from 'express';
 import { createCatalogLink } from '../util/functions';
+import { RequestWPP } from '../types/RequestWPP';
 
 export async function getProducts(req: RequestWPP, res: Response) {
   const { phone, qnt } = req.query;
   if (!phone)
     return res.status(401).send({
-      message: 'Please send the contact number you wish to return the products.',
+      message:
+        'Please send the contact number you wish to return the products.',
     });
 
   try {
-    const result = await req.client.getProducts(phone as string, qnt as unknown as number);
+    const result = await req.client.getProducts(
+      phone as string,
+      qnt as unknown as number
+    );
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on get products', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on get products',
+      error: error,
+    });
   }
 }
 
@@ -40,10 +48,15 @@ export async function getProductById(req: RequestWPP, res: Response) {
     });
 
   try {
-    const result = await req.client.getProductById(phone as string, id as string);
+    const result = await req.client.getProductById(
+      phone as string,
+      id as string
+    );
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on get product', error: error });
+    res
+      .status(500)
+      .json({ status: 'Error', message: 'Error on get product', error: error });
   }
 }
 export async function editProduct(req: RequestWPP, res: Response) {
@@ -57,7 +70,11 @@ export async function editProduct(req: RequestWPP, res: Response) {
     const result = await req.client.editProduct(id, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on edit product.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on edit product.',
+      error: error,
+    });
   }
 }
 
@@ -72,7 +89,11 @@ export async function delProducts(req: RequestWPP, res: Response) {
     const result = await req.client.delProducts(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on delete product.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on delete product.',
+      error: error,
+    });
   }
 }
 
@@ -87,7 +108,11 @@ export async function changeProductImage(req: RequestWPP, res: Response) {
     const result = await req.client.changeProductImage(id, base64);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on change product image.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on change product image.',
+      error: error,
+    });
   }
 }
 
@@ -118,7 +143,11 @@ export async function addProductImage(req: RequestWPP, res: Response) {
     const result = await req.client.addProductImage(id, base64);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on add product image.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on add product image.',
+      error: error,
+    });
   }
 }
 
@@ -133,7 +162,11 @@ export async function removeProductImage(req: RequestWPP, res: Response) {
     const result = await req.client.removeProductImage(id, index);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on remove product image.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on remove product image.',
+      error: error,
+    });
   }
 }
 
@@ -145,10 +178,18 @@ export async function getCollections(req: RequestWPP, res: Response) {
     });
 
   try {
-    const result = await req.client.getCollections(phone as string, qnt as string, max as string);
+    const result = await req.client.getCollections(
+      phone as string,
+      qnt as string,
+      max as string
+    );
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on get collections.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on get collections.',
+      error: error,
+    });
   }
 }
 
@@ -163,7 +204,11 @@ export async function createCollection(req: RequestWPP, res: Response) {
     const result = await req.client.createCollection(name, products);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on create collection.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on create collection.',
+      error: error,
+    });
   }
 }
 
@@ -178,7 +223,11 @@ export async function editCollection(req: RequestWPP, res: Response) {
     const result = await req.client.editCollection(id, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on edit collection.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on edit collection.',
+      error: error,
+    });
   }
 }
 
@@ -193,7 +242,11 @@ export async function deleteCollection(req: RequestWPP, res: Response) {
     const result = await req.client.deleteCollection(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on delete collection.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on delete collection.',
+      error: error,
+    });
   }
 }
 
@@ -208,7 +261,11 @@ export async function setProductVisibility(req: RequestWPP, res: Response) {
     const result = await req.client.setProductVisibility(id, value);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on set product visibility.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on set product visibility.',
+      error: error,
+    });
   }
 }
 
@@ -223,7 +280,11 @@ export async function updateCartEnabled(req: RequestWPP, res: Response) {
     const result = await req.client.updateCartEnabled(enabled);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on set enabled cart.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on set enabled cart.',
+      error: error,
+    });
   }
 }
 

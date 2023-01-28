@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
-import { RequestWPP } from '../types/RequestWPP';
-import { contactToArray } from '../util/functions';
 import { NextFunction } from 'express';
 
-export default async function statusConnection(req: RequestWPP, res: any, next: any) {
+import { RequestWPP } from '../types/RequestWPP';
+import { contactToArray } from '../util/functions';
+
+export default async function statusConnection(
+  req: RequestWPP,
+  res: any,
+  next: any
+) {
   try {
-    let numbers: any = [];
+    const numbers: any = [];
     if (req.client && req.client.isConnected) {
       await req.client.isConnected();
 
-      let localArr = contactToArray(req.body.phone || [], req.body.isGroup);
+      const localArr = contactToArray(req.body.phone || [], req.body.isGroup);
       let index = 0;
       for (const contact of localArr) {
         if (req.body.isGroup) {
           localArr[index] = contact;
         } else if (numbers.indexOf(contact) < 0) {
-          const profile: any = await req.client.checkNumberStatus(contact).catch((error) => console.log(error));
+          const profile: any = await req.client
+            .checkNumberStatus(contact)
+            .catch((error) => console.log(error));
           if (!profile?.numberExists) {
             const num = (contact as any).split('@')[0];
             return res.status(400).json({

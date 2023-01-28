@@ -14,7 +14,9 @@ export default {
   phone: {
     path: '$item',
     formatting: (value: any) => {
-      return value.type === 'chat' ? value.to.split('@')[0] : value.to.remote.user;
+      return value.type === 'chat'
+        ? value.to.split('@')[0]
+        : value.to.remote.user;
     },
   },
 };

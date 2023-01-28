@@ -1,6 +1,8 @@
 import config from '../../../config';
 
-let mongoose = config.tokenStoreType === 'mongodb' ? require('../../db/mongodb/db') : null;
+const mongoose =
+  config.tokenStoreType === 'mongodb' ? require('../../db/mongodb/db') : null;
+
 let Token: any = null;
 
 if (config.tokenStoreType === 'mongodb') {

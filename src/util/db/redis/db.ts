@@ -1,5 +1,7 @@
 import config from '../../../config';
-let redis = config.tokenStoreType === 'redis' ? require('redis') : null;
+
+const redis = config.tokenStoreType === 'redis' ? require('redis') : null;
+
 let RedisClient: any = null;
 
 if (config.tokenStoreType === 'redis') {

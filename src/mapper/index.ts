@@ -5,8 +5,8 @@ export async function convert(prefix: string, data: any, event?: any) {
     data.event = event || data.event;
     event = data.event.indexOf('message') >= 0 ? 'message' : data.event;
 
-    let mappConfEvent = await config_event(prefix, event);
-    let mappConfType = await config_type(prefix, event, data.type);
+    const mappConfEvent = await config_event(prefix, event);
+    const mappConfType = await config_type(prefix, event, data.type);
 
     Object.assign(mappConfEvent, mappConfType);
 
@@ -21,7 +21,7 @@ export async function convert(prefix: string, data: any, event?: any) {
 
 async function config_event(prefix: any, event: any) {
   try {
-    let { default: mappConf } = await import(`./${prefix}${event}.js`);
+    const { default: mappConf } = await import(`./${prefix}${event}.js`);
     if (!mappConf) return undefined;
     return mappConf;
   } catch (e) {
@@ -31,7 +31,9 @@ async function config_event(prefix: any, event: any) {
 
 async function config_type(prefix: any, event: any, type: any) {
   try {
-    let { default: mappConf } = await import(`./${prefix}${event}-${type}.js`);
+    const { default: mappConf } = await import(
+      `./${prefix}${event}-${type}.js`
+    );
     if (!mappConf) return undefined;
     return mappConf;
   } catch (e) {

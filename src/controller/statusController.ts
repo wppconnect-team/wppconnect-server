@@ -1,10 +1,13 @@
-import { unlinkAsync } from '../util/functions';
-import { RequestWPP } from '../types/RequestWPP';
 import { Response } from 'express';
+
+import { RequestWPP } from '../types/RequestWPP';
+import { unlinkAsync } from '../util/functions';
 
 function returnError(req: RequestWPP, res: Response, error: any) {
   req.logger.error(error);
-  res.status(500).json({ status: 'Error', message: 'Erro ao enviar status.', error: error });
+  res
+    .status(500)
+    .json({ status: 'Error', message: 'Erro ao enviar status.', error: error });
 }
 
 async function returnSucess(res: Response, data: any) {
@@ -20,10 +23,11 @@ export async function sendTextStorie(req: any, res: any) {
     });
 
   try {
-    let results: any = [];
+    const results: any = [];
     results.push(await req.client.sendTextStatus(text, options));
 
-    if (results.length === 0) return res.status(400).json('Error sending the text of stories');
+    if (results.length === 0)
+      return res.status(400).json('Error sending the text of stories');
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
@@ -41,10 +45,11 @@ export async function sendImageStorie(req: any, res: any) {
   const pathFile = path || req.file.path;
 
   try {
-    let results: any = [];
+    const results: any = [];
     results.push(await req.client.sendImageStatus(pathFile));
 
-    if (results.length === 0) return res.status(400).json('Error sending the image of stories');
+    if (results.length === 0)
+      return res.status(400).json('Error sending the image of stories');
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
@@ -62,11 +67,12 @@ export async function sendVideoStorie(req: any, res: any) {
   const pathFile = path || req.file.path;
 
   try {
-    let results: any = [];
+    const results: any = [];
 
     results.push(await req.client.sendVideoStatus(pathFile));
 
-    if (results.length === 0) return res.status(400).json('Error sending message');
+    if (results.length === 0)
+      return res.status(400).json('Error sending message');
     if (req.file) await unlinkAsync(pathFile);
     returnSucess(res, results);
   } catch (error) {

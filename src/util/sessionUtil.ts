@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { EventEmitter } from 'events';
+
 export const chromiumArgs = [
   '--disable-web-security',
   '--no-sandbox',
@@ -37,6 +38,6 @@ export const chromiumArgs = [
   '--ignore-ssl-errors',
   '--ignore-certificate-errors-spki-list',
 ];
-export let clientsArray = [];
-export let sessions = [];
+export const clientsArray = [];
+export const sessions = [];
 export const eventEmitter = new EventEmitter();

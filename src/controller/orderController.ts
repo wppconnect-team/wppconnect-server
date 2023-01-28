@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RequestWPP } from '../types/RequestWPP';
 import { Response } from 'express';
 
-function returnSucess(res: Response, session: string, phone: string | null, data?: any) {
+import { RequestWPP } from '../types/RequestWPP';
+
+function returnSucess(
+  res: Response,
+  session: string,
+  phone: string | null,
+  data?: any
+) {
   res.status(201).json({
     status: 'Success',
     response: {
@@ -28,7 +34,12 @@ function returnSucess(res: Response, session: string, phone: string | null, data
   });
 }
 
-function returnError(req: RequestWPP, res: Response, session: string, error?: any) {
+function returnError(
+  req: RequestWPP,
+  res: Response,
+  session: string,
+  error?: any
+) {
   req.logger.error(error);
   res.status(400).json({
     status: 'Error',
@@ -45,7 +56,7 @@ export async function getBusinessProfilesProducts(req: any, res: any) {
   const { phone } = req.body;
 
   try {
-    let results: any = [];
+    const results: any = [];
 
     for (const contato of phone) {
       results.push(await req.client.getBusinessProfilesProducts(contato));
@@ -61,9 +72,7 @@ export async function getOrderbyMsg(req: any, res: any) {
   const { messageId } = req.body;
 
   try {
-    let result: any;
-
-    result = await req.client.getOrderbyMsg(messageId);
+    const result = await req.client.getOrderbyMsg(messageId);
 
     returnSucess(res, session, null, result);
   } catch (error) {
