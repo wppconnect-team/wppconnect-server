@@ -20,7 +20,7 @@ import mime from 'mime-types';
 import QRCode from 'qrcode';
 import { Logger } from 'winston';
 
-import { version } from '../../package.json';
+//import { version } from '../../package.json';
 import { RequestWPP } from '../types/RequestWPP';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
@@ -316,7 +316,7 @@ export async function getSessionState(req: any, res: any) {
         status: client.status,
         qrcode: qr,
         urlcode: client.urlcode,
-        version: version,
+        version: '',
       });
   } catch (ex) {
     req.logger.error(ex);
