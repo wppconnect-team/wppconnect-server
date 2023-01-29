@@ -243,3 +243,8 @@ export function setMaxListners(serverOptions) {
 }
 
 export let unlinkAsync = promisify(fs.unlink);
+
+export function createCatalogLink(session) {
+  const [wid] = session.split('@');
+  return `https://wa.me/c/${wid}`;
+}
