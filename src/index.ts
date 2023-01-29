@@ -16,8 +16,8 @@
 
 import cors from 'cors';
 import express from 'express';
+import boolParser from 'express-query-boolean';
 import { createServer } from 'http';
-//import boolParser from 'express-query-boolean';
 import mergeDeep from 'merge-deep';
 import { Server as Socket } from 'socket.io';
 
@@ -58,7 +58,7 @@ export function initServer(serverOptions: any) {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
   app.use('/files', express.static('WhatsAppImages'));
-  //app.use(boolParser());
+  app.use(boolParser());
 
   // Add request options
   app.use((req: any, res: any, next) => {
