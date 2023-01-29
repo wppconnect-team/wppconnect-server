@@ -158,7 +158,7 @@ export async function editCollection(req, res) {
     });
 
   try {
-    const result = await req.client.createCollection(id, options);
+    const result = await req.client.editCollection(id, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({ status: 'Error', message: 'Error on edit collection.', error: error });
