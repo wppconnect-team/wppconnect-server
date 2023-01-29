@@ -204,7 +204,7 @@ export async function promoteParticipant(req: any, res: any) {
   const { groupId, phone } = req.body;
 
   try {
-    const arrayGroups = [];
+    const arrayGroups: any = [];
     for (const group of groupToArray(groupId)) {
       await req.client.promoteParticipant(group, contactToArray(phone));
       arrayGroups.push(group);
@@ -232,7 +232,7 @@ export async function demoteParticipant(req: any, res: any) {
   const { groupId, phone } = req.body;
 
   try {
-    const arrayGroups = [];
+    const arrayGroups: any = [];
     for (const group of groupToArray(groupId)) {
       await req.client.demoteParticipant(group, contactToArray(phone));
       arrayGroups.push(group);

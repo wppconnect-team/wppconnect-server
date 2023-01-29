@@ -1,4 +1,4 @@
-//import mapper from 'json-mapper-json';
+import mapper from 'json-mapper-json';
 
 export async function convert(prefix: string, data: any, event?: any) {
   try {
@@ -13,7 +13,7 @@ export async function convert(prefix: string, data: any, event?: any) {
     // console.log('mappConfEvent', mappConfEvent);
 
     if (!mappConfEvent) return data;
-    return 'await mapper(data, mappConfEvent)';
+    return await mapper(data, mappConfEvent);
   } catch (e) {
     return data;
   }
