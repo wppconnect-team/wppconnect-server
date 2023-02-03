@@ -11913,6 +11913,7 @@
         "deprecated": false
       }
     },
+
     "/send-catalog-link": {
       "post": {
         "tags": ["Catalog"],
@@ -12028,10 +12029,128 @@
         },
         "deprecated": false
       }
+    },
+    "/change-product-image": {
+      "post": {
+        "tags": ["Catalog"],
+        "summary": "Change a product image",
+        "description": "Change a image product on whatsapp business account.",
+        "operationId": "ChangeProductImage",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeProductImageRequest"
+              },
+              "example": {
+                "id": "5798635556858xxx",
+                "base64": "data:image/png;base64,.........."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/add-product-image": {
+      "post": {
+        "tags": ["Catalog"],
+        "summary": "Add a product image",
+        "description": "Add a image product on whatsapp business account.",
+        "operationId": "AddProductImage",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProductImageRequest"
+              },
+              "example": {
+                "id": "5798635556858xxx",
+                "base64": "data:image/png;base64,.........."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddProductImageRequest": {
+        "title": "AddProductImageRequest",
+        "required": ["id", "base64"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "base64": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "5798635556858xxx",
+          "base64": "data:image/png;base64,.........."
+        }
+      },
+      "ChangeProductImageRequest": {
+        "title": "ChangeProductImageRequest",
+        "required": ["id", "base64"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "base64": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": "5798635556858xxx",
+          "base64": "data:image/png;base64,.........."
+        }
+      },
       "resultadocomsucessodacriaçãodotoken": {
         "title": "resultadocomsucessodacriaçãodotoken",
         "required": ["status", "session", "token", "full"],
