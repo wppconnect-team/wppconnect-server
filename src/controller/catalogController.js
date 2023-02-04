@@ -101,7 +101,24 @@ export async function addProductImage(req, res) {
     const result = await req.client.addProductImage(id, base64);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ status: 'Error', message: 'Error on add product image.', error: error });
+  }
+}
+
+export async function addProduct(req, res) {
+  const { name, image, description, price, url, retailerId } = req.body;
+  if (!name || !image || !price)
+    return res.status(401).send({
+      message: 'name, price and image was not informed',
+    });
+
+  try {
+    const result = await req.client.createProduct(name, image, description, price, url, retailerId);
+    res.status(201).json({ status: 'success', response: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ status: 'Error', message: 'Error on add product.', error: error });
   }
 }
 
@@ -158,7 +175,7 @@ export async function editCollection(req, res) {
     });
 
   try {
-    const result = await req.client.createCollection(id, options);
+    const result = await req.client.editCollection(id, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({ status: 'Error', message: 'Error on edit collection.', error: error });

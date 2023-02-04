@@ -207,6 +207,7 @@ routes.post('/api/:session/reject-call', verifyToken, statusConnection, DeviceCo
 routes.get('/api/:session/get-products', verifyToken, statusConnection, CatalogController.getProducts);
 routes.get('/api/:session/get-product-by-id', verifyToken, statusConnection, CatalogController.getProductById);
 routes.post('/api/:session/edit-product', verifyToken, statusConnection, CatalogController.editProduct);
+routes.post('/api/:session/add-product', verifyToken, statusConnection, CatalogController.addProduct);
 routes.post('/api/:session/del-products', verifyToken, statusConnection, CatalogController.delProducts);
 routes.post('/api/:session/change-product-image', verifyToken, statusConnection, CatalogController.changeProductImage);
 routes.post('/api/:session/add-product-image', verifyToken, statusConnection, CatalogController.addProductImage);
