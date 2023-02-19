@@ -1,3 +1,9 @@
+## 1.8.4 (2023-02-19)
+
+### Bug Fixes
+
+- **deps:** update dependency @wppconnect-team/wppconnect to ^1.22.0 ([#1104](https://github.com/wppconnect-team/wppconnect-server/issues/1104)) ([b444adb](https://github.com/wppconnect-team/wppconnect-server/commit/b444adbe9b5e135ba327e4f7cce6b8b623deedde))
+
 ## 1.8.3 (2023-02-03)
 
 ## 1.8.2 (2023-01-13)
