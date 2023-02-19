@@ -2420,15 +2420,15 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.1.tgz#34bdc31727a1889198855913db2f270ace6d7bf8"
   integrity sha512-0G7tNyS+yW8TdgHwZKlDWYXFA6OJQnoLCQvYKkQP0Q2X205PSQ6RNUj0M+1OB/9gRQaUZ/ccYfaxd0nhaWKfjw==
 
-"@wppconnect-team/wppconnect@^1.21.0":
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.21.0.tgz#ae05e097a2ab2244217c69cd8cf4990b9d79b35e"
-  integrity sha512-jH4eE1jTZVGRDJo3SFG8pdBVZYrjyv8o6vV7vHUcZ1IRPy30+bMG8zfmhSKw+kfBbhToXyeAF0ZdTXCoQvTr3w==
+"@wppconnect-team/wppconnect@^1.22.0":
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.22.0.tgz#9875eaca1f0a5c70154e8aa670b1f06f5c9cee8b"
+  integrity sha512-nTTLNQ+4Sjt40+ySf0yJku5gBY8NMWArtQyEbbRqRb/yMcfSV8EH0yr4VcFJCFcygA8LAvUsO+I1gzARPOLq1A==
   dependencies:
-    "@wppconnect/wa-js" "^2.19.0"
-    "@wppconnect/wa-version" "^1.1.244"
+    "@wppconnect/wa-js" "^2.19.1"
+    "@wppconnect/wa-version" "^1.1.257"
     atob "^2.1.2"
-    axios "^1.3.1"
+    axios "^1.3.3"
     boxen "^5.1.2"
     catch-exit "^1.2.2"
     chalk "~4.1.2"
@@ -2437,10 +2437,10 @@
     file-type "~16.5.4"
     futoin-hkdf "^1.5.1"
     latest-version "^5.1.0"
-    logform "^2.4.2"
+    logform "^2.5.1"
     lookpath "^1.2.2"
     mime-types "^2.1.35"
-    puppeteer "^19.6.3"
+    puppeteer "^19.7.1"
     puppeteer-extra "^3.3.4"
     puppeteer-extra-plugin-stealth "^2.11.1"
     puppeteer-extra-plugin-user-data-dir "^2.4.0"
@@ -2457,15 +2457,15 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.19.0":
+"@wppconnect/wa-js@^2.19.1":
   version "2.19.1"
   resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.19.1.tgz#c66b7aa6638b7523222fa7438fa1d412d96338aa"
   integrity sha512-jJqd6hHA9pfifwnTf+C896QVLMmV31bV3c7FAg1h7W2tB/pxzfCU6Y0RpqpFCX3rtu4e3Wc3eQvCf1dJZY7G1Q==
 
-"@wppconnect/wa-version@^1.1.244":
-  version "1.1.251"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.251.tgz#98e8298ec59c8fb25ed526efd9b83b0dad901abd"
-  integrity sha512-48Dt7P5oQ5RsIgfPquX+sV70x/MpsrALxyg30zu6rnxbOnNShVM9rxFDPtTTD2ARNqalXAYcbbr8AB4LLrejQg==
+"@wppconnect/wa-version@^1.1.257":
+  version "1.1.257"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.1.257.tgz#348a54ae3440286e5a99265ae76d4c7c135605ea"
+  integrity sha512-3Gxel+f0f2FYu4LQVnv6aUa/ubTtRSZtzOU3PF7lyXlSuxnvVsQhYWeEMN4y7yYr88VDm6ezuNq4yI/9xLmQuA==
   dependencies:
     node-fetch "^2.6.9"
     semver "^7.3.8"
@@ -2741,7 +2741,7 @@ aws-sdk@^2.1318.0:
     uuid "8.0.0"
     xml2js "0.4.19"
 
-axios@^1.3.1, axios@^1.3.3:
+axios@^1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.3.3.tgz#e7011384ba839b885007c9c9fae1ff23dceb295b"
   integrity sha512-eYq77dYIFS77AQlhzEL937yUBSepBfPIe8FcgEDN35vMNZKMrs81pgnyrQpwfy4NF4b4XWX1Zgx7yX+25w8QJA==
@@ -3130,11 +3130,6 @@ chrome-launcher@^0.15.1:
     escape-string-regexp "^4.0.0"
     is-wsl "^2.2.0"
     lighthouse-logger "^1.0.0"
-
-chromium-bidi@0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/chromium-bidi/-/chromium-bidi-0.4.3.tgz#40ae4a5409ef3fbeabafb29d5325f3f58cbeea12"
-  integrity sha512-A40H1rdpJqkTdnGhnYDzMhtDdIbkXNFj2wgIfivMXL7LyHFDmBtv1hdyycDhnxtYunbPLDZtTs/n+ZT5j7Vnew==
 
 ci-info@^3.2.0:
   version "3.8.0"
@@ -6053,7 +6048,7 @@ log-symbols@^5.1.0:
     chalk "^5.0.0"
     is-unicode-supported "^1.1.0"
 
-logform@^2.3.2, logform@^2.4.0, logform@^2.4.2:
+logform@^2.3.2, logform@^2.4.0, logform@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/logform/-/logform-2.5.1.tgz#44c77c34becd71b3a42a3970c77929e52c6ed48b"
   integrity sha512-9FyqAm9o9NKKfiAKfZoYo9bGXXuwMkxQiQttkT4YjjVtQVIQtK6LmVtlxmCaFswo6N4AfEkHqZTV0taDtPotNg==
@@ -7170,12 +7165,11 @@ pupa@^3.1.0:
   dependencies:
     escape-goat "^4.0.0"
 
-puppeteer-core@19.7.0:
-  version "19.7.0"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-19.7.0.tgz#bd069fa15137e1e13e69b23278fbb508465c1955"
-  integrity sha512-BU05W24N+fWudCCeWxv/+R9fnMGmS6HCNPJbieoy0S4yAloVOoVDpOnHV8ZpFTGMPTHQ2EuPyZPWA+idPKO0pw==
+puppeteer-core@19.7.1:
+  version "19.7.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-19.7.1.tgz#6f5326ba0a97a7ba63f8f986c3971e31ef42d871"
+  integrity sha512-4b5Go25IA+0xrUIw0Qtqi4nxc0qwdu/C7VT1+tFPl1W27207YT+7bxfANC3PjXMlS6bcbzinCf5YfGqMl8tfyQ==
   dependencies:
-    chromium-bidi "0.4.3"
     cross-fetch "3.1.5"
     debug "4.3.4"
     devtools-protocol "0.0.1094867"
@@ -7234,16 +7228,16 @@ puppeteer-extra@^3.3.4:
     debug "^4.1.1"
     deepmerge "^4.2.2"
 
-puppeteer@^19.6.3:
-  version "19.7.0"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-19.7.0.tgz#67fe8ffb11ff1719ba180643b9b2c06116b0d3ef"
-  integrity sha512-ri4XTvTWL09E3L+SNhY9FKRdEOCRhFyyuBppg7D5lk9q4BZKvDWivpjstwmtz5lr8ufxju/jkn9y7uGowISHgw==
+puppeteer@^19.7.1:
+  version "19.7.1"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-19.7.1.tgz#53c0234cac96f28934da139b0239237ccef3251a"
+  integrity sha512-Hampj7jHlicySL1sSLHCwoFoRCi6RcEbnZmRE5brtbk0mp6Td33+9kWQD2eFs09772JIt00ybPKr50Gt7Y18Xg==
   dependencies:
     cosmiconfig "8.0.0"
     https-proxy-agent "5.0.1"
     progress "2.0.3"
     proxy-from-env "1.1.0"
-    puppeteer-core "19.7.0"
+    puppeteer-core "19.7.1"
 
 q@^1.5.1:
   version "1.5.1"
