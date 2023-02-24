@@ -113,7 +113,7 @@ export async function removeProductImage(req, res) {
     });
 
   try {
-    const result = await req.client.addProductImage(id, index);
+    const result = await req.client.removeProductImage(id, index);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({ status: 'Error', message: 'Error on remove product image.', error: error });
