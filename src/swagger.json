@@ -12072,6 +12072,52 @@
         "deprecated": false
       }
     },
+    "/add-product": {
+      "post": {
+        "tags": ["Catalog"],
+        "summary": "Add a new product",
+        "description": "Add a new product on catalog on whatsapp business account.",
+        "operationId": "AddProduct",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddProductRequest"
+              },
+              "example": {
+                "name": "Cat",
+                "description": "white cat",
+                "image": "data:image/png;base64,..........",
+                "price": 19.9,
+                "url": "url my cat",
+                "retailerId": "ID00123"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/add-product-image": {
       "post": {
         "tags": ["Catalog"],
@@ -12117,6 +12163,36 @@
   },
   "components": {
     "schemas": {
+      "AddProductRequest": {
+        "title": "AddProductRequest",
+        "required": ["name", "image", "price"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "price": {
+            "type": "float"
+          },
+          "description": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "retailerId": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "white cat",
+          "image": "data:image/png;base64,..........",
+          "price": 19.9
+        }
+      },
       "AddProductImageRequest": {
         "title": "AddProductImageRequest",
         "required": ["id", "base64"],
