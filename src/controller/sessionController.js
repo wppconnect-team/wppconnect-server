@@ -155,7 +155,7 @@ export async function startSession(req, res) {
 
 export async function closeSession(req, res) {
   const session = req.session;
-  const { clearSession = true } = req.body;
+  const { clearSession = false } = req.body;
   try {
     if (clientsArray[session].status === null) {
       return await res.status(200).json({ status: true, message: 'Session successfully closed' });
