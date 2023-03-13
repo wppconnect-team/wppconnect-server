@@ -29,7 +29,7 @@
     }
   },
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.22.0",
+    "@wppconnect-team/wppconnect": "^1.23.0",
     "axios": "^1.3.4",
     "bcrypt": "^5.1.0",
     "buffer-to-stream": "1.0.0",
