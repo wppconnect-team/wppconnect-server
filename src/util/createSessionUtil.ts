@@ -93,7 +93,10 @@ export default class CreateSessionUtil {
                   client.close();
                   clientsArray[session] = undefined;
                 }
-                callWebHook(client, req, 'status-find', { status: statusFind, session: client.session });
+                callWebHook(client, req, 'status-find', {
+                  status: statusFind,
+                  session: client.session,
+                });
                 req.logger.info(statusFind + '\n\n');
               } catch (error) {}
             },

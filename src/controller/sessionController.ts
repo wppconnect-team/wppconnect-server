@@ -13,15 +13,16 @@
  * See the License for the specific language governing permclearSessionissions and
  * limitations under the License.
  */
-import fs from 'fs';
 import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
-import { RequestWPP } from '../types/RequestWPP';
-import { Logger } from 'winston';
-import config from '../config';
+import { Response } from 'express';
+import fs from 'fs';
 import mime from 'mime-types';
 import QRCode from 'qrcode';
+import { Logger } from 'winston';
+
 import { version } from '../../package.json';
-import { Response } from 'express';
+import config from '../config';
+import { RequestWPP } from '../types/RequestWPP';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
@@ -98,7 +99,7 @@ export async function download(message: any, client: any, logger: any) {
   }
 }
 
-export async function startAllSessions(req: any, res: any) {
+export async function startAllSessions(req: RequestWPP, res: Response) {
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -129,7 +130,7 @@ export async function startAllSessions(req: any, res: any) {
     .json({ status: 'success', message: 'Starting all sessions' });
 }
 
-export async function showAllSessions(req: any, res: any) {
+export async function showAllSessions(req: RequestWPP, res: Response) {
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -157,7 +158,7 @@ export async function showAllSessions(req: any, res: any) {
   return res.status(200).json({ response: arr });
 }
 
-export async function startSession(req: any, res: any) {
+export async function startSession(req: RequestWPP, res: Response) {
   const session = req.session;
   const { waitQrCode = false } = req.body;
 
@@ -165,7 +166,7 @@ export async function startSession(req: any, res: any) {
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
 
-export async function closeSession(req: any, res: any) {
+export async function closeSession(req: RequestWPP, res: Response) {
   const session = req.session;
   const { clearSession = false } = req.body;
   try {
@@ -177,7 +178,7 @@ export async function closeSession(req: any, res: any) {
       (clientsArray as any)[session] = { status: null };
 
       if (clearSession) {
-        let sessionFolder = `${config.customUserDataDir}/${session}`;
+        const sessionFolder = `${config.customUserDataDir}/${session}`;
         if (fs.existsSync(sessionFolder)) {
           console.log('Deletando pasta: ' + sessionFolder);
           fs.rmdirSync(sessionFolder, { recursive: true });
@@ -202,7 +203,7 @@ export async function closeSession(req: any, res: any) {
   }
 }
 
-export async function logOutSession(req: any, res: any) {
+export async function logOutSession(req: RequestWPP, res: Response) {
   try {
     const session = req.session;
     await req.client.logout();
@@ -224,7 +225,7 @@ export async function logOutSession(req: any, res: any) {
   }
 }
 
-export async function checkConnectionSession(req: any, res: any) {
+export async function checkConnectionSession(req: RequestWPP, res: Response) {
   try {
     await req.client.isConnected();
 
@@ -234,7 +235,7 @@ export async function checkConnectionSession(req: any, res: any) {
   }
 }
 
-export async function downloadMediaByMessage(req: any, res: any) {
+export async function downloadMediaByMessage(req: RequestWPP, res: Response) {
   const client = req.client;
   const { messageId } = req.body;
 
@@ -274,7 +275,7 @@ export async function downloadMediaByMessage(req: any, res: any) {
   }
 }
 
-export async function getMediaByMessage(req: any, res: any) {
+export async function getMediaByMessage(req: RequestWPP, res: Response) {
   const client = req.client;
   const { messageId } = req.params;
 
@@ -308,7 +309,7 @@ export async function getMediaByMessage(req: any, res: any) {
   }
 }
 
-export async function getSessionState(req: any, res: any) {
+export async function getSessionState(req: RequestWPP, res: Response) {
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
@@ -324,7 +325,7 @@ export async function getSessionState(req: any, res: any) {
         status: client.status,
         qrcode: qr,
         urlcode: client.urlcode,
-        version: '',
+        version: version,
       });
   } catch (ex) {
     req.logger.error(ex);
@@ -336,7 +337,7 @@ export async function getSessionState(req: any, res: any) {
   }
 }
 
-export async function getQrCode(req: any, res: any) {
+export async function getQrCode(req: RequestWPP, res: Response) {
   try {
     if (req.client.urlcode) {
       const qr = req.client.urlcode
@@ -366,7 +367,7 @@ export async function getQrCode(req: any, res: any) {
   }
 }
 
-export async function killServiceWorker(req: any, res: any) {
+export async function killServiceWorker(req: RequestWPP, res: Response) {
   try {
     return res
       .status(200)
@@ -381,7 +382,7 @@ export async function killServiceWorker(req: any, res: any) {
   }
 }
 
-export async function restartService(req: any, res: any) {
+export async function restartService(req: RequestWPP, res: Response) {
   try {
     return res
       .status(200)
@@ -395,7 +396,7 @@ export async function restartService(req: any, res: any) {
   }
 }
 
-export async function subscribePresence(req: any, res: any) {
+export async function subscribePresence(req: RequestWPP, res: Response) {
   try {
     const { phone, isGroup = false, all = false } = req.body;
 

@@ -551,7 +551,12 @@ routes.get(
   statusConnection,
   CatalogController.getProductById
 );
-routes.post('/api/:session/add-product', verifyToken, statusConnection, CatalogController.addProduct);
+routes.post(
+  '/api/:session/add-product',
+  verifyToken,
+  statusConnection,
+  CatalogController.addProduct
+);
 routes.post(
   '/api/:session/edit-product',
   verifyToken,
@@ -606,7 +611,12 @@ routes.post(
   statusConnection,
   CatalogController.deleteCollection
 );
-routes.post('/api/:session/send-link-catalog', verifyToken, statusConnection, CatalogController.sendLinkCatalog);
+routes.post(
+  '/api/:session/send-link-catalog',
+  verifyToken,
+  statusConnection,
+  CatalogController.sendLinkCatalog
+);
 routes.post(
   '/api/:session/set-product-visibility',
   verifyToken,

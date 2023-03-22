@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import { Response } from 'express';
-import { createCatalogLink } from '../util/functions';
+
 import { RequestWPP } from '../types/RequestWPP';
+import { createCatalogLink } from '../util/functions';
 
 export async function getProducts(req: RequestWPP, res: Response) {
   const { phone, qnt } = req.query;
@@ -117,18 +118,39 @@ export async function changeProductImage(req: RequestWPP, res: Response) {
 }
 
 export async function addProduct(req: RequestWPP, res: Response) {
-  const { name, image, description, price, url, retailerId, currency = 'BRL' } = req.body;
+  const {
+    name,
+    image,
+    description,
+    price,
+    url,
+    retailerId,
+    currency = 'BRL',
+  } = req.body;
   if (!name || !image || !price)
     return res.status(401).send({
       message: 'name, price and image was not informed',
     });
 
   try {
-    const result = await req.client.createProduct(name, image, description, price, false, url, retailerId, currency);
+    const result = await req.client.createProduct(
+      name,
+      image,
+      description,
+      price,
+      false,
+      url,
+      retailerId,
+      currency
+    );
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ status: 'Error', message: 'Error on add product.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on add product.',
+      error: error,
+    });
   }
 }
 
@@ -299,19 +321,27 @@ export async function sendLinkCatalog(req: RequestWPP, res: Response) {
     const session = await req.client.getWid();
     const catalogLink = createCatalogLink(session);
     for (const phone of phones) {
-      const result = await req.client.sendText(phone, `${message} ${catalogLink}`, {
-        useTemplateButtons: true,
-        buttons: [
-          {
-            url: catalogLink,
-            text: 'Abrir catálogo',
-          },
-        ],
-      });
-      results.push({ phone, status: result.id });
+      const result = await req.client.sendText(
+        phone,
+        `${message} ${catalogLink}`,
+        {
+          useTemplateButtons: true,
+          buttons: [
+            {
+              url: catalogLink,
+              text: 'Abrir catálogo',
+            },
+          ],
+        }
+      );
+      (results as any).push({ phone, status: result.id });
     }
     return res.status(200).json({ status: 'success', response: results });
   } catch (error) {
-    res.status(500).json({ status: 'Error', message: 'Error on set enabled cart.', error: error });
+    res.status(500).json({
+      status: 'Error',
+      message: 'Error on set enabled cart.',
+      error: error,
+    });
   }
 }

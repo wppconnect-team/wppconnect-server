@@ -287,7 +287,7 @@ export function setMaxListners(serverOptions: ServerOptions) {
   }
 }
 
-export let unlinkAsync = promisify(fs.unlink);
+export const unlinkAsync = promisify(fs.unlink);
 
 export function createCatalogLink(session: any) {
   const [wid] = session.split('@');
