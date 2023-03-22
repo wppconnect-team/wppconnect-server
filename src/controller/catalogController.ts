@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Response } from 'express';
-
-import { RequestWPP } from '../types/RequestWPP';
 import { createCatalogLink } from '../util/functions';
 
-export async function getProducts(req: RequestWPP, res: Response) {
+export async function getProducts(req: any, res: any) {
   const { phone, qnt } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -41,7 +38,7 @@ export async function getProducts(req: RequestWPP, res: Response) {
   }
 }
 
-export async function getProductById(req: RequestWPP, res: Response) {
+export async function getProductById(req: any, res: any) {
   const { phone, id } = req.query;
   if (!phone || !id)
     return res.status(401).send({
@@ -60,7 +57,7 @@ export async function getProductById(req: RequestWPP, res: Response) {
       .json({ status: 'Error', message: 'Error on get product', error: error });
   }
 }
-export async function editProduct(req: RequestWPP, res: Response) {
+export async function editProduct(req: any, res: any) {
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -79,7 +76,7 @@ export async function editProduct(req: RequestWPP, res: Response) {
   }
 }
 
-export async function delProducts(req: RequestWPP, res: Response) {
+export async function delProducts(req: any, res: any) {
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -98,7 +95,7 @@ export async function delProducts(req: RequestWPP, res: Response) {
   }
 }
 
-export async function changeProductImage(req: RequestWPP, res: Response) {
+export async function changeProductImage(req: any, res: any) {
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -117,7 +114,7 @@ export async function changeProductImage(req: RequestWPP, res: Response) {
   }
 }
 
-export async function addProduct(req: RequestWPP, res: Response) {
+export async function addProduct(req: any, res: any) {
   const {
     name,
     image,
@@ -154,7 +151,7 @@ export async function addProduct(req: RequestWPP, res: Response) {
   }
 }
 
-export async function addProductImage(req: RequestWPP, res: Response) {
+export async function addProductImage(req: any, res: any) {
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -173,7 +170,7 @@ export async function addProductImage(req: RequestWPP, res: Response) {
   }
 }
 
-export async function removeProductImage(req: RequestWPP, res: Response) {
+export async function removeProductImage(req: any, res: any) {
   const { id, index } = req.body;
   if (!id || !index)
     return res.status(401).send({
@@ -192,7 +189,7 @@ export async function removeProductImage(req: RequestWPP, res: Response) {
   }
 }
 
-export async function getCollections(req: RequestWPP, res: Response) {
+export async function getCollections(req: any, res: any) {
   const { phone, qnt, max } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -215,7 +212,7 @@ export async function getCollections(req: RequestWPP, res: Response) {
   }
 }
 
-export async function createCollection(req: RequestWPP, res: Response) {
+export async function createCollection(req: any, res: any) {
   const { name, products } = req.body;
   if (!name || !products)
     return res.status(401).send({
@@ -234,7 +231,7 @@ export async function createCollection(req: RequestWPP, res: Response) {
   }
 }
 
-export async function editCollection(req: RequestWPP, res: Response) {
+export async function editCollection(req: any, res: any) {
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -253,7 +250,7 @@ export async function editCollection(req: RequestWPP, res: Response) {
   }
 }
 
-export async function deleteCollection(req: RequestWPP, res: Response) {
+export async function deleteCollection(req: any, res: any) {
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -272,7 +269,7 @@ export async function deleteCollection(req: RequestWPP, res: Response) {
   }
 }
 
-export async function setProductVisibility(req: RequestWPP, res: Response) {
+export async function setProductVisibility(req: any, res: any) {
   const { id, value } = req.body;
   if (!id || !value)
     return res.status(401).send({
@@ -291,7 +288,7 @@ export async function setProductVisibility(req: RequestWPP, res: Response) {
   }
 }
 
-export async function updateCartEnabled(req: RequestWPP, res: Response) {
+export async function updateCartEnabled(req: any, res: any) {
   const { enabled } = req.body;
   if (!enabled)
     return res.status(401).send({
@@ -310,7 +307,7 @@ export async function updateCartEnabled(req: RequestWPP, res: Response) {
   }
 }
 
-export async function sendLinkCatalog(req: RequestWPP, res: Response) {
+export async function sendLinkCatalog(req: any, res: any) {
   const { phones, message } = req.body;
   if (!phones)
     return res.status(401).send({

@@ -15,7 +15,7 @@
  */
 
 import cors from 'cors';
-import express from 'express';
+import express, { NextFunction, Response } from 'express';
 import boolParser from 'express-query-boolean';
 import { createServer } from 'http';
 import mergeDeep from 'merge-deep';
@@ -24,6 +24,7 @@ import { Server as Socket } from 'socket.io';
 import config from './config';
 import { convert } from './mapper/index';
 import routes from './routes';
+import { RequestWPP } from './types/RequestWPP';
 import {
   createFolders,
   setMaxListners,
@@ -61,10 +62,10 @@ export function initServer(serverOptions: any) {
   app.use(boolParser());
 
   // Add request options
-  app.use((req: any, res: any, next) => {
+  app.use((req: any, res: any, next: NextFunction) => {
     req.serverOptions = serverOptions;
     req.logger = logger;
-    req.io = io;
+    req.io = io as any;
 
     const oldSend = res.send;
 
