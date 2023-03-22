@@ -1,5 +1,4 @@
 import config from '../../config';
-import { WhatsAppServer } from '../../types/WhatsAppServer';
 import FileTokenStore from './fileTokenStory';
 import MongodbTokenStore from './mongodbTokenStory';
 import RedisTokenStore from './redisTokenStory';
