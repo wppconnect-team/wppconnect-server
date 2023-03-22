@@ -15,16 +15,16 @@
  */
 
 import cors from 'cors';
-import express, { NextFunction, Response } from 'express';
+import express, { NextFunction } from 'express';
 import boolParser from 'express-query-boolean';
 import { createServer } from 'http';
 import mergeDeep from 'merge-deep';
 import { Server as Socket } from 'socket.io';
 
+import { version } from '../package.json';
 import config from './config';
 import { convert } from './mapper/index';
 import routes from './routes';
-import { RequestWPP } from './types/RequestWPP';
 import {
   createFolders,
   setMaxListners,
@@ -106,7 +106,7 @@ export function initServer(serverOptions: any) {
     logger.info(
       `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
     );
-    logger.info(`WPPConnect-Server version: `);
+    logger.info(`WPPConnect-Server version: ${version}`);
 
     if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
   });
