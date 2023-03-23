@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import { NextFunction } from 'express';
-
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 import { contactToArray } from '../util/functions';
 
 export default async function statusConnection(
-  req: RequestWPP,
+  req: Request,
   res: any,
   next: any
 ) {

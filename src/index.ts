@@ -48,13 +48,6 @@ export function initServer(serverOptions: any) {
   const app = express();
   const PORT = process.env.PORT || serverOptions.port;
 
-  const http = createServer(app);
-  const io = new Socket(http, {
-    cors: {
-      origin: ['*'],
-    },
-  });
-
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -89,6 +82,16 @@ export function initServer(serverOptions: any) {
     next();
   });
 
+  app.use(routes);
+
+  createFolders();
+  const http = createServer(app);
+  const io = new Socket(http, {
+    cors: {
+      origin: ['*'],
+    },
+  });
+
   io.on('connection', (sock) => {
     logger.info(`ID: ${sock.id} entrou`);
 
@@ -96,10 +99,6 @@ export function initServer(serverOptions: any) {
       logger.info(`ID: ${sock.id} saiu`);
     });
   });
-
-  app.use(routes);
-
-  createFolders();
 
   http.listen(PORT, () => {
     logger.info(`Server is running on port: ${PORT}`);

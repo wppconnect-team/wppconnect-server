@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 import bcrypt from 'bcrypt';
-import { Response } from 'express';
 
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 
 const saltRounds = 10;
 
-export async function encryptSession(req: any, res: any) {
+export async function encryptSession(req: Request, res: any): Promise<any> {
   const { session, secretkey } = req.params;
   const { authorization: token } = req.headers;
   const secureTokenEnv = req.serverOptions.secretKey;

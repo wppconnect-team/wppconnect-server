@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Response } from 'express';
 
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 
-export async function addNewLabel(req: any, res: any) {
+export async function addNewLabel(req: Request, res: any) {
   const { name, options } = req.body;
   if (!name)
     return res.status(401).send({
@@ -36,7 +35,7 @@ export async function addNewLabel(req: any, res: any) {
   }
 }
 
-export async function addOrRemoveLabels(req: any, res: any) {
+export async function addOrRemoveLabels(req: Request, res: any) {
   const { chatIds, options } = req.body;
   if (!chatIds || !options)
     return res.status(401).send({
@@ -55,7 +54,7 @@ export async function addOrRemoveLabels(req: any, res: any) {
   }
 }
 
-export async function getAllLabels(req: any, res: any) {
+export async function getAllLabels(req: Request, res: any) {
   try {
     const result = await req.client.getAllLabels();
     res.status(201).json({ status: 'success', response: result });
@@ -68,7 +67,7 @@ export async function getAllLabels(req: any, res: any) {
   }
 }
 
-export async function deleteAllLabels(req: any, res: any) {
+export async function deleteAllLabels(req: Request, res: any) {
   try {
     const result = await req.client.deleteAllLabels();
     res.status(201).json({ status: 'success', response: result });
@@ -81,7 +80,7 @@ export async function deleteAllLabels(req: any, res: any) {
   }
 }
 
-export async function deleteLabel(req: any, res: any) {
+export async function deleteLabel(req: Request, res: any) {
   const { id } = req.params;
   try {
     const result = await req.client.deleteLabel(id);

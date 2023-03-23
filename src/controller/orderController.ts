@@ -15,7 +15,7 @@
  */
 import { Response } from 'express';
 
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 
 function returnSucess(
   res: Response,
@@ -35,7 +35,7 @@ function returnSucess(
 }
 
 function returnError(
-  req: RequestWPP,
+  req: Request,
   res: Response,
   session: string,
   error?: any
@@ -51,7 +51,7 @@ function returnError(
   });
 }
 
-export async function getBusinessProfilesProducts(req: any, res: any) {
+export async function getBusinessProfilesProducts(req: Request, res: any) {
   const session = req.session;
   const { phone } = req.body;
 
@@ -67,7 +67,7 @@ export async function getBusinessProfilesProducts(req: any, res: any) {
     returnError(req, res, session, error);
   }
 }
-export async function getOrderbyMsg(req: any, res: any) {
+export async function getOrderbyMsg(req: Request, res: any) {
   const session = req.session;
   const { messageId } = req.body;
 

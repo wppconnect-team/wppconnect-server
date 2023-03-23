@@ -15,10 +15,10 @@
  */
 import { Response } from 'express';
 
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 import { unlinkAsync } from '../util/functions';
 
-function returnError(req: RequestWPP, res: Response, error: any) {
+function returnError(req: Request, res: Response, error: any) {
   req.logger.error(error);
   res.status(500).json({
     status: 'Error',
@@ -31,7 +31,7 @@ async function returnSucess(res: any, data: any) {
   res.status(201).json({ status: 'success', response: data, mapper: 'return' });
 }
 
-export async function sendMessage(req: any, res: any) {
+export async function sendMessage(req: Request, res: any) {
   const { phone, message } = req.body;
 
   const options = req.body.options || {};
@@ -51,7 +51,7 @@ export async function sendMessage(req: any, res: any) {
   }
 }
 
-export async function sendFile(req: any, res: any) {
+export async function sendFile(req: Request, res: any) {
   const { phone, path, base64, filename = 'file', message, caption } = req.body;
 
   if (!path && !req.file && !base64)
@@ -82,7 +82,7 @@ export async function sendFile(req: any, res: any) {
   }
 }
 
-export async function sendVoice(req: any, res: any) {
+export async function sendVoice(req: Request, res: any) {
   const {
     phone,
     path,
@@ -113,7 +113,7 @@ export async function sendVoice(req: any, res: any) {
   }
 }
 
-export async function sendVoice64(req: any, res: any) {
+export async function sendVoice64(req: Request, res: any) {
   const { phone, base64Ptt } = req.body;
 
   try {
@@ -132,7 +132,7 @@ export async function sendVoice64(req: any, res: any) {
   }
 }
 
-export async function sendLinkPreview(req: any, res: any) {
+export async function sendLinkPreview(req: Request, res: any) {
   const { phone, url, caption } = req.body;
 
   try {
@@ -151,7 +151,7 @@ export async function sendLinkPreview(req: any, res: any) {
   }
 }
 
-export async function sendLocation(req: any, res: any) {
+export async function sendLocation(req: Request, res: any) {
   const { phone, lat, lng, title, address } = req.body;
 
   try {
@@ -175,7 +175,7 @@ export async function sendLocation(req: any, res: any) {
   }
 }
 
-export async function sendButtons(req: any, res: any) {
+export async function sendButtons(req: Request, res: any) {
   const { phone, message, options } = req.body;
 
   try {
@@ -194,7 +194,7 @@ export async function sendButtons(req: any, res: any) {
   }
 }
 
-export async function sendListMessage(req: any, res: any) {
+export async function sendListMessage(req: Request, res: any) {
   const {
     phone,
     description = '',
@@ -224,7 +224,7 @@ export async function sendListMessage(req: any, res: any) {
   }
 }
 
-export async function sendPollMessage(req: any, res: any) {
+export async function sendPollMessage(req: Request, res: any) {
   const { phone, name, choices, options } = req.body;
 
   try {
@@ -245,7 +245,7 @@ export async function sendPollMessage(req: any, res: any) {
   }
 }
 
-export async function sendStatusText(req: any, res: any) {
+export async function sendStatusText(req: Request, res: any) {
   const { message } = req.body;
 
   try {
@@ -260,7 +260,7 @@ export async function sendStatusText(req: any, res: any) {
   }
 }
 
-export async function replyMessage(req: any, res: any) {
+export async function replyMessage(req: Request, res: any) {
   const { phone, message, messageId } = req.body;
 
   try {
@@ -278,7 +278,7 @@ export async function replyMessage(req: any, res: any) {
   }
 }
 
-export async function sendMentioned(req: any, res: any) {
+export async function sendMentioned(req: Request, res: any) {
   const { phone, message, mentioned } = req.body;
 
   try {
@@ -301,7 +301,7 @@ export async function sendMentioned(req: any, res: any) {
     });
   }
 }
-export async function sendImageAsSticker(req: any, res: any) {
+export async function sendImageAsSticker(req: Request, res: any) {
   const { phone, path } = req.body;
 
   if (!path && !req.file)
@@ -325,7 +325,7 @@ export async function sendImageAsSticker(req: any, res: any) {
     returnError(req, res, error);
   }
 }
-export async function sendImageAsStickerGif(req: any, res: any) {
+export async function sendImageAsStickerGif(req: Request, res: any) {
   const { phone, path } = req.body;
 
   if (!path && !req.file)

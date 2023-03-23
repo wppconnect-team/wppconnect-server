@@ -16,7 +16,7 @@
 import { create, SocketState } from '@wppconnect-team/wppconnect';
 
 import { download } from '../controller/sessionController';
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
 import { callWebHook, startHelper } from './functions';
@@ -131,7 +131,7 @@ export default class CreateSessionUtil {
     }
   }
 
-  async opendata(req: RequestWPP, session: string, res?: any) {
+  async opendata(req: Request, session: string, res?: any) {
     await this.createSessionUtil(req, clientsArray, session, res);
   }
 
@@ -171,7 +171,7 @@ export default class CreateSessionUtil {
     });
   }
 
-  async start(req: RequestWPP, client: WhatsAppServer) {
+  async start(req: Request, client: WhatsAppServer) {
     try {
       await client.isConnected();
       Object.assign(client, { status: 'CONNECTED', qrcode: null });
@@ -197,7 +197,7 @@ export default class CreateSessionUtil {
     }
   }
 
-  async checkStateSession(client: WhatsAppServer, req: RequestWPP) {
+  async checkStateSession(client: WhatsAppServer, req: Request) {
     await client.onStateChange((state) => {
       req.logger.info(`State Change ${state}: ${client.session}`);
       const conflits = [SocketState.CONFLICT];
@@ -208,7 +208,7 @@ export default class CreateSessionUtil {
     });
   }
 
-  async listenMessages(client: WhatsAppServer, req: RequestWPP) {
+  async listenMessages(client: WhatsAppServer, req: Request) {
     await client.onMessage(async (message: any) => {
       eventEmitter.emit(`mensagem-${client.session}`, client, message);
       callWebHook(client, req, 'onmessage', message);
@@ -234,21 +234,21 @@ export default class CreateSessionUtil {
     });
   }
 
-  async listenAcks(client: WhatsAppServer, req: RequestWPP) {
+  async listenAcks(client: WhatsAppServer, req: Request) {
     await client.onAck(async (ack) => {
       req.io.emit('onack', ack);
       callWebHook(client, req, 'onack', ack);
     });
   }
 
-  async onPresenceChanged(client: WhatsAppServer, req: RequestWPP) {
+  async onPresenceChanged(client: WhatsAppServer, req: Request) {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
       req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
     });
   }
 
-  async onReactionMessage(client: WhatsAppServer, req: RequestWPP) {
+  async onReactionMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onReactionMessage(async (reaction: any) => {
       req.io.emit('onreactionmessage', reaction);
@@ -256,14 +256,14 @@ export default class CreateSessionUtil {
     });
   }
 
-  async onRevokedMessage(client: WhatsAppServer, req: RequestWPP) {
+  async onRevokedMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onRevokedMessage(async (response: any) => {
       req.io.emit('onrevokedmessage', response);
       callWebHook(client, req, 'onrevokedmessage', response);
     });
   }
-  async onPollResponse(client: WhatsAppServer, req: RequestWPP) {
+  async onPollResponse(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onPollResponse(async (response: any) => {
       req.io.emit('onpollresponse', response);

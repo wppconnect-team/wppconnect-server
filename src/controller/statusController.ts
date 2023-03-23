@@ -1,9 +1,9 @@
 import { Response } from 'express';
 
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 import { unlinkAsync } from '../util/functions';
 
-function returnError(req: RequestWPP, res: Response, error: any) {
+function returnError(req: Request, res: Response, error: any) {
   req.logger.error(error);
   res
     .status(500)
@@ -14,7 +14,7 @@ async function returnSucess(res: Response, data: any) {
   res.status(201).json({ status: 'success', response: data, mapper: 'return' });
 }
 
-export async function sendTextStorie(req: any, res: any) {
+export async function sendTextStorie(req: Request, res: any) {
   const { text, options } = req.body;
 
   if (!text)
@@ -34,7 +34,7 @@ export async function sendTextStorie(req: any, res: any) {
   }
 }
 
-export async function sendImageStorie(req: any, res: any) {
+export async function sendImageStorie(req: Request, res: any) {
   const { path, options } = req.body;
 
   if (!path && !req.file)
@@ -56,7 +56,7 @@ export async function sendImageStorie(req: any, res: any) {
   }
 }
 
-export async function sendVideoStorie(req: any, res: any) {
+export async function sendVideoStorie(req: Request, res: any) {
   const { path } = req.body;
 
   if (!path && !req.file)

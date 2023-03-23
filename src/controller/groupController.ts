@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Response } from 'express';
-
-import { RequestWPP } from '../types/RequestWPP';
+import { Request } from '../types/Request';
 import {
   contactToArray,
   groupNameToArray,
   groupToArray,
 } from '../util/functions';
 
-export async function getAllGroups(req: any, res: any) {
+export async function getAllGroups(req: Request, res: any) {
   try {
     const response = await req.client.getAllGroups();
 
@@ -35,7 +33,7 @@ export async function getAllGroups(req: any, res: any) {
   }
 }
 
-export async function joinGroupByCode(req: any, res: any) {
+export async function joinGroupByCode(req: Request, res: any) {
   const { inviteCode } = req.body;
 
   if (!inviteCode)
@@ -60,7 +58,7 @@ export async function joinGroupByCode(req: any, res: any) {
   }
 }
 
-export async function createGroup(req: any, res: any) {
+export async function createGroup(req: Request, res: any) {
   const { participants, name } = req.body;
 
   try {
@@ -95,7 +93,7 @@ export async function createGroup(req: any, res: any) {
   }
 }
 
-export async function leaveGroup(req: any, res: any) {
+export async function leaveGroup(req: Request, res: any) {
   const { groupId } = req.body;
 
   try {
@@ -117,7 +115,7 @@ export async function leaveGroup(req: any, res: any) {
   }
 }
 
-export async function getGroupMembers(req: any, res: any) {
+export async function getGroupMembers(req: Request, res: any) {
   const { groupId } = req.params;
 
   try {
@@ -136,7 +134,7 @@ export async function getGroupMembers(req: any, res: any) {
   }
 }
 
-export async function addParticipant(req: any, res: any) {
+export async function addParticipant(req: Request, res: any) {
   const { groupId, phone } = req.body;
 
   try {
@@ -167,7 +165,7 @@ export async function addParticipant(req: any, res: any) {
   }
 }
 
-export async function removeParticipant(req: any, res: any) {
+export async function removeParticipant(req: Request, res: any) {
   const { groupId, phone } = req.body;
 
   try {
@@ -200,7 +198,7 @@ export async function removeParticipant(req: any, res: any) {
   }
 }
 
-export async function promoteParticipant(req: any, res: any) {
+export async function promoteParticipant(req: Request, res: any) {
   const { groupId, phone } = req.body;
 
   try {
@@ -228,7 +226,7 @@ export async function promoteParticipant(req: any, res: any) {
   }
 }
 
-export async function demoteParticipant(req: any, res: any) {
+export async function demoteParticipant(req: Request, res: any) {
   const { groupId, phone } = req.body;
 
   try {
@@ -256,7 +254,7 @@ export async function demoteParticipant(req: any, res: any) {
   }
 }
 
-export async function getGroupAdmins(req: any, res: any) {
+export async function getGroupAdmins(req: Request, res: any) {
   const { groupId } = req.params;
 
   try {
@@ -279,7 +277,7 @@ export async function getGroupAdmins(req: any, res: any) {
   }
 }
 
-export async function getGroupInviteLink(req: any, res: any) {
+export async function getGroupInviteLink(req: Request, res: any) {
   const { groupId } = req.params;
   try {
     let response = {};
@@ -298,7 +296,7 @@ export async function getGroupInviteLink(req: any, res: any) {
   }
 }
 
-export async function revokeGroupInviteLink(req: any, res: any) {
+export async function revokeGroupInviteLink(req: Request, res: any) {
   const { groupId } = req.params;
 
   let response = {};
@@ -322,7 +320,7 @@ export async function revokeGroupInviteLink(req: any, res: any) {
   }
 }
 
-export async function getAllBroadcastList(req: any, res: any) {
+export async function getAllBroadcastList(req: Request, res: any) {
   try {
     const response = await req.client.getAllBroadcastList();
     return res.status(200).json({ status: 'success', response: response });
@@ -336,7 +334,7 @@ export async function getAllBroadcastList(req: any, res: any) {
   }
 }
 
-export async function getGroupInfoFromInviteLink(req: any, res: any) {
+export async function getGroupInfoFromInviteLink(req: Request, res: any) {
   try {
     const { invitecode } = req.body;
     const response = await req.client.getGroupInfoFromInviteLink(invitecode);
@@ -351,7 +349,7 @@ export async function getGroupInfoFromInviteLink(req: any, res: any) {
   }
 }
 
-export async function getGroupMembersIds(req: any, res: any) {
+export async function getGroupMembersIds(req: Request, res: any) {
   const { groupId } = req.params;
   let response = {};
   try {
@@ -369,7 +367,7 @@ export async function getGroupMembersIds(req: any, res: any) {
   }
 }
 
-export async function setGroupDescription(req: any, res: any) {
+export async function setGroupDescription(req: Request, res: any) {
   const { groupId, description } = req.body;
 
   let response = {};
@@ -390,7 +388,7 @@ export async function setGroupDescription(req: any, res: any) {
   }
 }
 
-export async function setGroupProperty(req: any, res: any) {
+export async function setGroupProperty(req: Request, res: any) {
   const { groupId, property, value = true } = req.body;
 
   let response = {};
@@ -411,7 +409,7 @@ export async function setGroupProperty(req: any, res: any) {
   }
 }
 
-export async function setGroupSubject(req: any, res: any) {
+export async function setGroupSubject(req: Request, res: any) {
   const { groupId, title } = req.body;
 
   let response = {};
@@ -432,7 +430,7 @@ export async function setGroupSubject(req: any, res: any) {
   }
 }
 
-export async function setMessagesAdminsOnly(req: any, res: any) {
+export async function setMessagesAdminsOnly(req: Request, res: any) {
   const { groupId, value = true } = req.body;
 
   let response = {};
@@ -453,7 +451,7 @@ export async function setMessagesAdminsOnly(req: any, res: any) {
   }
 }
 
-export async function changePrivacyGroup(req: any, res: any) {
+export async function changePrivacyGroup(req: Request, res: any) {
   const { groupId, status } = req.body;
 
   try {
@@ -475,7 +473,7 @@ export async function changePrivacyGroup(req: any, res: any) {
   }
 }
 
-export async function setGroupProfilePic(req: any, res: any) {
+export async function setGroupProfilePic(req: Request, res: any) {
   const { phone, path } = req.body;
 
   if (!path && !req.file)

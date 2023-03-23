@@ -21,6 +21,7 @@ import { Logger } from 'winston';
 
 import { version } from '../../package.json';
 import config from '../config';
+import { Request } from '../types/Request';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
@@ -97,7 +98,7 @@ export async function download(message: any, client: any, logger: any) {
   }
 }
 
-export async function startAllSessions(req: any, res: any) {
+export async function startAllSessions(req: Request, res: any) {
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -128,7 +129,7 @@ export async function startAllSessions(req: any, res: any) {
     .json({ status: 'success', message: 'Starting all sessions' });
 }
 
-export async function showAllSessions(req: any, res: any) {
+export async function showAllSessions(req: Request, res: any) {
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -156,7 +157,7 @@ export async function showAllSessions(req: any, res: any) {
   return res.status(200).json({ response: arr });
 }
 
-export async function startSession(req: any, res: any) {
+export async function startSession(req: Request, res: any) {
   const session = req.session;
   const { waitQrCode = false } = req.body;
 
@@ -164,7 +165,7 @@ export async function startSession(req: any, res: any) {
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
 
-export async function closeSession(req: any, res: any) {
+export async function closeSession(req: Request, res: any) {
   const session = req.session;
   const { clearSession = false } = req.body;
   try {
@@ -201,7 +202,7 @@ export async function closeSession(req: any, res: any) {
   }
 }
 
-export async function logOutSession(req: any, res: any) {
+export async function logOutSession(req: Request, res: any) {
   try {
     const session = req.session;
     await req.client.logout();
@@ -223,7 +224,7 @@ export async function logOutSession(req: any, res: any) {
   }
 }
 
-export async function checkConnectionSession(req: any, res: any) {
+export async function checkConnectionSession(req: Request, res: any) {
   try {
     await req.client.isConnected();
 
@@ -233,7 +234,7 @@ export async function checkConnectionSession(req: any, res: any) {
   }
 }
 
-export async function downloadMediaByMessage(req: any, res: any) {
+export async function downloadMediaByMessage(req: Request, res: any) {
   const client = req.client;
   const { messageId } = req.body;
 
@@ -273,7 +274,7 @@ export async function downloadMediaByMessage(req: any, res: any) {
   }
 }
 
-export async function getMediaByMessage(req: any, res: any) {
+export async function getMediaByMessage(req: Request, res: any) {
   const client = req.client;
   const { messageId } = req.params;
 
@@ -307,7 +308,7 @@ export async function getMediaByMessage(req: any, res: any) {
   }
 }
 
-export async function getSessionState(req: any, res: any) {
+export async function getSessionState(req: Request, res: any) {
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
@@ -335,7 +336,7 @@ export async function getSessionState(req: any, res: any) {
   }
 }
 
-export async function getQrCode(req: any, res: any) {
+export async function getQrCode(req: Request, res: any) {
   try {
     if (req.client.urlcode) {
       const qr = req.client.urlcode
@@ -365,7 +366,7 @@ export async function getQrCode(req: any, res: any) {
   }
 }
 
-export async function killServiceWorker(req: any, res: any) {
+export async function killServiceWorker(req: Request, res: any) {
   try {
     return res
       .status(200)
@@ -380,7 +381,7 @@ export async function killServiceWorker(req: any, res: any) {
   }
 }
 
-export async function restartService(req: any, res: any) {
+export async function restartService(req: Request, res: any) {
   try {
     return res
       .status(200)
@@ -394,7 +395,7 @@ export async function restartService(req: any, res: any) {
   }
 }
 
-export async function subscribePresence(req: any, res: any) {
+export async function subscribePresence(req: Request, res: any) {
   try {
     const { phone, isGroup = false, all = false } = req.body;
 
