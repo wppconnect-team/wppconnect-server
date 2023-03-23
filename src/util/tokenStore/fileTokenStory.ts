@@ -1,11 +1,11 @@
-import { FileTokenStore as fileTkStoreFather } from './FileTokenStore';
+import { FileTokenStore as fsTokenStore } from './FileTokenStore/FileTokenStore';
 
 class FileTokenStore {
   declare client: any;
   constructor(client: any) {
     this.client = client;
   }
-  tokenStore = new fileTkStoreFather({
+  tokenStore = new fsTokenStore({
     encodeFunction: (data) => {
       return this.encodeFunction(data, this.client.config);
     },

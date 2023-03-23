@@ -19,9 +19,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import sanitize from 'sanitize-filename';
 
-import { logger } from '../../';
-import { isValidSessionToken } from './isValidSessionToken';
-import { SessionToken, TokenStore } from './types';
+import { logger } from '../../..';
+import { SessionToken, TokenStore } from '../types';
 
 export interface FileTokenStoreOptions {
   /**
@@ -114,7 +113,7 @@ export class FileTokenStore implements TokenStore {
     sessionName: string,
     tokenData: SessionToken | null
   ): Promise<boolean> {
-    if (!tokenData || !isValidSessionToken(tokenData)) {
+    if (!tokenData) {
       return false;
     }
 
