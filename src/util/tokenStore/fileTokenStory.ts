@@ -1,11 +1,11 @@
-import * as wppconnect from '@wppconnect-team/wppconnect';
+import { FileTokenStore as fileTkStoreFather } from './FileTokenStore';
 
 class FileTokenStore {
   declare client: any;
   constructor(client: any) {
     this.client = client;
   }
-  tokenStore = new wppconnect.tokenStore.FileTokenStore({
+  tokenStore = new fileTkStoreFather({
     encodeFunction: (data) => {
       return this.encodeFunction(data, this.client.config);
     },
@@ -19,7 +19,7 @@ class FileTokenStore {
     return JSON.stringify(data);
   }
 
-  public decodeFunction(text: string, client: any) {
+  public async decodeFunction(text: string, client: any): Promise<string[]> {
     const object = JSON.parse(text);
     if (object.config && Object.keys(client.config).length === 0)
       client.config = object.config;

@@ -34,6 +34,8 @@ import { createLogger } from './util/logger';
 
 //require('dotenv').config();
 
+export const logger = createLogger(config.log);
+
 export function initServer(serverOptions: any) {
   if (typeof serverOptions !== 'object') {
     serverOptions = {};
@@ -42,8 +44,6 @@ export function initServer(serverOptions: any) {
   serverOptions = mergeDeep({}, config, serverOptions);
 
   setMaxListners(serverOptions);
-
-  const logger = createLogger(serverOptions.log);
 
   const app = express();
   const PORT = process.env.PORT || serverOptions.port;

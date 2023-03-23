@@ -47,8 +47,17 @@ export default class CreateSessionUtil {
 
       const tokenStore = new Factory();
       const myTokenStore = tokenStore.createTokenStory(client);
+      const tokenData = await myTokenStore.getToken(session);
 
-      await myTokenStore.getToken(session);
+      if (!tokenData) {
+        myTokenStore.setToken(session, {
+          WABrowserId: 'null',
+          WAToken1: 'null',
+          WAToken2: 'null',
+          WASecretBundle: 'null',
+        });
+      }
+
       this.startChatWootClient(client);
 
       if (req.serverOptions.customUserDataDir) {
