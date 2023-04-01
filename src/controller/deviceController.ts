@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Chat } from '@wppconnect-team/wppconnect';
 import { Response } from 'express';
-import fs from 'fs';
-import mime from 'mime-types';
 
 import { Request } from '../types/Request';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
-import { download } from './sessionController';
 
 function returnSucess(res: any, session: any, phone: any, data: any) {
   res.status(201).json({
@@ -173,37 +171,14 @@ export async function getChatById(req: Request, res: any) {
   const { isGroup } = req.query;
 
   try {
-    let allMessages: any = [];
-
+    let result = {} as Chat;
     if (isGroup) {
-      allMessages = await req.client.getAllMessagesInChat(
-        `${phone}@g.us`,
-        true,
-        true
-      );
+      result = await req.client.getChatById(`${phone}@g.us`);
     } else {
-      allMessages = await req.client.getAllMessagesInChat(
-        `${phone}@c.us`,
-        true,
-        true
-      );
+      result = await req.client.getChatById(`${phone}@c.us`);
     }
 
-    const dir = './WhatsAppImages';
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
-
-    allMessages.map((message: any) => {
-      if (message.type === 'sticker') {
-        download(message, req.client, req.logger);
-        message.body = `${req.serverOptions.host}:${
-          req.serverOptions.port
-        }/files/file${message.t}.${mime.extension(message.mimetype)}`;
-      }
-    });
-
-    return res.status(200).json({ status: 'success', response: allMessages });
+    return res.status(200).json(result);
   } catch (e) {
     req.logger.error(e);
     return res.status(500).json({
