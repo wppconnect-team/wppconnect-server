@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';
 import express, { NextFunction } from 'express';
 import boolParser from 'express-query-boolean';
@@ -42,6 +43,7 @@ export function initServer(serverOptions: any) {
   }
 
   serverOptions = mergeDeep({}, config, serverOptions);
+  defaultLogger.level = serverOptions.log.level;
 
   setMaxListners(serverOptions);
 
@@ -109,6 +111,15 @@ export function initServer(serverOptions: any) {
 
     if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
   });
+
+  if (config.log.level === 'error' || config.log.level === 'warn') {
+    console.log(`\x1b[33m ======================================================
+Attention:
+Your configuration is configured to show only a few logs, before opening an issue, 
+please set the log to 'silly', copy the log that shows the error and open your issue.
+======================================================
+`);
+  }
 
   return {
     app,

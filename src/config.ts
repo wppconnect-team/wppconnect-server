@@ -27,7 +27,7 @@ export default {
     daysToArchive: 45,
   },
   log: {
-    level: 'error',
+    level: 'error', // Before open a issue, change level to silly and retry a action
     logger: ['console', 'file'],
   },
   createOptions: {
