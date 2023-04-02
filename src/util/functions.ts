@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import s3 from 'aws-sdk';
 import api from 'axios';
 import Crypto from 'crypto';
 import fs from 'fs';
@@ -30,7 +29,7 @@ let mime: any, crypto: any, aws: any;
 if (config.webhook.uploadS3) {
   mime = config.webhook.uploadS3 ? mimetypes : null;
   crypto = config.webhook.uploadS3 ? Crypto : null;
-  aws = config.webhook.uploadS3 ? s3 : null;
+  aws = config.webhook.uploadS3 ? import('aws-sdk') : null;
 }
 
 export function contactToArray(number: any, isGroup?: boolean) {
