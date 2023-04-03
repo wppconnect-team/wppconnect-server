@@ -1,3 +1,9 @@
+# 2.0.0 (2023-04-03)
+
+### Bug Fixes
+
+- Fixed warning for aws-s3 ([d4d4b86](https://github.com/wppconnect-team/wppconnect-server/commit/d4d4b86331494f8514a87b41b76740070b9682a0))
+
 ## 1.8.5 (2023-03-13)
 
 ### Bug Fixes
