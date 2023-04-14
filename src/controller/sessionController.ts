@@ -338,7 +338,7 @@ export async function getSessionState(req: Request, res: any) {
 
 export async function getQrCode(req: Request, res: any) {
   try {
-    if (req.client.urlcode) {
+    if (req?.client?.urlcode) {
       const qr = req.client.urlcode
         ? await QRCode.toDataURL(req.client.urlcode)
         : null;
@@ -352,6 +352,12 @@ export async function getQrCode(req: Request, res: any) {
         'Content-Length': img.length,
       });
       res.end(img);
+    } else if (typeof req.client === 'undefined') {
+      return res.status(200).json({
+        status: null,
+        message:
+          'Session not started. Please, use the /start-session route, for initialization your session',
+      });
     } else {
       return res.status(200).json({
         status: req.client.status,
