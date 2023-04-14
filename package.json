@@ -71,7 +71,7 @@
     "@types/node": "^18.15.11",
     "@types/qrcode": "^1.5.0",
     "@types/swagger-ui-express": "^4.1.3",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
     "aws-sdk": "^2.1358.0",
     "commitizen": "^4.3.0",
     "conventional-changelog-cli": "^2.2.2",
