@@ -90,7 +90,7 @@ export function initServer(serverOptions: any) {
   const http = createServer(app);
   const io = new Socket(http, {
     cors: {
-      origin: ['*'],
+      origin: '*',
     },
   });
 
