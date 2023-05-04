@@ -17,3 +17,5 @@
 *.tgz
 /.idea
 userDataDir
+/yarn.lock
+/yarn-error.log
