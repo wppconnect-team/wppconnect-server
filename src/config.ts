@@ -12,6 +12,7 @@ export default {
     url: null,
     autoDownload: true,
     uploadS3: false,
+    awsBucketName: '',
     readMessage: true,
     allUnreadOnStart: false,
     listenAcks: true,
