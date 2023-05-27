@@ -6578,7 +6578,7 @@
         "tags": ["Send Message"],
         "summary": "Send Message Button",
         "description": "Envia uma mensagem de botões para um número de telefone. ",
-        "operationId": "SendMessageWithButton",
+        "operationId": "SendMessageRequestWithButton",
         "parameters": [],
         "requestBody": {
           "description": "",
@@ -6611,7 +6611,7 @@
         "tags": ["Send Message"],
         "summary": "Send Message Button with sections",
         "description": "Envia uma mensagem de botões para um número de telefone ou grupo, com seções. ",
-        "operationId": "SendMessageWithButtonSections",
+        "operationId": "SendMessageRequestWithButtonSections",
         "parameters": [],
         "requestBody": {
           "description": "",
@@ -12074,9 +12074,6 @@
           "description": "",
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddProductRequest"
-              },
               "example": {
                 "name": "Cat",
                 "description": "white cat",
@@ -12154,36 +12151,6 @@
   },
   "components": {
     "schemas": {
-      "AddProductRequest": {
-        "title": "AddProductRequest",
-        "required": ["name", "image", "price"],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string"
-          },
-          "price": {
-            "type": "float"
-          },
-          "description": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "retailerId": {
-            "type": "string"
-          }
-        },
-        "example": {
-          "name": "white cat",
-          "image": "data:image/png;base64,..........",
-          "price": 19.9
-        }
-      },
       "AddProductImageRequest": {
         "title": "AddProductImageRequest",
         "required": ["id", "base64"],
