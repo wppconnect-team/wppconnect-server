@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 import { create, SocketState } from '@wppconnect-team/wppconnect';
+import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
-import { Request } from '../types/Request';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
 import { callWebHook, startHelper } from './functions';

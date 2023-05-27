@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Response } from 'express';
-
-import { Request } from '../types/Request';
+import { Request, Response } from 'express';
 
 function returnSucess(
   res: Response,
@@ -51,7 +49,7 @@ function returnError(
   });
 }
 
-export async function getBusinessProfilesProducts(req: Request, res: any) {
+export async function getBusinessProfilesProducts(req: Request, res: Response) {
   const session = req.session;
   const { phone } = req.body;
 
@@ -67,7 +65,7 @@ export async function getBusinessProfilesProducts(req: Request, res: any) {
     returnError(req, res, session, error);
   }
 }
-export async function getOrderbyMsg(req: Request, res: any) {
+export async function getOrderbyMsg(req: Request, res: Response) {
   const session = req.session;
   const { messageId } = req.body;
 

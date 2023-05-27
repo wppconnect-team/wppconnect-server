@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import { Chat } from '@wppconnect-team/wppconnect';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
-import { Request } from '../types/Request';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
 
@@ -44,7 +43,7 @@ function returnError(req: Request, res: Response, session: any, error: any) {
   });
 }
 
-export async function setProfileName(req: Request, res: any) {
+export async function setProfileName(req: Request, res: Response) {
   const { name } = req.body;
 
   if (!name)
@@ -65,7 +64,7 @@ export async function setProfileName(req: Request, res: any) {
   }
 }
 
-export async function showAllContacts(req: Request, res: any) {
+export async function showAllContacts(req: Request, res: Response) {
   try {
     const contacts = await req.client.getAllContacts();
     res.status(200).json({ status: 'success', response: contacts });
@@ -79,7 +78,7 @@ export async function showAllContacts(req: Request, res: any) {
   }
 }
 
-export async function getAllChats(req: Request, res: any) {
+export async function getAllChats(req: Request, res: Response) {
   try {
     const response = await req.client.getAllChats();
     return res
@@ -93,7 +92,7 @@ export async function getAllChats(req: Request, res: any) {
   }
 }
 
-export async function getAllChatsWithMessages(req: Request, res: any) {
+export async function getAllChatsWithMessages(req: Request, res: Response) {
   try {
     const response = await req.client.getAllChatsWithMessages();
     return res.status(200).json({ status: 'success', response: response });
@@ -109,7 +108,7 @@ export async function getAllChatsWithMessages(req: Request, res: any) {
 /**
  * Depreciado em favor de getMessages
  */
-export async function getAllMessagesInChat(req: Request, res: any) {
+export async function getAllMessagesInChat(req: Request, res: Response) {
   try {
     const { phone } = req.params;
     const {
@@ -138,7 +137,7 @@ export async function getAllMessagesInChat(req: Request, res: any) {
   }
 }
 
-export async function getAllNewMessages(req: Request, res: any) {
+export async function getAllNewMessages(req: Request, res: Response) {
   try {
     const response = await req.client.getAllNewMessages();
     return res.status(200).json({ status: 'success', response: response });
@@ -152,7 +151,7 @@ export async function getAllNewMessages(req: Request, res: any) {
   }
 }
 
-export async function getAllUnreadMessages(req: Request, res: any) {
+export async function getAllUnreadMessages(req: Request, res: Response) {
   try {
     const response = await req.client.getAllUnreadMessages();
     return res.status(200).json({ status: 'success', response: response });
@@ -166,7 +165,7 @@ export async function getAllUnreadMessages(req: Request, res: any) {
   }
 }
 
-export async function getChatById(req: Request, res: any) {
+export async function getChatById(req: Request, res: Response) {
   const { phone } = req.params;
   const { isGroup } = req.query;
 
@@ -189,7 +188,7 @@ export async function getChatById(req: Request, res: any) {
   }
 }
 
-export async function getMessageById(req: Request, res: any) {
+export async function getMessageById(req: Request, res: Response) {
   const session = req.session;
   const { messageId } = req.params;
 
@@ -202,7 +201,7 @@ export async function getMessageById(req: Request, res: any) {
   }
 }
 
-export async function getBatteryLevel(req: Request, res: any) {
+export async function getBatteryLevel(req: Request, res: Response) {
   try {
     const response = await req.client.getBatteryLevel();
     return res.status(200).json({ status: 'Success', response: response });
@@ -216,7 +215,7 @@ export async function getBatteryLevel(req: Request, res: any) {
   }
 }
 
-export async function getHostDevice(req: Request, res: any) {
+export async function getHostDevice(req: Request, res: Response) {
   try {
     const response = await req.client.getHostDevice();
     const phoneNumber = await req.client.getWid();
@@ -235,7 +234,7 @@ export async function getHostDevice(req: Request, res: any) {
   }
 }
 
-export async function getPhoneNumber(req: Request, res: any) {
+export async function getPhoneNumber(req: Request, res: Response) {
   try {
     const phoneNumber = await req.client.getWid();
     return res
@@ -251,7 +250,7 @@ export async function getPhoneNumber(req: Request, res: any) {
   }
 }
 
-export async function getBlockList(req: Request, res: any) {
+export async function getBlockList(req: Request, res: Response) {
   const response = await req.client.getBlockList();
 
   try {
@@ -270,7 +269,7 @@ export async function getBlockList(req: Request, res: any) {
   }
 }
 
-export async function deleteChat(req: Request, res: any) {
+export async function deleteChat(req: Request, res: Response) {
   const { phone } = req.body;
   const session = req.session;
 
@@ -284,7 +283,7 @@ export async function deleteChat(req: Request, res: any) {
     returnError(req, res, session, error);
   }
 }
-export async function deleteAllChats(req: Request, res: any) {
+export async function deleteAllChats(req: Request, res: Response) {
   try {
     const chats = await req.client.getAllChats();
     for (const chat of chats) {
@@ -301,7 +300,7 @@ export async function deleteAllChats(req: Request, res: any) {
   }
 }
 
-export async function clearChat(req: Request, res: any) {
+export async function clearChat(req: Request, res: Response) {
   const { phone } = req.body;
   const session = req.session;
 
@@ -316,7 +315,7 @@ export async function clearChat(req: Request, res: any) {
   }
 }
 
-export async function clearAllChats(req: Request, res: any) {
+export async function clearAllChats(req: Request, res: Response) {
   try {
     const chats = await req.client.getAllChats();
     for (const chat of chats) {
@@ -331,7 +330,7 @@ export async function clearAllChats(req: Request, res: any) {
   }
 }
 
-export async function archiveChat(req: Request, res: any) {
+export async function archiveChat(req: Request, res: Response) {
   const { phone, value = true } = req.body;
 
   try {
@@ -345,7 +344,7 @@ export async function archiveChat(req: Request, res: any) {
   }
 }
 
-export async function archiveAllChats(req: Request, res: any) {
+export async function archiveAllChats(req: Request, res: Response) {
   try {
     const chats = await req.client.getAllChats();
     for (const chat of chats) {
@@ -362,7 +361,7 @@ export async function archiveAllChats(req: Request, res: any) {
   }
 }
 
-export async function deleteMessage(req: Request, res: any) {
+export async function deleteMessage(req: Request, res: Response) {
   const { phone, messageId } = req.body;
 
   try {
@@ -378,7 +377,7 @@ export async function deleteMessage(req: Request, res: any) {
       .json({ status: 'error', message: 'Error on delete message', error: e });
   }
 }
-export async function reactMessage(req: Request, res: any) {
+export async function reactMessage(req: Request, res: Response) {
   const { msgId, reaction } = req.body;
 
   try {
@@ -397,7 +396,7 @@ export async function reactMessage(req: Request, res: any) {
   }
 }
 
-export async function reply(req: Request, res: any) {
+export async function reply(req: Request, res: Response) {
   const { phone, text, messageid } = req.body;
 
   try {
@@ -411,7 +410,7 @@ export async function reply(req: Request, res: any) {
   }
 }
 
-export async function forwardMessages(req: Request, res: any) {
+export async function forwardMessages(req: Request, res: Response) {
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
@@ -440,7 +439,7 @@ export async function forwardMessages(req: Request, res: any) {
   }
 }
 
-export async function markUnseenMessage(req: Request, res: any) {
+export async function markUnseenMessage(req: Request, res: Response) {
   const { phone } = req.body;
 
   try {
@@ -456,7 +455,7 @@ export async function markUnseenMessage(req: Request, res: any) {
   }
 }
 
-export async function blockContact(req: Request, res: any) {
+export async function blockContact(req: Request, res: Response) {
   const { phone } = req.body;
 
   try {
@@ -472,7 +471,7 @@ export async function blockContact(req: Request, res: any) {
   }
 }
 
-export async function unblockContact(req: Request, res: any) {
+export async function unblockContact(req: Request, res: Response) {
   const { phone } = req.body;
 
   try {
@@ -488,7 +487,7 @@ export async function unblockContact(req: Request, res: any) {
   }
 }
 
-export async function pinChat(req: Request, res: any) {
+export async function pinChat(req: Request, res: Response) {
   const { phone, state } = req.body;
 
   try {
@@ -509,7 +508,7 @@ export async function pinChat(req: Request, res: any) {
   }
 }
 
-export async function setProfilePic(req: Request, res: any) {
+export async function setProfilePic(req: Request, res: Response) {
   if (!req.file)
     return res
       .status(400)
@@ -535,7 +534,7 @@ export async function setProfilePic(req: Request, res: any) {
   }
 }
 
-export async function getUnreadMessages(req: Request, res: any) {
+export async function getUnreadMessages(req: Request, res: Response) {
   try {
     const response = await req.client.getUnreadMessages(false, false, true);
     return res.status(200).json({ status: 'success', response: response });
@@ -547,7 +546,7 @@ export async function getUnreadMessages(req: Request, res: any) {
   }
 }
 
-export async function getChatIsOnline(req: Request, res: any) {
+export async function getChatIsOnline(req: Request, res: Response) {
   const { phone } = req.params;
   try {
     const response = await req.client.getChatIsOnline(`${phone}@c.us`);
@@ -562,7 +561,7 @@ export async function getChatIsOnline(req: Request, res: any) {
   }
 }
 
-export async function getLastSeen(req: Request, res: any) {
+export async function getLastSeen(req: Request, res: Response) {
   const { phone } = req.params;
   try {
     const response = await req.client.getLastSeen(`${phone}@c.us`);
@@ -578,7 +577,7 @@ export async function getLastSeen(req: Request, res: any) {
   }
 }
 
-export async function getListMutes(req: Request, res: any) {
+export async function getListMutes(req: Request, res: Response) {
   const { type = 'all' } = req.params;
   try {
     const response = await req.client.getListMutes(type);
@@ -594,7 +593,7 @@ export async function getListMutes(req: Request, res: any) {
   }
 }
 
-export async function loadAndGetAllMessagesInChat(req: Request, res: any) {
+export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
   const { phone, includeMe = true, includeNotifications = false } = req.params;
   try {
     const response = await req.client.loadAndGetAllMessagesInChat(
@@ -611,7 +610,7 @@ export async function loadAndGetAllMessagesInChat(req: Request, res: any) {
       .json({ status: 'error', response: 'Error on open list', error: error });
   }
 }
-export async function getMessages(req: Request, res: any) {
+export async function getMessages(req: Request, res: Response) {
   const { phone } = req.params;
   const { count = 20, direction = 'before', id = null } = req.query;
   try {
@@ -629,7 +628,7 @@ export async function getMessages(req: Request, res: any) {
   }
 }
 
-export async function sendContactVcard(req: Request, res: any) {
+export async function sendContactVcard(req: Request, res: Response) {
   const { phone, contactsId, name = null, isGroup = false } = req.body;
   try {
     let response;
@@ -652,7 +651,7 @@ export async function sendContactVcard(req: Request, res: any) {
   }
 }
 
-export async function sendMute(req: Request, res: any) {
+export async function sendMute(req: Request, res: Response) {
   const { phone, time, type = 'hours', isGroup = false } = req.body;
 
   try {
@@ -670,7 +669,7 @@ export async function sendMute(req: Request, res: any) {
   }
 }
 
-export async function sendSeen(req: Request, res: any) {
+export async function sendSeen(req: Request, res: Response) {
   const { phone } = req.body;
   const session = req.session;
 
@@ -685,7 +684,7 @@ export async function sendSeen(req: Request, res: any) {
   }
 }
 
-export async function setChatState(req: Request, res: any) {
+export async function setChatState(req: Request, res: Response) {
   const { phone, chatstate, isGroup = false } = req.body;
 
   try {
@@ -705,7 +704,7 @@ export async function setChatState(req: Request, res: any) {
   }
 }
 
-export async function setTemporaryMessages(req: Request, res: any) {
+export async function setTemporaryMessages(req: Request, res: Response) {
   const { phone, value = true, isGroup = false } = req.body;
 
   try {
@@ -725,7 +724,7 @@ export async function setTemporaryMessages(req: Request, res: any) {
   }
 }
 
-export async function setTyping(req: Request, res: any) {
+export async function setTyping(req: Request, res: Response) {
   const { phone, value = true, isGroup = false } = req.body;
   try {
     let response;
@@ -743,7 +742,7 @@ export async function setTyping(req: Request, res: any) {
   }
 }
 
-export async function setRecording(req: Request, res: any) {
+export async function setRecording(req: Request, res: Response) {
   const { phone, value = true, duration, isGroup = false } = req.body;
   try {
     let response;
@@ -763,7 +762,7 @@ export async function setRecording(req: Request, res: any) {
   }
 }
 
-export async function checkNumberStatus(req: Request, res: any) {
+export async function checkNumberStatus(req: Request, res: Response) {
   const { phone } = req.params;
   try {
     let response;
@@ -782,7 +781,7 @@ export async function checkNumberStatus(req: Request, res: any) {
   }
 }
 
-export async function getContact(req: Request, res: any) {
+export async function getContact(req: Request, res: Response) {
   const { phone = true } = req.params;
   try {
     let response;
@@ -799,7 +798,7 @@ export async function getContact(req: Request, res: any) {
   }
 }
 
-export async function getAllContacts(req: Request, res: any) {
+export async function getAllContacts(req: Request, res: Response) {
   try {
     const response = await req.client.getAllContacts();
 
@@ -814,7 +813,7 @@ export async function getAllContacts(req: Request, res: any) {
   }
 }
 
-export async function getNumberProfile(req: Request, res: any) {
+export async function getNumberProfile(req: Request, res: Response) {
   const { phone = true } = req.params;
   try {
     let response;
@@ -833,7 +832,7 @@ export async function getNumberProfile(req: Request, res: any) {
   }
 }
 
-export async function getProfilePicFromServer(req: Request, res: any) {
+export async function getProfilePicFromServer(req: Request, res: Response) {
   const { phone = true } = req.params;
   try {
     let response;
@@ -852,7 +851,7 @@ export async function getProfilePicFromServer(req: Request, res: any) {
   }
 }
 
-export async function getStatus(req: Request, res: any) {
+export async function getStatus(req: Request, res: Response) {
   const { phone = true } = req.params;
   try {
     let response;
@@ -868,7 +867,7 @@ export async function getStatus(req: Request, res: any) {
   }
 }
 
-export async function setProfileStatus(req: Request, res: any) {
+export async function setProfileStatus(req: Request, res: Response) {
   const { status } = req.body;
   try {
     const response = await req.client.setProfileStatus(status);
@@ -881,7 +880,7 @@ export async function setProfileStatus(req: Request, res: any) {
       .json({ status: 'error', message: 'Error on set profile status' });
   }
 }
-export async function rejectCall(req: Request, res: any) {
+export async function rejectCall(req: Request, res: Response) {
   const { callId } = req.body;
   try {
     const response = await req.client.rejectCall(callId);
@@ -895,7 +894,7 @@ export async function rejectCall(req: Request, res: any) {
   }
 }
 
-export async function starMessage(req: Request, res: any) {
+export async function starMessage(req: Request, res: Response) {
   const { messageId, star = true } = req.body;
   try {
     const response = await req.client.starMessage(messageId, star);
@@ -911,7 +910,7 @@ export async function starMessage(req: Request, res: any) {
   }
 }
 
-export async function getReactions(req: Request, res: any) {
+export async function getReactions(req: Request, res: Response) {
   const messageId = req.params.id;
   try {
     const response = await req.client.getReactions(messageId);
@@ -927,7 +926,7 @@ export async function getReactions(req: Request, res: any) {
   }
 }
 
-export async function getVotes(req: Request, res: any) {
+export async function getVotes(req: Request, res: Response) {
   const messageId = req.params.id;
   try {
     const response = await req.client.getVotes(messageId);
@@ -940,7 +939,7 @@ export async function getVotes(req: Request, res: any) {
       .json({ status: 'error', message: 'Error on get votes', error: error });
   }
 }
-export async function chatWoot(req: Request, res: any) {
+export async function chatWoot(req: Request, res: Response) {
   const { session } = req.params;
   const client: any = clientsArray[session];
   if (client == null || client.status !== 'CONNECTED') return;

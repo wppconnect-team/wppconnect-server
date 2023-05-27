@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Request, Response } from 'express';
+
 import { createCatalogLink } from '../util/functions';
 
-export async function getProducts(req: any, res: any) {
+export async function getProducts(req: Request, res: Response) {
   const { phone, qnt } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -24,7 +26,7 @@ export async function getProducts(req: any, res: any) {
     });
 
   try {
-    const result = await req.client.getProducts(
+    const result = await req.client?.getProducts(
       phone as string,
       qnt as unknown as number
     );
@@ -38,7 +40,7 @@ export async function getProducts(req: any, res: any) {
   }
 }
 
-export async function getProductById(req: any, res: any) {
+export async function getProductById(req: Request, res: Response) {
   const { phone, id } = req.query;
   if (!phone || !id)
     return res.status(401).send({
@@ -57,7 +59,7 @@ export async function getProductById(req: any, res: any) {
       .json({ status: 'Error', message: 'Error on get product', error: error });
   }
 }
-export async function editProduct(req: any, res: any) {
+export async function editProduct(req: Request, res: Response) {
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -76,7 +78,7 @@ export async function editProduct(req: any, res: any) {
   }
 }
 
-export async function delProducts(req: any, res: any) {
+export async function delProducts(req: Request, res: Response) {
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -95,7 +97,7 @@ export async function delProducts(req: any, res: any) {
   }
 }
 
-export async function changeProductImage(req: any, res: any) {
+export async function changeProductImage(req: Request, res: Response) {
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -114,7 +116,7 @@ export async function changeProductImage(req: any, res: any) {
   }
 }
 
-export async function addProduct(req: any, res: any) {
+export async function addProduct(req: Request, res: Response) {
   const {
     name,
     image,
@@ -151,7 +153,7 @@ export async function addProduct(req: any, res: any) {
   }
 }
 
-export async function addProductImage(req: any, res: any) {
+export async function addProductImage(req: Request, res: Response) {
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -170,7 +172,7 @@ export async function addProductImage(req: any, res: any) {
   }
 }
 
-export async function removeProductImage(req: any, res: any) {
+export async function removeProductImage(req: Request, res: Response) {
   const { id, index } = req.body;
   if (!id || !index)
     return res.status(401).send({
@@ -189,7 +191,7 @@ export async function removeProductImage(req: any, res: any) {
   }
 }
 
-export async function getCollections(req: any, res: any) {
+export async function getCollections(req: Request, res: Response) {
   const { phone, qnt, max } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -212,7 +214,7 @@ export async function getCollections(req: any, res: any) {
   }
 }
 
-export async function createCollection(req: any, res: any) {
+export async function createCollection(req: Request, res: Response) {
   const { name, products } = req.body;
   if (!name || !products)
     return res.status(401).send({
@@ -231,7 +233,7 @@ export async function createCollection(req: any, res: any) {
   }
 }
 
-export async function editCollection(req: any, res: any) {
+export async function editCollection(req: Request, res: Response) {
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -250,7 +252,7 @@ export async function editCollection(req: any, res: any) {
   }
 }
 
-export async function deleteCollection(req: any, res: any) {
+export async function deleteCollection(req: Request, res: Response) {
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -269,7 +271,7 @@ export async function deleteCollection(req: any, res: any) {
   }
 }
 
-export async function setProductVisibility(req: any, res: any) {
+export async function setProductVisibility(req: Request, res: Response) {
   const { id, value } = req.body;
   if (!id || !value)
     return res.status(401).send({
@@ -288,7 +290,7 @@ export async function setProductVisibility(req: any, res: any) {
   }
 }
 
-export async function updateCartEnabled(req: any, res: any) {
+export async function updateCartEnabled(req: Request, res: Response) {
   const { enabled } = req.body;
   if (!enabled)
     return res.status(401).send({
@@ -307,7 +309,7 @@ export async function updateCartEnabled(req: any, res: any) {
   }
 }
 
-export async function sendLinkCatalog(req: any, res: any) {
+export async function sendLinkCatalog(req: Request, res: Response) {
   const { phones, message } = req.body;
   if (!phones)
     return res.status(401).send({
