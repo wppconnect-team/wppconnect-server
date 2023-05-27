@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import bcrypt from 'bcrypt';
+import { NextFunction, Request, Response } from 'express';
 
 import { clientsArray } from '../util/sessionUtil';
 
@@ -21,7 +22,7 @@ function formatSession(session: string) {
   return session.split(':')[0];
 }
 
-const verifyToken = (req: any, res: any, next: any) => {
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const secureToken = req.serverOptions.secretKey;
 
   const { session } = req.params;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { Request } from '../types/Request';
+import { Request, Response } from 'express';
 
-export async function addNewLabel(req: Request, res: any) {
+export async function addNewLabel(req: Request, res: Response) {
   const { name, options } = req.body;
   if (!name)
     return res.status(401).send({
@@ -35,7 +35,7 @@ export async function addNewLabel(req: Request, res: any) {
   }
 }
 
-export async function addOrRemoveLabels(req: Request, res: any) {
+export async function addOrRemoveLabels(req: Request, res: Response) {
   const { chatIds, options } = req.body;
   if (!chatIds || !options)
     return res.status(401).send({
@@ -54,7 +54,7 @@ export async function addOrRemoveLabels(req: Request, res: any) {
   }
 }
 
-export async function getAllLabels(req: Request, res: any) {
+export async function getAllLabels(req: Request, res: Response) {
   try {
     const result = await req.client.getAllLabels();
     res.status(201).json({ status: 'success', response: result });
@@ -67,7 +67,7 @@ export async function getAllLabels(req: Request, res: any) {
   }
 }
 
-export async function deleteAllLabels(req: Request, res: any) {
+export async function deleteAllLabels(req: Request, res: Response) {
   try {
     const result = await req.client.deleteAllLabels();
     res.status(201).json({ status: 'success', response: result });
@@ -80,7 +80,7 @@ export async function deleteAllLabels(req: Request, res: any) {
   }
 }
 
-export async function deleteLabel(req: Request, res: any) {
+export async function deleteLabel(req: Request, res: Response) {
   const { id } = req.params;
   try {
     const result = await req.client.deleteLabel(id);

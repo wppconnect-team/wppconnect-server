@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-export async function healthz(req: any, res: any) {
+import { Request, Response } from 'express';
+
+export async function healthz(req: Request, res: Response) {
   const healthcheck = {
     uptime: process.uptime(),
     message: 'OK',
@@ -28,7 +30,7 @@ export async function healthz(req: any, res: any) {
   }
 }
 
-export async function unhealthy(req: any, res: any) {
+export async function unhealthy(req: Request, res: Response) {
   res.status(503).send();
   process.exit();
 }

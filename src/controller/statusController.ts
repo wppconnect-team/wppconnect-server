@@ -1,6 +1,5 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
-import { Request } from '../types/Request';
 import { unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {
@@ -14,7 +13,7 @@ async function returnSucess(res: Response, data: any) {
   res.status(201).json({ status: 'success', response: data, mapper: 'return' });
 }
 
-export async function sendTextStorie(req: Request, res: any) {
+export async function sendTextStorie(req: Request, res: Response) {
   const { text, options } = req.body;
 
   if (!text)
@@ -34,7 +33,7 @@ export async function sendTextStorie(req: Request, res: any) {
   }
 }
 
-export async function sendImageStorie(req: Request, res: any) {
+export async function sendImageStorie(req: Request, res: Response) {
   const { path, options } = req.body;
 
   if (!path && !req.file)
@@ -42,7 +41,7 @@ export async function sendImageStorie(req: Request, res: any) {
       message: 'Sending the image is mandatory',
     });
 
-  const pathFile = path || req.file.path;
+  const pathFile = path || req.file?.path;
 
   try {
     const results: any = [];
@@ -56,7 +55,7 @@ export async function sendImageStorie(req: Request, res: any) {
   }
 }
 
-export async function sendVideoStorie(req: Request, res: any) {
+export async function sendVideoStorie(req: Request, res: Response) {
   const { path } = req.body;
 
   if (!path && !req.file)
@@ -64,7 +63,7 @@ export async function sendVideoStorie(req: Request, res: any) {
       message: 'Sending the Video is mandatory',
     });
 
-  const pathFile = path || req.file.path;
+  const pathFile = path || req.file?.path;
 
   try {
     const results: any = [];

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { Request } from '../types/Request';
+import { NextFunction, Request, Response } from 'express';
+
 import { contactToArray } from '../util/functions';
 
 export default async function statusConnection(
   req: Request,
-  res: any,
-  next: any
+  res: Response,
+  next: NextFunction
 ) {
   try {
     const numbers: any = [];
