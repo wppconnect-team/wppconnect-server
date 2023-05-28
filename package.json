@@ -47,7 +47,7 @@
     "qrcode": "^1.5.3",
     "socket.io": "^4.6.1",
     "swagger-ui-express": "^4.6.3",
-    "winston": "^3.8.2"
+    "winston": "^3.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.5",
