@@ -2256,13 +2256,13 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-2.0.4.tgz#3982ee6f8b42845437fc4d391e93ac5d9da52f0f"
   integrity sha512-0xRgjgDLdz6G7+vvDLlaRpFatJaJ69uTalZLRSMX5B3VUrDmXcrVA3+6fXXQgmYz7bY9AAgs348XQdmtLsK41A==
 
-"@wppconnect-team/wppconnect@^1.24.0":
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.24.0.tgz#5006a10fe6d1621d143570af6423e4f270914373"
-  integrity sha512-VCLNBCN1QsUQi0v7d9/NwdCwekwplkIJhTR8XetnzrHdATdxXFBsLq21madmzvpijZUEj83SJy/O4eAgYy4Q0Q==
+"@wppconnect-team/wppconnect@^1.25.0":
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.25.0.tgz#dd4f29708fd2a8d1af4174ff8a184ee9437bc906"
+  integrity sha512-DNsn51dhn9IC9lqZnx1QhViTSQVg+WpeAXggkvmI+GbnieZlgVh58fnKg0l+l68oB5k4oaMxFzZunn5cX2lluA==
   dependencies:
-    "@wppconnect/wa-js" "^2.23.5"
-    "@wppconnect/wa-version" "^1.2.27"
+    "@wppconnect/wa-js" "^2.24.2"
+    "@wppconnect/wa-version" "^1.2.42"
     atob "^2.1.2"
     axios "^1.4.0"
     boxen "^5.1.2"
@@ -2288,23 +2288,23 @@
     sharp "^0.32.1"
     tmp "^0.2.1"
     tree-kill "^1.2.2"
-    winston "^3.8.2"
+    winston "^3.9.0"
     ws "^8.13.0"
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@wppconnect/wa-js@^2.23.5":
-  version "2.24.0"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.24.0.tgz#caf0dd2a05227db965ccd7426009bcdf279d9c5a"
-  integrity sha512-r5yVX7NqTD3mIaCicZhVhjW2O5ao3IWeULZavTBFS8epIc52Ey5JAA/ZDLLMj201hx1g5yHOsBbzFE/+L0dMnQ==
+"@wppconnect/wa-js@^2.24.2":
+  version "2.24.2"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-js/-/wa-js-2.24.2.tgz#2dbc5d9f336af765ae06e18ef806901c9d0459bc"
+  integrity sha512-dlnaNq6VRNSwg90ww0+0QRovQR9NsGCcMyhkfX2iCxH1BPZSsVCmnNTMBsI5y108mXW2iCjCEKU5O475aP5Vdw==
 
-"@wppconnect/wa-version@^1.2.27":
-  version "1.2.34"
-  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.2.34.tgz#34c28ea0357f5d089c608b521af7e70fae554df5"
-  integrity sha512-a5oGREERbwmqnRMtaz50GQoTyIgAnIV8oiYFwFF/1zRXOuRVZNlJEQ20C5vUTGhM4d5xr+xdo+c3UV9YSoAhtQ==
+"@wppconnect/wa-version@^1.2.42":
+  version "1.2.42"
+  resolved "https://registry.yarnpkg.com/@wppconnect/wa-version/-/wa-version-1.2.42.tgz#861756dc42cf86c77c3daef8901627930133337f"
+  integrity sha512-ovinXvU5Ft8ObRDoMlBxBsZUBi1NNvtGGoKDmy9JDnqYLRf8JgdBDttv3EalmDm8o9raVL1VBI3XqQjbR+Kvrg==
   dependencies:
     node-fetch "^2.6.11"
-    semver "^7.5.0"
+    semver "^7.5.1"
 
 JSONStream@^1.0.4:
   version "1.3.5"
@@ -7989,6 +7989,13 @@ semver@^7.0.0, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8:
   dependencies:
     lru-cache "^6.0.0"
 
+semver@^7.5.1:
+  version "7.5.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.1.tgz#c90c4d631cf74720e46b21c1d37ea07edfab91ec"
+  integrity sha512-Wvss5ivl8TMRZXXESstBA4uR5iXgEN/VC5/sOcuXdVLzcdkz4HWetIoRfG5gb5X+ij/G9rw9YoGn3QoQ8OCSpw==
+  dependencies:
+    lru-cache "^6.0.0"
+
 semver@~7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.0.0.tgz#5f3ca35761e47e05b206c6daff2cf814f0316b8e"
@@ -9170,23 +9177,6 @@ winston-transport@^4.5.0:
     logform "^2.3.2"
     readable-stream "^3.6.0"
     triple-beam "^1.3.0"
-
-winston@^3.8.2:
-  version "3.8.2"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-3.8.2.tgz#56e16b34022eb4cff2638196d9646d7430fdad50"
-  integrity sha512-MsE1gRx1m5jdTTO9Ld/vND4krP2To+lgDoMEHGGa4HIlAUyXJtfc7CxQcGXVyz2IBpw5hbFkj2b/AtUdQwyRew==
-  dependencies:
-    "@colors/colors" "1.5.0"
-    "@dabh/diagnostics" "^2.0.2"
-    async "^3.2.3"
-    is-stream "^2.0.0"
-    logform "^2.4.0"
-    one-time "^1.0.0"
-    readable-stream "^3.4.0"
-    safe-stable-stringify "^2.3.1"
-    stack-trace "0.0.x"
-    triple-beam "^1.3.0"
-    winston-transport "^4.5.0"
 
 winston@^3.9.0:
   version "3.9.0"
