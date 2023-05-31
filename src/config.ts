@@ -21,6 +21,10 @@ export default {
     onPollResponse: true,
     onRevokedMessage: true,
   },
+  chatwoot: {
+    sendQrCode: true,
+    sendStatus: true,
+  },
   archive: {
     enable: false,
     waitTime: 10,
