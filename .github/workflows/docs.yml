@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  update-lock:
+  generate-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
