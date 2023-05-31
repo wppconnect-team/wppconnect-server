@@ -809,6 +809,7 @@ routes.post(
   upload.single('file'),
   MiscController.restoreAllSessions
 );
+routes.get('/api/:session/take-screenshot', MiscController.takeScreenshot);
 
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 

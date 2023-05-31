@@ -109,3 +109,27 @@ export async function restoreAllSessions(req: Request, res: Response) {
     });
   }
 }
+
+export async function takeScreenshot(req: Request, res: Response) {
+  /**
+   #swagger.tags = ["Misc"]
+   #swagger.autoBody=false
+    #swagger.security = [{
+          "bearerAuth": []
+    }]
+    #swagger.parameters["session"] = {
+    schema: 'NERDWHATS_AMERICA'
+    }
+  */
+
+  try {
+    const result = await (req.client as any)?.takeScreenshot();
+    return res.status(200).json(result);
+  } catch (error: any) {
+    return res.status(500).json({
+      status: false,
+      message: 'Error on take screenshot or not implemented yet',
+      error: error,
+    });
+  }
+}
