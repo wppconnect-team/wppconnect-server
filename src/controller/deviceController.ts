@@ -601,6 +601,36 @@ export async function archiveAllChats(req: Request, res: Response) {
   }
 }
 
+export async function getAllChatsArchiveds(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Chat"]
+   * #swagger.description = 'Retrieves all archived chats.'
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
+  try {
+    const chats = await req.client.getAllChats();
+    const archived = [] as any;
+    for (const chat of chats) {
+      if (chat.archive === true) {
+        archived.push(chat);
+      }
+    }
+    return res.status(201).json(archived);
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error on archive all chats',
+      error: e,
+    });
+  }
+}
 export async function deleteMessage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
