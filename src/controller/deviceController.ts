@@ -1815,3 +1815,31 @@ export async function chatWoot(req: Request, res: Response) {
     });
   }
 }
+export async function getPlatformFromMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Misc"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["messageId"] = {
+      schema: '<messageId>'
+     }
+   */
+  try {
+    const result = await req.client.getPlatformFromMessage(
+      req.params.messageId
+    );
+    return res.status(200).json(result);
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error on get get platform from message',
+      error: e,
+    });
+  }
+}

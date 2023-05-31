@@ -58,6 +58,11 @@ routes.get(
   SessionController.getMediaByMessage
 );
 routes.get(
+  '/api/:session/get-platform-from-message/:messageId',
+  verifyToken,
+  DeviceController.getPlatformFromMessage
+);
+routes.get(
   '/api/:session/status-session',
   verifyToken,
   SessionController.getSessionState
