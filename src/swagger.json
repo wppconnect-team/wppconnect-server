@@ -5734,6 +5734,118 @@
         ]
       }
     },
+    "/api/{secretkey}/backup-sessions": {
+      "get": {
+        "tags": ["Misc"],
+        "description": "Please, open the router in your browser, in swagger this not run",
+        "produces": ["application/zip"],
+        "parameters": [
+          {
+            "name": "secretkey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "THISISMYSECURETOKEN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A ZIP file contaings your backup. Please, open this link in your browser",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/{secretkey}/restore-sessions": {
+      "post": {
+        "tags": ["Misc"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "secretkey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "THISISMYSECURETOKEN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/take-screenshot": {
+      "get": {
+        "tags": ["Misc"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/chatwoot": {
       "post": {
         "tags": ["Misc"],
