@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Whatsapp } from '@wppconnect-team/wppconnect';
 import { EventEmitter } from 'events';
 
 export const chromiumArgs = [
@@ -38,6 +39,7 @@ export const chromiumArgs = [
   '--ignore-ssl-errors',
   '--ignore-certificate-errors-spki-list',
 ];
-export const clientsArray = [];
+// eslint-disable-next-line prefer-const
+export let clientsArray: Whatsapp[] = [];
 export const sessions = [];
 export const eventEmitter = new EventEmitter();

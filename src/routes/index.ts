@@ -24,6 +24,7 @@ import { encryptSession } from '../controller/encryptController';
 import * as GroupController from '../controller/groupController';
 import * as LabelsController from '../controller/labelsController';
 import * as MessageController from '../controller/messageController';
+import * as MiscController from '../controller/miscController';
 import * as OrderController from '../controller/orderController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
@@ -801,6 +802,12 @@ routes.get(
   verifyToken,
   statusConnection,
   OrderController.getOrderbyMsg
+);
+routes.get('/api/:secretkey/backup-sessions', MiscController.backupAllSessions);
+routes.post(
+  '/api/:secretkey/restore-sessions',
+  upload.single('file'),
+  MiscController.restoreAllSessions
 );
 
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
