@@ -37,6 +37,6 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'docs: Improovment on docs'
-          file_pattern: swagger.json
+          file_pattern: '*.json src/*.json'
           commit_user_name: github-actions[bot]
           commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
