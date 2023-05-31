@@ -605,3 +605,42 @@ export async function subscribePresence(req: Request, res: Response) {
     });
   }
 }
+
+export async function editBusinessProfile(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Profile"]
+   * #swagger.description = 'Edit your bussiness profile'
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $adress: 'Av. Nossa Senhora de Copacabana, 315',
+        $email: 'test@test.com.br',
+        $categories: {
+          $id: "133436743388217",
+          $localized_display_name: "Artes e entretenimento",
+          $not_a_biz: false,
+        },
+        $website: [
+          "https://www.wppconnect.io",
+          "https://www.teste2.com.br",
+        ],
+      }
+     }
+   */
+  try {
+    return res.status(200).json(await req.client.editBusinessProfile(req.body));
+  } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error on edit business profile',
+      error: error,
+    });
+  }
+}

@@ -784,6 +784,12 @@ routes.post(
 );
 
 // Business
+routes.post(
+  '/api/:session/edit-business-profile',
+  verifyToken,
+  statusConnection,
+  SessionController.editBusinessProfile
+);
 routes.get(
   '/api/:session/get-business-profiles-products',
   verifyToken,
