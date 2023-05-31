@@ -50,6 +50,16 @@ function returnError(
 }
 
 export async function getBusinessProfilesProducts(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
   const session = req.session;
   const { phone } = req.body;
 
@@ -66,6 +76,22 @@ export async function getBusinessProfilesProducts(req: Request, res: Response) {
   }
 }
 export async function getOrderbyMsg(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $messageId: '<message_id>',
+      }
+     }
+   */
   const session = req.session;
   const { messageId } = req.body;
 
