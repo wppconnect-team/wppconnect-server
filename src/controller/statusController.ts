@@ -14,6 +14,23 @@ async function returnSucess(res: Response, data: any) {
 }
 
 export async function sendTextStorie(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Status Stories"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $text: 'My new storie',
+        $options: { backgroundColor: '#0275d8', font: 2},
+      }
+     }
+   */
   const { text, options } = req.body;
 
   if (!text)
@@ -34,6 +51,22 @@ export async function sendTextStorie(req: Request, res: Response) {
 }
 
 export async function sendImageStorie(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Status Stories"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $path: 'Path of your image',
+      }
+     }
+   */
   const { path, options } = req.body;
 
   if (!path && !req.file)
@@ -56,6 +89,22 @@ export async function sendImageStorie(req: Request, res: Response) {
 }
 
 export async function sendVideoStorie(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Status Stories"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $path: 'Path of your video',
+      }
+     }
+   */
   const { path } = req.body;
 
   if (!path && !req.file)

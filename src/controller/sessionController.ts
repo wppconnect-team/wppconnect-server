@@ -99,6 +99,19 @@ export async function download(message: any, client: any, logger: any) {
 }
 
 export async function startAllSessions(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["secretkey"] = {
+      schema: 'THISISMYSECURECODE'
+     }
+   */
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -130,6 +143,19 @@ export async function startAllSessions(req: Request, res: Response) {
 }
 
 export async function showAllSessions(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["secretkey"] = {
+      schema: ''
+     }
+   */
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -158,6 +184,22 @@ export async function showAllSessions(req: Request, res: Response) {
 }
 
 export async function startSession(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $waitQrCode: false,
+      }
+     }
+   */
   const session = req.session;
   const { waitQrCode = false } = req.body;
 
@@ -166,6 +208,22 @@ export async function startSession(req: Request, res: Response) {
 }
 
 export async function closeSession(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $clearSession: false,
+      }
+     }
+   */
   const session = req.session;
   const { clearSession = false } = req.body;
   try {
@@ -203,6 +261,16 @@ export async function closeSession(req: Request, res: Response) {
 }
 
 export async function logOutSession(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
   try {
     const session = req.session;
     await req.client.logout();
@@ -225,6 +293,16 @@ export async function logOutSession(req: Request, res: Response) {
 }
 
 export async function checkConnectionSession(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
   try {
     await req.client.isConnected();
 
@@ -235,6 +313,22 @@ export async function checkConnectionSession(req: Request, res: Response) {
 }
 
 export async function downloadMediaByMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $messageId: '<messageId>',
+      }
+     }
+   */
   const client = req.client;
   const { messageId } = req.body;
 
@@ -275,6 +369,19 @@ export async function downloadMediaByMessage(req: Request, res: Response) {
 }
 
 export async function getMediaByMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["session"] = {
+      schema: 'messageId'
+     }
+   */
   const client = req.client;
   const { messageId } = req.params;
 
@@ -309,6 +416,22 @@ export async function getMediaByMessage(req: Request, res: Response) {
 }
 
 export async function getSessionState(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $waitQrCode: false,
+      }
+     }
+   */
   try {
     const { waitQrCode = false } = req.body;
     const client = req.client;
@@ -337,6 +460,16 @@ export async function getSessionState(req: Request, res: Response) {
 }
 
 export async function getQrCode(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
   try {
     if (req?.client?.urlcode) {
       const qr = req.client.urlcode
@@ -373,6 +506,17 @@ export async function getQrCode(req: Request, res: Response) {
 }
 
 export async function killServiceWorker(req: Request, res: Response) {
+  /**
+   * #swagger.ignore=true
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
   try {
     return res
       .status(200)
@@ -388,6 +532,17 @@ export async function killServiceWorker(req: Request, res: Response) {
 }
 
 export async function restartService(req: Request, res: Response) {
+  /**
+   * #swagger.ignore=true
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+   */
   try {
     return res
       .status(200)
@@ -402,6 +557,24 @@ export async function restartService(req: Request, res: Response) {
 }
 
 export async function subscribePresence(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Misc"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $phone: '5521999999999',
+        $isGroup: false,
+        $all: 'false',
+      }
+     }
+   */
   try {
     const { phone, isGroup = false, all = false } = req.body;
 

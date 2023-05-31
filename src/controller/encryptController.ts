@@ -22,6 +22,16 @@ export async function encryptSession(
   req: Request,
   res: Response
 ): Promise<any> {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.parameters['secretkey'] = {
+       schema: 'THISISMYSECURETOKEN',
+     }
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.autoHeaders = false
+   */
   const { session, secretkey } = req.params;
   const { authorization: token } = req.headers;
   const secureTokenEnv = req.serverOptions.secretKey;

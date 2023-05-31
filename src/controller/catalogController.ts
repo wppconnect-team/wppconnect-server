@@ -18,6 +18,24 @@ import { Request, Response } from 'express';
 import { createCatalogLink } from '../util/functions';
 
 export async function getProducts(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["phone"] = {
+      in: 'query',
+      schema: '5521999999999',
+     }
+     #swagger.parameters["qnt"] = {
+      in: 'query',
+      schema: '10',
+     }
+   */
   const { phone, qnt } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -41,6 +59,24 @@ export async function getProducts(req: Request, res: Response) {
 }
 
 export async function getProductById(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["phone"] = {
+      in: 'query',
+      schema: '5521999999999',
+     }
+     #swagger.parameters["id"] = {
+      in: 'query',
+      schema: '10',
+     }
+   */
   const { phone, id } = req.query;
   if (!phone || !id)
     return res.status(401).send({
@@ -60,6 +96,25 @@ export async function getProductById(req: Request, res: Response) {
   }
 }
 export async function editProduct(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<product_id>',
+        $options: {
+          $name: 'New name for product',
+        }
+      }
+     }
+   */
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -79,6 +134,22 @@ export async function editProduct(req: Request, res: Response) {
 }
 
 export async function delProducts(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<product_id>',
+      }
+     }
+   */
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -98,6 +169,23 @@ export async function delProducts(req: Request, res: Response) {
 }
 
 export async function changeProductImage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<product_id>',
+        $base64: '<base64_string>',
+      }
+     }
+   */
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -117,6 +205,28 @@ export async function changeProductImage(req: Request, res: Response) {
 }
 
 export async function addProduct(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $name: 'Product name',
+        $image: '<base64_string>',
+        $description: 'Description for your product',
+        $price: '8890',
+        $url: 'http://link_for_your_product.com',
+        $retailerId: 'SKU001',
+        $currency: 'BRL',
+      }
+     }
+   */
   const {
     name,
     image,
@@ -154,6 +264,23 @@ export async function addProduct(req: Request, res: Response) {
 }
 
 export async function addProductImage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<product_id>',
+        $base64: '<base64_string>',
+      }
+     }
+   */
   const { id, base64 } = req.body;
   if (!id || !base64)
     return res.status(401).send({
@@ -173,6 +300,23 @@ export async function addProductImage(req: Request, res: Response) {
 }
 
 export async function removeProductImage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<product_id>',
+        $index: '1',
+      }
+     }
+   */
   const { id, index } = req.body;
   if (!id || !index)
     return res.status(401).send({
@@ -192,6 +336,25 @@ export async function removeProductImage(req: Request, res: Response) {
 }
 
 export async function getCollections(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["phone"] = {
+      schema: '5521999999999'
+     }
+     #swagger.parameters["qnt"] = {
+      schema: '10'
+     }
+     #swagger.parameters["max"] = {
+      schema: '10'
+     }
+   */
   const { phone, qnt, max } = req.query;
   if (!phone)
     return res.status(401).send({
@@ -215,6 +378,23 @@ export async function getCollections(req: Request, res: Response) {
 }
 
 export async function createCollection(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $name: 'Collection name',
+        $products: ['<id_product1>', '<id_product2>'],
+      }
+     }
+   */
   const { name, products } = req.body;
   if (!name || !products)
     return res.status(401).send({
@@ -234,6 +414,25 @@ export async function createCollection(req: Request, res: Response) {
 }
 
 export async function editCollection(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<id_product>',
+        $options: {
+          name: 'New name for collection',
+        },
+      }
+     }
+   */
   const { id, options } = req.body;
   if (!id || !options)
     return res.status(401).send({
@@ -253,6 +452,22 @@ export async function editCollection(req: Request, res: Response) {
 }
 
 export async function deleteCollection(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<id_product>',
+      }
+     }
+   */
   const { id } = req.body;
   if (!id)
     return res.status(401).send({
@@ -272,6 +487,23 @@ export async function deleteCollection(req: Request, res: Response) {
 }
 
 export async function setProductVisibility(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $id: '<id_product>',
+        $value: false,
+      }
+     }
+   */
   const { id, value } = req.body;
   if (!id || !value)
     return res.status(401).send({
@@ -291,6 +523,22 @@ export async function setProductVisibility(req: Request, res: Response) {
 }
 
 export async function updateCartEnabled(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Catalog & Bussiness"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $enabled: true,
+      }
+     }
+   */
   const { enabled } = req.body;
   if (!enabled)
     return res.status(401).send({
@@ -310,6 +558,23 @@ export async function updateCartEnabled(req: Request, res: Response) {
 }
 
 export async function sendLinkCatalog(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $phones: ['<array_phone_id'],
+        $message: 'Message',
+      }
+     }
+   */
   const { phones, message } = req.body;
   if (!phones)
     return res.status(401).send({
