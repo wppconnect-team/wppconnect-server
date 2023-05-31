@@ -284,13 +284,13 @@ export default class CreateSessionUtil {
   }
 
   getClient(session: any) {
-    let client = clientsArray[session] as any;
+    let client = clientsArray[session];
 
     if (!client)
-      client = (clientsArray as any)[session] = {
+      client = clientsArray[session] = {
         status: null,
         session: session,
-      };
+      } as any;
     return client;
   }
 }
