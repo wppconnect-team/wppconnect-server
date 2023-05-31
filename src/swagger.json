@@ -5598,6 +5598,82 @@
         ]
       }
     },
+    "/api/{session}/edit-business-profile": {
+      "post": {
+        "tags": ["Profile"],
+        "description": "Edit your bussiness profile",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "adress": {
+                  "type": "string",
+                  "example": "Av. Nossa Senhora de Copacabana, 315"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test@test.com.br"
+                },
+                "categories": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "133436743388217"
+                    },
+                    "localized_display_name": {
+                      "type": "string",
+                      "example": "Artes e entretenimento"
+                    },
+                    "not_a_biz": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  },
+                  "required": ["id", "localized_display_name", "not_a_biz"]
+                },
+                "website": {
+                  "type": "array",
+                  "example": [
+                    "https://www.wppconnect.io",
+                    "https://www.teste2.com.br"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": ["adress", "email", "categories", "website"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/get-business-profiles-products": {
       "get": {
         "tags": ["Catalog & Bussiness"],
