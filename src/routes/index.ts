@@ -333,6 +333,13 @@ routes.get(
   statusConnection,
   DeviceController.getAllChats
 );
+
+routes.get(
+  '/api/:session/all-chats-archived',
+  verifyToken,
+  statusConnection,
+  DeviceController.getAllChatsArchiveds
+);
 routes.get(
   '/api/:session/all-chats-with-messages',
   verifyToken,
