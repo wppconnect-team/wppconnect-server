@@ -263,6 +263,7 @@ export async function closeSession(req: Request, res: Response) {
 export async function logOutSession(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
+   * #swagger.description = 'This route logout and delete session data'
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -274,6 +275,14 @@ export async function logOutSession(req: Request, res: Response) {
   try {
     const session = req.session;
     await req.client.logout();
+    //await req.client.close();
+    delete clientsArray[req.session];
+    await fs.promises.rm(config.customUserDataDir + req.session, {
+      recursive: true,
+    });
+    await fs.promises.rm(
+      __dirname + `../../../tokens/${req.session}.data.json`
+    );
 
     req.io.emit('whatsapp-status', false);
     callWebHook(req.client, req, 'logoutsession', {
