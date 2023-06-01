@@ -193,10 +193,22 @@ export async function startSession(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $waitQrCode: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              webhook: { type: "string" },
+              waitQrCode: { type: "boolean" },
+            }
+          },
+          example: {
+            webhook: "https://webhook.site/7cc2944d-3967-4cea-988c-d57ea80bce5f",
+            waitQrCode: false,
+          }
+        }
       }
      }
    */
@@ -217,10 +229,20 @@ export async function closeSession(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $clearSession: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              clearSession: { type: "boolean" },
+            }
+          },
+          example: {
+            clearSession: false,
+          }
+        }
       }
      }
    */
@@ -331,10 +353,20 @@ export async function downloadMediaByMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $messageId: '<messageId>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              messageId: { type: "string" },
+            }
+          },
+          example: {
+            messageId: '<messageId>'
+          }
+        }
       }
      }
    */
@@ -434,10 +466,20 @@ export async function getSessionState(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $waitQrCode: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              waitQrCode: { type: "boolean" },
+            }
+          },
+          example: {
+            waitQrCode: false
+          }
+        }
       }
      }
    */
@@ -575,12 +617,24 @@ export async function subscribePresence(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $all: 'false',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              all: { type: "boolean" },
+            }
+          },
+          example: {
+            phone: '5521999999999',
+            isGroup: false,
+            all: false,
+          }
+        }
       }
      }
    */
@@ -640,6 +694,36 @@ export async function editBusinessProfile(req: Request, res: Response) {
           "https://www.wppconnect.io",
           "https://www.teste2.com.br",
         ],
+      }
+     }
+     
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              adress: { type: "string" },
+              email: { type: "string" },
+              categories: { type: "object" },
+              websites: { type: "array" },
+            }
+          },
+          example: {
+            adress: 'Av. Nossa Senhora de Copacabana, 315',
+            email: 'test@test.com.br',
+            categories: {
+              $id: "133436743388217",
+              $localized_display_name: "Artes e entretenimento",
+              $not_a_biz: false,
+            },
+            website: [
+              "https://www.wppconnect.io",
+              "https://www.teste2.com.br",
+            ],
+          }
+        }
       }
      }
    */
