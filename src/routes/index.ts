@@ -826,6 +826,7 @@ routes.post(
   MiscController.restoreAllSessions
 );
 routes.get('/api/:session/take-screenshot', MiscController.takeScreenshot);
+routes.post('/api/:session/set-limit', MiscController.setLimit);
 
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 
