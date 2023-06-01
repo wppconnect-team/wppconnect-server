@@ -84,6 +84,10 @@ routes.post(
   SessionController.logOutSession
 );
 routes.post(
+  '/api/:session/:secretkey/clear-session-data',
+  MiscController.clearSessionData
+);
+routes.post(
   '/api/:session/close-session',
   verifyToken,
   SessionController.closeSession
