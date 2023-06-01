@@ -24,12 +24,12 @@ import { promisify } from 'util';
 import config from '../config';
 import { convert } from '../mapper/index';
 import { ServerOptions } from '../types/ServerOptions';
+import aws from 'aws-sdk';
 
-let mime: any, crypto: any, aws: any;
+let mime: any, crypto: any; //, aws: any;
 if (config.webhook.uploadS3) {
   mime = config.webhook.uploadS3 ? mimetypes : null;
   crypto = config.webhook.uploadS3 ? Crypto : null;
-  aws = config.webhook.uploadS3 ? import('aws-sdk') : null;
 }
 
 export function contactToArray(number: any, isGroup?: boolean) {
@@ -135,12 +135,20 @@ async function autoDownload(client: any, req: any, message: any) {
       const buffer = await client.decryptFile(message);
       if (req.serverOptions.webhook.uploadS3) {
         const hashName = crypto.randomBytes(24).toString('hex');
-        const fileName = `${hashName}.${mime.extension(message.mimetype)}`;
 
         const s3 = new aws.S3();
+        const bucketName =
+          config.webhook.awsBucketName && config.webhook.awsBucketName !== ''
+            ? config.webhook.awsBucketName
+            : client.session;
+        const fileName = `${
+          config.webhook.awsBucketName && config.webhook.awsBucketName !== ''
+            ? client.session + '/'
+            : ''
+        }${hashName}.${mime.extension(message.mimetype)}`;
 
         const params = {
-          Bucket: client.session,
+          Bucket: bucketName,
           Key: fileName,
           Body: buffer,
           ACL: 'public-read',
