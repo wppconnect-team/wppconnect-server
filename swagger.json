@@ -294,20 +294,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "clearSession": {
-                  "type": "boolean",
-                  "example": false
-                }
-              },
-              "required": ["clearSession"]
-            }
           }
         ],
         "responses": {
@@ -322,7 +308,25 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clearSession": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "clearSession": false
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/qrcode-session": {
@@ -368,20 +372,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "waitQrCode": {
-                  "type": "boolean",
-                  "example": false
-                }
-              },
-              "required": ["waitQrCode"]
-            }
           }
         ],
         "responses": {},
@@ -389,7 +379,29 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhook": {
+                    "type": "string"
+                  },
+                  "waitQrCode": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "webhook": "https://webhook.site/7cc2944d-3967-4cea-988c-d57ea80bce5f",
+                "waitQrCode": false
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/logout-session": {
@@ -472,20 +484,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "clearSession": {
-                  "type": "boolean",
-                  "example": false
-                }
-              },
-              "required": ["clearSession"]
-            }
           }
         ],
         "responses": {
@@ -500,7 +498,25 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clearSession": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "clearSession": false
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/subscribe-presence": {
@@ -516,28 +532,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "phone": {
-                  "type": "string",
-                  "example": "5521999999999"
-                },
-                "isGroup": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "all": {
-                  "type": "string",
-                  "example": "false"
-                }
-              },
-              "required": ["phone", "isGroup", "all"]
-            }
           }
         ],
         "responses": {
@@ -552,7 +546,33 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "all": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "phone": "5521999999999",
+                "isGroup": false,
+                "all": false
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/download-media": {
@@ -568,20 +588,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "messageId": {
-                  "type": "string",
-                  "example": "<messageId>"
-                }
-              },
-              "required": ["messageId"]
-            }
           }
         ],
         "responses": {
@@ -596,7 +602,25 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messageId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "messageId": "<messageId>"
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-message": {
@@ -5777,7 +5801,44 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "adress": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "categories": {
+                    "type": "object"
+                  },
+                  "websites": {
+                    "type": "array"
+                  }
+                }
+              },
+              "example": {
+                "adress": "Av. Nossa Senhora de Copacabana, 315",
+                "email": "test@test.com.br",
+                "categories": {
+                  "$id": "133436743388217",
+                  "$localized_display_name": "Artes e entretenimento",
+                  "$not_a_biz": false
+                },
+                "website": [
+                  "https://www.wppconnect.io",
+                  "https://www.teste2.com.br"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/get-business-profiles-products": {
