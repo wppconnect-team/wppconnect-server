@@ -84,6 +84,10 @@ routes.post(
   SessionController.logOutSession
 );
 routes.post(
+  '/api/:session/:secretkey/clear-session-data',
+  MiscController.clearSessionData
+);
+routes.post(
   '/api/:session/close-session',
   verifyToken,
   SessionController.closeSession
@@ -822,6 +826,7 @@ routes.post(
   MiscController.restoreAllSessions
 );
 routes.get('/api/:session/take-screenshot', MiscController.takeScreenshot);
+routes.post('/api/:session/set-limit', MiscController.setLimit);
 
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 
