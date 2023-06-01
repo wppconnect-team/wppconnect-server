@@ -183,3 +183,38 @@ export async function clearSessionData(req: Request, res: Response) {
     });
   }
 }
+
+export async function setLimit(req: Request, res: Response) {
+  /**
+   #swagger.tags = ["Misc"]
+   #swagger.description = 'Change limits of whatsapp web. Types value: maxMediaSize, maxFileSize, maxShare, statusVideoMaxDuration, unlimitedPin;'
+   #swagger.autoBody=false
+    #swagger.security = [{
+          "bearerAuth": []
+    }]
+    #swagger.parameters["session"] = {
+    schema: 'NERDWHATS_AMERICA'
+    }
+     #swagger.parameters["obj"] = {
+      in: 'body',
+      schema: {
+        $type: 'maxFileSize',
+        $value: 104857600
+      }
+     }
+  */
+
+  try {
+    const { type, value } = req.body;
+    if (!type || !value) throw new Error('Send de type and value');
+
+    const result = await req.client.setLimit(type, value);
+    return res.status(200).json(result);
+  } catch (error: any) {
+    return res.status(500).json({
+      status: false,
+      message: 'Error on set limit',
+      error: error,
+    });
+  }
+}
