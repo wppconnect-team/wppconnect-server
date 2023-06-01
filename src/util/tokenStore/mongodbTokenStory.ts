@@ -1,4 +1,3 @@
-import { WhatsAppServer } from '../../types/WhatsAppServer';
 import Token from './model/token';
 
 class MongodbTokenStore {

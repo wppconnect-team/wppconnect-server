@@ -67,7 +67,7 @@ export async function sendImageStorie(req: Request, res: Response) {
       }
      }
    */
-  const { path, options } = req.body;
+  const { path } = req.body;
 
   if (!path && !req.file)
     return res.status(401).send({

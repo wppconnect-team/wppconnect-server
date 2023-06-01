@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import aws from 'aws-sdk';
 import api from 'axios';
 import Crypto from 'crypto';
 import fs from 'fs';
@@ -24,7 +25,6 @@ import { promisify } from 'util';
 import config from '../config';
 import { convert } from '../mapper/index';
 import { ServerOptions } from '../types/ServerOptions';
-import aws from 'aws-sdk';
 
 let mime: any, crypto: any; //, aws: any;
 if (config.webhook.uploadS3) {
