@@ -371,18 +371,36 @@ export async function sendPollMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $name: 'Poll name',
-        $choices: ['Option 1', 'Option 2', 'Option 3'],
-        $options: {
-          $selectableCount: '1',
+    #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        phone: { type: "string" },
+                        isGroup: { type: "boolean" },
+                        name: { type: "string" },
+                        choices: { type: "array" },
+                        options: { type: "object" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          phone: '5521999999999',
+                          isGroup: false,
+                          name: 'Poll name',
+                          choices: ['Option 1', 'Option 2', 'Option 3'],
+                          options: {
+                            selectableCount: 1,
+                          }
+                        }
+                    },
+                }
+            }
         }
-      }
-     }
+    }
    */
   const { phone, name, choices, options } = req.body;
 
