@@ -25,7 +25,7 @@ import config from '../config';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
-import { clientsArray } from '../util/sessionUtil';
+import { clientsArray, deleteSessionOnArray } from '../util/sessionUtil';
 
 const SessionUtil = new CreateSessionUtil();
 
@@ -146,14 +146,13 @@ export async function showAllSessions(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
      #swagger.autoBody=false
+     #swagger.autoQuery=false
+     #swagger.autoHeaders=false
      #swagger.security = [{
             "bearerAuth": []
      }]
-     #swagger.parameters["session"] = {
-      schema: 'NERDWHATS_AMERICA'
-     }
      #swagger.parameters["secretkey"] = {
-      schema: ''
+      schema: 'THISISMYSECURETOKEN'
      }
    */
   const { secretkey } = req.params;
@@ -180,7 +179,7 @@ export async function showAllSessions(req: Request, res: Response) {
     arr.push({ session: item });
   });
 
-  return res.status(200).json({ response: arr });
+  return res.status(200).json({ response: await getAllTokens(req) });
 }
 
 export async function startSession(req: Request, res: Response) {
@@ -297,24 +296,42 @@ export async function logOutSession(req: Request, res: Response) {
   try {
     const session = req.session;
     await req.client.logout();
-    //await req.client.close();
-    delete clientsArray[req.session];
-    await fs.promises.rm(config.customUserDataDir + req.session, {
-      recursive: true,
-    });
-    await fs.promises.rm(
-      __dirname + `../../../tokens/${req.session}.data.json`
-    );
+    deleteSessionOnArray(req.session);
 
-    req.io.emit('whatsapp-status', false);
-    callWebHook(req.client, req, 'logoutsession', {
-      message: `Session: ${session} logged out`,
-      connected: false,
-    });
+    setTimeout(async () => {
+      const pathUserData = config.customUserDataDir + req.session;
+      const pathTokens = __dirname + `../../../tokens/${req.session}.data.json`;
 
-    return await res
-      .status(200)
-      .json({ status: true, message: 'Session successfully closed' });
+      if (fs.existsSync(pathUserData)) {
+        await fs.promises.rm(pathUserData, {
+          recursive: true,
+          maxRetries: 5,
+          force: true,
+          retryDelay: 1000,
+        });
+      }
+      if (fs.existsSync(pathTokens)) {
+        await fs.promises.rm(pathTokens, {
+          recursive: true,
+          maxRetries: 5,
+          force: true,
+          retryDelay: 1000,
+        });
+      }
+
+      req.io.emit('whatsapp-status', false);
+      callWebHook(req.client, req, 'logoutsession', {
+        message: `Session: ${session} logged out`,
+        connected: false,
+      });
+
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
+    }, 500);
+    /*try {
+      await req.client.close();
+    } catch (error) {}*/
   } catch (error) {
     req.logger.error(error);
     return await res
