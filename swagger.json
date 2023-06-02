@@ -99,22 +99,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "session",
-            "schema": {
               "type": "string",
-              "example": "NERDWHATS_AMERICA"
-            },
-            "in": "query"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
+              "example": "THISISMYSECURETOKEN"
             }
           }
         ],
@@ -4535,52 +4521,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Product name"
-                },
-                "image": {
-                  "type": "string",
-                  "example": "<base64_string>"
-                },
-                "description": {
-                  "type": "string",
-                  "example": "Description for your product"
-                },
-                "price": {
-                  "type": "string",
-                  "example": "8890"
-                },
-                "url": {
-                  "type": "string",
-                  "example": "http://link_for_your_product.com"
-                },
-                "retailerId": {
-                  "type": "string",
-                  "example": "SKU001"
-                },
-                "currency": {
-                  "type": "string",
-                  "example": "BRL"
-                }
-              },
-              "required": [
-                "name",
-                "image",
-                "description",
-                "price",
-                "url",
-                "retailerId",
-                "currency"
-              ]
-            }
           }
         ],
         "responses": {
@@ -4598,7 +4538,53 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "retailerId": {
+                    "type": "string"
+                  },
+                  "currency": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "name": "Product name",
+                    "image": "<base64_string>",
+                    "description": "Description for your product",
+                    "price": "8890",
+                    "url": "http://link_for_your_product.com",
+                    "retailerId": "SKU001",
+                    "currency": "BRL"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/edit-product": {
@@ -4614,30 +4600,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<product_id>"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "New name for product"
-                    }
-                  },
-                  "required": ["name"]
-                }
-              },
-              "required": ["id", "options"]
-            }
           }
         ],
         "responses": {
@@ -4655,7 +4617,35 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>",
+                    "options": {
+                      "name": "New name for product"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/del-products": {
@@ -4671,20 +4661,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<product_id>"
-                }
-              },
-              "required": ["id"]
-            }
           }
         ],
         "responses": {
@@ -4702,7 +4678,29 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/change-product-image": {
@@ -4718,24 +4716,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<product_id>"
-                },
-                "base64": {
-                  "type": "string",
-                  "example": "<base64_string>"
-                }
-              },
-              "required": ["id", "base64"]
-            }
           }
         ],
         "responses": {
@@ -4753,7 +4733,33 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "base64": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>",
+                    "base64": "<base64_string>"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/add-product-image": {
@@ -4769,24 +4775,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<product_id>"
-                },
-                "base64": {
-                  "type": "string",
-                  "example": "<base64_string>"
-                }
-              },
-              "required": ["id", "base64"]
-            }
           }
         ],
         "responses": {
@@ -4804,7 +4792,33 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "base64": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>",
+                    "base64": "<base64_string>"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/remove-product-image": {
@@ -4820,24 +4834,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<product_id>"
-                },
-                "index": {
-                  "type": "string",
-                  "example": "1"
-                }
-              },
-              "required": ["id", "index"]
-            }
           }
         ],
         "responses": {
@@ -4855,7 +4851,33 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "index": {
+                    "type": "number"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>",
+                    "index": 1
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/get-collections": {
@@ -4928,27 +4950,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Collection name"
-                },
-                "products": {
-                  "type": "array",
-                  "example": ["<id_product1>", "<id_product2>"],
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": ["name", "products"]
-            }
           }
         ],
         "responses": {
@@ -4966,7 +4967,33 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "products": {
+                    "type": "array"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "name": "Collection name",
+                    "products": ["<id_product1>", "<id_product2>"]
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/edit-collection": {
@@ -4982,29 +5009,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<id_product>"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "New name for collection"
-                    }
-                  }
-                }
-              },
-              "required": ["id", "options"]
-            }
           }
         ],
         "responses": {
@@ -5022,7 +5026,35 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "products": {
+                    "type": "array"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>",
+                    "options": {
+                      "name": "New name for collection"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/del-collection": {
@@ -5038,20 +5070,6 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "<id_product>"
-                }
-              },
-              "required": ["id"]
-            }
           }
         ],
         "responses": {
@@ -5069,7 +5087,29 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-link-catalog": {
@@ -5123,7 +5163,8 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {}
       }
     },
     "/api/{session}/set-product-visibility": {
@@ -5174,7 +5215,33 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "id": "<product_id>",
+                    "value": false
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/set-cart-enabled": {
@@ -5189,20 +5256,6 @@
             "schema": {
               "type": "string",
               "example": "NERDWHATS_AMERICA"
-            }
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean",
-                  "example": true
-                }
-              },
-              "required": ["enabled"]
             }
           }
         ],
@@ -5221,7 +5274,29 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "enabled": true
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-text-storie": {
