@@ -342,6 +342,12 @@ routes.get(
   statusConnection,
   DeviceController.getAllChats
 );
+routes.post(
+  '/api/:session/list-chats',
+  verifyToken,
+  statusConnection,
+  DeviceController.listChats
+);
 
 routes.get(
   '/api/:session/all-chats-archived',

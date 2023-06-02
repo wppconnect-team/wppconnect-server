@@ -53,10 +53,24 @@ export async function setProfileName(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $name: 'New name',
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                name: "My new name",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -107,6 +121,8 @@ export async function showAllContacts(req: Request, res: Response) {
 export async function getAllChats(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Chat"]
+   * #swagger.summary = 'Deprecated in favor of 'list-chats'
+   * #swagger.deprecated = true
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -128,9 +144,106 @@ export async function getAllChats(req: Request, res: Response) {
   }
 }
 
+export async function listChats(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Chat"]
+   * #swagger.summary = 'Retrieve a list of chats'
+   * #swagger.description = 'This body is not required. Not sent body to get all chats or filter.'
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              count: { type: "number" },
+              direction: { type: "string" },
+              onlyGroups: { type: "boolean" },
+              onlyUsers: { type: "boolean" },
+              onlyWithUnreadMessage: { type: "boolean" },
+              withLabels: { type: "array" },
+            }
+          },
+          examples: {
+            "All options - Edit this": {
+              value: {
+                id: "<chatId>",
+                count: 20,
+                direction: "after",
+                onlyGroups: false,
+                onlyUsers: false,
+                onlyWithUnreadMessage: false,
+                withLabels: []
+              }
+            },
+            "All chats": {
+              value: {
+              }
+            },
+            "Chats group": {
+              value: {
+                onlyGroups: true,
+              }
+            },
+            "Only with unread messages": {
+              value: {
+                onlyWithUnreadMessage: false,
+              }
+            },
+            "Paginated results": {
+              value: {
+                id: "<chatId>",
+                count: 20,
+                direction: "after",
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+  try {
+    const {
+      id,
+      count,
+      direction,
+      onlyGroups,
+      onlyUsers,
+      onlyWithUnreadMessage,
+      withLabels,
+    } = req.body;
+
+    const response = await req.client.listChats({
+      id: id,
+      count: count,
+      direction: direction,
+      onlyGroups: onlyGroups,
+      onlyUsers: onlyUsers,
+      onlyWithUnreadMessage: onlyWithUnreadMessage,
+      withLabels: withLabels,
+    });
+
+    return res.status(200).json(response);
+  } catch (e) {
+    req.logger.error(e);
+    return res
+      .status(500)
+      .json({ status: 'error', message: 'Error on get all chats' });
+  }
+}
+
 export async function getAllChatsWithMessages(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Chat"]
+   * #swagger.summary = 'Deprecated in favor of list-chats'
+   * #swagger.deprecated = true
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -437,11 +550,26 @@ export async function deleteChat(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -495,11 +623,27 @@ export async function clearChat(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
+     
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -552,12 +696,29 @@ export async function archiveChat(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        value: true,
+     
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              value: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                value: true,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -641,12 +802,29 @@ export async function deleteMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        messageId: '<messageId>',
+     
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              messageId: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                messageId: "<messageId>",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -675,11 +853,26 @@ export async function reactMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $msgId: '<message_id>',
-        $reaction: '😜',
+     #swagger.requestBody = {
+      required: false,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              messageId: { type: "string" },
+              reaction: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                messageId: "<messageId>",
+                reaction: "😜",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -712,13 +905,30 @@ export async function reply(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $messageid: '<message_id>',
-        $text: 'Text to reply',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              messageid: { type: "string" },
+              text: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+              phone: "5521999999999",
+              isGroup: false,
+              messageid: "<messageId>",
+              text: "Text to reply",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -745,12 +955,28 @@ export async function forwardMessages(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $messageId: '<message_id>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              messageid: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                messageid: "<messageId>",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -792,11 +1018,26 @@ export async function markUnseenMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -825,11 +1066,26 @@ export async function blockContact(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+              phone: "5521999999999",
+              isGroup: false,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -858,11 +1114,26 @@ export async function unblockContact(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+              phone: "5521999999999",
+              isGroup: false,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -897,6 +1168,29 @@ export async function pinChat(req: Request, res: Response) {
         $phone: '5521999999999',
         $isGroup: false,
         $state: true,
+      }
+     }
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              state: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+              phone: "5521999999999",
+              state: true,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1158,13 +1452,30 @@ export async function sendContactVcard(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $name: 'Name of contact',
-        $contactsId: ['5521999999999'],
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              name: { type: "string" },
+              contactsId: { type: "array" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                name: 'Name of contact',
+                contactsId: ['5521999999999'],
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1200,13 +1511,30 @@ export async function sendMute(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $time: '1',
-        $type: 'hours',
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              time: { type: "number" },
+              type: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                time: 1,
+                type: 'hours',
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1237,11 +1565,26 @@ export async function sendSeen(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1270,12 +1613,28 @@ export async function setChatState(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $chatstate: '1',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              chatstate: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                chatstate: "1",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1308,12 +1667,28 @@ export async function setTemporaryMessages(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $value: true,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              value: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                value: true,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1346,12 +1721,28 @@ export async function setTyping(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $value: true,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              value: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                value: true,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1382,13 +1773,31 @@ export async function setRecording(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $duration: '5',
-        $value: true,
+     
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              duration: { type: "number" },
+              value: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                duration: 5,
+                value: true,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1608,6 +2017,27 @@ export async function setProfileStatus(req: Request, res: Response) {
         $status: 'My new status',
       }
      }
+     
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              status: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                status: "My new status",
+              }
+            },
+          }
+        }
+      }
+     }
    */
   const { status } = req.body;
   try {
@@ -1631,10 +2061,25 @@ export async function rejectCall(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $callId: '<callId>',
+     
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              callId: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                callId: "<callid>",
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1661,11 +2106,26 @@ export async function starMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $messageId: '<messageId>',
-        $star: 'true',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              messageId: { type: "string" },
+              star: { type: "boolean" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                messageId: "5521999999999",
+                star: true,
+              }
+            },
+          }
+        }
       }
      }
    */
@@ -1750,11 +2210,26 @@ export async function chatWoot(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $event: 'conversation_status_changed',
-        $private: 'false',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              event: { type: "string" },
+              private: { type: "string" },
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                messageId: "conversation_status_changed",
+                private: "false",
+              }
+            },
+          }
+        }
       }
      }
    */
