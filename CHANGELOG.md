@@ -1,3 +1,9 @@
+# 2.2.0 (2023-06-02)
+
+### Bug Fixes
+
+- **deps:** update dependency @wppconnect-team/wppconnect to ^1.27.0 ([#1273](https://github.com/wppconnect-team/wppconnect-server/issues/1273)) ([1047dff](https://github.com/wppconnect-team/wppconnect-server/commit/1047dffab930686b5cc1f1adf9f854033f48e080))
+
 ## 2.1.2 (2023-06-01)
 
 ## 2.1.1 (2023-06-01)
