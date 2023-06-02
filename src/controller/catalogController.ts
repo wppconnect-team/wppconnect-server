@@ -105,15 +105,30 @@ export async function editProduct(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<product_id>',
-        $options: {
-          $name: 'New name for product',
+    #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        options: { type: "object" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                          options: {
+                            name: 'New name for product',
+                          }
+                        }
+                    },
+                }
+            }
         }
-      }
-     }
+    }
    */
   const { id, options } = req.body;
   if (!id || !options)
@@ -143,12 +158,26 @@ export async function delProducts(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<product_id>',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id } = req.body;
   if (!id)
@@ -178,13 +207,29 @@ export async function changeProductImage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<product_id>',
-        $base64: '<base64_string>',
-      }
-     }
+     
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        base64: { type: "string" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                          base64: '<base64_string>'
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id, base64 } = req.body;
   if (!id || !base64)
@@ -214,18 +259,38 @@ export async function addProduct(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $name: 'Product name',
-        $image: '<base64_string>',
-        $description: 'Description for your product',
-        $price: '8890',
-        $url: 'http://link_for_your_product.com',
-        $retailerId: 'SKU001',
-        $currency: 'BRL',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        name: { type: "string" },
+                        image: { type: "string" },
+                        description: { type: "string" },
+                        price: { type: "string" },
+                        url: { type: "string" },
+                        retailerId: { type: "string" },
+                        currency: { type: "string" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          name: 'Product name',
+                          image: '<base64_string>',
+                          description: 'Description for your product',
+                          price: '8890',
+                          url: 'http://link_for_your_product.com',
+                          retailerId: 'SKU001',
+                          currency: 'BRL',
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const {
     name,
@@ -273,13 +338,28 @@ export async function addProductImage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<product_id>',
-        $base64: '<base64_string>',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        base64: { type: "string" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                          base64: '<base64_string>'
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id, base64 } = req.body;
   if (!id || !base64)
@@ -309,13 +389,28 @@ export async function removeProductImage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<product_id>',
-        $index: '1',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        index: { type: "number" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                          index: 1
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id, index } = req.body;
   if (!id || !index)
@@ -387,13 +482,28 @@ export async function createCollection(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $name: 'Collection name',
-        $products: ['<id_product1>', '<id_product2>'],
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        name: { type: "string" },
+                        products: { type: "array" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          name: 'Collection name',
+                          products: ['<id_product1>', '<id_product2>'],
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { name, products } = req.body;
   if (!name || !products)
@@ -423,15 +533,30 @@ export async function editCollection(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<id_product>',
-        $options: {
-          name: 'New name for collection',
-        },
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        products: { type: "array" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                          options: {
+                            name: 'New name for collection',
+                          }
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id, options } = req.body;
   if (!id || !options)
@@ -461,12 +586,26 @@ export async function deleteCollection(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $id: '<id_product>',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id } = req.body;
   if (!id)
@@ -503,6 +642,28 @@ export async function setProductVisibility(req: Request, res: Response) {
         $value: false,
       }
      }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        value: { type: "boolean" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          id: '<product_id>',
+                          value: false,
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { id, value } = req.body;
   if (!id || !value)
@@ -532,12 +693,26 @@ export async function updateCartEnabled(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $enabled: true,
-      }
-     }
+      #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        enabled: { type: "boolean" },
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          enabled: true,
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { enabled } = req.body;
   if (!enabled)
@@ -574,6 +749,29 @@ export async function sendLinkCatalog(req: Request, res: Response) {
         $message: 'Message',
       }
      }
+     
+      #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                      $phones: { type: "array" }
+                      $message: { type: "string" }
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                          phones: ['<array_phone_id'],
+                          message: 'Message',
+                        }
+                    },
+                }
+            }
+        }
+    }
    */
   const { phones, message } = req.body;
   if (!phones)
