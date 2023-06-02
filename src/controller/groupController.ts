@@ -24,6 +24,8 @@ import {
 export async function getAllGroups(req: Request, res: Response) {
   /**
      #swagger.tags = ["Group"]
+     #swagger.deprecated = true
+     #swagger.summary = 'Deprecated in favor of 'list-chats'
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
