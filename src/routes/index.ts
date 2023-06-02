@@ -19,6 +19,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import uploadConfig from '../config/upload';
 import * as CatalogController from '../controller/catalogController';
+import * as CommunityController from '../controller/communityController';
 import * as DeviceController from '../controller/deviceController';
 import { encryptSession } from '../controller/encryptController';
 import * as GroupController from '../controller/groupController';
@@ -833,6 +834,50 @@ routes.post(
 );
 routes.get('/api/:session/take-screenshot', MiscController.takeScreenshot);
 routes.post('/api/:session/set-limit', MiscController.setLimit);
+
+//Communitys
+routes.post(
+  '/api/:session/create-community',
+  verifyToken,
+  statusConnection,
+  CommunityController.createCommunity
+);
+routes.post(
+  '/api/:session/deactivate-community',
+  verifyToken,
+  statusConnection,
+  CommunityController.deactivateCommunity
+);
+routes.post(
+  '/api/:session/add-community-subgroup',
+  verifyToken,
+  statusConnection,
+  CommunityController.addSubgroupsCommunity
+);
+routes.post(
+  '/api/:session/remove-community-subgroup',
+  verifyToken,
+  statusConnection,
+  CommunityController.removeSubgroupsCommunity
+);
+routes.post(
+  '/api/:session/promote-community-participant',
+  verifyToken,
+  statusConnection,
+  CommunityController.promoteCommunityParticipant
+);
+routes.post(
+  '/api/:session/demote-community-participant',
+  verifyToken,
+  statusConnection,
+  CommunityController.demoteCommunityParticipant
+);
+routes.get(
+  '/api/:session/community-participants/:id',
+  verifyToken,
+  statusConnection,
+  CommunityController.getCommunityParticipants
+);
 
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 

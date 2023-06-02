@@ -45,6 +45,20 @@ const doc = {
       description: 'Manages chat-related operations.',
     },
     {
+      name: 'Contact',
+      description:
+        'Handles operations related to contacts, such as managing contact lists, adding or removing contacts, and retrieving contact information.',
+    },
+    {
+      name: 'Catalog & Bussiness',
+      description:
+        'Handles operations related to catalogs and business-related functionalities, such as managing product catalogs and business information.',
+    },
+    {
+      name: 'Community',
+      description: 'Manage communities.',
+    },
+    {
       name: 'Messages',
       description:
         'Handles message-related operations, including sending, receiving, and managing messages.',
@@ -65,19 +79,9 @@ const doc = {
         'Manages labels or tags associated with chats or messages for organization and categorization purposes.',
     },
     {
-      name: 'Contact',
-      description:
-        'Handles operations related to contacts, such as managing contact lists, adding or removing contacts, and retrieving contact information.',
-    },
-    {
       name: 'Group',
       description:
         'Manages operations related to WhatsApp groups, such as creating, modifying, and managing group settings.',
-    },
-    {
-      name: 'Catalog & Bussiness',
-      description:
-        'Handles operations related to catalogs and business-related functionalities, such as managing product catalogs and business information.',
     },
     {
       name: 'Misc',
