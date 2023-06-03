@@ -742,14 +742,6 @@ export async function sendLinkCatalog(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phones: ['<array_phone_id'],
-        $message: 'Message',
-      }
-     }
-     
       #swagger.requestBody = {
         required: true,
         "@content": {
@@ -757,8 +749,8 @@ export async function sendLinkCatalog(req: Request, res: Response) {
                 schema: {
                     type: "object",
                     properties: {
-                      $phones: { type: "array" }
-                      $message: { type: "string" }
+                      phones: { type: "array" },
+                      message: { type: "string" }
                     }
                 },
                 examples: {

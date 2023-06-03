@@ -37,10 +37,7 @@ export async function backupAllSessions(req: Request, res: Response) {
         description: 'A ZIP file contaings your backup. Please, open this link in your browser',
         content: {
           "application/zip": {
-            schema: {
-              type: 'string',
-              format: 'binary',
-            }
+            schema: {}
           }
         },
       }
@@ -126,12 +123,12 @@ export async function takeScreenshot(req: Request, res: Response) {
   */
 
   try {
-    const result = await (req.client as any)?.takeScreenshot();
+    const result = await req.client.takeScreenshot();
     return res.status(200).json(result);
   } catch (error: any) {
     return res.status(500).json({
       status: false,
-      message: 'Error on take screenshot or not implemented yet',
+      message: 'Error on take screenshot',
       error: error,
     });
   }
@@ -195,13 +192,29 @@ export async function setLimit(req: Request, res: Response) {
     #swagger.parameters["session"] = {
     schema: 'NERDWHATS_AMERICA'
     }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $type: 'maxFileSize',
-        $value: 104857600
-      }
-     }
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              type: { type: 'string' },
+              value: { type: 'any' },
+            },
+            required: ['type', 'value'],
+          },
+          examples: {
+            'Default': {
+              value: {
+                type: 'maxFileSize',
+                value: 104857600
+              },
+            },
+          },
+        },
+      },
+    }
   */
 
   try {

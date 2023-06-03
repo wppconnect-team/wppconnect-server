@@ -26,13 +26,34 @@ export async function addNewLabel(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $name: 'Name of your label',
-        $options: { labelColor: 4292849392 },
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $name: { type: "string" },
+              $options: {
+                type: "object",
+                properties: {
+                  labelColor: { type: "number" }
+                }
+              }
+            },
+            required: ["name", "options"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                name: "Name of your label",
+                options: { labelColor: 4292849392 }
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { name, options } = req.body;
   if (!name)
@@ -62,13 +83,46 @@ export async function addOrRemoveLabels(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $chatIds: ['5521999999999'],
-        $options: [{labelId:'76', type:'add'},{labelId:'75', type:'remove'}],
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              chatIds: {
+                type: "array",
+                items: {
+                  type: "string"
+                }
+              },
+              options: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    labelId: { type: "string" },
+                    type: { type: "string" }
+                  },
+                }
+              }
+            },
+            required: ["chatIds"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                chatIds: ["5521999999999"],
+                options: [
+                  { labelId: "76", type: "add" },
+                  { labelId: "75", type: "remove" }
+                ]
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { chatIds, options } = req.body;
   if (!chatIds || !options)

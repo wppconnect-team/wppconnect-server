@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 WPPConnect Team
+ * Copyright 2023 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,12 +56,29 @@ export async function joinGroupByCode(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $inviteCode: '5644444',
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              inviteCode: {
+                type: "string"
+              }
+            },
+            required: ["inviteCode"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                inviteCode: "5644444"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { inviteCode } = req.body;
 
@@ -97,13 +114,36 @@ export async function createGroup(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $participants: ['5521999999999'],
-        $name: 'Group name',
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              participants: {
+                type: "array",
+                items: {
+                  type: "string"
+                }
+              },
+              name: {
+                type: "string"
+              }
+            },
+            required: ["participants", "name"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                participants: ["5521999999999"],
+                name: "Group name"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { participants, name } = req.body;
 
@@ -149,12 +189,20 @@ export async function leaveGroup(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              groupId: { type: "string" }
+            },
+            required: ["groupId"]
+          }
+        }
       }
-     }
+    }
    */
   const { groupId } = req.body;
 
@@ -187,12 +235,27 @@ export async function getGroupMembers(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              groupId: { type: "string" }
+            },
+            required: ["groupId"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                groupId: "<groupId>"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId } = req.params;
 
@@ -222,13 +285,29 @@ export async function addParticipant(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $phone: '5521999999999',
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              groupId: { type: "string" },
+              phone: { type: "string" }
+            },
+            required: ["groupId", "phone"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                groupId: "<groupId>",
+                phone: "5521999999999"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, phone } = req.body;
 
@@ -270,13 +349,29 @@ export async function removeParticipant(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $phone: '5521999999999',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              "groupId": { type: "string" },
+              "phone": { type: "string" }
+            },
+            required: ["groupId", "phone"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                "groupId": "<groupId>",
+                "phone": "5521999999999"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, phone } = req.body;
 
@@ -320,13 +415,29 @@ export async function promoteParticipant(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $phone: '5521999999999',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              "groupId": { type: "string" },
+              "phone": { type: "string" }
+            },
+            required: ["groupId", "phone"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                "groupId": "<groupId>",
+                "phone": "5521999999999"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, phone } = req.body;
 
@@ -365,13 +476,29 @@ export async function demoteParticipant(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $phone: '5521999999999',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              "groupId": { type: "string" },
+              "phone": { type: "string" }
+            },
+            required: ["groupId", "phone"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                "groupId": "<groupId>",
+                "phone": "5521999999999"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, phone } = req.body;
 
@@ -410,12 +537,27 @@ export async function getGroupAdmins(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              "groupId": { type: "string" }
+            },
+            required: ["groupId"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                "groupId": "<groupId>"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId } = req.params;
 
@@ -449,12 +591,19 @@ export async function getGroupInviteLink(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              groupId: { type: "string" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId } = req.params;
   try {
@@ -484,12 +633,19 @@ export async function revokeGroupInviteLink(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId } = req.params;
 
@@ -548,12 +704,19 @@ export async function getGroupInfoFromInviteLink(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $invitecode: '<groupId>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $invitecode: { type: "string" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   try {
     const { invitecode } = req.body;
@@ -610,13 +773,20 @@ export async function setGroupDescription(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $description: 'Desription for your group',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" },
+              $description: { type: "string" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, description } = req.body;
 
@@ -648,14 +818,21 @@ export async function setGroupProperty(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $property: 'announcement',
-        $value: true,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" },
+              $property: { type: "string" },
+              $value: { type: "boolean" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, property, value = true } = req.body;
 
@@ -687,13 +864,20 @@ export async function setGroupSubject(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $title: 'Title for your group',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" },
+              $title: { type: "string" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, title } = req.body;
 
@@ -725,13 +909,20 @@ export async function setMessagesAdminsOnly(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $value: true,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" },
+              $value: { type: "boolean" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, value = true } = req.body;
 
@@ -763,13 +954,20 @@ export async function changePrivacyGroup(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $status: true,
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" },
+              $status: { type: "boolean" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { groupId, status } = req.body;
 
@@ -802,13 +1000,20 @@ export async function setGroupProfilePic(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $groupId: '<groupId>',
-        $path: 'path_of_your_file',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              $groupId: { type: "string" },
+              $path: { type: "string" }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { phone, path } = req.body;
 

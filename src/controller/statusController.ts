@@ -26,10 +26,33 @@ export async function sendTextStorie(req: Request, res: Response) {
      #swagger.parameters["obj"] = {
       in: 'body',
       schema: {
-        $text: 'My new storie',
-        $options: { backgroundColor: '#0275d8', font: 2},
+        text: 'My new storie',
+        options: { backgroundColor: '#0275d8', font: 2},
       }
      }
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              text: { type: 'string' },
+              options: { type: 'object' },
+            },
+            required: ['text'],
+          },
+          examples: {
+            'Default': {
+              value: {
+                text: 'My new storie',
+                options: { backgroundColor: '#0275d8', font: 2},
+              },
+            },
+          },
+        },
+      },
+    }
    */
   const { text, options } = req.body;
 
@@ -60,12 +83,27 @@ export async function sendImageStorie(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $path: 'Path of your image',
-      }
-     }
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              path: { type: 'string' },
+            },
+            required: ['path'],
+          },
+          examples: {
+            'Default': {
+              value: {
+                path: 'Path of your image',
+              },
+            },
+          },
+        },
+      },
+    }
    */
   const { path } = req.body;
 
@@ -98,12 +136,27 @@ export async function sendVideoStorie(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $path: 'Path of your video',
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              path: { type: "string" }
+            },
+            required: ["path"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                path: "Path of your video"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { path } = req.body;
 

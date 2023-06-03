@@ -41,14 +41,30 @@ export async function sendMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $message: 'Hello, welcome to WPPConnect',
-        $isGroup: false,
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                $phone: { type: "string" },
+                $isGroup: { type: "boolean" },
+                $message: { type: "string" }
+              }
+            },
+            examples: {
+              "Default": {
+                value: {
+                  phone: '5521999999999',
+                  isGroup: false,
+                  message: 'Hello, welcome to WPPConnect'
+                },
+              },
+            },
+          }
+        }
       }
-     }
    */
   const { phone, message } = req.body;
 
@@ -79,16 +95,34 @@ export async function sendFile(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $filename: 'file name lol',
-        $caption: 'caption for my file',
-        $base64: '<base64> string',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+            schema: {
+                type: "object",
+                properties: {
+                    "phone": { type: "string" },
+                    "isGroup": { type: "boolean" },
+                    "filename": { type: "string" },
+                    "caption": { type: "string" },
+                    "base64": { type: "string" }
+                }
+            },
+            examples: {
+                "Default": {
+                    value: {
+                        "phone": "5521999999999",
+                        "isGroup": false,
+                        "filename": "file name lol",
+                        "caption": "caption for my file",
+                        "base64": "<base64> string"
+                    }
+                }
+            }
+        }
       }
-     }
+    }
    */
   const { phone, path, base64, filename = 'file', message, caption } = req.body;
 
@@ -130,15 +164,32 @@ export async function sendVoice(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $path: '<path_file>',
-        $quotedMessageId: undefined,
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        "phone": { type: "string" },
+                        "isGroup": { type: "boolean" },
+                        "path": { type: "string" },
+                        "quotedMessageId": { type: "string" }
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                            "phone": "5521999999999",
+                            "isGroup": false,
+                            "path": "<path_file>",
+                            "quotedMessageId": "message Id"
+                        }
+                    }
+                }
+            }
+        }
+    }
    */
   const {
     phone,
@@ -180,14 +231,30 @@ export async function sendVoice64(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $base64Ptt: '<base64_string>',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        "phone": { type: "string" },
+                        "isGroup": { type: "boolean" },
+                        "base64Ptt": { type: "string" }
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                            "phone": "5521999999999",
+                            "isGroup": false,
+                            "base64Ptt": "<base64_string>"
+                        }
+                    }
+                }
+            }
+        }
+    }
    */
   const { phone, base64Ptt } = req.body;
 
@@ -217,15 +284,32 @@ export async function sendLinkPreview(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $url: 'http://www.link.com',
-        $caption: 'Text for describe link',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        "phone": { type: "string" },
+                        "isGroup": { type: "boolean" },
+                        "url": { type: "string" },
+                        "caption": { type: "string" }
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                            "phone": "5521999999999",
+                            "isGroup": false,
+                            "url": "http://www.link.com",
+                            "caption": "Text for describe link"
+                        }
+                    }
+                }
+            }
+        }
+    }
    */
   const { phone, url, caption } = req.body;
 
@@ -255,17 +339,36 @@ export async function sendLocation(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $lat: '-89898322',
-        $lng: '-545454',
-        $title: 'Rio de Janeiro',
-        $address: 'Av. N. S. de Copacabana, 25, Copacabana',
-      }
-     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+            "application/json": {
+                schema: {
+                    type: "object",
+                    properties: {
+                        "phone": { type: "string" },
+                        "isGroup": { type: "boolean" },
+                        "lat": { type: "string" },
+                        "lng": { type: "string" },
+                        "title": { type: "string" },
+                        "address": { type: "string" }
+                    }
+                },
+                examples: {
+                    "Default": {
+                        value: {
+                            "phone": "5521999999999",
+                            "isGroup": false,
+                            "lat": "-89898322",
+                            "lng": "-545454",
+                            "title": "Rio de Janeiro",
+                            "address": "Av. N. S. de Copacabana, 25, Copacabana"
+                        }
+                    }
+                }
+            }
+        }
+    }
    */
   const { phone, lat, lng, title, address } = req.body;
 
@@ -432,12 +535,33 @@ export async function sendStatusText(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $message: 'Post text status',
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              phone: { type: 'string' },
+              isGroup: { type: 'boolean' },
+              message: { type: 'string' },
+              messageId: { type: 'string' }
+            },
+            required: ['phone', 'isGroup', 'message']
+          },
+          examples: {
+            Default: {
+              value: {
+                phone: '5521999999999',
+                isGroup: false,
+                message: 'Reply to message',
+                messageId: '<id_message>'
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { message } = req.body;
 
@@ -463,15 +587,32 @@ export async function replyMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: false,
-        $message: 'Reply to message',
-        $messageId: '<id_message>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              "phone": { type: "string" },
+              "isGroup": { type: "boolean" },
+              "message": { type: "string" },
+              "messageId": { type: "string" }
+            }
+          },
+          examples: {
+            "Default": {
+              value: {
+                "phone": "5521999999999",
+                "isGroup": false,
+                "message": "Reply to message",
+                "messageId": "<id_message>"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { phone, message, messageId } = req.body;
 
@@ -500,15 +641,33 @@ export async function sendMentioned(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
+     #swagger.requestBody = {
+  required: true,
+  "@content": {
+    "application/json": {
       schema: {
-        $phone: '5521999999999',
-        $isGroup: true,
-        $message: 'Your text message',
-        $mentioned: ["@556593077171@c.us"],
+        type: "object",
+        properties: {
+          "phone": { type: "string" },
+          "isGroup": { type: "boolean" },
+          "message": { type: "string" },
+          "mentioned": { type: "array", items: { type: "string" } }
+        },
+        required: ["phone", "message", "mentioned"]
+      },
+      examples: {
+        "Default": {
+          value: {
+            "phone": "5521999999999",
+            "isGroup": true,
+            "message": "Your text message",
+            "mentioned": ["@556593077171@c.us"]
+          }
+        }
       }
-     }
+    }
+  }
+}
    */
   const { phone, message, mentioned } = req.body;
 
@@ -542,14 +701,31 @@ export async function sendImageAsSticker(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: true,
-        $path: '<path_file>',
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              "phone": { type: "string" },
+              "isGroup": { type: "boolean" },
+              "path": { type: "string" }
+            },
+            required: ["phone", "path"]
+          },
+          examples: {
+            "Default": {
+              value: {
+                "phone": "5521999999999",
+                "isGroup": true,
+                "path": "<path_file>"
+              }
+            }
+          }
+        }
       }
-     }
+    }
    */
   const { phone, path } = req.body;
 
@@ -584,14 +760,31 @@ export async function sendImageAsStickerGif(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $phone: '5521999999999',
-        $isGroup: true,
-        $path: '<path_file>',
-      }
-     }
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              phone: { type: 'string' },
+              isGroup: { type: 'boolean' },
+              path: { type: 'string' },
+            },
+            required: ['phone', 'path'],
+          },
+          examples: {
+            'Default': {
+              value: {
+                phone: '5521999999999',
+                isGroup: true,
+                path: '<path_file>',
+              },
+            },
+          },
+        },
+      },
+    }
    */
   const { phone, path } = req.body;
 

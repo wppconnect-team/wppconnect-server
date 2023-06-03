@@ -85,12 +85,27 @@ export async function getOrderbyMsg(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.parameters["obj"] = {
-      in: 'body',
-      schema: {
-        $messageId: '<message_id>',
-      }
-     }
+     #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              messageId: { type: 'string' },
+            },
+            required: ['messageId'],
+          },
+          examples: {
+            'Default': {
+              value: {
+                messageId: '<message_id>',
+              },
+            },
+          },
+        },
+      },
+    }
    */
   const session = req.session;
   const { messageId } = req.body;
