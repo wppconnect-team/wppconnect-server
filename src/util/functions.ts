@@ -137,14 +137,11 @@ async function autoDownload(client: any, req: any, message: any) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
         const s3 = new aws.S3();
-        const bucketName =
-          config.webhook.awsBucketName && config.webhook.awsBucketName !== ''
-            ? config.webhook.awsBucketName
-            : client.session;
+        const bucketName = config.webhook?.awsBucketName
+          ? config.webhook?.awsBucketName
+          : client.session;
         const fileName = `${
-          config.webhook.awsBucketName && config.webhook.awsBucketName !== ''
-            ? client.session + '/'
-            : ''
+          config.webhook?.awsBucketName ? client.session + '/' : ''
         }${hashName}.${mime.extension(message.mimetype)}`;
 
         const params = {

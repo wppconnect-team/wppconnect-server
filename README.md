@@ -129,7 +129,7 @@ This server use config.ts file to define some options, default values are:
     // enable upload to s3
     uploadS3: false,
     // set default bucket name on aws s3
-    awsBucketName: '',
+    awsBucketName: null,
     //marks messages as read when the webhook returns ok
     readMessage: true,
     //sends all unread messages to the webhook when the server starts
