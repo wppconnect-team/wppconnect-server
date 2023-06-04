@@ -82,7 +82,7 @@
     "commitizen": "^4.3.0",
     "conventional-changelog-cli": "^2.2.2",
     "crypto-js": "^4.1.1",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard-with-typescript": "^35.0.0",
     "eslint-plugin-import": "^2.27.5",
