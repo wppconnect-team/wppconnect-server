@@ -1,3 +1,9 @@
+## 2.2.2 (2023-06-04)
+
+### Bug Fixes
+
+- Upgrade @wppconnect-team/wppconnect@1.27.1 ([81feb71](https://github.com/wppconnect-team/wppconnect-server/commit/81feb714598b7bb03689489f9d5dad7989b1ddab))
+
 ## 2.2.1 (2023-06-02)
 
 # 2.2.0 (2023-06-02)
