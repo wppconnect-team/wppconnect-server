@@ -305,15 +305,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "clearSession": {
-                    "type": "boolean"
-                  }
-                }
+                "properties": {}
               },
-              "example": {
-                "clearSession": false
-              }
+              "example": {}
             }
           }
         }
@@ -495,15 +489,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "clearSession": {
-                    "type": "boolean"
-                  }
-                }
+                "properties": {}
               },
-              "example": {
-                "clearSession": false
-              }
+              "example": {}
             }
           }
         }
