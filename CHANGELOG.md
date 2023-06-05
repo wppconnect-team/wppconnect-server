@@ -1,3 +1,9 @@
+## 2.2.3 (2023-06-05)
+
+### Bug Fixes
+
+- Removed clearsession on route 'close-session' ([1df6154](https://github.com/wppconnect-team/wppconnect-server/commit/1df6154143bb17cff38d92daddfa9cfb5f8fba0d))
+
 ## 2.2.2 (2023-06-04)
 
 ### Bug Fixes
