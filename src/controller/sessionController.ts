@@ -235,18 +235,15 @@ export async function closeSession(req: Request, res: Response) {
           schema: {
             type: "object",
             properties: {
-              clearSession: { type: "boolean" },
             }
           },
           example: {
-            clearSession: false,
           }
         }
       }
      }
    */
   const session = req.session;
-  const { clearSession = false } = req.body;
   try {
     if ((clientsArray as any)[session].status === null) {
       return await res
@@ -255,13 +252,6 @@ export async function closeSession(req: Request, res: Response) {
     } else {
       (clientsArray as any)[session] = { status: null };
 
-      if (clearSession) {
-        const sessionFolder = `${config.customUserDataDir}/${session}`;
-        if (fs.existsSync(sessionFolder)) {
-          console.log('Deletando pasta: ' + sessionFolder);
-          fs.rmdirSync(sessionFolder, { recursive: true });
-        }
-      }
       await req.client.close();
       req.io.emit('whatsapp-status', false);
       callWebHook(req.client, req, 'closesession', {
