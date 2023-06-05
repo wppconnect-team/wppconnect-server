@@ -832,7 +832,11 @@ routes.post(
   upload.single('file'),
   MiscController.restoreAllSessions
 );
-routes.get('/api/:session/take-screenshot', MiscController.takeScreenshot);
+routes.get(
+  '/api/:session/take-screenshot',
+  verifyToken,
+  MiscController.takeScreenshot
+);
 routes.post('/api/:session/set-limit', MiscController.setLimit);
 
 //Communitys
