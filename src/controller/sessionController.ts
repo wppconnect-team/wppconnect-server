@@ -102,6 +102,7 @@ export async function startAllSessions(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
      #swagger.autoBody=false
+     #swagger.operationId = 'startAllSessions'
      #swagger.security = [{
             "bearerAuth": []
      }]
@@ -146,6 +147,7 @@ export async function showAllSessions(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
      #swagger.autoBody=false
+     #swagger.operationId = 'showAllSessions'
      #swagger.autoQuery=false
      #swagger.autoHeaders=false
      #swagger.security = [{
@@ -186,6 +188,7 @@ export async function startSession(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
      #swagger.autoBody=false
+     #swagger.operationId = 'startSession'
      #swagger.security = [{
             "bearerAuth": []
      }]
@@ -221,26 +224,13 @@ export async function startSession(req: Request, res: Response) {
 export async function closeSession(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
-     #swagger.autoBody=false
+     #swagger.operationId = 'closeSession'
+     #swagger.autoBody=true
      #swagger.security = [{
             "bearerAuth": []
      }]
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
-     }
-     #swagger.requestBody = {
-      required: true,
-      "@content": {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-            }
-          },
-          example: {
-          }
-        }
-      }
      }
    */
   const session = req.session;
@@ -274,6 +264,7 @@ export async function closeSession(req: Request, res: Response) {
 export async function logOutSession(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
+     #swagger.operationId = 'logoutSession'
    * #swagger.description = 'This route logout and delete session data'
      #swagger.autoBody=false
      #swagger.security = [{
@@ -333,6 +324,7 @@ export async function logOutSession(req: Request, res: Response) {
 export async function checkConnectionSession(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
+     #swagger.operationId = 'CheckConnectionState'
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -354,6 +346,7 @@ export async function downloadMediaByMessage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
      #swagger.autoBody=false
+     #swagger.operationId = 'downloadMediabyMessage'
      #swagger.security = [{
             "bearerAuth": []
      }]
@@ -420,6 +413,7 @@ export async function getMediaByMessage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
      #swagger.autoBody=false
+     #swagger.operationId = 'getMediaByMessage'
      #swagger.security = [{
             "bearerAuth": []
      }]
@@ -465,29 +459,15 @@ export async function getMediaByMessage(req: Request, res: Response) {
 
 export async function getSessionState(req: Request, res: Response) {
   /**
-   * #swagger.tags = ["Auth"]
-     #swagger.autoBody=false
+     #swagger.tags = ["Auth"]
+     #swagger.operationId = 'getSessionState'
+     #swagger.summary = 'Retrieve status of a session'
+     #swagger.autoBody = false
      #swagger.security = [{
             "bearerAuth": []
      }]
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
-     }
-     #swagger.requestBody = {
-      required: true,
-      "@content": {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              waitQrCode: { type: "boolean" },
-            }
-          },
-          example: {
-            waitQrCode: false
-          }
-        }
-      }
      }
    */
   try {
@@ -521,6 +501,7 @@ export async function getQrCode(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
      #swagger.autoBody=false
+     #swagger.operationId = 'getQrCode'
      #swagger.security = [{
             "bearerAuth": []
      }]
@@ -567,6 +548,7 @@ export async function killServiceWorker(req: Request, res: Response) {
   /**
    * #swagger.ignore=true
    * #swagger.tags = ["Messages"]
+     #swagger.operationId = 'killServiceWorkier'
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -593,6 +575,7 @@ export async function restartService(req: Request, res: Response) {
   /**
    * #swagger.ignore=true
    * #swagger.tags = ["Messages"]
+     #swagger.operationId = 'restartService'
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -617,6 +600,7 @@ export async function restartService(req: Request, res: Response) {
 export async function subscribePresence(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Misc"]
+     #swagger.operationId = 'subscribePresence'
      #swagger.autoBody=false
      #swagger.security = [{
             "bearerAuth": []
@@ -679,6 +663,7 @@ export async function subscribePresence(req: Request, res: Response) {
 export async function editBusinessProfile(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Profile"]
+     #swagger.operationId = 'editBusinessProfile'
    * #swagger.description = 'Edit your bussiness profile'
      #swagger.autoBody=false
      #swagger.security = [{

@@ -64,11 +64,6 @@ routes.get(
   DeviceController.getPlatformFromMessage
 );
 routes.get(
-  '/api/:session/status-session',
-  verifyToken,
-  SessionController.getSessionState
-);
-routes.get(
   '/api/:session/qrcode-session',
   verifyToken,
   SessionController.getQrCode
@@ -163,6 +158,11 @@ routes.post(
   verifyToken,
   statusConnection,
   MessageController.sendVoice64
+);
+routes.get(
+  '/api/:session/status-session',
+  verifyToken,
+  SessionController.getSessionState
 );
 routes.post(
   '/api/:session/send-status',
