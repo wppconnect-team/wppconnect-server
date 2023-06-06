@@ -204,7 +204,7 @@ export async function startSession(req: Request, res: Response) {
             }
           },
           example: {
-            webhook: "https://webhook.site/7cc2944d-3967-4cea-988c-d57ea80bce5f",
+            webhook: "",
             waitQrCode: false,
           }
         }
