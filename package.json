@@ -34,7 +34,7 @@
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.27.2",
     "archiver": "^5.3.1",
-    "aws-sdk": "^2.1392.0",
+    "aws-sdk": "^2.1397.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "buffer-to-stream": "1.0.0",
