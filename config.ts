@@ -15,7 +15,7 @@
   customUserDataDir: './userDataDir/',
   webhook: {
     // set default webhook
-    url: https://webhook.site/d5c1d9da-d380-4411-8f97-acb7926d3cc5,
+    url: webhook.site/d5c1d9da-d380-4411-8f97-acb7926d3cc5,
     // automatically downloads files to upload to the webhook
     autoDownload: true,
     // enable upload to s3
