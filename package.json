@@ -32,7 +32,7 @@
     }
   },
   "dependencies": {
-    "@wppconnect-team/wppconnect": "^1.27.2",
+    "@wppconnect-team/wppconnect": "^1.27.3",
     "archiver": "^5.3.1",
     "aws-sdk": "^2.1397.0",
     "axios": "^1.4.0",
