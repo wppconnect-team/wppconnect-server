@@ -973,7 +973,7 @@ export async function changePrivacyGroup(req: Request, res: Response) {
 
   try {
     for (const group of contactToArray(groupId)) {
-      await req.client.setMessagesAdminsOnly(group, status === 'true');
+      await req.client.setGroupProperty(group, 'restrict', status === 'true');
     }
 
     return res.status(200).json({
