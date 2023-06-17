@@ -143,7 +143,7 @@ export async function sendFile(req: Request, res: Response) {
         await req.client.sendFile(contact, pathFile, {
           filename: filename,
           caption: msg,
-          ...options
+          ...options,
         })
       );
     }
