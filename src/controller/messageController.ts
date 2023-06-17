@@ -126,6 +126,8 @@ export async function sendFile(req: Request, res: Response) {
    */
   const { phone, path, base64, filename = 'file', message, caption } = req.body;
 
+  const options = req.body.options || {};
+
   if (!path && !req.file && !base64)
     return res.status(401).send({
       message: 'Sending the file is mandatory',
@@ -136,11 +138,12 @@ export async function sendFile(req: Request, res: Response) {
 
   try {
     const results: any = [];
-    for (const contato of phone) {
+    for (const contact of phone) {
       results.push(
-        await req.client.sendFile(contato, pathFile, {
+        await req.client.sendFile(contact, pathFile, {
           filename: filename,
           caption: msg,
+          ...options
         })
       );
     }
