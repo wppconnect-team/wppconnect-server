@@ -27,7 +27,7 @@
     //sends all unread messages to the webhook when the server starts
     allUnreadOnStart: false,
     // send all events of message status (read, sended, etc)
-    listenAcks: true,
+    listenAcks: false,
     // send all events of contacts online or offline for webook and socket
     onPresenceChanged: true,
     // send all events of groups participants changed for webook and socket
