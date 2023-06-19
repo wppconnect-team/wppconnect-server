@@ -17,27 +17,26 @@ import { Whatsapp } from '@wppconnect-team/wppconnect';
 import { EventEmitter } from 'events';
 
 export const chromiumArgs = [
-  '--disable-web-security',
-  '--no-sandbox',
-  '--disable-web-security',
-  '--aggressive-cache-discard',
-  '--disable-cache',
-  '--disable-application-cache',
-  '--disable-offline-load-stale-cache',
-  '--disk-cache-size=0',
-  '--disable-background-networking',
-  '--disable-default-apps',
-  '--disable-extensions',
-  '--disable-sync',
-  '--disable-translate',
-  '--hide-scrollbars',
-  '--metrics-recording-only',
-  '--mute-audio',
-  '--no-first-run',
-  '--safebrowsing-disable-auto-update',
-  '--ignore-certificate-errors',
-  '--ignore-ssl-errors',
-  '--ignore-certificate-errors-spki-list',
+  '--disable-web-security', // Desabilita a segurança da web
+  '--no-sandbox', // Desabilita o sandbox
+  '--aggressive-cache-discard', // Descarta agressivamente o cache
+  '--disable-cache', // Desabilita o cache
+  '--disable-application-cache', // Desabilita o cache de aplicativos
+  '--disable-offline-load-stale-cache', // Desabilita o carregamento de cache desatualizado offline
+  '--disk-cache-size=0', // Define o tamanho do cache em disco como 0
+  '--disable-background-networking', // Desabilita as atividades de rede em segundo plano
+  '--disable-default-apps', // Desabilita os aplicativos padrão
+  '--disable-extensions', // Desabilita as extensões
+  '--disable-sync', // Desabilita a sincronização
+  '--disable-translate', // Desabilita a tradução
+  '--hide-scrollbars', // Esconde as barras de rolagem
+  '--metrics-recording-only', // Grava apenas métricas
+  '--mute-audio', // Silencia o áudio
+  '--no-first-run', // Não faz a primeira execução
+  '--safebrowsing-disable-auto-update', // Desabilita a atualização automática do Safe Browsing
+  '--ignore-certificate-errors', // Ignora erros de certificado
+  '--ignore-ssl-errors', // Ignora erros SSL
+  '--ignore-certificate-errors-spki-list' // Ignora erros de certificado na lista SPKI
 ];
 // eslint-disable-next-line prefer-const
 export let clientsArray: Whatsapp[] = [];
