@@ -17,26 +17,26 @@ import { Whatsapp } from '@wppconnect-team/wppconnect';
 import { EventEmitter } from 'events';
 
 export const chromiumArgs = [
-  '--disable-web-security', // Desabilita a segurança da web
-  '--no-sandbox', // Desabilita o sandbox
-  '--aggressive-cache-discard', // Descarta agressivamente o cache
-  '--disable-cache', // Desabilita o cache
-  '--disable-application-cache', // Desabilita o cache de aplicativos
-  '--disable-offline-load-stale-cache', // Desabilita o carregamento de cache desatualizado offline
-  '--disk-cache-size=0', // Define o tamanho do cache em disco como 0
-  '--disable-background-networking', // Desabilita as atividades de rede em segundo plano
-  '--disable-default-apps', // Desabilita os aplicativos padrão
-  '--disable-extensions', // Desabilita as extensões
-  '--disable-sync', // Desabilita a sincronização
-  '--disable-translate', // Desabilita a tradução
-  '--hide-scrollbars', // Esconde as barras de rolagem
-  '--metrics-recording-only', // Grava apenas métricas
-  '--mute-audio', // Silencia o áudio
-  '--no-first-run', // Não faz a primeira execução
-  '--safebrowsing-disable-auto-update', // Desabilita a atualização automática do Safe Browsing
-  '--ignore-certificate-errors', // Ignora erros de certificado
-  '--ignore-ssl-errors', // Ignora erros SSL
-  '--ignore-certificate-errors-spki-list' // Ignora erros de certificado na lista SPKI
+  '--disable-web-security', // Disables web security
+  '--no-sandbox', // Disables sandbox
+  '--aggressive-cache-discard', // Aggressively discards cache
+  '--disable-cache', // Disables cache
+  '--disable-application-cache', // Disables application cache
+  '--disable-offline-load-stale-cache', // Disables loading stale offline cache
+  '--disk-cache-size=0', // Sets disk cache size to 0
+  '--disable-background-networking', // Disables background networking activities
+  '--disable-default-apps', // Disables default apps
+  '--disable-extensions', // Disables extensions
+  '--disable-sync', // Disables synchronization
+  '--disable-translate', // Disables translation
+  '--hide-scrollbars', // Hides scrollbars
+  '--metrics-recording-only', // Records metrics only
+  '--mute-audio', // Mutes audio
+  '--no-first-run', // Skips first run
+  '--safebrowsing-disable-auto-update', // Disables Safe Browsing auto-update
+  '--ignore-certificate-errors', // Ignores certificate errors
+  '--ignore-ssl-errors', // Ignores SSL errors
+  '--ignore-certificate-errors-spki-list' // Ignores certificate errors in SPKI list
 ];
 // eslint-disable-next-line prefer-const
 export let clientsArray: Whatsapp[] = [];
