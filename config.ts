@@ -44,7 +44,7 @@
   // send data to chatwoot
   chatwoot: {
     sendQrCode: true,
-    sendStatus: true,
+    sendStatus: false,
   },
   //functionality that archives conversations, runs when the server starts
   archive: {
