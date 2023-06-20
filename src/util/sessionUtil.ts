@@ -36,7 +36,7 @@ export const chromiumArgs = [
   '--safebrowsing-disable-auto-update', // Disables Safe Browsing auto-update
   '--ignore-certificate-errors', // Ignores certificate errors
   '--ignore-ssl-errors', // Ignores SSL errors
-  '--ignore-certificate-errors-spki-list' // Ignores certificate errors in SPKI list
+  '--ignore-certificate-errors-spki-list', // Ignores certificate errors in SPKI list
 ];
 // eslint-disable-next-line prefer-const
 export let clientsArray: Whatsapp[] = [];
