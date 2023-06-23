@@ -973,7 +973,11 @@ export async function changePrivacyGroup(req: Request, res: Response) {
 
   try {
     for (const group of contactToArray(groupId)) {
-      await req.client.setMessagesAdminsOnly(group, status === 'true');
+      await req.client.setGroupProperty(
+        group,
+        'restrict' as any,
+        status === 'true'
+      );
     }
 
     return res.status(200).json({
@@ -1015,7 +1019,7 @@ export async function setGroupProfilePic(req: Request, res: Response) {
       }
     }
    */
-  const { phone, path } = req.body;
+  const { groupId, path } = req.body;
 
   if (!path && !req.file)
     return res.status(401).send({
@@ -1025,8 +1029,8 @@ export async function setGroupProfilePic(req: Request, res: Response) {
   const pathFile = path || req.file?.path;
 
   try {
-    for (const contato of contactToArray(phone, true)) {
-      await req.client.setGroupIcon(contato, pathFile);
+    for (const contact of contactToArray(groupId, true)) {
+      await req.client.setGroupIcon(contact, pathFile);
     }
 
     return res.status(201).json({
