@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import aws from 'aws-sdk';
+const { aws } = require("@aws-sdk/client-s3");
 import api from 'axios';
 import Crypto from 'crypto';
 import fs from 'fs';
