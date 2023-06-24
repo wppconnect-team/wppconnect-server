@@ -205,10 +205,10 @@ export default class chatWootClient {
   async findConversation(contact: any) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/conversations?inbox_id=${this.inbox_id}&status=all`
+        `api/v1/accounts/${this.account_id}/contacts/${contact.id}/conversations`
       );
-      return data.data.payload.find(
-        (e: any) => e.meta.sender.id == contact.id && e.status != 'resolved'
+      return data.payload.find(
+        (e: any) => e.inbox_id == this.inbox_id && e.status != 'resolved'
       );
     } catch (e) {
       console.log(e);
