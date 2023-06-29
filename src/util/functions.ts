@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const { aws } = require("@aws-sdk/client-s3");
+const { aws } = require('@aws-sdk/client-s3');
 import api from 'axios';
 import Crypto from 'crypto';
 import fs from 'fs';
@@ -90,6 +90,10 @@ export function groupNameToArray(group: any) {
   }
 
   return localArr;
+}
+
+export function callSocket(req: any, event: any, data: any) {
+  return req.io.to(req.session).emit(event, data);
 }
 
 export async function callWebHook(
