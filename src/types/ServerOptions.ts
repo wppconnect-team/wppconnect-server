@@ -20,6 +20,7 @@ export interface ServerOptions {
     onReactionMessage: boolean;
     onPollResponse: boolean;
     onRevokedMessage: boolean;
+    onSelfMessage: boolean;
   };
   archive: {
     enable: boolean;

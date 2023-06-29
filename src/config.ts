@@ -22,6 +22,7 @@ export default {
     onPollResponse: true,
     onRevokedMessage: true,
     onLabelUpdated: true,
+    onSelfMessage: false,
   },
   chatwoot: {
     sendQrCode: true,
