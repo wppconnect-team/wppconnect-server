@@ -159,11 +159,6 @@ export default class CreateSessionUtil {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
-    // req.io.emit('qrCode', {
-    //   data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
-    //   session: client.session,
-    // });
-
     callSocket(req, 'qr-code', {
       data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
       session: client.session,
@@ -190,7 +185,7 @@ export default class CreateSessionUtil {
 
       req.logger.info(`Started Session: ${client.session}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
-      // req.io.emit('session-logged', { status: true, session: client.session });
+
       callSocket(req, 'session-logged', {
         status: true,
         session: client.session,
@@ -198,7 +193,7 @@ export default class CreateSessionUtil {
       startHelper(client, req);
     } catch (error) {
       req.logger.error(error);
-      // req.io.emit('session-error', client.session);
+
       callSocket(req, 'session-error', {
         session: client.session,
       });
@@ -244,14 +239,12 @@ export default class CreateSessionUtil {
         download(message, client, req.logger);
       }
 
-      // req.io.emit('received-message', { response: message });
       callSocket(req, 'received-message', {
         message,
       });
     });
 
     await client.onIncomingCall(async (call) => {
-      // req.io.emit('incomingcall', call);
       callSocket(req, 'incoming-call', {
         call,
       });
@@ -261,7 +254,6 @@ export default class CreateSessionUtil {
 
   async listenAcks(client: WhatsAppServer, req: Request) {
     await client.onAck(async (ack) => {
-      // req.io.emit('onack', ack);
       callSocket(req, 'on-ack', {
         ack,
       });
@@ -271,7 +263,6 @@ export default class CreateSessionUtil {
 
   async onPresenceChanged(client: WhatsAppServer, req: Request) {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
-      // req.io.emit('onpresencechanged', presenceChangedEvent);
       callSocket(req, 'on-presence-changed', {
         presenceChangedEvent,
       });
@@ -282,7 +273,6 @@ export default class CreateSessionUtil {
   async onReactionMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onReactionMessage(async (reaction: any) => {
-      // req.io.emit('onreactionmessage', reaction);
       callSocket(req, 'on-reaction-message', {
         reaction,
       });
@@ -293,7 +283,6 @@ export default class CreateSessionUtil {
   async onRevokedMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onRevokedMessage(async (response: any) => {
-      // req.io.emit('onrevokedmessage', response);
       callSocket(req, 'on-revoked-message', {
         response,
       });
@@ -303,7 +292,6 @@ export default class CreateSessionUtil {
   async onPollResponse(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onPollResponse(async (response: any) => {
-      // req.io.emit('onpollresponse', response);
       callSocket(req, 'on-poll-response', {
         response,
       });
@@ -313,7 +301,6 @@ export default class CreateSessionUtil {
   async onLabelUpdated(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onUpdateLabel(async (response: any) => {
-      // req.io.emit('onupdatelabel', response);
       callSocket(req, 'on-update-label', {
         response,
       });

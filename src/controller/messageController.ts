@@ -78,7 +78,7 @@ export async function sendMessage(req: Request, res: Response) {
 
     if (results.length === 0)
       return res.status(400).json('Error sending message');
-    // req.io.emit('send-message', results);
+
     callSocket(req, 'send-message', {
       results,
     });
@@ -630,7 +630,7 @@ export async function replyMessage(req: Request, res: Response) {
 
     if (results.length === 0)
       return res.status(400).json('Error sending message');
-    // req.io.emit('send-message', { message: message, to: phone });
+
     callSocket(req, 'send-message', { message: message, to: phone });
     returnSucess(res, results);
   } catch (error) {

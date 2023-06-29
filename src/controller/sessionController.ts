@@ -243,7 +243,7 @@ export async function closeSession(req: Request, res: Response) {
       (clientsArray as any)[session] = { status: null };
 
       await req.client.close();
-      // req.io.emit('whatsapp-status', false);
+
       callSocket(req, 'whatsapp-status', {
         status: false,
       });
@@ -303,7 +303,6 @@ export async function logOutSession(req: Request, res: Response) {
         });
       }
 
-      // req.io.emit('whatsapp-status', false);
       callSocket(req, 'whatsapp-status', {
         status: false,
       });
