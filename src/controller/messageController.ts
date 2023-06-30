@@ -79,9 +79,7 @@ export async function sendMessage(req: Request, res: Response) {
     if (results.length === 0)
       return res.status(400).json('Error sending message');
 
-    callSocket(req, 'sent-message', {
-      results,
-    });
+    callSocket(req, 'sent-message', results);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);

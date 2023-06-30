@@ -93,12 +93,13 @@ export function groupNameToArray(group: any) {
 }
 
 export function callSocket(req: any, event: any, data: any) {
-  const listeners =
-    req.io?.sockets?.adapter?.rooms?.get(req.session)?.size || 0;
+  const session = req?.session || data?.session;
+
+  const listeners = req.io?.sockets?.adapter?.rooms?.get(session)?.size || 0;
 
   if (listeners == 0) return;
 
-  return req.io.to(req.session).emit(event, data);
+  return req.io.to(session).emit(event, data);
 }
 
 export async function callWebHook(
