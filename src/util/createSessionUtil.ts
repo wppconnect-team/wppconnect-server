@@ -230,7 +230,7 @@ export default class CreateSessionUtil {
 
       req.io.emit('received-message', { response: message });
       if (req.serverOptions.webhook.onSelfMessage && message.fromMe)
-        callWebHook(client, req, 'onSelfMessage', message);
+        callWebHook(client, req, 'onselfmessage', message);
     });
 
     await client.onIncomingCall(async (call) => {
