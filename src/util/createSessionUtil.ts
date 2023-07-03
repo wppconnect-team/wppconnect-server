@@ -68,8 +68,8 @@ export default class CreateSessionUtil {
           req.serverOptions.createOptions,
           {
             session: session,
-            deviceName: client.config?.options?.deviceName || req.serverOptions.deviceName,
-            poweredBy: client.config?.options?.poweredBy || req.serverOptions.poweredBy || 'WPPConnect-Server',
+            deviceName: client.config?.deviceName || req.serverOptions.deviceName,
+            poweredBy: client.config?.poweredBy || req.serverOptions.poweredBy || 'WPPConnect-Server',
             catchQR: (
               base64Qr: any,
               asciiQR: any,
