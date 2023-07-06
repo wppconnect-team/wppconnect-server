@@ -45,7 +45,7 @@
     "multer": "^1.4.5-lts.1",
     "qrcode": "^1.5.3",
     "socket.io": "^4.7.1",
-    "swagger-autogen": "^2.23.2",
+    "swagger-autogen": "^2.23.4",
     "swagger-ui-express": "^4.6.3",
     "unzipper": "^0.10.14",
     "winston": "^3.9.0"
