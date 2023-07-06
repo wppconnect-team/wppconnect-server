@@ -35,7 +35,7 @@
     "@wppconnect-team/wppconnect": "^1.27.3",
     "archiver": "^5.3.1",
     "@aws-sdk/client-s3": "^3.359.0",
-    "aws-sdk": "^2.1401.0",
+    "aws-sdk": "^2.1412.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "buffer-to-stream": "1.0.0",
