@@ -212,6 +212,12 @@ This server use config.ts file to define some options, default values are:
     redisDb: 0,
     redisPrefix: 'docker',
   },
+  // Your configurations yo upload on AWS
+  aws_s3: {
+    region: 'sa-east-1',
+    access_key_id: '',
+    secret_key: '',
+  },
 }
 ```
 

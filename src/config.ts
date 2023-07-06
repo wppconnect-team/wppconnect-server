@@ -80,4 +80,9 @@ export default {
     redisDb: 0,
     redisPrefix: 'docker',
   },
+  aws_s3: {
+    region: 'sa-east-1',
+    access_key_id: '',
+    secret_key: '',
+  },
 };

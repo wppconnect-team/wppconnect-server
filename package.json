@@ -26,16 +26,10 @@
     "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
     "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url"
   },
-  "config": {
-    "commitizen": {
-      "path": "@commitlint/cz-commitlint"
-    }
-  },
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.27.3",
     "archiver": "^5.3.1",
     "@aws-sdk/client-s3": "^3.359.0",
-    "aws-sdk": "^2.1401.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "buffer-to-stream": "1.0.0",
