@@ -46,7 +46,7 @@
     "qrcode": "^1.5.3",
     "socket.io": "^4.7.1",
     "swagger-autogen": "^2.23.4",
-    "swagger-ui-express": "^4.6.3",
+    "swagger-ui-express": "^5.0.0",
     "unzipper": "^0.10.14",
     "winston": "^3.9.0"
   },
