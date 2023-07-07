@@ -70,7 +70,7 @@ export default class CreateSessionUtil {
             session: session,
             deviceName:
               client.config?.deviceName || req.serverOptions.deviceName,
-            poweredBy: 
+            poweredBy:
               client.config?.poweredBy ||
               req.serverOptions.poweredBy ||
               'WPPConnect-Server',

@@ -58,7 +58,7 @@ export interface ServerOptions {
   aws_s3: {
     region: BucketLocationConstraint | null;
     access_key_id: string | null;
-    secret_key: null | null;
+    secret_key: string | null;
     defaultBucketName: string | null;
   };
 }
