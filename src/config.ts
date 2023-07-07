@@ -12,7 +12,6 @@ export default {
     url: null,
     autoDownload: true,
     uploadS3: false,
-    awsBucketName: null,
     readMessage: true,
     allUnreadOnStart: false,
     listenAcks: true,
@@ -82,7 +81,8 @@ export default {
   },
   aws_s3: {
     region: 'sa-east-1',
-    access_key_id: '',
-    secret_key: '',
+    access_key_id: null,
+    secret_key: null,
+    defaultBucketName: null,
   },
 };

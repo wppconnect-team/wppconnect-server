@@ -1,3 +1,5 @@
+import { BucketLocationConstraint } from '@aws-sdk/client-s3';
+
 export interface ServerOptions {
   secretKey: string;
   host: string;
@@ -51,5 +53,11 @@ export interface ServerOptions {
     redisPassword: string;
     redisDb: string;
     redisPrefix: string;
+  };
+  aws_s3: {
+    region: BucketLocationConstraint | null;
+    access_key_id: string | null;
+    secret_key: null | null;
+    defaultBucketName: string | null;
   };
 }
