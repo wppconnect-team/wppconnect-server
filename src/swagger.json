@@ -7339,6 +7339,14 @@
         "responses": {}
       }
     },
+    "/metrics": {
+      "get": {
+        "tags": ["Misc"],
+        "description": "This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/unhealthy": {
       "get": {
         "tags": ["Misc"],
