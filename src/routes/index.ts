@@ -31,7 +31,7 @@ import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
-import { prometheusRegister } from '../middleware/instrumentation';
+import * as prometheusRegister from '../middleware/instrumentation';
 import statusConnection from '../middleware/statusConnection';
 import swaggerDocument from '../swagger.json';
 
@@ -896,9 +896,6 @@ routes.get('/unhealthy', HealthCheck.unhealthy);
 
 //Metrics Prometheus
 
-routes.get('/metrics', (req: Request, res: Response) => {
-  res.setHeader('Content-Type', prometheusRegister.contentType);
-  prometheusRegister.metrics().then((data) => res.status(200).send(data));
-});
+routes.get('/metrics', prometheusRegister.metrics);
 
 export default routes;
