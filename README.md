@@ -217,6 +217,8 @@ This server use config.ts file to define some options, default values are:
     region: 'sa-east-1',
     access_key_id: '',
     secret_key: '',
+    // If you already have a bucket created that will be used. Will bestored: you-default-bucket/{session}/{filename}
+    defaultBucketName: ''
   },
 }
 ```
