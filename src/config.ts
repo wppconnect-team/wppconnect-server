@@ -12,7 +12,6 @@ export default {
     url: null,
     autoDownload: true,
     uploadS3: false,
-    awsBucketName: null,
     readMessage: true,
     allUnreadOnStart: false,
     listenAcks: true,
@@ -22,6 +21,7 @@ export default {
     onPollResponse: true,
     onRevokedMessage: true,
     onLabelUpdated: true,
+    onSelfMessage: false,
   },
   chatwoot: {
     sendQrCode: true,
@@ -79,5 +79,11 @@ export default {
     redisPassword: '',
     redisDb: 0,
     redisPrefix: 'docker',
+  },
+  aws_s3: {
+    region: 'sa-east-1',
+    access_key_id: null,
+    secret_key: null,
+    defaultBucketName: null,
   },
 };

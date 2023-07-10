@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 WPPConnect Team
+ * Copyright 2023 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const { aws } = require('@aws-sdk/client-s3');
+import {
+  CreateBucketCommand,
+  PutObjectCommand,
+  PutPublicAccessBlockCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import api from 'axios';
 import Crypto from 'crypto';
+import { Request } from 'express';
 import fs from 'fs';
 import mimetypes from 'mime-types';
 import os from 'os';
@@ -25,6 +31,7 @@ import { promisify } from 'util';
 import config from '../config';
 import { convert } from '../mapper/index';
 import { ServerOptions } from '../types/ServerOptions';
+import { bucketAlreadyExists } from './bucketAlreadyExists';
 
 let mime: any, crypto: any; //, aws: any;
 if (config.webhook.uploadS3) {
@@ -104,7 +111,7 @@ export function callSocket(req: any, event: any, data: any) {
 
 export async function callWebHook(
   client: any,
-  req: any,
+  req: Request,
   event: any,
   data: any
 ) {
@@ -146,23 +153,54 @@ async function autoDownload(client: any, req: any, message: any) {
       if (req.serverOptions.webhook.uploadS3) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
-        const s3 = new aws.S3();
-        const bucketName = config.webhook?.awsBucketName
-          ? config.webhook?.awsBucketName
+        if (
+          !config.aws_s3.region ||
+          !config.aws_s3.access_key_id ||
+          !config.aws_s3.secret_key
+        )
+          throw new Error('Please, configure your aws configs');
+        const s3Client = new S3Client({ region: config.aws_s3.region });
+        let bucketName = config.aws_s3.defaultBucketName
+          ? config.aws_s3.defaultBucketName
           : client.session;
+        bucketName = bucketName
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]|[-— _.,?!]/g, '')
+          .toLowerCase();
         const fileName = `${
-          config.webhook?.awsBucketName ? client.session + '/' : ''
+          config.aws_s3.defaultBucketName ? client.session + '/' : ''
         }${hashName}.${mime.extension(message.mimetype)}`;
 
-        const params = {
-          Bucket: bucketName,
-          Key: fileName,
-          Body: buffer,
-          ACL: 'public-read',
-          ContentType: message.mimetype,
-        };
-        const data = await s3.upload(params).promise();
-        message.fileUrl = data.Location;
+        if (!(await bucketAlreadyExists(bucketName))) {
+          await s3Client.send(
+            new CreateBucketCommand({
+              Bucket: bucketName,
+              ObjectOwnership: 'ObjectWriter',
+            })
+          );
+          await s3Client.send(
+            new PutPublicAccessBlockCommand({
+              Bucket: bucketName,
+              PublicAccessBlockConfiguration: {
+                BlockPublicAcls: false,
+                IgnorePublicAcls: false,
+                BlockPublicPolicy: false,
+              },
+            })
+          );
+        }
+
+        await s3Client.send(
+          new PutObjectCommand({
+            Bucket: bucketName,
+            Key: fileName,
+            Body: buffer,
+            ContentType: message.mimetype,
+            ACL: 'public-read',
+          })
+        );
+
+        message.fileUrl = `https://${bucketName}.s3.amazonaws.com/${fileName}`;
       } else {
         message.body = await buffer.toString('base64');
       }

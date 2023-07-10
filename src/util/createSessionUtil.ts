@@ -68,8 +68,12 @@ export default class CreateSessionUtil {
           req.serverOptions.createOptions,
           {
             session: session,
-            deviceName: req.serverOptions.deviceName,
-            poweredBy: req.serverOptions.poweredBy || 'WPPConnect-Server',
+            deviceName:
+              client.config?.deviceName || req.serverOptions.deviceName,
+            poweredBy:
+              client.config?.poweredBy ||
+              req.serverOptions.poweredBy ||
+              'WPPConnect-Server',
             catchQR: (
               base64Qr: any,
               asciiQR: any,
@@ -240,6 +244,8 @@ export default class CreateSessionUtil {
       }
 
       callSocket(req, 'received-message', message);
+      if (req.serverOptions.webhook.onSelfMessage && message.fromMe)
+        callWebHook(client, req, 'onselfmessage', message);
     });
 
     await client.onIncomingCall(async (call) => {

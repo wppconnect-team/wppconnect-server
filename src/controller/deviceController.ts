@@ -1955,9 +1955,10 @@ export async function getProfilePicFromServer(req: Request, res: Response) {
      }
    */
   const { phone = true } = req.params;
+  const { isGroup = false } = req.query;
   try {
     let response;
-    for (const contato of contactToArray(phone as string, false)) {
+    for (const contato of contactToArray(phone as string, isGroup as boolean)) {
       response = await req.client.getProfilePicFromServer(contato);
     }
 
