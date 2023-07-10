@@ -161,7 +161,10 @@ async function autoDownload(client: any, req: any, message: any) {
           config.aws_s3.defaultBucketName ? client.session + '/' : ''
         }${hashName}.${mime.extension(message.mimetype)}`;
 
-        if (!(await bucketAlreadyExists(bucketName))) {
+        if (
+          !config.aws_s3.defaultBucketName &&
+          !(await bucketAlreadyExists(bucketName))
+        ) {
           await s3Client.send(
             new CreateBucketCommand({
               Bucket: bucketName,
