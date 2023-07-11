@@ -48,7 +48,7 @@
     "swagger-autogen": "^2.23.4",
     "swagger-ui-express": "^5.0.0",
     "unzipper": "^0.10.14",
-    "winston": "^3.9.0"
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.6",
