@@ -155,8 +155,13 @@ async function autoDownload(client: any, req: any, message: any) {
           : client.session;
         bucketName = bucketName
           .normalize('NFD')
-          .replace(/[\u0300-\u036f]|[-— _.,?!]/g, '')
+          .replace(/[\u0300-\u036f]|[— _.,?!]/g, '')
           .toLowerCase();
+        bucketName =
+          bucketName.length < 3
+            ? bucketName +
+              `${Math.floor(Math.random() * (999 - 100 + 1)) + 100}`
+            : bucketName;
         const fileName = `${
           config.aws_s3.defaultBucketName ? client.session + '/' : ''
         }${hashName}.${mime.extension(message.mimetype)}`;
