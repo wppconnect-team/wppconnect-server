@@ -57,7 +57,7 @@ export function initServer(serverOptions: any) {
   app.use('/files', express.static('WhatsAppImages'));
   app.use(boolParser());
 
-  if (config.aws_s3.access_key_id && config.aws_s3.secret_key) {
+  if (config.aws_s3 && config.aws_s3.access_key_id && config.aws_s3.secret_key) {
     process.env['AWS_ACCESS_KEY_ID'] = config.aws_s3.access_key_id;
     process.env['AWS_SECRET_ACCESS_KEY'] = config.aws_s3.secret_key;
   }
