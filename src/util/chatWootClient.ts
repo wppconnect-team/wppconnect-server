@@ -17,6 +17,7 @@ import axios from 'axios';
 import toStream from 'buffer-to-stream';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
+import { Readable } from 'stream';
 
 import { eventEmitter } from './sessionUtil';
 
@@ -86,6 +87,33 @@ export default class chatWootClient {
     });
   }
 
+  private bufferToReadableStream(buffer) {
+    const readableInstanceStream = new Readable({
+      read() {
+        this.push(buffer);
+        this.push(null);
+      },
+    });
+
+    return readableInstanceStream;
+  }
+
+  private async appendAttachment(data, mediaData, filename, mimeType) {
+    const readableStream = this.bufferToReadableStream(mediaData);
+
+    // Wait for the toStream operation to complete before continuing
+    await new Promise((resolve) => {
+      readableStream.on('end', () => {
+        data.append('attachments[]', readableStream, {
+          filename: filename,
+          contentType: mimeType,
+        });
+
+        resolve(null);
+      });
+    });
+  }
+
   async sendMessage(client: any, message: any) {
     if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
     const contact = await this.createContact(message);
@@ -122,17 +150,24 @@ export default class chatWootClient {
           data.append('content', message.caption);
         }
 
-        const streaemMediaData = await new Promise((resolve, reject) => {
-          const readable = toStream(mediaData);
+        console.log('====================================');
+        console.log('AQUI');
+        console.log('====================================');
 
-          readable.on('end', () => resolve(readable));
-          readable.on('error', (error) => reject(error));
-        });
+        await this.appendAttachment(
+          data,
+          mediaData,
+          filename,
+          message.mimetype
+        );
+        // data.append('attachments[]', toStream(mediaData), {
+        //   filename: filename,
+        //   contentType: message.mimetype,
+        // });
 
-        data.append('attachments[]', streaemMediaData, {
-          filename: filename,
-          contentType: message.mimetype,
-        });
+        console.log('====================================');
+        console.log('ALÍ');
+        console.log('====================================');
         data.append('message_type', 'incoming');
         data.append('private', 'false');
 
