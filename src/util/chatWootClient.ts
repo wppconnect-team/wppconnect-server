@@ -126,7 +126,7 @@ export default class chatWootClient {
           const readable = toStream(mediaData);
 
           readable.on('end', () => resolve(readable));
-          readable.on('error', () => reject(readable));
+          readable.on('error', (error) => reject(error));
         });
 
         data.append('attachments[]', streaemMediaData, {
