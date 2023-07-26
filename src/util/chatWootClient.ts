@@ -121,7 +121,15 @@ export default class chatWootClient {
         if (message.caption) {
           data.append('content', message.caption);
         }
-        data.append('attachments[]', toStream(mediaData), {
+
+        const streaemMediaData = await new Promise((resolve, reject) => {
+          const readable = toStream(mediaData);
+
+          readable.on('end', () => resolve(readable));
+          readable.on('error', () => reject(readable));
+        });
+
+        data.append('attachments[]', streaemMediaData, {
           filename: filename,
           contentType: message.mimetype,
         });
