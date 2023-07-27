@@ -17,8 +17,8 @@ import axios from 'axios';
 import toStream from 'buffer-to-stream';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
-import { Readable } from 'stream';
 
+import { AsyncBufferToStream } from './bufferutils';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
@@ -87,33 +87,6 @@ export default class chatWootClient {
     });
   }
 
-  private bufferToReadableStream(buffer) {
-    const readableInstanceStream = new Readable({
-      read() {
-        this.push(buffer);
-        this.push(null);
-      },
-    });
-
-    return readableInstanceStream;
-  }
-
-  private async appendAttachment(data, mediaData, filename, mimeType) {
-    const readableStream = this.bufferToReadableStream(mediaData);
-
-    // Wait for the toStream operation to complete before continuing
-    await new Promise((resolve) => {
-      readableStream.on('end', () => {
-        data.append('attachments[]', readableStream, {
-          filename: filename,
-          contentType: mimeType,
-        });
-
-        resolve(null);
-      });
-    });
-  }
-
   async sendMessage(client: any, message: any) {
     if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
     const contact = await this.createContact(message);
@@ -154,16 +127,10 @@ export default class chatWootClient {
         console.log('AQUI');
         console.log('====================================');
 
-        await this.appendAttachment(
-          data,
-          mediaData,
-          filename,
-          message.mimetype
-        );
-        // data.append('attachments[]', toStream(mediaData), {
-        //   filename: filename,
-        //   contentType: message.mimetype,
-        // });
+        data.append('attachments[]', await AsyncBufferToStream(mediaData), {
+          filename: filename,
+          contentType: message.mimetype,
+        });
 
         console.log('====================================');
         console.log('ALÍ');
