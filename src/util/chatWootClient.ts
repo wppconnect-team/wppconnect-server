@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import axios from 'axios';
-import toStream from 'buffer-to-stream';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
 
-import { AsyncBufferToStream } from './bufferutils';
+import { AsyncBufferToStream } from './bufferUtils';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
