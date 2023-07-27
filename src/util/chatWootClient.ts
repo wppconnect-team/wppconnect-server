@@ -123,18 +123,11 @@ export default class chatWootClient {
           data.append('content', message.caption);
         }
 
-        console.log('====================================');
-        console.log('AQUI');
-        console.log('====================================');
-
         data.append('attachments[]', await AsyncBufferToStream(mediaData), {
           filename: filename,
           contentType: message.mimetype,
         });
 
-        console.log('====================================');
-        console.log('ALÍ');
-        console.log('====================================');
         data.append('message_type', 'incoming');
         data.append('private', 'false');
 
