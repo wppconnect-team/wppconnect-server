@@ -3,7 +3,7 @@ import { Readable } from 'stream';
 import {
   AsyncBufferToStream,
   bufferToReadableStream,
-} from '../../util/bufferutils';
+} from '../../util/bufferUtils';
 
 function generateRandomData(length: number): string {
   const characters =
