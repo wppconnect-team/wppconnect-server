@@ -17,7 +17,7 @@ import axios from 'axios';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
 
-import bufferUtils from './bufferUtils';
+import bufferUtils from './bufferutils';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
