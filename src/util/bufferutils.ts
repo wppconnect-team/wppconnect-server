@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Readable } from 'stream';
+import { logger } from '..';
 
 function bufferToReadableStream(buffer: Buffer): Readable {
   const readableInstanceStream = new Readable({
@@ -30,7 +32,18 @@ async function AsyncBufferToStream(buffer: Buffer): Promise<Readable> {
   return new Promise((resolve, reject) => {
     const bufferStream = bufferToReadableStream(buffer);
 
-    resolve(bufferStream);
+
+
+    bufferStream.on('data', (data) => {
+      return 
+    });
+
+    bufferStream.on('end', (data) => {
+      logger.info('READ NO TEXT MESSAGE')
+      resolve(bufferStream);
+    });
+
+    
 
     bufferStream.on('error', (error) => {
       reject(error);
