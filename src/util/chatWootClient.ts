@@ -17,7 +17,7 @@ import axios from 'axios';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
 
-import { AsyncBufferToStream } from './bufferUtils';
+import bufferUtils from './bufferUtils';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
@@ -122,10 +122,14 @@ export default class chatWootClient {
           data.append('content', message.caption);
         }
 
-        data.append('attachments[]', await AsyncBufferToStream(mediaData), {
-          filename: filename,
-          contentType: message.mimetype,
-        });
+        data.append(
+          'attachments[]',
+          await bufferUtils.AsyncBufferToStream(mediaData),
+          {
+            filename: filename,
+            contentType: message.mimetype,
+          }
+        );
 
         data.append('message_type', 'incoming');
         data.append('private', 'false');
