@@ -16,8 +16,9 @@
 import axios from 'axios';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
+import { Readable } from 'stream';
 
-import bufferUtils from './bufferutils';
+// import bufferUtils from './bufferutils';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
@@ -117,19 +118,20 @@ export default class chatWootClient {
 
         const mediaData = Buffer.from(b64, 'base64');
 
+        // Create a readable stream from the Buffer
+        const stream = new Readable();
+        stream.push(mediaData);
+        stream.push(null); // Signaling the end of the stream
+
         const data = new FormData();
         if (message.caption) {
           data.append('content', message.caption);
         }
 
-        data.append(
-          'attachments[]',
-          await bufferUtils.AsyncBufferToStream(mediaData),
-          {
-            filename: filename,
-            contentType: message.mimetype,
-          }
-        );
+        data.append('attachments[]', stream, {
+          filename: filename,
+          contentType: message.mimetype,
+        });
 
         data.append('message_type', 'incoming');
         data.append('private', 'false');
@@ -144,6 +146,7 @@ export default class chatWootClient {
             },
           }
         );
+
         configPost.headers = { ...configPost.headers, ...data.getHeaders() };
 
         const result = await axios.post(
@@ -152,6 +155,7 @@ export default class chatWootClient {
           configPost
         );
 
+        console.log('POS-REQUEST');
         return result;
       } else {
         const body = {

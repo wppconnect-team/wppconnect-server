@@ -1,9 +1,6 @@
 import { Readable } from 'stream';
 
-import {
-  AsyncBufferToStream,
-  bufferToReadableStream,
-} from '../../util/bufferUtils';
+import bufferUtils from '../../util/bufferutils';
 
 function generateRandomData(length: number): string {
   const characters =
@@ -22,14 +19,14 @@ describe('Utils Functions', function () {
     const buffer = Buffer.from(bodyToBuffer, 'utf-8');
 
     it('Should transform the Buffer in a Readable Stream', function () {
-      const bufferStream = bufferToReadableStream(buffer);
+      const bufferStream = bufferUtils.bufferToReadableStream(buffer);
 
       // Assert that the bufferStream is a Readable stream
       expect(bufferStream).toBeInstanceOf(Readable);
     });
 
     it('Should, on data end, checks if the Stream are correct', function () {
-      const bufferStream = bufferToReadableStream(buffer);
+      const bufferStream = bufferUtils.bufferToReadableStream(buffer);
 
       let data = '';
 
@@ -48,7 +45,7 @@ describe('Utils Functions', function () {
     const buffer = Buffer.from(bodyToBuffer, 'utf-8');
 
     it('Should await the Buffer convertion and return a instance of readable', async function () {
-      const bufferStream = await AsyncBufferToStream(buffer);
+      const bufferStream = await bufferUtils.AsyncBufferToStream(buffer);
 
       expect(bufferStream).toBeInstanceOf(Readable);
     });

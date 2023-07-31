@@ -15,7 +15,8 @@
  */
 
 import { Readable } from 'stream';
-import { logger } from '..';
+
+// type AsyncBufferToStream
 
 function bufferToReadableStream(buffer: Buffer): Readable {
   const readableInstanceStream = new Readable({
@@ -32,18 +33,14 @@ async function AsyncBufferToStream(buffer: Buffer): Promise<Readable> {
   return new Promise((resolve, reject) => {
     const bufferStream = bufferToReadableStream(buffer);
 
-
-
-    bufferStream.on('data', (data) => {
-      return 
+    let data;
+    bufferStream.on('data', (chunck) => {
+      // data = chunck;
     });
 
-    bufferStream.on('end', (data) => {
-      logger.info('READ NO TEXT MESSAGE')
+    bufferStream.on('end', () => {
       resolve(bufferStream);
     });
-
-    
 
     bufferStream.on('error', (error) => {
       reject(error);
