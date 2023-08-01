@@ -230,12 +230,10 @@ export default class chatWootClient {
           },
         };
 
-        const endpoint = `https://webhook.site/2f35d594-f0ec-42ea-a2d8-3e7714732bbb`;
-        // const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
+        const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
 
         const result = await axios.post(endpoint, data, configPost);
 
-        // console.log('POS-REQUEST');
         return result;
       } else {
         const body = {
