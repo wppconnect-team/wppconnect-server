@@ -15,8 +15,8 @@
  */
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { default as FormData } from 'form-data';
+import mime from 'mime-types';
 
-// import mime from 'mime-types';
 import bufferutils from './bufferutils';
 // import bufferUtils from './bufferutils';
 import { eventEmitter } from './sessionUtil';
@@ -194,8 +194,8 @@ export default class chatWootClient {
         ].includes(message.type)
       ) {
         if (message.mimetype === 'image/webp') message.mimetype = 'image/jpeg';
-        // const extension = mime.extension(message.mimetype);
-        // const filename = `${message.timestamp}.${extension}`;
+        const extension = mime.extension(message.mimetype);
+        const filename = `${message.timestamp}.${extension}`;
         let b64;
 
         if (message.qrCode) {
@@ -213,9 +213,13 @@ export default class chatWootClient {
           data.append('content', message.caption);
         }
 
-        data.append('attachments[]', stream);
+        data.append('attachments[]', stream, {
+          filename: filename,
+          contentType: message.mimetype,
+        });
 
         data.append('message_type', 'incoming');
+        data.append('private', 'false');
 
         const configPost: AxiosRequestConfig = {
           baseURL: this.config.baseURL,
@@ -224,13 +228,10 @@ export default class chatWootClient {
             ...data.getHeaders(),
           },
         };
-
-        // const endpoint = `https://webhook.site/2f35d594-f0ec-42ea-a2d8-3e7714732bbb`;
         const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
 
-        const result = await this.api.post(endpoint, data, configPost);
+        const result = await axios.post(endpoint, data, configPost);
 
-        // console.log('POS-REQUEST');
         return result;
       } else {
         const body = {
