@@ -32,9 +32,7 @@ function bufferToReadableStream(buffer: Buffer): Readable {
 async function AsyncBufferToStream(buffer: Buffer): Promise<Readable> {
   return new Promise((resolve, reject) => {
     const bufferStream = bufferToReadableStream(buffer);
-
-    let data;
-    bufferStream.on('data', (chunck) => {
+    bufferStream.on('data', () => {
       // data = chunck;
     });
 
