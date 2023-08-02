@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
 
@@ -29,7 +29,7 @@ export default class chatWootClient {
   declare sender: any;
   declare account_id: any;
   declare inbox_id: any;
-  declare api: any;
+  declare api: AxiosInstance;
 
   constructor(config: any, session: string) {
     this.config = config;
@@ -224,12 +224,10 @@ export default class chatWootClient {
         const configPost: AxiosRequestConfig = {
           baseURL: this.config.baseURL,
           headers: {
-            'Content-Type': 'application/json;charset=utf-8',
             api_access_token: this.config.token,
             ...data.getHeaders(),
           },
         };
-
         const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
 
         const result = await axios.post(endpoint, data, configPost);
