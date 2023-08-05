@@ -44,7 +44,7 @@
     "moment": "^2.29.4",
     "multer": "^1.4.5-lts.1",
     "qrcode": "^1.5.3",
-    "socket.io": "^4.7.1",
+    "socket.io": "^4.7.2",
     "swagger-autogen": "^2.23.5",
     "swagger-ui-express": "^5.0.0",
     "unzipper": "^0.10.14",
