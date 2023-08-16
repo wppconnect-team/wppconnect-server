@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import axios from 'axios';
-import toStream from 'buffer-to-stream';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { default as FormData } from 'form-data';
 import mime from 'mime-types';
 
+import bufferutils from './bufferutils';
+// import bufferUtils from './bufferutils';
 import { eventEmitter } from './sessionUtil';
 
 export default class chatWootClient {
@@ -28,7 +29,7 @@ export default class chatWootClient {
   declare sender: any;
   declare account_id: any;
   declare inbox_id: any;
-  declare api: any;
+  declare api: AxiosInstance;
 
   constructor(config: any, session: string) {
     this.config = config;
@@ -86,8 +87,94 @@ export default class chatWootClient {
     });
   }
 
+  // async sendMessage(client: any, message: any) {
+  //   if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
+  //   const contact = await this.createContact(message);
+  //   const conversation = await this.createConversation(
+  //     contact,
+  //     message.chatId.split('@')[0]
+  //   );
+
+  //   try {
+  //     if (
+  //       message.type == 'image' ||
+  //       message.type == 'video' ||
+  //       message.type == 'in' ||
+  //       message.type == 'document' ||
+  //       message.type == 'ptt' ||
+  //       message.type == 'audio' ||
+  //       message.type == 'sticker'
+  //     ) {
+  //       if (message.mimetype == 'image/webp') message.mimetype = 'image/jpeg';
+  //       const extension = mime.extension(message.mimetype);
+  //       const filename = `${message.timestamp}.${extension}`;
+  //       let b64;
+
+  //       if (message.qrCode) b64 = message.qrCode;
+  //       else {
+  //         const buffer = await client.decryptFile(message);
+  //         b64 = await buffer.toString('base64');
+  //       }
+
+  //       const mediaData = Buffer.from(b64, 'base64');
+
+  //       // Create a readable stream from the Buffer
+  //       const stream = new Readable();
+  //       stream.push(mediaData);
+  //       stream.push(null); // Signaling the end of the stream
+
+  //       const data = new FormData();
+  //       if (message.caption) {
+  //         data.append('content', message.caption);
+  //       }
+
+  //       data.append('attachments[]', stream, {
+  //         filename: filename,
+  //         contentType: message.mimetype,
+  //       });
+
+  //       data.append('message_type', 'incoming');
+  //       data.append('private', 'false');
+
+  //       const configPost = Object.assign(
+  //         {},
+  //         {
+  //           baseURL: this.config.baseURL,
+  //           headers: {
+  //             'Content-Type': 'application/json;charset=utf-8',
+  //             api_access_token: this.config.token,
+  //           },
+  //         }
+  //       );
+
+  //       configPost.headers = { ...configPost.headers, ...data.getHeaders() };
+  //       console.log('PRÉ-REQUEST');
+  //       const result = await axios.post(
+  //         `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
+  //         data,
+  //         configPost
+  //       );
+  //       console.log('POS-REQUEST');
+  //       return result;
+  //     } else {
+  //       const body = {
+  //         content: message.body,
+  //         message_type: 'incoming',
+  //       };
+  //       const { data } = await this.api.post(
+  //         `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
+  //         body
+  //       );
+  //       return data;
+  //     }
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
+
   async sendMessage(client: any, message: any) {
     if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
+
     const contact = await this.createContact(message);
     const conversation = await this.createConversation(
       contact,
@@ -96,55 +183,54 @@ export default class chatWootClient {
 
     try {
       if (
-        message.type == 'image' ||
-        message.type == 'video' ||
-        message.type == 'in' ||
-        message.type == 'document' ||
-        message.type == 'ptt' ||
-        message.type == 'audio' ||
-        message.type == 'sticker'
+        [
+          'image',
+          'video',
+          'in',
+          'document',
+          'ptt',
+          'audio',
+          'sticker',
+        ].includes(message.type)
       ) {
-        if (message.mimetype == 'image/webp') message.mimetype = 'image/jpeg';
+        if (message.mimetype === 'image/webp') message.mimetype = 'image/jpeg';
         const extension = mime.extension(message.mimetype);
         const filename = `${message.timestamp}.${extension}`;
         let b64;
 
-        if (message.qrCode) b64 = message.qrCode;
-        else {
+        if (message.qrCode) {
+          b64 = message.qrCode;
+        } else {
           const buffer = await client.decryptFile(message);
-          b64 = await buffer.toString('base64');
+          b64 = buffer.toString('base64');
         }
 
         const mediaData = Buffer.from(b64, 'base64');
+        const stream = bufferutils.bufferToReadableStream(mediaData);
 
         const data = new FormData();
         if (message.caption) {
           data.append('content', message.caption);
         }
-        data.append('attachments[]', toStream(mediaData), {
+
+        data.append('attachments[]', stream, {
           filename: filename,
           contentType: message.mimetype,
         });
+
         data.append('message_type', 'incoming');
         data.append('private', 'false');
 
-        const configPost = Object.assign(
-          {},
-          {
-            baseURL: this.config.baseURL,
-            headers: {
-              'Content-Type': 'application/json;charset=utf-8',
-              api_access_token: this.config.token,
-            },
-          }
-        );
-        configPost.headers = { ...configPost.headers, ...data.getHeaders() };
+        const configPost: AxiosRequestConfig = {
+          baseURL: this.config.baseURL,
+          headers: {
+            api_access_token: this.config.token,
+            ...data.getHeaders(),
+          },
+        };
+        const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
 
-        const result = await axios.post(
-          `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
-          data,
-          configPost
-        );
+        const result = await axios.post(endpoint, data, configPost);
 
         return result;
       } else {
@@ -152,13 +238,13 @@ export default class chatWootClient {
           content: message.body,
           message_type: 'incoming',
         };
-        const { data } = await this.api.post(
-          `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`,
-          body
-        );
+        const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
+
+        const { data } = await this.api.post(endpoint, body);
         return data;
       }
     } catch (e) {
+      console.error('Error sending message:', e);
       return null;
     }
   }
