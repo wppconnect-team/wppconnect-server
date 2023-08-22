@@ -23,7 +23,7 @@ import { Logger } from 'winston';
 import { version } from '../../package.json';
 import config from '../config';
 import CreateSessionUtil from '../util/createSessionUtil';
-import { callWebHook, contactToArray } from '../util/functions';
+import { callSocket, callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
 import { clientsArray, deleteSessionOnArray } from '../util/sessionUtil';
 
@@ -243,7 +243,10 @@ export async function closeSession(req: Request, res: Response) {
       (clientsArray as any)[session] = { status: null };
 
       await req.client.close();
-      req.io.emit('whatsapp-status', false);
+
+      callSocket(req, 'whatsapp-status', {
+        status: false,
+      });
       callWebHook(req.client, req, 'closesession', {
         message: `Session: ${session} disconnected`,
         connected: false,
@@ -300,7 +303,9 @@ export async function logOutSession(req: Request, res: Response) {
         });
       }
 
-      req.io.emit('whatsapp-status', false);
+      callSocket(req, 'whatsapp-status', {
+        status: false,
+      });
       callWebHook(req.client, req, 'logoutsession', {
         message: `Session: ${session} logged out`,
         connected: false,
