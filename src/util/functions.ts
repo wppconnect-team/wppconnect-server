@@ -141,7 +141,7 @@ async function autoDownload(client: any, req: any, message: any) {
     if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
       const buffer = await client.decryptFile(message);
       if (req.serverOptions.webhook.uploadS3) {
-        const hashName = crypto.randomBytes(24).toString('hex');
+        const hashName = message.id.replace("true_", "").replace("false_", "")
 
         if (
           !config.aws_s3.region ||
@@ -153,15 +153,7 @@ async function autoDownload(client: any, req: any, message: any) {
         let bucketName = config.aws_s3.defaultBucketName
           ? config.aws_s3.defaultBucketName
           : client.session;
-        bucketName = bucketName
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]|[— _.,?!]/g, '')
-          .toLowerCase();
-        bucketName =
-          bucketName.length < 3
-            ? bucketName +
-              `${Math.floor(Math.random() * (999 - 100 + 1)) + 100}`
-            : bucketName;
+        bucketName = bucketName.toLowerCase();
         const fileName = `${
           config.aws_s3.defaultBucketName ? client.session + '/' : ''
         }${hashName}.${mime.extension(message.mimetype)}`;
