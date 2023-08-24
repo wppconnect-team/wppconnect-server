@@ -196,7 +196,7 @@ async function autoDownload(client: any, req: any, message: any) {
             Key: fileName,
             Body: buffer,
             ContentType: message.mimetype,
-            // ACL: 'public-read',
+            ACL: 'public-read',
           })
         );
 
