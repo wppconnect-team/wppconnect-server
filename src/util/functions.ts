@@ -144,18 +144,18 @@ async function autoDownload(client: any, req: any, message: any) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
         if (
-          !config.aws_s3.region ||
-          !config.aws_s3.access_key_id ||
-          !config.aws_s3.secret_key
+          !config?.aws_s3?.region ||
+          !config?.aws_s3?.access_key_id ||
+          !config?.aws_s3?.secret_key
         )
           throw new Error('Please, configure your aws configs');
         const s3Client = new S3Client({
-          region: config.aws_s3.region,
-          endpoint: config.aws_s3.endpoint || undefined,
-          forcePathStyle: config.aws_s3.forcePathStyle || undefined,
+          region: config?.aws_s3?.region,
+          endpoint: config?.aws_s3?.endpoint || undefined,
+          forcePathStyle: config?.aws_s3?.forcePathStyle || undefined,
         });
-        let bucketName = config.aws_s3.defaultBucketName
-          ? config.aws_s3.defaultBucketName
+        let bucketName = config?.aws_s3?.defaultBucketName
+          ? config?.aws_s3?.defaultBucketName
           : client.session;
         bucketName = bucketName
           .normalize('NFD')
