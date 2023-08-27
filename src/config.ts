@@ -85,5 +85,7 @@ export default {
     access_key_id: null,
     secret_key: null,
     defaultBucketName: null,
+    endpoint: null,
+    forcePathStyle: null,
   },
 };
