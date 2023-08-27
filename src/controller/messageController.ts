@@ -51,6 +51,7 @@ export async function sendMessage(req: Request, res: Response) {
                 $phone: { type: "string" },
                 $isGroup: { type: "boolean" },
                 $message: { type: "string" }
+                $options: { type: "object" }
               }
             },
             examples: {
@@ -59,6 +60,14 @@ export async function sendMessage(req: Request, res: Response) {
                   phone: '5521999999999',
                   isGroup: false,
                   message: 'Hello, welcome to WPPConnect'
+                  options: {
+                    linkPreview: {
+                      title: 'Another text',
+                      description: 'Another description'
+                    },
+                    markIsRead: true,
+                    mentionedList: [],
+                  },
                 },
               },
             },
