@@ -163,7 +163,7 @@ export default class CreateSessionUtil {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
-    callSocket(req, 'qr-code', {
+    callSocket(req, ['qrCode', 'qr-code'], {
       data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
       session: client.session,
     });
@@ -256,14 +256,18 @@ export default class CreateSessionUtil {
 
   async listenAcks(client: WhatsAppServer, req: Request) {
     await client.onAck(async (ack) => {
-      callSocket(req, 'on-ack', ack);
+      callSocket(req, ['onack', 'on-ack'], ack);
       callWebHook(client, req, 'onack', ack);
     });
   }
 
   async onPresenceChanged(client: WhatsAppServer, req: Request) {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
-      callSocket(req, 'on-presence-changed', presenceChangedEvent);
+      callSocket(
+        req,
+        ['onpresencechanged', 'on-presence-changed'],
+        presenceChangedEvent
+      );
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
     });
   }
@@ -271,7 +275,7 @@ export default class CreateSessionUtil {
   async onReactionMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onReactionMessage(async (reaction: any) => {
-      callSocket(req, 'on-reaction-message', reaction);
+      callSocket(req, ['onreactionmessage', 'on-reaction-message'], reaction);
       callWebHook(client, req, 'onreactionmessage', reaction);
     });
   }
@@ -279,7 +283,7 @@ export default class CreateSessionUtil {
   async onRevokedMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onRevokedMessage(async (response: any) => {
-      callSocket(req, 'on-revoked-message', response);
+      callSocket(req, ['onrevokedmessage', 'on-revoked-message'], response);
       callWebHook(client, req, 'onrevokedmessage', response);
     });
   }
@@ -293,7 +297,7 @@ export default class CreateSessionUtil {
   async onLabelUpdated(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onUpdateLabel(async (response: any) => {
-      callSocket(req, 'on-update-label', response);
+      callSocket(req, ['onupdatelabel', 'on-update-label'], response);
       callWebHook(client, req, 'onupdatelabel', response);
     });
   }

@@ -244,9 +244,7 @@ export async function closeSession(req: Request, res: Response) {
 
       await req.client.close();
 
-      callSocket(req, 'whatsapp-status', {
-        status: false,
-      });
+      callSocket(req, 'whatsapp-status', false);
       callWebHook(req.client, req, 'closesession', {
         message: `Session: ${session} disconnected`,
         connected: false,
@@ -303,9 +301,7 @@ export async function logOutSession(req: Request, res: Response) {
         });
       }
 
-      callSocket(req, 'whatsapp-status', {
-        status: false,
-      });
+      callSocket(req, 'whatsapp-status', false);
       callWebHook(req.client, req, 'logoutsession', {
         message: `Session: ${session} logged out`,
         connected: false,
