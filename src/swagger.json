@@ -93,6 +93,7 @@
       "get": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "showAllSessions",
         "parameters": [
           {
             "name": "secretkey",
@@ -123,6 +124,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "startAllSessions",
         "parameters": [
           {
             "name": "secretkey",
@@ -168,6 +170,7 @@
       "get": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "CheckConnectionState",
         "parameters": [
           {
             "name": "session",
@@ -195,6 +198,7 @@
       "get": {
         "tags": ["Messages"],
         "description": "",
+        "operationId": "getMediaByMessage",
         "parameters": [
           {
             "name": "session",
@@ -271,52 +275,11 @@
         ]
       }
     },
-    "/api/{session}/status-session": {
-      "get": {
-        "tags": ["Auth"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "session",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "NERDWHATS_AMERICA"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              },
-              "example": {}
-            }
-          }
-        }
-      }
-    },
     "/api/{session}/qrcode-session": {
       "get": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "getQrCode",
         "parameters": [
           {
             "name": "session",
@@ -347,6 +310,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "startSession",
         "parameters": [
           {
             "name": "session",
@@ -358,7 +322,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -380,7 +348,7 @@
                 }
               },
               "example": {
-                "webhook": "https://webhook.site/7cc2944d-3967-4cea-988c-d57ea80bce5f",
+                "webhook": "",
                 "waitQrCode": false
               }
             }
@@ -392,6 +360,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "This route logout and delete session data",
+        "operationId": "logoutSession",
         "parameters": [
           {
             "name": "session",
@@ -459,6 +428,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "closeSession",
         "parameters": [
           {
             "name": "session",
@@ -482,25 +452,14 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              },
-              "example": {}
-            }
-          }
-        }
+        ]
       }
     },
     "/api/{session}/subscribe-presence": {
       "post": {
         "tags": ["Misc"],
         "description": "",
+        "operationId": "subscribePresence",
         "parameters": [
           {
             "name": "session",
@@ -557,6 +516,7 @@
       "post": {
         "tags": ["Messages"],
         "description": "",
+        "operationId": "downloadMediabyMessage",
         "parameters": [
           {
             "name": "session",
@@ -626,36 +586,7 @@
             "bearerAuth": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "$phone": {
-                    "type": "string"
-                  },
-                  "$isGroup": {
-                    "type": "boolean"
-                  },
-                  "$message": {
-                    "type": "string"
-                  }
-                }
-              },
-              "examples": {
-                "Default": {
-                  "value": {
-                    "phone": "5521999999999",
-                    "isGroup": false,
-                    "message": "Hello, welcome to WPPConnect"
-                  }
-                }
-              }
-            }
-          }
-        }
+        "requestBody": {}
       }
     },
     "/api/{session}/send-image": {
@@ -1163,6 +1094,37 @@
         }
       }
     },
+    "/api/{session}/status-session": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "operationId": "closeSession",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/send-status": {
       "post": {
         "tags": ["Messages"],
@@ -1438,7 +1400,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1462,7 +1428,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1486,7 +1456,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3178,7 +3152,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3527,7 +3505,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3606,7 +3588,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3765,7 +3751,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "messageId": {
+                  "msgId": {
                     "type": "string"
                   },
                   "reaction": {
@@ -3776,7 +3762,7 @@
               "examples": {
                 "Default": {
                   "value": {
-                    "messageId": "<messageId>",
+                    "msgId": "<messageId>",
                     "reaction": "😜"
                   }
                 }
@@ -4126,7 +4112,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -5991,7 +5981,11 @@
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/api/{session}/contact/{phone}": {
@@ -6094,6 +6088,13 @@
             "schema": {
               "type": "string",
               "example": "5521999999999"
+            }
+          },
+          {
+            "name": "isGroup",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -6549,6 +6550,7 @@
       "post": {
         "tags": ["Profile"],
         "description": "Edit your bussiness profile",
+        "operationId": "editBusinessProfile",
         "parameters": [
           {
             "name": "session",
@@ -6673,7 +6675,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -6696,7 +6702,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -7327,32 +7337,44 @@
     "/api-docs": {
       "get": {
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/healthz": {
       "get": {
         "tags": ["Misc"],
         "description": "This endpoint can be used to check the health status of the API. It returns a response with a status code indicating the API",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/metrics": {
-      "get": {
-        "tags": ["Misc"],
-        "description": "This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.",
-        "parameters": [],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/unhealthy": {
       "get": {
         "tags": ["Misc"],
         "description": "This endpoint is used to force the API into an unhealthy state. It can be useful for testing error handling or simulating service disruptions.",
-        "parameters": [],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["Misc"],
+        "description": "This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     }
   },
