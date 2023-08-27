@@ -1,6 +1,7 @@
 # WPPConnect Team
 
 ## _WPPConnect Server_
+![WPPConnect-SERVER](https://i.imgur.com/y1ts6RR.png)
 
 [![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
 [![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
