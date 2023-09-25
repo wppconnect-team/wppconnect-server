@@ -16,7 +16,7 @@
 
 import { Request, Response } from 'express';
 
-import { callSocket, unlinkAsync } from '../util/functions';
+import { unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {
   req.logger.error(error);
@@ -87,8 +87,7 @@ export async function sendMessage(req: Request, res: Response) {
 
     if (results.length === 0)
       return res.status(400).json('Error sending message');
-
-    callSocket(req, 'sent-message', results);
+    req.io.emit('mensagem-enviada', results);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
@@ -637,8 +636,7 @@ export async function replyMessage(req: Request, res: Response) {
 
     if (results.length === 0)
       return res.status(400).json('Error sending message');
-
-    callSocket(req, 'sent-message', { message: message, to: phone });
+    req.io.emit('mensagem-enviada', { message: message, to: phone });
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
