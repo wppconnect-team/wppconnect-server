@@ -101,6 +101,10 @@ export default class CreateSessionUtil {
                   client.close();
                   clientsArray[session] = undefined;
                 }
+                callSocket(req, 'status-find', {
+                  status: statusFind,
+                  session: client.session,
+                });
                 callWebHook(client, req, 'status-find', {
                   status: statusFind,
                   session: client.session,
