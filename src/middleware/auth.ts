@@ -108,7 +108,7 @@ export const verifyTokenSocket = (socket: Socket, next: any) => {
     } catch (error) {
       try {
         if (token && token !== '' && token.split(' ').length > 0) {
-          const token_value = token.split(' ')[1];
+          const token_value = token.split(' ')[0];
           if (token_value)
             tokenDecrypt = token_value.replace(/_/g, '/').replace(/-/g, '+');
           else tokenDecrypt = token;
