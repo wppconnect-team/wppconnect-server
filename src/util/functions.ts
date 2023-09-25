@@ -154,27 +154,31 @@ async function autoDownload(client: any, req: any, message: any) {
     if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
       const buffer = await client.decryptFile(message);
       if (req.serverOptions.webhook.uploadS3) {
-        const hashName = crypto.randomBytes(24).toString('hex');
+        const hashName = message.id.replace("true_", "").replace("false_", "")
 
         if (
-          !config.aws_s3.region ||
-          !config.aws_s3.access_key_id ||
-          !config.aws_s3.secret_key
+          !config?.aws_s3?.region ||
+          !config?.aws_s3?.access_key_id ||
+          !config?.aws_s3?.secret_key
         )
           throw new Error('Please, configure your aws configs');
-        const s3Client = new S3Client({ region: config.aws_s3.region });
-        let bucketName = config.aws_s3.defaultBucketName
-          ? config.aws_s3.defaultBucketName
+        const s3Client = new S3Client({
+          region: config?.aws_s3?.region,
+          endpoint: config?.aws_s3?.endpoint || undefined,
+          forcePathStyle: config?.aws_s3?.forcePathStyle || undefined,
+        });
+        let bucketName = config?.aws_s3?.defaultBucketName
+          ? config?.aws_s3?.defaultBucketName
           : client.session;
-        bucketName = bucketName
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]|[-— _.,?!]/g, '')
-          .toLowerCase();
+        bucketName = bucketName.toLowerCase();
         const fileName = `${
           config.aws_s3.defaultBucketName ? client.session + '/' : ''
         }${hashName}.${mime.extension(message.mimetype)}`;
 
-        if (!(await bucketAlreadyExists(bucketName))) {
+        if (
+          !config.aws_s3.defaultBucketName &&
+          !(await bucketAlreadyExists(bucketName))
+        ) {
           await s3Client.send(
             new CreateBucketCommand({
               Bucket: bucketName,

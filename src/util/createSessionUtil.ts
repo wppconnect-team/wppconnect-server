@@ -101,10 +101,6 @@ export default class CreateSessionUtil {
                   client.close();
                   clientsArray[session] = undefined;
                 }
-                callSocket(req, 'status-find', {
-                  status: statusFind,
-                  session: client.session,
-                });
                 callWebHook(client, req, 'status-find', {
                   status: statusFind,
                   session: client.session,
@@ -168,11 +164,18 @@ export default class CreateSessionUtil {
       session: client.session,
     });
 
-    callWebHook(client, req, 'qrcode', { qrcode: qrCode, urlcode: urlCode });
+    callWebHook(client, req, 'qrcode', {
+      qrcode: qrCode,
+      urlcode: urlCode,
+      session: client.session,
+    });
     if (res && !res._headerSent)
-      res
-        .status(200)
-        .json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
+      res.status(200).json({
+        status: 'qrcode',
+        qrcode: qrCode,
+        urlcode: urlCode,
+        session: client.session,
+      });
   }
 
   async onParticipantsChanged(req: any, client: any) {
@@ -189,18 +192,11 @@ export default class CreateSessionUtil {
 
       req.logger.info(`Started Session: ${client.session}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
-
-      callSocket(req, 'session-logged', {
-        status: true,
-        session: client.session,
-      });
+      req.io.emit('session-logged', { status: true, session: client.session });
       startHelper(client, req);
     } catch (error) {
       req.logger.error(error);
-
-      callSocket(req, 'session-error', {
-        session: client.session,
-      });
+      req.io.emit('session-error', client.session);
     }
 
     await this.checkStateSession(client, req);
@@ -243,13 +239,13 @@ export default class CreateSessionUtil {
         download(message, client, req.logger);
       }
 
-      callSocket(req, 'received-message', message);
+      req.io.emit('received-message', { response: message });
       if (req.serverOptions.webhook.onSelfMessage && message.fromMe)
         callWebHook(client, req, 'onselfmessage', message);
     });
 
     await client.onIncomingCall(async (call) => {
-      callSocket(req, 'incoming-call', call);
+      req.io.emit('incomingcall', call);
       callWebHook(client, req, 'incomingcall', call);
     });
   }
@@ -290,7 +286,7 @@ export default class CreateSessionUtil {
   async onPollResponse(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onPollResponse(async (response: any) => {
-      callSocket(req, 'on-poll-response', response);
+      req.io.emit('onpollresponse', response);
       callWebHook(client, req, 'onpollresponse', response);
     });
   }

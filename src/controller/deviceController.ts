@@ -860,14 +860,14 @@ export async function reactMessage(req: Request, res: Response) {
           schema: {
             type: "object",
             properties: {
-              messageId: { type: "string" },
+              msgId: { type: "string" },
               reaction: { type: "string" },
             }
           },
           examples: {
             "Default": {
               value: {
-                messageId: "<messageId>",
+                msgId: "<messageId>",
                 reaction: "😜",
               }
             },
