@@ -101,18 +101,10 @@ export function initServer(serverOptions: any) {
   });
 
   io.on('connection', (sock) => {
-    sock.on('joinChannel', (channelId: string) => {
-      sock.join(channelId);
-      logger.info(`ID: ${sock.id} entrou do canal ${channelId}`);
-    });
-
-    sock.on('leaveChannel', (channelId: string) => {
-      sock.leave(channelId);
-      logger.info(`ID: ${sock.id} saiu do canal ${channelId}`);
-    });
+    logger.info(`ID: ${sock.id} entrou`);
 
     sock.on('disconnect', () => {
-      logger.info(`ID: ${sock.id} se desconectou`);
+      logger.info(`ID: ${sock.id} saiu`);
     });
   });
 

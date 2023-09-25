@@ -19,7 +19,7 @@ import { Request } from 'express';
 import { download } from '../controller/sessionController';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
-import { callSocket, callWebHook, startHelper } from './functions';
+import { callWebHook, startHelper } from './functions';
 import { clientsArray, eventEmitter } from './sessionUtil';
 import Factory from './tokenStore/factory';
 
@@ -101,10 +101,6 @@ export default class CreateSessionUtil {
                   client.close();
                   clientsArray[session] = undefined;
                 }
-                callSocket(req, 'status-find', {
-                  status: statusFind,
-                  session: client.session,
-                });
                 callWebHook(client, req, 'status-find', {
                   status: statusFind,
                   session: client.session,
@@ -163,7 +159,7 @@ export default class CreateSessionUtil {
     qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
-    callSocket(req, 'qr-code', {
+    req.io.emit('qrCode', {
       data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
       session: client.session,
     });
@@ -196,18 +192,11 @@ export default class CreateSessionUtil {
 
       req.logger.info(`Started Session: ${client.session}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
-
-      callSocket(req, 'session-logged', {
-        status: true,
-        session: client.session,
-      });
+      req.io.emit('session-logged', { status: true, session: client.session });
       startHelper(client, req);
     } catch (error) {
       req.logger.error(error);
-
-      callSocket(req, 'session-error', {
-        session: client.session,
-      });
+      req.io.emit('session-error', client.session);
     }
 
     await this.checkStateSession(client, req);
@@ -250,27 +239,27 @@ export default class CreateSessionUtil {
         download(message, client, req.logger);
       }
 
-      callSocket(req, 'received-message', message);
+      req.io.emit('received-message', { response: message });
       if (req.serverOptions.webhook.onSelfMessage && message.fromMe)
         callWebHook(client, req, 'onselfmessage', message);
     });
 
     await client.onIncomingCall(async (call) => {
-      callSocket(req, 'incoming-call', call);
+      req.io.emit('incomingcall', call);
       callWebHook(client, req, 'incomingcall', call);
     });
   }
 
   async listenAcks(client: WhatsAppServer, req: Request) {
     await client.onAck(async (ack) => {
-      callSocket(req, 'on-ack', ack);
+      req.io.emit('onack', ack);
       callWebHook(client, req, 'onack', ack);
     });
   }
 
   async onPresenceChanged(client: WhatsAppServer, req: Request) {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
-      callSocket(req, 'on-presence-changed', presenceChangedEvent);
+      req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
     });
   }
@@ -278,7 +267,7 @@ export default class CreateSessionUtil {
   async onReactionMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onReactionMessage(async (reaction: any) => {
-      callSocket(req, 'on-reaction-message', reaction);
+      req.io.emit('onreactionmessage', reaction);
       callWebHook(client, req, 'onreactionmessage', reaction);
     });
   }
@@ -286,21 +275,21 @@ export default class CreateSessionUtil {
   async onRevokedMessage(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onRevokedMessage(async (response: any) => {
-      callSocket(req, 'on-revoked-message', response);
+      req.io.emit('onrevokedmessage', response);
       callWebHook(client, req, 'onrevokedmessage', response);
     });
   }
   async onPollResponse(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onPollResponse(async (response: any) => {
-      callSocket(req, 'on-poll-response', response);
+      req.io.emit('onpollresponse', response);
       callWebHook(client, req, 'onpollresponse', response);
     });
   }
   async onLabelUpdated(client: WhatsAppServer, req: Request) {
     await client.isConnected();
     await client.onUpdateLabel(async (response: any) => {
-      callSocket(req, 'on-update-label', response);
+      req.io.emit('onupdatelabel', response);
       callWebHook(client, req, 'onupdatelabel', response);
     });
   }
