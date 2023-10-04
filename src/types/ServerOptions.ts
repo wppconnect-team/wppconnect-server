@@ -24,6 +24,10 @@ export interface ServerOptions {
     onRevokedMessage: boolean;
     onSelfMessage: boolean;
   };
+  websocket: {
+    autoDownload: boolean;
+    uploadS3: boolean;
+  };
   archive: {
     enable: boolean;
     waitTime: number;

@@ -38,6 +38,10 @@ if (config.webhook.uploadS3) {
   mime = config.webhook.uploadS3 ? mimetypes : null;
   crypto = config.webhook.uploadS3 ? Crypto : null;
 }
+if (config.websocket.uploadS3) {
+  mime = config.websocket.uploadS3 ? mimetypes : null;
+  crypto = config.websocket.uploadS3 ? Crypto : null;
+}
 
 export function contactToArray(number: any, isGroup?: boolean) {
   const localArr: any = [];
@@ -136,11 +140,14 @@ export async function callWebHook(
   }
 }
 
-async function autoDownload(client: any, req: any, message: any) {
+export async function autoDownload(client: any, req: any, message: any) {
   try {
     if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
       const buffer = await client.decryptFile(message);
-      if (req.serverOptions.webhook.uploadS3) {
+      if (
+        req.serverOptions.webhook.uploadS3 ||
+        req.serverOptions.websocket.uploadS3
+      ) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
         if (

@@ -23,6 +23,10 @@ export default {
     onLabelUpdated: true,
     onSelfMessage: false,
   },
+  websocket: {
+    autoDownload: false,
+    uploadS3: false,
+  },
   chatwoot: {
     sendQrCode: true,
     sendStatus: true,
