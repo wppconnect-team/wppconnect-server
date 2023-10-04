@@ -146,7 +146,7 @@ export async function autoDownload(client: any, req: any, message: any) {
       const buffer = await client.decryptFile(message);
       if (
         req.serverOptions.webhook.uploadS3 ||
-        req.serverOptions.websocket.uploadS3
+        req.serverOptions?.websocket?.uploadS3
       ) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
