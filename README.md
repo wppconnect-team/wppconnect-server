@@ -157,6 +157,12 @@ This server use config.ts file to define some options, default values are:
     // 'event', 'from' ou 'type' to ignore and not send to webhook
     ignore: [],
   },
+  websocket: {
+    // Just leave one active, here or on webhook.autoDownload
+    autoDownload: false,
+    // Just leave one active, here or on webhook.uploadS3, to avoid duplication in S3
+    uploadS3: false,
+  },
   // send data to chatwoot
   chatwoot: {
     sendQrCode: true,

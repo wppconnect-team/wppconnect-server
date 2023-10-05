@@ -25,6 +25,10 @@ export interface ServerOptions {
     onSelfMessage: boolean;
     ignore: string[];
   };
+  websocket: {
+    autoDownload: boolean;
+    uploadS3: boolean;
+  };
   archive: {
     enable: boolean;
     waitTime: number;

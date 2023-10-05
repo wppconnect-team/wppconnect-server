@@ -24,6 +24,10 @@ export default {
     onSelfMessage: false,
     ignore: ['status@broadcast'],
   },
+  websocket: {
+    autoDownload: false,
+    uploadS3: false,
+  },
   chatwoot: {
     sendQrCode: true,
     sendStatus: true,
