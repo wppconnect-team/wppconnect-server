@@ -108,6 +108,13 @@ export async function callWebHook(
   const webhook =
     client?.config.webhook || req.serverOptions.webhook.url || false;
   if (webhook) {
+    if (
+      req.serverOptions.webhook?.ignore &&
+      (req.serverOptions.webhook.ignore.includes(event) ||
+        req.serverOptions.webhook.ignore.includes(data?.from) ||
+        req.serverOptions.webhook.ignore.includes(data?.type))
+    )
+      return;
     if (req.serverOptions.webhook.autoDownload)
       await autoDownload(client, req, data);
     try {
