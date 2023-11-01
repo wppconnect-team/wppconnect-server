@@ -78,7 +78,7 @@
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "commitizen": "^4.3.0",
     "conventional-changelog-cli": "^4.1.0",
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard-with-typescript": "^39.1.1",
@@ -107,7 +107,7 @@
     "webpack-cli": "^5.1.4"
   },
   "peerDependencies": {
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "mongoose": "^7.6.3",
     "redis": "^4.6.10"
   }
