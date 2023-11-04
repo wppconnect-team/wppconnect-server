@@ -986,17 +986,9 @@ export async function forwardMessages(req: Request, res: Response) {
     let response;
 
     if (!isGroup) {
-      response = await req.client.forwardMessages(
-        `${phone}`,
-        [messageId],
-        false
-      );
+      response = await req.client.forwardMessage(`${phone}`, [messageId]);
     } else {
-      response = await req.client.forwardMessages(
-        `${phone}`,
-        [messageId],
-        false
-      );
+      response = await req.client.forwardMessage(`${phone}`, [messageId]);
     }
 
     return res.status(201).json({ status: 'success', response: response });
