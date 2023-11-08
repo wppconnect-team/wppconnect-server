@@ -133,7 +133,7 @@ export async function sendFile(req: Request, res: Response) {
       }
     }
    */
-  const { phone, path, base64, filename = 'file', message, caption } = req.body;
+  const { phone, path, base64, filename = 'file', message, caption, quotedMessageId } = req.body;
 
   const options = req.body.options || {};
 
@@ -152,6 +152,7 @@ export async function sendFile(req: Request, res: Response) {
         await req.client.sendFile(contact, pathFile, {
           filename: filename,
           caption: msg,
+          quotedMsg: quotedMessageId,
           ...options,
         })
       );
