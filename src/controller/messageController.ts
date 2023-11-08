@@ -268,13 +268,19 @@ export async function sendVoice64(req: Request, res: Response) {
         }
     }
    */
-  const { phone, base64Ptt } = req.body;
+  const { phone, base64Ptt, quotedMessageId } = req.body;
 
   try {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendPttFromBase64(contato, base64Ptt, 'Voice Audio')
+        await req.client.sendPttFromBase64(
+          contato,
+          base64Ptt,
+          'Voice Audio',
+          '',
+          quotedMessageId
+        )
       );
     }
 
