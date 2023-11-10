@@ -103,8 +103,8 @@ routes.post(
 );
 
 // CEP
-routes.get('/cep/:cep', CepController.getCep);
-routes.get('/postalcode/:code', CepController.getPostalCode);
+routes.get('/api/cep/:cep', CepController.getCep);
+routes.get('/api/postalcode/:code', CepController.getPostalCode);
 
 // Messages
 routes.post(
