@@ -297,11 +297,12 @@ export async function addProduct(req: Request, res: Response) {
     image,
     description,
     price,
+    isHidden,
     url,
     retailerId,
-    currency = 'BRL',
+    currency = 'eur',
   } = req.body;
-  if (!name || !image || !price)
+  if (!name || !image)
     return res.status(401).send({
       message: 'name, price and image was not informed',
     });
@@ -312,7 +313,7 @@ export async function addProduct(req: Request, res: Response) {
       image,
       description,
       price,
-      false,
+      isHidden,
       url,
       retailerId,
       currency
