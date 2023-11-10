@@ -19,6 +19,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import uploadConfig from '../config/upload';
 import * as CatalogController from '../controller/catalogController';
+import * as CepController from '../controller/cepController';
 import * as CommunityController from '../controller/communityController';
 import * as DeviceController from '../controller/deviceController';
 import { encryptSession } from '../controller/encryptController';
@@ -100,6 +101,10 @@ routes.post(
   statusConnection,
   SessionController.downloadMediaByMessage
 );
+
+// CEP
+routes.get('/api/cep/:cep', CepController.getCep);
+routes.get('/api/postalcode/:code', CepController.getPostalCode);
 
 // Messages
 routes.post(
