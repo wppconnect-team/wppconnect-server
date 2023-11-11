@@ -133,7 +133,15 @@ export async function sendFile(req: Request, res: Response) {
       }
     }
    */
-  const { phone, path, base64, filename = 'file', message, caption } = req.body;
+  const {
+    phone,
+    path,
+    base64,
+    filename = 'file',
+    message,
+    caption,
+    quotedMessageId,
+  } = req.body;
 
   const options = req.body.options || {};
 
@@ -152,6 +160,7 @@ export async function sendFile(req: Request, res: Response) {
         await req.client.sendFile(contact, pathFile, {
           filename: filename,
           caption: msg,
+          quotedMsg: quotedMessageId,
           ...options,
         })
       );
@@ -268,13 +277,19 @@ export async function sendVoice64(req: Request, res: Response) {
         }
     }
    */
-  const { phone, base64Ptt } = req.body;
+  const { phone, base64Ptt, quotedMessageId } = req.body;
 
   try {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendPttFromBase64(contato, base64Ptt, 'Voice Audio')
+        await req.client.sendPttFromBase64(
+          contato,
+          base64Ptt,
+          'Voice Audio',
+          '',
+          quotedMessageId
+        )
       );
     }
 
