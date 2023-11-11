@@ -60,59 +60,57 @@ export default class CreateSessionUtil {
           executablePath:
             'node_modules\\chromium\\lib\\chromium\\chrome-win\\chrome.exe',
           userDataDir: req.serverOptions.customUserDataDir + session,
+          ignoreHTTPSErrors: true,
+          slowMo: 150,
         };
       }
 
-      const wppClient = await create(
-        Object.assign(
-          {},
-          { tokenStore: myTokenStore },
-          req.serverOptions.createOptions,
-          {
-            session: session,
-            deviceName:
-              client.config?.deviceName || req.serverOptions.deviceName,
-            poweredBy:
-              client.config?.poweredBy ||
-              req.serverOptions.poweredBy ||
-              'WPPConnect-Server',
-            catchQR: (
-              base64Qr: any,
-              asciiQR: any,
-              attempt: any,
-              urlCode: string
-            ) => {
-              this.exportQR(req, base64Qr, urlCode, client, res);
-            },
-            onLoadingScreen: (percent: string, message: string) => {
-              req.logger.info(`[${session}] ${percent}% - ${message}`);
-            },
-            statusFind: (statusFind: string) => {
-              try {
-                eventEmitter.emit(
-                  `status-${client.session}`,
-                  client,
-                  statusFind
-                );
-                if (
-                  statusFind === 'autocloseCalled' ||
-                  statusFind === 'desconnectedMobile'
-                ) {
-                  client.status = 'CLOSED';
-                  client.qrcode = null;
-                  client.close();
-                  clientsArray[session] = undefined;
-                }
-                callWebHook(client, req, 'status-find', {
-                  status: statusFind,
-                  session: client.session,
-                });
-                req.logger.info(statusFind + '\n\n');
-              } catch (error) {}
-            },
-          }
-        )
+      const teste = Object.assign(
+        {},
+        { tokenStore: myTokenStore },
+        req.serverOptions.createOptions,
+        {
+          session: session,
+          useChrome: false,
+          deviceName: client.config?.deviceName || req.serverOptions.deviceName,
+          poweredBy:
+            client.config?.poweredBy ||
+            req.serverOptions.poweredBy ||
+            'WPPConnect-Server',
+          catchQR: (
+            base64Qr: any,
+            asciiQR: any,
+            attempt: any,
+            urlCode: string
+          ) => {
+            this.exportQR(req, base64Qr, urlCode, client, res);
+          },
+          onLoadingScreen: (percent: string, message: string) => {
+            req.logger.info(`[${session}] ${percent}% - ${message}`);
+          },
+          statusFind: (statusFind: string) => {
+            try {
+              eventEmitter.emit(`status-${client.session}`, client, statusFind);
+              if (
+                statusFind === 'autocloseCalled' ||
+                statusFind === 'desconnectedMobile'
+              ) {
+                client.status = 'CLOSED';
+                client.qrcode = null;
+                client.close();
+                clientsArray[session] = undefined;
+              }
+              callWebHook(client, req, 'status-find', {
+                status: statusFind,
+                session: client.session,
+              });
+              req.logger.info(statusFind + '\n\n');
+            } catch (error) {}
+          },
+        }
       );
+      console.log(teste);
+      const wppClient = await create(teste);
 
       client = clientsArray[session] = Object.assign(wppClient, client);
       await this.start(req, client);
