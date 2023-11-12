@@ -15,6 +15,7 @@
  */
 import { create, SocketState } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
+import PCR from 'puppeteer-chromium-resolver';
 
 import { download } from '../controller/sessionController';
 import { WhatsAppServer } from '../types/WhatsAppServer';
@@ -56,11 +57,11 @@ export default class CreateSessionUtil {
       this.startChatWootClient(client);
 
       if (req.serverOptions.customUserDataDir) {
+        const stats = await PCR({});
         req.serverOptions.createOptions.puppeteerOptions = {
           args: ['--no-sandbox'],
           headless: true,
-          executablePath:
-            'node_modules\\chromium\\lib\\chromium\\chrome-win\\chrome.exe',
+          executablePath: stats.executablePath,
           userDataDir: req.serverOptions.customUserDataDir + session,
           ignoreHTTPSErrors: true,
           slowMo: 150,
