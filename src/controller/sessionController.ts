@@ -215,7 +215,7 @@ export async function startSession(req: Request, res: Response) {
      }
    */
   const session = req.session;
-  const { waitQrCode = false } = req.body;
+  const { waitQrCode = true } = req.body;
 
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
