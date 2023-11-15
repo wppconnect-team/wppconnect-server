@@ -33,7 +33,7 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: Updated yarn.lock'
           file_pattern: yarn.lock
