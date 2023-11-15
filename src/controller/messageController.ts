@@ -41,39 +41,38 @@ export async function sendMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.requestBody = {
-        required: true,
-        "@content": {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                $phone: { type: "string" },
-                $isGroup: { type: "boolean" },
-                $message: { type: "string" }
-                $options: { type: "object" }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              message: { type: "string" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Send message to contact": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                message: 'Hi from WPPConnect',
               }
             },
-            examples: {
-              "Default": {
-                value: {
-                  phone: '5521999999999',
-                  isGroup: false,
-                  message: 'Hello, welcome to WPPConnect'
-                  options: {
-                    linkPreview: {
-                      title: 'Another text',
-                      description: 'Another description'
-                    },
-                    markIsRead: true,
-                    mentionedList: [],
-                  },
-                },
-              },
+            "Send message to group": {
+              value: {
+                phone: '8865623215244578',
+                isGroup: true,
+                message: 'Hi from WPPConnect',
+              }
             },
           }
         }
       }
+     }
    */
   const { phone, message } = req.body;
 
