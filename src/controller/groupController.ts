@@ -1046,3 +1046,30 @@ export async function setGroupProfilePic(req: Request, res: Response) {
     });
   }
 }
+
+export async function getCommonGroups(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Group"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["wid"] = {
+      schema: '5521999999999@c.us'
+     }
+   */
+  const { wid } = req.params;
+  try {
+    return res.status(200).json(await (req.client as any).getCommonGroups(wid));
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error on get common groups',
+      error: e,
+    });
+  }
+}

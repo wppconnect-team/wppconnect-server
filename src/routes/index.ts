@@ -234,6 +234,12 @@ routes.get(
   GroupController.getGroupMembers
 );
 routes.get(
+  '/api/:session/common-groups/:wid',
+  verifyToken,
+  statusConnection,
+  GroupController.getCommonGroups
+);
+routes.get(
   '/api/:session/group-admins/:groupId',
   verifyToken,
   statusConnection,
