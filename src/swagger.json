@@ -7520,6 +7520,229 @@
         ]
       }
     },
+    "/api/{session}/newsletter": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "operationId": "createNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "<newsletter_id>"
+            },
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Edit newsletter/channel": {
+                  "value": {
+                    "name": "New name of channel",
+                    "description": "New description of channel",
+                    "picture": "<new_base64_image> or send null"
+                  }
+                },
+                "Create newsletter/channel": {
+                  "value": {
+                    "name": "Name for your channel",
+                    "options": {
+                      "description": "Description of channel",
+                      "picture": "<base64_image>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/newsletter/{id}": {
+      "put": {
+        "tags": [],
+        "description": "",
+        "operationId": "editNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Edit newsletter/channel": {
+                  "value": {
+                    "name": "New name of channel",
+                    "description": "New description of channel",
+                    "picture": "<new_base64_image> or send null"
+                  }
+                },
+                "Create newsletter/channel": {
+                  "value": {
+                    "name": "Name for your channel",
+                    "options": {
+                      "description": "Description of channel",
+                      "picture": "<base64_image>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "description": "",
+        "operationId": "destroyNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/{session}/mute-newsletter/{id}": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "operationId": "muteNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/chatwoot": {
       "post": {
         "tags": ["Misc"],

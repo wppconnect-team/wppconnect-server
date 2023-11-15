@@ -26,6 +26,7 @@ import * as GroupController from '../controller/groupController';
 import * as LabelsController from '../controller/labelsController';
 import * as MessageController from '../controller/messageController';
 import * as MiscController from '../controller/miscController';
+import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
@@ -900,6 +901,32 @@ routes.get(
   verifyToken,
   statusConnection,
   CommunityController.getCommunityParticipants
+);
+
+routes.post(
+  '/api/:session/newsletter',
+  verifyToken,
+  statusConnection,
+  NewsletterController.createNewsletter
+);
+routes.put(
+  '/api/:session/newsletter/:id',
+  verifyToken,
+  statusConnection,
+  NewsletterController.editNewsletter
+);
+
+routes.delete(
+  '/api/:session/newsletter/:id',
+  verifyToken,
+  statusConnection,
+  NewsletterController.destroyNewsletter
+);
+routes.post(
+  '/api/:session/mute-newsletter/:id',
+  verifyToken,
+  statusConnection,
+  NewsletterController.muteNewsletter
 );
 
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
