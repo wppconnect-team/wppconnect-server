@@ -90,33 +90,15 @@ export async function getOrderbyMsg(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.requestBody = {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              messageId: { type: 'string' },
-            },
-            required: ['messageId'],
-          },
-          examples: {
-            'Default': {
-              value: {
-                messageId: '<message_id>',
-              },
-            },
-          },
-        },
-      },
-    }
+     #swagger.parameters["messageId"] = {
+      schema: 'true_5521999999999@c.us_3EB0E69ACC5B396B21F2FE'
+     }
    */
   const session = req.session;
-  const { messageId } = req.body;
+  const { messageId } = req.params;
 
   try {
-    const result = await req.client.getOrderbyMsg(messageId);
+    const result = await (req.client as any).getOrder(messageId);
 
     returnSucess(res, session, null, result);
   } catch (error) {
