@@ -644,8 +644,8 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request"
+          "default": {
+            "description": ""
           }
         },
         "security": [
@@ -674,7 +674,7 @@
               "examples": {
                 "Edit a message": {
                   "value": {
-                    "id": "7787877872655655ad@ads858598.c.us",
+                    "id": "true_5521999999999@c.us_3EB04FCAA1527EB6D9DEC8",
                     "newText": "New text for message"
                   }
                 }
@@ -6767,6 +6767,14 @@
             "schema": {
               "type": "string",
               "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
             }
           }
         ],
