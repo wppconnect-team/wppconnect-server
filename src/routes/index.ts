@@ -840,7 +840,7 @@ routes.get(
   OrderController.getBusinessProfilesProducts
 );
 routes.get(
-  '/api/:session/get-order-by-messageId',
+  '/api/:session/get-order-by-messageId/:messageId',
   verifyToken,
   statusConnection,
   OrderController.getOrderbyMsg

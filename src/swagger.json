@@ -6943,7 +6943,7 @@
         ]
       }
     },
-    "/api/{session}/get-order-by-messageId": {
+    "/api/{session}/get-order-by-messageId/{messageId}": {
       "get": {
         "tags": ["Catalog & Bussiness"],
         "description": "",
@@ -6956,6 +6956,15 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "true_5521999999999@c.us_3EB0E69ACC5B396B21F2FE"
+            }
           }
         ],
         "responses": {
@@ -6967,30 +6976,7 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "messageId": {
-                    "type": "string"
-                  }
-                },
-                "required": ["messageId"]
-              },
-              "examples": {
-                "Default": {
-                  "value": {
-                    "messageId": "<message_id>"
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/{secretkey}/backup-sessions": {
