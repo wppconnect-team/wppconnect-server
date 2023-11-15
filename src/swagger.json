@@ -1536,6 +1536,112 @@
         "deprecated": true
       }
     },
+    "/api/{session}/send-order-message": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "object"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Send with custom items": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "custom",
+                        "name": "Item test",
+                        "price": 120000,
+                        "qnt": 2
+                      },
+                      {
+                        "type": "custom",
+                        "name": "Item test 2",
+                        "price": 145000,
+                        "qnt": 2
+                      }
+                    ]
+                  }
+                },
+                "Send with product items": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "product",
+                        "id": "37878774457",
+                        "price": 148000,
+                        "qnt": 2
+                      }
+                    ]
+                  }
+                },
+                "Send with custom items and options": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "custom",
+                        "name": "Item test",
+                        "price": 120000,
+                        "qnt": 2
+                      }
+                    ],
+                    "options": {
+                      "tax": 10000,
+                      "shipping": 4000,
+                      "discount": 10000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{session}/send-poll-message": {
       "post": {
         "tags": ["Messages"],
