@@ -93,6 +93,53 @@ export async function sendMessage(req: Request, res: Response) {
   }
 }
 
+export async function editMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              newText: { type: "string" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Edit a message": {
+              value: { 
+                id: 'true_5521999999999@c.us_3EB04FCAA1527EB6D9DEC8',
+                newText: 'New text for message'
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+  const { id, newText } = req.body;
+
+  const options = req.body.options || {};
+  try {
+    const edited = await (req.client as any).editMessage(id, newText, options);
+
+    req.io.emit('edited-message', edited);
+    returnSucess(res, edited);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
 export async function sendFile(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
