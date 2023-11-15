@@ -208,6 +208,12 @@ routes.post(
   MessageController.sendListMessage
 );
 routes.post(
+  '/api/:session/send-order-message',
+  verifyToken,
+  statusConnection,
+  MessageController.sendOrderMessage
+);
+routes.post(
   '/api/:session/send-poll-message',
   verifyToken,
   statusConnection,

@@ -537,6 +537,107 @@ export async function sendListMessage(req: Request, res: Response) {
   }
 }
 
+export async function sendOrderMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              items: { type: "object" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Send with custom items": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                items: [
+                  {
+                    type: 'custom',
+                    name: 'Item test',
+                    price: 120000,
+                    qnt: 2,
+                  },
+                  {
+                    type: 'custom',
+                    name: 'Item test 2',
+                    price: 145000,
+                    qnt: 2,
+                  },
+                ],
+              }
+            },
+            "Send with product items": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                items: [
+                  {
+                    type: 'product',
+                    id: '37878774457',
+                    price: 148000,
+                    qnt: 2,
+                  },
+                ],
+              }
+            },
+            "Send with custom items and options": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                items: [
+                  {
+                    type: 'custom',
+                    name: 'Item test',
+                    price: 120000,
+                    qnt: 2,
+                  },
+                ],
+                options: {
+                  tax: 10000,
+                  shipping: 4000,
+                  discount: 10000,
+                }
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+  const { phone, items } = req.body;
+
+  const options = req.body.options || {};
+
+  try {
+    const results: any = [];
+    for (const contato of phone) {
+      results.push(await req.client.sendOrderMessage(contato, items, options));
+    }
+
+    if (results.length === 0)
+      return res.status(400).json('Error sending order message');
+    req.io.emit('mensagem-enviada', results);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
 export async function sendPollMessage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
