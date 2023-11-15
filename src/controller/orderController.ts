@@ -59,15 +59,20 @@ export async function getBusinessProfilesProducts(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
+     #swagger.parameters["phone"] = {
+      in: 'query',
+      schema: '5521999999999@c.us',
+     }
    */
   const session = req.session;
-  const { phone } = req.body;
+  const { phone } = req.query as unknown as any;
 
   try {
     const results: any = [];
 
     for (const contato of phone) {
-      results.push(await req.client.getBusinessProfilesProducts(contato));
+      const result = await req.client.getBusinessProfilesProducts(contato);
+      results.push(result);
     }
 
     returnSucess(res, session, phone, results);
