@@ -506,7 +506,50 @@ export async function sendListMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA',
      }
-     #swagger.deprecated=true
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              description: { type: "string" },
+              sections: { type: "array" },
+              buttonText: { type: "string" },
+            }
+          },
+          examples: {
+            "Send list message": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                description: 'Desc for list',
+                buttonText: 'Select a option',
+                sections: [
+                  {
+                    title: 'Section 1',
+                    rows: [
+                      {
+                        rowId: 'my_custom_id',
+                        title: 'Test 1',
+                        description: 'Description 1',
+                      },
+                      {
+                        rowId: '2',
+                        title: 'Test 2',
+                        description: 'Description 2',
+                      },
+                    ],
+                  },
+                ],
+              }
+            },
+          }
+        }
+      }
+     }
    */
   const {
     phone,
