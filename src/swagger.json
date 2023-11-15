@@ -1655,6 +1655,14 @@
               "example": "<groupId>"
             },
             "in": "query"
+          },
+          {
+            "name": "wid",
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
+            },
+            "in": "query"
           }
         ],
         "responses": {
@@ -1753,6 +1761,45 @@
             }
           }
         }
+      }
+    },
+    "/api/{session}/common-groups/{wid}": {
+      "get": {
+        "tags": ["Group"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "wid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/{session}/group-admins/{groupId}": {
