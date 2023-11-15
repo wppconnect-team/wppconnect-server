@@ -628,6 +628,62 @@
         }
       }
     },
+    "/api/{session}/edit-message": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "newText": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Edit a message": {
+                  "value": {
+                    "id": "7787877872655655ad@ads858598.c.us",
+                    "newText": "New text for message"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{session}/send-image": {
       "post": {
         "tags": ["Messages"],
