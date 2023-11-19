@@ -2592,7 +2592,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "$invitecode": {
+                  "invitecode": {
                     "type": "string"
                   }
                 }
