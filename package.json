@@ -19,6 +19,9 @@
     "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url",
     "test": "jest"
   },
+  "engines": {
+    "node": "18.16.0"
+  },
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.28.3",
     "archiver": "^6.0.1",
