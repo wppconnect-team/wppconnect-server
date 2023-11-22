@@ -23,9 +23,10 @@
     "node": "18.16.0"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.454.0",
+    "@babel/runtime": "^7.23.4",
     "@wppconnect-team/wppconnect": "^1.28.3",
     "archiver": "^6.0.1",
-    "@aws-sdk/client-s3": "^3.454.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "buffer-to-stream": "1.0.0",
@@ -90,8 +91,8 @@
     "redis": "^4.6.10",
     "rimraf": "^5.0.5",
     "shx": "^0.3.4",
-    "ts-jest": "^29.1.1",
     "swagger-ui-dist": "^5.10.0",
+    "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
