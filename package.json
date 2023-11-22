@@ -17,8 +17,7 @@
     "swagger:copy-json": "shx cp ./src/swagger.json ./swagger-docs",
     "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
     "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url",
-    "test": "jest",
-    "heroku-postbuild": "mkdir ./.cache && mv /app/.cache/puppeteer ./.cache"
+    "test": "jest"
   },
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.28.3",
