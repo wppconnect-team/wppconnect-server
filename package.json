@@ -19,9 +19,6 @@
     "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url",
     "test": "jest"
   },
-  "engines": {
-    "node": "18.16.0"
-  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.454.0",
     "@babel/runtime": "^7.23.4",
