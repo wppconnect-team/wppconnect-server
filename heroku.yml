@@ -1,6 +1,6 @@
 build:
   docker:
-    web: Dockerfile
+    web: DockerFile
 
 run: 
   web: node dist/server.js

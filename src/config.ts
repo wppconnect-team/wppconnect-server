@@ -1,7 +1,7 @@
 export default {
   secretKey: 'THISISMYSECURETOKEN',
   host: 'http://localhost',
-  port: '21465',
+  port: '80',
   deviceName: 'GDS-WppConnect',
   poweredBy: 'GDS-WPPConnect-Server',
   startAllSession: true,
