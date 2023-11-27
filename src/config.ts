@@ -12,7 +12,6 @@ export default {
     url: null,
     autoDownload: true,
     uploadS3: false,
-    awsBucketName: null,
     readMessage: true,
     allUnreadOnStart: false,
     listenAcks: true,
@@ -22,6 +21,12 @@ export default {
     onPollResponse: true,
     onRevokedMessage: true,
     onLabelUpdated: true,
+    onSelfMessage: false,
+    ignore: ['status@broadcast'],
+  },
+  websocket: {
+    autoDownload: false,
+    uploadS3: false,
   },
   chatwoot: {
     sendQrCode: true,
@@ -60,6 +65,15 @@ export default {
       '--ignore-ssl-errors',
       '--ignore-certificate-errors-spki-list',
     ],
+    /**
+     * Example of configuring the linkPreview generator
+     * If you set this to 'null', it will use global servers; however, you have the option to define your own server
+     * Clone the repository https://github.com/wppconnect-team/wa-js-api-server and host it on your server with ssl
+     *
+     * Configure the attribute as follows:
+     * linkPreviewApiServers: [ 'https://www.yourserver.com/wa-js-api-server' ]
+     */
+    linkPreviewApiServers: null,
   },
   mapper: {
     enable: false,
@@ -79,5 +93,13 @@ export default {
     redisPassword: '',
     redisDb: 0,
     redisPrefix: 'docker',
+  },
+  aws_s3: {
+    region: 'sa-east-1',
+    access_key_id: null,
+    secret_key: null,
+    defaultBucketName: null,
+    endpoint: null,
+    forcePathStyle: null,
   },
 };

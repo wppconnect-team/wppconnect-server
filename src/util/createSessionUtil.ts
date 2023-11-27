@@ -19,7 +19,7 @@ import { Request } from 'express';
 import { download } from '../controller/sessionController';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
-import { callWebHook, startHelper } from './functions';
+import { autoDownload, callWebHook, startHelper } from './functions';
 import { clientsArray, eventEmitter } from './sessionUtil';
 import Factory from './tokenStore/factory';
 
@@ -68,8 +68,12 @@ export default class CreateSessionUtil {
           req.serverOptions.createOptions,
           {
             session: session,
-            deviceName: req.serverOptions.deviceName,
-            poweredBy: req.serverOptions.poweredBy || 'WPPConnect-Server',
+            deviceName:
+              client.config?.deviceName || req.serverOptions.deviceName,
+            poweredBy:
+              client.config?.poweredBy ||
+              req.serverOptions.poweredBy ||
+              'WPPConnect-Server',
             catchQR: (
               base64Qr: any,
               asciiQR: any,
@@ -160,11 +164,18 @@ export default class CreateSessionUtil {
       session: client.session,
     });
 
-    callWebHook(client, req, 'qrcode', { qrcode: qrCode, urlcode: urlCode });
+    callWebHook(client, req, 'qrcode', {
+      qrcode: qrCode,
+      urlcode: urlCode,
+      session: client.session,
+    });
     if (res && !res._headerSent)
-      res
-        .status(200)
-        .json({ status: 'qrcode', qrcode: qrCode, urlcode: urlCode });
+      res.status(200).json({
+        status: 'qrcode',
+        qrcode: qrCode,
+        urlcode: urlCode,
+        session: client.session,
+      });
   }
 
   async onParticipantsChanged(req: any, client: any) {
@@ -221,14 +232,20 @@ export default class CreateSessionUtil {
         });
     });
 
-    await client.onAnyMessage((message: any) => {
+    await client.onAnyMessage(async (message: any) => {
       message.session = client.session;
 
       if (message.type === 'sticker') {
         download(message, client, req.logger);
       }
 
+      if (req.serverOptions?.websocket?.autoDownload) {
+        await autoDownload(client, req, message);
+      }
+
       req.io.emit('received-message', { response: message });
+      if (req.serverOptions.webhook.onSelfMessage && message.fromMe)
+        callWebHook(client, req, 'onselfmessage', message);
     });
 
     await client.onIncomingCall(async (call) => {

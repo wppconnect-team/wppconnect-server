@@ -22,3 +22,4 @@ userDataDir
 /yarn-error.log
 backupFolder
 tokens/*
+wppconnect_tokens/*

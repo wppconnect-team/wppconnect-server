@@ -2,6 +2,8 @@
 
 ## _WPPConnect Server_
 
+![WPPConnect-SERVER](https://i.imgur.com/y1ts6RR.png)
+
 [![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
 [![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/project/wppconnect-team/wppconnect-server 'Average time to resolve an issue')
@@ -10,13 +12,15 @@
 [![Build](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml)
 [![release-it](https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-release--it-e10079.svg)](https://github.com/release-it/release-it)
 
-Wppconnect Server is a ready-to-use API, just download, install, and start using, simple as that.
+Welcome to the **WPPConnect Server** repository, developed by the WPPConnect Team. Our mission is to provide a robust and ready-to-use API for seamless communication with WhatsApp. The server is designed to streamline the process of sending and receiving messages, managing contacts, creating groups, and much more, all while leveraging the power of JavaScript ES6, NodeJS, and a RESTful architecture.
 
 - Javascript ES6
 - NodeJS
 - Restfull
 
 ## Our online channels
+
+Connect with us across various platforms to stay updated and engage in discussions:
 
 [![Discord](https://img.shields.io/discord/844351092758413353?color=blueviolet&label=Discord&logo=discord&style=flat)](https://discord.gg/JU5JGGKGNG)
 [![Telegram Group](https://img.shields.io/badge/Telegram-Group-32AFED?logo=telegram)](https://t.me/wppconnect)
@@ -25,11 +29,11 @@ Wppconnect Server is a ready-to-use API, just download, install, and start using
 
 ## Documentations
 
-Access our documentation on [postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
+Detailed documentation and guides are available for your convenience:
 
-Access our documentation on [Swagger](https://wppconnect.io/swagger/wppconnect-server)
-
-Or Swagger UI in your server. Acess router: "IP:PORT/api-docs"
+- [Postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
+- [Swagger](https://wppconnect.io/swagger/wppconnect-server)
+- Swagger UI can be accessed on your server through the route: "IP:PORT/api-docs"
 
 ## Features
 
@@ -38,7 +42,8 @@ Or Swagger UI in your server. Acess router: "IP:PORT/api-docs"
 | Multiple Sessions                    | ✔   |
 | Send **text, image, video and docs** | ✔   |
 | Get **contacts list**                | ✔   |
-| Receive messages                     | ✔   |
+| Manage products                      | ✔   |
+| Receive/Send messages                | ✔   |
 | Open/Close Session                   | ✔   |
 | Change Profile/Username              | ✔   |
 | Create Group                         | ✔   |
@@ -55,6 +60,7 @@ Or Swagger UI in your server. Acess router: "IP:PORT/api-docs"
 - Express
 - Nodemon
 - SocketIO
+- S3
 
 ## Installation
 
@@ -148,6 +154,14 @@ This server use config.ts file to define some options, default values are:
     onRevokedMessage: true,
     // send all events of labels for webook and socket
     onLabelUpdated: true,
+    // 'event', 'from' ou 'type' to ignore and not send to webhook
+    ignore: [],
+  },
+  websocket: {
+    // Just leave one active, here or on webhook.autoDownload
+    autoDownload: false,
+    // Just leave one active, here or on webhook.uploadS3, to avoid duplication in S3
+    uploadS3: false,
   },
   // send data to chatwoot
   chatwoot: {
@@ -211,6 +225,14 @@ This server use config.ts file to define some options, default values are:
     redisPassword: '',
     redisDb: 0,
     redisPrefix: 'docker',
+  },
+  // Your configurations yo upload on AWS
+  aws_s3: {
+    region: 'sa-east-1',
+    access_key_id: '',
+    secret_key: '',
+    // If you already have a bucket created that will be used. Will bestored: you-default-bucket/{session}/{filename}
+    defaultBucketName: ''
   },
 }
 ```

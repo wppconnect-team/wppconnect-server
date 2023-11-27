@@ -860,14 +860,14 @@ export async function reactMessage(req: Request, res: Response) {
           schema: {
             type: "object",
             properties: {
-              messageId: { type: "string" },
+              msgId: { type: "string" },
               reaction: { type: "string" },
             }
           },
           examples: {
             "Default": {
               value: {
-                messageId: "<messageId>",
+                msgId: "<messageId>",
                 reaction: "😜",
               }
             },
@@ -986,17 +986,9 @@ export async function forwardMessages(req: Request, res: Response) {
     let response;
 
     if (!isGroup) {
-      response = await req.client.forwardMessages(
-        `${phone}`,
-        [messageId],
-        false
-      );
+      response = await req.client.forwardMessage(`${phone}`, [messageId]);
     } else {
-      response = await req.client.forwardMessages(
-        `${phone}`,
-        [messageId],
-        false
-      );
+      response = await req.client.forwardMessage(`${phone}`, [messageId]);
     }
 
     return res.status(201).json({ status: 'success', response: response });
@@ -1955,9 +1947,10 @@ export async function getProfilePicFromServer(req: Request, res: Response) {
      }
    */
   const { phone = true } = req.params;
+  const { isGroup = false } = req.query;
   try {
     let response;
-    for (const contato of contactToArray(phone as string, false)) {
+    for (const contato of contactToArray(phone as string, isGroup as boolean)) {
       response = await req.client.getProfilePicFromServer(contato);
     }
 

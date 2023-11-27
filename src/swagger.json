@@ -93,6 +93,7 @@
       "get": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "showAllSessions",
         "parameters": [
           {
             "name": "secretkey",
@@ -123,6 +124,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "startAllSessions",
         "parameters": [
           {
             "name": "secretkey",
@@ -168,6 +170,7 @@
       "get": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "CheckConnectionState",
         "parameters": [
           {
             "name": "session",
@@ -195,6 +198,7 @@
       "get": {
         "tags": ["Messages"],
         "description": "",
+        "operationId": "getMediaByMessage",
         "parameters": [
           {
             "name": "session",
@@ -271,52 +275,11 @@
         ]
       }
     },
-    "/api/{session}/status-session": {
-      "get": {
-        "tags": ["Auth"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "session",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "NERDWHATS_AMERICA"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              },
-              "example": {}
-            }
-          }
-        }
-      }
-    },
     "/api/{session}/qrcode-session": {
       "get": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "getQrCode",
         "parameters": [
           {
             "name": "session",
@@ -347,6 +310,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "startSession",
         "parameters": [
           {
             "name": "session",
@@ -358,7 +322,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -380,7 +348,7 @@
                 }
               },
               "example": {
-                "webhook": "https://webhook.site/7cc2944d-3967-4cea-988c-d57ea80bce5f",
+                "webhook": "",
                 "waitQrCode": false
               }
             }
@@ -392,6 +360,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "This route logout and delete session data",
+        "operationId": "logoutSession",
         "parameters": [
           {
             "name": "session",
@@ -459,6 +428,7 @@
       "post": {
         "tags": ["Auth"],
         "description": "",
+        "operationId": "closeSession",
         "parameters": [
           {
             "name": "session",
@@ -482,25 +452,14 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              },
-              "example": {}
-            }
-          }
-        }
+        ]
       }
     },
     "/api/{session}/subscribe-presence": {
       "post": {
         "tags": ["Misc"],
         "description": "",
+        "operationId": "subscribePresence",
         "parameters": [
           {
             "name": "session",
@@ -557,6 +516,7 @@
       "post": {
         "tags": ["Messages"],
         "description": "",
+        "operationId": "downloadMediabyMessage",
         "parameters": [
           {
             "name": "session",
@@ -633,23 +593,89 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "$phone": {
+                  "phone": {
                     "type": "string"
                   },
-                  "$isGroup": {
+                  "isGroup": {
                     "type": "boolean"
                   },
-                  "$message": {
+                  "message": {
                     "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
                   }
                 }
               },
               "examples": {
-                "Default": {
+                "Send message to contact": {
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
-                    "message": "Hello, welcome to WPPConnect"
+                    "message": "Hi from WPPConnect"
+                  }
+                },
+                "Send message to group": {
+                  "value": {
+                    "phone": "8865623215244578",
+                    "isGroup": true,
+                    "message": "Hi from WPPConnect"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/edit-message": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "newText": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Edit a message": {
+                  "value": {
+                    "id": "true_5521999999999@c.us_3EB04FCAA1527EB6D9DEC8",
+                    "newText": "New text for message"
                   }
                 }
               }
@@ -1163,6 +1189,37 @@
         }
       }
     },
+    "/api/{session}/status-session": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "",
+        "operationId": "closeSession",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/send-status": {
       "post": {
         "tags": ["Messages"],
@@ -1438,7 +1495,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1462,13 +1523,176 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
           }
         ],
-        "deprecated": true
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "sections": {
+                    "type": "array"
+                  },
+                  "buttonText": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Send list message": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "description": "Desc for list",
+                    "buttonText": "Select a option",
+                    "sections": [
+                      {
+                        "title": "Section 1",
+                        "rows": [
+                          {
+                            "rowId": "my_custom_id",
+                            "title": "Test 1",
+                            "description": "Description 1"
+                          },
+                          {
+                            "rowId": "2",
+                            "title": "Test 2",
+                            "description": "Description 2"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/send-order-message": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "object"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Send with custom items": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "custom",
+                        "name": "Item test",
+                        "price": 120000,
+                        "qnt": 2
+                      },
+                      {
+                        "type": "custom",
+                        "name": "Item test 2",
+                        "price": 145000,
+                        "qnt": 2
+                      }
+                    ]
+                  }
+                },
+                "Send with product items": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "product",
+                        "id": "37878774457",
+                        "price": 148000,
+                        "qnt": 2
+                      }
+                    ]
+                  }
+                },
+                "Send with custom items and options": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "custom",
+                        "name": "Item test",
+                        "price": 120000,
+                        "qnt": 2
+                      }
+                    ],
+                    "options": {
+                      "tax": 10000,
+                      "shipping": 4000,
+                      "discount": 10000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-poll-message": {
@@ -1486,7 +1710,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -1584,6 +1812,14 @@
             "schema": {
               "type": "string",
               "example": "<groupId>"
+            },
+            "in": "query"
+          },
+          {
+            "name": "wid",
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
             },
             "in": "query"
           }
@@ -1684,6 +1920,45 @@
             }
           }
         }
+      }
+    },
+    "/api/{session}/common-groups/{wid}": {
+      "get": {
+        "tags": ["Group"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "wid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/{session}/group-admins/{groupId}": {
@@ -2317,7 +2592,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "$invitecode": {
+                  "invitecode": {
                     "type": "string"
                   }
                 }
@@ -3178,7 +3453,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3527,7 +3806,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3606,7 +3889,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -3765,7 +4052,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "messageId": {
+                  "msgId": {
                     "type": "string"
                   },
                   "reaction": {
@@ -3776,7 +4063,7 @@
               "examples": {
                 "Default": {
                   "value": {
-                    "messageId": "<messageId>",
+                    "msgId": "<messageId>",
                     "reaction": "😜"
                   }
                 }
@@ -4126,7 +4413,11 @@
             }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -5991,7 +6282,11 @@
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/api/{session}/contact/{phone}": {
@@ -6094,6 +6389,13 @@
             "schema": {
               "type": "string",
               "example": "5521999999999"
+            }
+          },
+          {
+            "name": "isGroup",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -6549,6 +6851,7 @@
       "post": {
         "tags": ["Profile"],
         "description": "Edit your bussiness profile",
+        "operationId": "editBusinessProfile",
         "parameters": [
           {
             "name": "session",
@@ -6671,9 +6974,21 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
+            }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
@@ -6681,7 +6996,7 @@
         ]
       }
     },
-    "/api/{session}/get-order-by-messageId": {
+    "/api/{session}/get-order-by-messageId/{messageId}": {
       "get": {
         "tags": ["Catalog & Bussiness"],
         "description": "",
@@ -6694,37 +7009,27 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "true_5521999999999@c.us_3EB0E69ACC5B396B21F2FE"
+            }
           }
         ],
-        "responses": {},
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
         "security": [
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "messageId": {
-                    "type": "string"
-                  }
-                },
-                "required": ["messageId"]
-              },
-              "examples": {
-                "Default": {
-                  "value": {
-                    "messageId": "<message_id>"
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/{secretkey}/backup-sessions": {
@@ -7268,6 +7573,229 @@
         ]
       }
     },
+    "/api/{session}/newsletter": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "operationId": "createNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "<newsletter_id>"
+            },
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Edit newsletter/channel": {
+                  "value": {
+                    "name": "New name of channel",
+                    "description": "New description of channel",
+                    "picture": "<new_base64_image> or send null"
+                  }
+                },
+                "Create newsletter/channel": {
+                  "value": {
+                    "name": "Name for your channel",
+                    "options": {
+                      "description": "Description of channel",
+                      "picture": "<base64_image>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/newsletter/{id}": {
+      "put": {
+        "tags": [],
+        "description": "",
+        "operationId": "editNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Edit newsletter/channel": {
+                  "value": {
+                    "name": "New name of channel",
+                    "description": "New description of channel",
+                    "picture": "<new_base64_image> or send null"
+                  }
+                },
+                "Create newsletter/channel": {
+                  "value": {
+                    "name": "Name for your channel",
+                    "options": {
+                      "description": "Description of channel",
+                      "picture": "<base64_image>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "description": "",
+        "operationId": "destroyNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/{session}/mute-newsletter/{id}": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "operationId": "muteNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/chatwoot": {
       "post": {
         "tags": ["Misc"],
@@ -7327,24 +7855,44 @@
     "/api-docs": {
       "get": {
         "description": "",
-        "parameters": [],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/healthz": {
       "get": {
         "tags": ["Misc"],
         "description": "This endpoint can be used to check the health status of the API. It returns a response with a status code indicating the API",
-        "parameters": [],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     },
     "/unhealthy": {
       "get": {
         "tags": ["Misc"],
         "description": "This endpoint is used to force the API into an unhealthy state. It can be useful for testing error handling or simulating service disruptions.",
-        "parameters": [],
-        "responses": {}
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["Misc"],
+        "description": "This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
       }
     }
   },

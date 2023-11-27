@@ -26,11 +26,13 @@ import * as GroupController from '../controller/groupController';
 import * as LabelsController from '../controller/labelsController';
 import * as MessageController from '../controller/messageController';
 import * as MiscController from '../controller/miscController';
+import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
+import * as prometheusRegister from '../middleware/instrumentation';
 import statusConnection from '../middleware/statusConnection';
 import swaggerDocument from '../swagger.json';
 
@@ -106,6 +108,12 @@ routes.post(
   verifyToken,
   statusConnection,
   MessageController.sendMessage
+);
+routes.post(
+  '/api/:session/edit-message',
+  verifyToken,
+  statusConnection,
+  MessageController.editMessage
 );
 routes.post(
   '/api/:session/send-image',
@@ -201,6 +209,12 @@ routes.post(
   MessageController.sendListMessage
 );
 routes.post(
+  '/api/:session/send-order-message',
+  verifyToken,
+  statusConnection,
+  MessageController.sendOrderMessage
+);
+routes.post(
   '/api/:session/send-poll-message',
   verifyToken,
   statusConnection,
@@ -225,6 +239,12 @@ routes.get(
   verifyToken,
   statusConnection,
   GroupController.getGroupMembers
+);
+routes.get(
+  '/api/:session/common-groups/:wid',
+  verifyToken,
+  statusConnection,
+  GroupController.getCommonGroups
 );
 routes.get(
   '/api/:session/group-admins/:groupId',
@@ -821,7 +841,7 @@ routes.get(
   OrderController.getBusinessProfilesProducts
 );
 routes.get(
-  '/api/:session/get-order-by-messageId',
+  '/api/:session/get-order-by-messageId/:messageId',
   verifyToken,
   statusConnection,
   OrderController.getOrderbyMsg
@@ -883,6 +903,32 @@ routes.get(
   CommunityController.getCommunityParticipants
 );
 
+routes.post(
+  '/api/:session/newsletter',
+  verifyToken,
+  statusConnection,
+  NewsletterController.createNewsletter
+);
+routes.put(
+  '/api/:session/newsletter/:id',
+  verifyToken,
+  statusConnection,
+  NewsletterController.editNewsletter
+);
+
+routes.delete(
+  '/api/:session/newsletter/:id',
+  verifyToken,
+  statusConnection,
+  NewsletterController.destroyNewsletter
+);
+routes.post(
+  '/api/:session/mute-newsletter/:id',
+  verifyToken,
+  statusConnection,
+  NewsletterController.muteNewsletter
+);
+
 routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 
 // Api Doc
@@ -892,5 +938,9 @@ routes.get('/api-docs', swaggerUi.setup(swaggerDocument));
 //k8s
 routes.get('/healthz', HealthCheck.healthz);
 routes.get('/unhealthy', HealthCheck.unhealthy);
+
+//Metrics Prometheus
+
+routes.get('/metrics', prometheusRegister.metrics);
 
 export default routes;
