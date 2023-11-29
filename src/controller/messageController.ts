@@ -16,7 +16,7 @@
 
 import { Request, Response } from 'express';
 
-import { unlinkAsync } from '../util/functions';
+import { contactToArray, unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {
   req.logger.error(error);
@@ -144,13 +144,41 @@ export async function sendMessages(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const messageResult of messages) {
-      results.push(
-        await req.client.sendText(
-          messageResult.phone,
-          messageResult.message,
-          options
-        )
-      );
+      const numbers: any = [];
+      const localArr = contactToArray(messageResult.phone, false);
+      let index = 0;
+      for (const contact of localArr) {
+        if (req.body.isGroup) {
+          localArr[index] = contact;
+        } else if (numbers.indexOf(contact) < 0) {
+          const profile: any = await req.client
+            .checkNumberStatus(contact)
+            .catch((error) => console.log(error));
+          if (!profile?.numberExists) {
+            const num = (contact as any).split('@')[0];
+            return res.status(400).json({
+              response: {
+                error: 'notExists',
+                phone: num,
+                nome: req.body.name,
+              },
+              status: 'Connected',
+              message: `O número ${num} não existe.`,
+            });
+          } else {
+            if ((numbers as any).indexOf(profile.id._serialized) < 0) {
+              (numbers as any).push(profile.id._serialized);
+            }
+            (localArr as any)[index] = profile.id._serialized;
+          }
+        }
+        index++;
+      }
+      for (const contact of localArr) {
+        results.push(
+          await req.client.sendText(contact, messageResult.message, options)
+        );
+      }
     }
 
     if (results.length === 0)
