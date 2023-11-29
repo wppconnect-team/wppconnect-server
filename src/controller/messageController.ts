@@ -145,9 +145,7 @@ export async function sendMessages(req: Request, res: Response) {
     const results: any = [];
     for (const { message, phone } of messages) {
       for (const contato of phone) {
-        setTimeout(async () => {
-          results.push(await req.client.sendText(contato, message, options));
-        }, 5000);
+        results.push(await req.client.sendText(contato, message, options));
       }
     }
 
