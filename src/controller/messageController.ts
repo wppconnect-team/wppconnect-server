@@ -144,11 +144,13 @@ export async function sendMessages(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const messageResult of messages) {
-      for (const contato of messageResult.phone) {
-        results.push(
-          await req.client.sendText(contato, messageResult.message, options)
-        );
-      }
+      results.push(
+        await req.client.sendText(
+          messageResult.phone,
+          messageResult.message,
+          options
+        )
+      );
     }
 
     if (results.length === 0)
