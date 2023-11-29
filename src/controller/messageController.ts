@@ -143,9 +143,11 @@ export async function sendMessages(req: Request, res: Response) {
 
   try {
     const results: any = [];
-    for (const { message, phone } of messages) {
-      for (const contato of phone) {
-        results.push(await req.client.sendText(contato, message, options));
+    for (const messageResult of messages) {
+      for (const contato of messageResult.phone) {
+        results.push(
+          await req.client.sendText(contato, messageResult.message, options)
+        );
       }
     }
 
