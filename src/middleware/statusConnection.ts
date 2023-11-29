@@ -66,7 +66,7 @@ export default async function statusConnection(
         if (arrErrors.length > 0) {
           return res.status(400).json(arrErrors);
         } else {
-          req.body.messsages = newMessages;
+          req.body.messages = newMessages;
         }
       } else {
         const localArr = contactToArray(req.body.phone || [], req.body.isGroup);
