@@ -589,6 +589,73 @@
         "requestBody": {}
       }
     },
+    "/api/{session}/send-messages": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "phone": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "Default": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "filename": "file name lol",
+                    "caption": "caption for my file",
+                    "base64": "<base64> string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{session}/send-image": {
       "post": {
         "tags": ["Messages"],
@@ -7383,6 +7450,17 @@
       "session": {
         "type": "string",
         "schema": "NERDWHATS_AMERICA"
+      },
+      "message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
       }
     },
     "securitySchemes": {

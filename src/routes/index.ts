@@ -114,6 +114,12 @@ routes.post(
   MessageController.sendMessage
 );
 routes.post(
+  '/api/:session/send-messages',
+  verifyToken,
+  statusConnection,
+  MessageController.sendMessages
+);
+routes.post(
   '/api/:session/send-image',
   upload.single('file'),
   verifyToken,

@@ -93,6 +93,72 @@ export async function sendMessage(req: Request, res: Response) {
     returnError(req, res, error);
   }
 }
+export async function sendMessages(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.requestBody = {
+        required: true,
+        "@content": {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                $phone: { type: "string" },
+                $isGroup: { type: "boolean" },
+                $message: { type: "string" }
+                $options: { type: "object" }
+              }
+            },
+            examples: {
+              "Default": {
+                value: {
+                  phone: '5521999999999',
+                  isGroup: false,
+                  message: 'Hello, welcome to WPPConnect'
+                  options: {
+                    linkPreview: {
+                      title: 'Another text',
+                      description: 'Another description'
+                    },
+                    markIsRead: true,
+                    mentionedList: [],
+                  },
+                },
+              },
+            },
+          }
+        }
+      }
+   */
+  const { messages } = req.body;
+
+  const options = req.body.options || {};
+
+  try {
+    const results: any = [];
+    for (const { message, phone } of messages) {
+      for (const contato of phone) {
+        setTimeout(async () => {
+          results.push(await req.client.sendText(contato, message, options));
+        }, 5000);
+      }
+    }
+
+    if (results.length === 0)
+      return res.status(400).json('Error sending message');
+    req.io.emit('mensagem-enviada', results);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
 
 export async function sendFile(req: Request, res: Response) {
   /**
