@@ -18,6 +18,7 @@
     "license:add": "license-check-and-add add",
     "license:check": "license-check-and-add check",
     "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --fix .",
     "prepare": "husky install",
     "release": "release-it",
     "start": "node ./dist/server.js",
