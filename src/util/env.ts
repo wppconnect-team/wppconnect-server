@@ -1,3 +1,3 @@
-export function env(key: string, defaultValue = null) {
+export function env(key: string, defaultValue: any = null) {
   return process.env[key] || defaultValue;
 }
