@@ -75,7 +75,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/swagger-ui-express": "^4.1.6",
     "@types/unzipper": "^0.10.9",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
     "commitizen": "^4.3.0",
     "conventional-changelog-cli": "^4.1.0",
     "crypto-js": "^4.2.0",
