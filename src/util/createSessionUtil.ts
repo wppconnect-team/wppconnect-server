@@ -239,7 +239,10 @@ export default class CreateSessionUtil {
         download(message, client, req.logger);
       }
 
-      if (req.serverOptions?.websocket?.autoDownload) {
+      if (
+        req.serverOptions?.websocket?.autoDownload ||
+        req.serverOptions?.webhook?.autoDownload
+      ) {
         await autoDownload(client, req, message);
       }
 
