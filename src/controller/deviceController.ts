@@ -813,6 +813,8 @@ export async function deleteMessage(req: Request, res: Response) {
               phone: { type: "string" },
               isGroup: { type: "boolean" },
               messageId: { type: "string" },
+              onlyLocal: { type: "boolean" },
+              deleteMediaInDevice: { type: "boolean" },
             }
           },
           examples: {
@@ -828,14 +830,24 @@ export async function deleteMessage(req: Request, res: Response) {
       }
      }
    */
-  const { phone, messageId } = req.body;
+  const { phone, messageId, deleteMediaInDevice, onlyLocal } = req.body;
 
   try {
-    await req.client.deleteMessage(`${phone}`, [messageId]);
-
-    return res
-      .status(200)
-      .json({ status: 'success', response: { message: 'Message deleted' } });
+    const result = await req.client.deleteMessage(
+      `${phone}`,
+      messageId,
+      onlyLocal,
+      deleteMediaInDevice
+    );
+    if (result) {
+      return res
+        .status(200)
+        .json({ status: 'success', response: { message: 'Message deleted' } });
+    }
+    return res.status(401).json({
+      status: 'error',
+      response: { message: 'Error unknown on delete message' },
+    });
   } catch (e) {
     req.logger.error(e);
     return res
