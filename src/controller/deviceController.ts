@@ -976,7 +976,7 @@ export async function forwardMessages(req: Request, res: Response) {
             properties: {
               phone: { type: "string" },
               isGroup: { type: "boolean" },
-              messageid: { type: "string" },
+              messageId: { type: "string" },
             }
           },
           examples: {
@@ -984,7 +984,7 @@ export async function forwardMessages(req: Request, res: Response) {
               value: {
                 phone: "5521999999999",
                 isGroup: false,
-                messageid: "<messageId>",
+                messageId: "<messageId>",
               }
             },
           }
@@ -998,9 +998,9 @@ export async function forwardMessages(req: Request, res: Response) {
     let response;
 
     if (!isGroup) {
-      response = await req.client.forwardMessage(`${phone}`, [messageId]);
+      response = await req.client.forwardMessage(`${phone[0]}`, messageId);
     } else {
-      response = await req.client.forwardMessage(`${phone}`, [messageId]);
+      response = await req.client.forwardMessage(`${phone[0]}`, messageId);
     }
 
     return res.status(201).json({ status: 'success', response: response });
