@@ -70,10 +70,8 @@ export async function getBusinessProfilesProducts(req: Request, res: Response) {
   try {
     const results: any = [];
 
-    for (const contato of phone) {
-      const result = await req.client.getBusinessProfilesProducts(contato);
-      results.push(result);
-    }
+    const result = await req.client.getBusinessProfilesProducts(phone);
+    results.push(result);
 
     returnSucess(res, session, phone, results);
   } catch (error) {
