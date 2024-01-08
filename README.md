@@ -250,7 +250,7 @@ To generate an access token, you must use your `SECRET_KEY`.
 Using the route:
 
 ```shell
-  curl -X POST --location "http://localhost:21465/api/mySession/eUsouSeCreTo/generate-token"
+  curl -X POST --location "http://localhost:21465/api/mySession/THISISMYSECURETOKEN/generate-token"
 ```
 
 ### Response:
