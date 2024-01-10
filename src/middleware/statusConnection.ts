@@ -28,10 +28,14 @@ export default async function statusConnection(
     if (req.client && req.client.isConnected) {
       await req.client.isConnected();
 
-      const localArr = contactToArray(req.body.phone || [], req.body.isGroup);
+      const localArr = contactToArray(
+        req.body.phone || [],
+        req.body.isGroup,
+        req.body.isNewsletter
+      );
       let index = 0;
       for (const contact of localArr) {
-        if (req.body.isGroup) {
+        if (req.body.isGroup || req.body.isNewsletter) {
           localArr[index] = contact;
         } else if (numbers.indexOf(contact) < 0) {
           const profile: any = await req.client

@@ -235,27 +235,6 @@ export async function getGroupMembers(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.requestBody = {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              groupId: { type: "string" }
-            },
-            required: ["groupId"]
-          },
-          examples: {
-            "Default": {
-              value: {
-                groupId: "<groupId>"
-              }
-            }
-          }
-        }
-      }
-    }
    */
   const { groupId } = req.params;
 
