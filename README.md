@@ -93,6 +93,16 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 
 ```
 
+### Troubleshooting
+ If you encounter installation issues, please try the procedures below
+ . Error Sharp Runtime
+```sh
+    yarn add sharp
+    npm install --include=optional sharp
+    //or
+    yarn add sharp --ignore-engines
+```
+
 ## Run Server
 
 ```sh
