@@ -599,6 +599,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "message": {
                     "type": "string"
                   },
@@ -612,6 +615,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "message": "Hi from WPPConnect"
                   }
                 },
@@ -725,6 +729,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "filename": {
                     "type": "string"
                   },
@@ -741,6 +748,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "filename": "file name lol",
                     "caption": "caption for my file",
                     "base64": "<base64> string"
@@ -976,6 +984,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "filename": {
                     "type": "string"
                   },
@@ -992,6 +1003,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "filename": "file name lol",
                     "caption": "caption for my file",
                     "base64": "<base64> string"
@@ -1044,6 +1056,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "filename": {
                     "type": "string"
                   },
@@ -1060,6 +1075,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "filename": "file name lol",
                     "caption": "caption for my file",
                     "base64": "<base64> string"
@@ -1896,30 +1912,7 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "groupId": {
-                    "type": "string"
-                  }
-                },
-                "required": ["groupId"]
-              },
-              "examples": {
-                "Default": {
-                  "value": {
-                    "groupId": "<groupId>"
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/{session}/common-groups/{wid}": {
@@ -3976,6 +3969,9 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -4000,6 +3996,12 @@
                   },
                   "messageId": {
                     "type": "string"
+                  },
+                  "onlyLocal": {
+                    "type": "boolean"
+                  },
+                  "deleteMediaInDevice": {
+                    "type": "boolean"
                   }
                 }
               },
@@ -4114,7 +4116,7 @@
                   "isGroup": {
                     "type": "boolean"
                   },
-                  "messageid": {
+                  "messageId": {
                     "type": "string"
                   }
                 }
@@ -4124,7 +4126,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
-                    "messageid": "<messageId>"
+                    "messageId": "<messageId>"
                   }
                 }
               }
