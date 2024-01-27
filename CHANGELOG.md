@@ -1,3 +1,9 @@
+# 2.4.0 (2024-01-26)
+
+### Bug Fixes
+
+- Replaced ts-node with tsx ([66ae213](https://github.com/wppconnect-team/wppconnect-server/commit/66ae213adab5cc6aeeab77e6ee422e2ad9ee0c22))
+
 # 2.3.0 (2023-11-15)
 
 ## 2.2.5 (2023-08-27)
