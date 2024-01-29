@@ -96,7 +96,7 @@
     "pretty-quick": "^3.3.1",
     "prom-client": "^14.2.0",
     "redis": "^4.6.12",
-    "release-it": "^17.0.1",
+    "release-it": "^17.0.3",
     "rimraf": "^5.0.5",
     "shx": "^0.3.4",
     "swagger-ui-dist": "^5.10.5",
