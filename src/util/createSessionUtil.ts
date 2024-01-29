@@ -157,7 +157,6 @@ export default class CreateSessionUtil {
       urlcode: urlCode,
     });
 
-    qrCode = qrCode.replace('data:image/png;base64,', '');
     const imageBuffer = Buffer.from(qrCode, 'base64');
 
     req.io.emit('qrCode', {
