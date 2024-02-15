@@ -50,6 +50,7 @@ export async function sendMessage(req: Request, res: Response) {
             properties: {
               phone: { type: "string" },
               isGroup: { type: "boolean" },
+              isNewsletter: { type: "boolean" },
               message: { type: "string" },
               options: { type: "object" },
             }
@@ -59,6 +60,7 @@ export async function sendMessage(req: Request, res: Response) {
               value: { 
                 phone: '5521999999999',
                 isGroup: false,
+                isNewsletter: false,
                 message: 'Hi from WPPConnect',
               }
             },
@@ -159,6 +161,7 @@ export async function sendFile(req: Request, res: Response) {
                 properties: {
                     "phone": { type: "string" },
                     "isGroup": { type: "boolean" },
+                    "isNewsletter": { type: "boolean" },
                     "filename": { type: "string" },
                     "caption": { type: "string" },
                     "base64": { type: "string" }
@@ -169,6 +172,7 @@ export async function sendFile(req: Request, res: Response) {
                     value: {
                         "phone": "5521999999999",
                         "isGroup": false,
+                        "isNewsletter": false,
                         "filename": "file name lol",
                         "caption": "caption for my file",
                         "base64": "<base64> string"

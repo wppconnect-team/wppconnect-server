@@ -43,25 +43,31 @@ if (config?.websocket?.uploadS3) {
   crypto = config.websocket.uploadS3 ? Crypto : null;
 }
 
-export function contactToArray(number: any, isGroup?: boolean) {
+export function contactToArray(
+  number: any,
+  isGroup?: boolean,
+  isNewsletter?: boolean
+) {
   const localArr: any = [];
   if (Array.isArray(number)) {
     for (let contact of number) {
-      isGroup
+      isGroup || isNewsletter
         ? (contact = contact.split('@')[0])
         : (contact = contact.split('@')[0]?.replace(/[^\w ]/g, ''));
       if (contact !== '')
         if (isGroup) (localArr as any).push(`${contact}@g.us`);
+        else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
         else (localArr as any).push(`${contact}@c.us`);
     }
   } else {
     const arrContacts = number.split(/\s*[,;]\s*/g);
     for (let contact of arrContacts) {
-      isGroup
+      isGroup || isNewsletter
         ? (contact = contact.split('@')[0])
         : (contact = contact.split('@')[0]?.replace(/[^\w ]/g, ''));
       if (contact !== '')
         if (isGroup) (localArr as any).push(`${contact}@g.us`);
+        else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
         else (localArr as any).push(`${contact}@c.us`);
     }
   }
