@@ -97,11 +97,11 @@ export default {
     redisPrefix: 'docker',
   },
   aws_s3: {
-    region: env('AWS_S3_REGION', 'sa-east-1'),
-    access_key_id: env('AWS_S3_ACCESS_KEY_ID'),
-    secret_key: env('AWS_S3_SECRET_KEY'),
-    defaultBucketName: env('AWS_S3_DEFAULT_BUCKET_NAME'),
-    endpoint: env('AWS_S3_ENDPOINT'),
-    forcePathStyle: env('AWS_S3_FORCE_PATH_STYLE'),
+    region: env('AWS_DEFAULT_REGION', 'sa-east-1'),
+    access_key_id: env('AWS_ACCESS_KEY_ID'),
+    secret_key: env('AWS_SECRET_ACCESS_KEY'),
+    defaultBucketName: env('AWS_BUCKET'),
+    endpoint: env('AWS_ENDPOINT'),
+    forcePathStyle: env('AWS_USE_PATH_STYLE_ENDPOINT',false),
   },
 };
