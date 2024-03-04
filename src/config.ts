@@ -102,6 +102,6 @@ export default {
     secret_key: env('AWS_SECRET_ACCESS_KEY'),
     defaultBucketName: env('AWS_BUCKET'),
     endpoint: env('AWS_ENDPOINT'),
-    forcePathStyle: env('AWS_USE_PATH_STYLE_ENDPOINT',false),
+    forcePathStyle: env('AWS_USE_PATH_STYLE_ENDPOINT', false),
   },
 };
