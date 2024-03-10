@@ -93,7 +93,7 @@
     "mongoose": "^8.2.1",
     "nodemon": "^3.0.3",
     "prettier": "^2.8.8",
-    "pretty-quick": "^3.3.1",
+    "pretty-quick": "^4.0.0",
     "prom-client": "^14.2.0",
     "redis": "^4.6.13",
     "release-it": "^17.1.1",
