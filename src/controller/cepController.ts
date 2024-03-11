@@ -30,6 +30,7 @@ export async function getCep(req: Request, res: Response) {
         'https://www.cepaberto.com/api/v3/cep?cep=' +
           req.params.cep.replace('-', ''),
         {
+          timeout: 5000,
           headers: {
             Authorization: 'Token token=a30562962004d94271044de19730a8be',
           },
