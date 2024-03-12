@@ -355,7 +355,7 @@ export async function removeParticipant(req: Request, res: Response) {
   const { groupId, phone } = req.body;
 
   try {
-    let response = {};
+    let response: any = {};
     const arrayGroups: any = [];
 
     for (const group of groupToArray(groupId)) {
