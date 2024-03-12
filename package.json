@@ -61,7 +61,7 @@
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-typescript": "^7.23.3",
     "@commitlint/cli": "^18.6.1",
-    "@commitlint/config-conventional": "^18.6.2",
+    "@commitlint/config-conventional": "^18.6.3",
     "@commitlint/cz-commitlint": "^18.6.1",
     "@types/archiver": "^6.0.2",
     "@types/bcrypt": "^5.0.2",
