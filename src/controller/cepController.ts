@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as fs from 'fs';
-import * as correios from 'node-cep-correios';
 
 export async function getPostalCode(req: Request, res: Response) {
   const result = await axios.get(
@@ -25,53 +24,31 @@ export async function getCep(req: Request, res: Response) {
       res.send(info);
     });
   } else {
-    // axios
-    //   .get(
-    //     'https://www.cepaberto.com/api/v3/cep?cep=' +
-    //       req.params.cep.replace('-', ''),
-    //     {
-    //       timeout: 5000,
-    //       headers: {
-    //         Authorization: 'Token token=a30562962004d94271044de19730a8be',
-    //       },
-    //     }
-    //   )
-    //   .then((axiosReq) => {
-    //     const result = axiosReq.data;
+    axios
+      .get(`https://cep.awesomeapi.com.br/json/${req.params.cep}`, {
+        timeout: 5000,
+      })
+      .then((axiosReq) => {
+        const result = axiosReq.data;
 
-    //     const info = {
-    //       cep: result.cep,
-    //       logradouro: result.logradouro,
-    //       bairro: result.bairro,
-    //       localidade: result.cidade.nome,
-    //       uf: result.estado.sigla,
-    //       ibge: result.cidade.ibge,
-    //       ddd: result.cidade.ddd,
-    //       lat: result.latitude,
-    //       lon: result.longitude,
-    //     };
+        const info = {
+          cep: result.cep,
+          logradouro: result.address,
+          bairro: result.district,
+          localidade: result.city,
+          uf: result.state,
+          ibge: result.city_ibge,
+          ddd: result.ddd,
+          lat: result.lat,
+          lon: result.lng,
+        };
 
-    //     const data = JSON.stringify(info);
-    //     fs.writeFileSync(req.params.cep.replace('-', '') + '.json', data);
-    //     res.send(info);
-    //   })
-    //   .catch(() => {
-    correios.consultaCEP({ cep: req.params.cep }).then((resultCorreio) => {
-      const info = {
-        cep: resultCorreio.cep,
-        logradouro: resultCorreio.address,
-        bairro: resultCorreio.district,
-        localidade: resultCorreio.city,
-        uf: resultCorreio.state,
-        ibge: resultCorreio.city_ibge,
-        ddd: resultCorreio.ddd,
-        lat: resultCorreio.lat,
-        lon: resultCorreio.lng,
-      };
-      const data = JSON.stringify(info);
-      fs.writeFileSync(req.params.cep.replace('-', '') + '.json', data);
-      res.send(info);
-    });
-    // });
+        const data = JSON.stringify(info);
+        fs.writeFileSync(req.params.cep.replace('-', '') + '.json', data);
+        res.send(info);
+      })
+      .catch(() => {
+        res.sendStatus(404);
+      });
   }
 }
