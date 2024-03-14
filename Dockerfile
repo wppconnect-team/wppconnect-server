@@ -11,7 +11,6 @@ WORKDIR /usr/src/wpp-server
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY package.json  ./
 RUN yarn install --production=false --pure-lockfile && \
-    yarn add sharp --ignore-engines && \
     yarn cache clean
 COPY . .
 RUN yarn build
