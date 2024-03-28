@@ -1,3 +1,9 @@
+## 2.4.2 (2024-03-28)
+
+### Bug Fixes
+
+- Fixed DockerFile ([fed13ec](https://github.com/wppconnect-team/wppconnect-server/commit/fed13ece778462fa540bcfa55823863c7fe1bba0))
+
 ## 2.4.1 (2024-03-12)
 
 # 2.4.0 (2024-01-26)
