@@ -2,14 +2,15 @@ FROM node:lts-alpine3.18 as base
 WORKDIR /usr/src/wpp-server
 ENV NODE_ENV=production PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY package.json ./
+RUN yarn set version stable
 RUN yarn install --production --pure-lockfile && \
-    yarn add sharp --ignore-engines && \
     yarn cache clean
 
 FROM base as build
 WORKDIR /usr/src/wpp-server
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY package.json  ./
+RUN yarn set version stable
 RUN yarn install --production=false --pure-lockfile && \
     yarn cache clean
 COPY . .
