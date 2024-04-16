@@ -241,8 +241,7 @@ export default class CreateSessionUtil {
 
       if (
         req.serverOptions?.websocket?.autoDownload ||
-        req.serverOptions?.webhook?.autoDownload &&
-        message.fromMe==false
+        (req.serverOptions?.webhook?.autoDownload && message.fromMe == false)
       ) {
         await autoDownload(client, req, message);
       }
