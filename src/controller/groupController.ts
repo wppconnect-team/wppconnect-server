@@ -151,10 +151,25 @@ export async function createGroup(req: Request, res: Response) {
     let response = {};
     const infoGroup: any = [];
 
+    const localParticipantsPromise: any[] = [];
+    const localParticipants: any[] = [];
+
+    (participants as any[]).forEach((p) => {
+      localParticipantsPromise.push(
+        req.client.checkNumberStatus(p).then((r) => {
+          if (r.numberExists) {
+            localParticipants.push(p);
+          }
+        })
+      );
+    });
+
+    await Promise.all(localParticipantsPromise);
+
     for (const group of groupNameToArray(name)) {
       response = await req.client.createGroup(
         group,
-        contactToArray(participants)
+        contactToArray(localParticipants)
       );
       infoGroup.push({
         name: group,
