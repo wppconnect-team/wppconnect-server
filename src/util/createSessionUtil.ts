@@ -74,7 +74,7 @@ export default class CreateSessionUtil {
         {
           session: session,
           useChrome: false,
-          whatsappVersion: '2.2404.1',
+          whatsappVersion: '2.2413.51',
           deviceName: client.config?.deviceName || req.serverOptions.deviceName,
           poweredBy:
             client.config?.poweredBy ||
