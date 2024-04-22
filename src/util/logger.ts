@@ -28,7 +28,7 @@ export function createLogger(options: any) {
   const log_level = options.level;
   // Create file loggers
   const logger = winston.createLogger({
-    level: 'debug',
+    level: 'info',
     format: jsonLogFileFormat,
   });
 
