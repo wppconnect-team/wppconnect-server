@@ -163,6 +163,22 @@ export async function createGroup(req: Request, res: Response) {
       });
     }
 
+    const groupLink = await req.client.getGroupInviteLink(
+      (response as any).gid.user
+    );
+
+    Object.keys((response as any).participants).forEach((k) => {
+      const code = (response as any).participants[k].invite_code;
+
+      if (code) {
+        req.client.sendText(
+          k,
+          `Entre no grupo "${name}" acessando o link: ${groupLink}`,
+          {}
+        );
+      }
+    });
+
     return res.status(201).json({
       status: 'success',
       response: {
