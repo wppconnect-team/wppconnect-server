@@ -73,7 +73,7 @@ export default class CreateSessionUtil {
         req.serverOptions.createOptions,
         {
           session: session,
-          useChrome: true,
+          useChrome: false,
           deviceName: client.config?.deviceName || req.serverOptions.deviceName,
           poweredBy:
             client.config?.poweredBy ||
