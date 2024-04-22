@@ -58,7 +58,7 @@ export default class CreateSessionUtil {
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
           args: ['--no-sandbox'],
-          headless: true,
+          headless: 'new',
           executablePath:
             '..\\node_modules\\chromium\\lib\\chromium\\chrome-win\\chrome.exe',
           userDataDir: req.serverOptions.customUserDataDir + session,
@@ -73,8 +73,7 @@ export default class CreateSessionUtil {
         req.serverOptions.createOptions,
         {
           session: session,
-          useChrome: false,
-          whatsappVersion: '2.2413.51',
+          useChrome: true,
           deviceName: client.config?.deviceName || req.serverOptions.deviceName,
           poweredBy:
             client.config?.poweredBy ||
