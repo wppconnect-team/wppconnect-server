@@ -164,14 +164,14 @@ export async function createGroup(req: Request, res: Response) {
     }
 
     const groupLink = await req.client.getGroupInviteLink(
-      (response as any).gid.user
+      (response as any).gid._serialized
     );
 
-    Object.keys((response as any).participants).forEach((k) => {
+    Object.keys((response as any).participants).forEach(async (k) => {
       const code = (response as any).participants[k].invite_code;
 
       if (code) {
-        req.client.sendText(
+        await req.client.sendText(
           k,
           `Entre no grupo "${name}" acessando o link: ${groupLink}`,
           {}
