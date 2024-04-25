@@ -74,6 +74,8 @@ export default {
      * linkPreviewApiServers: [ 'https://www.yourserver.com/wa-js-api-server' ]
      */
     linkPreviewApiServers: null,
+    whatsppVersion: '2.2412.x',
+    autoClose: 300000,
   },
   mapper: {
     enable: false,
