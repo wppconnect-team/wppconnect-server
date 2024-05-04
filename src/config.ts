@@ -1,3 +1,5 @@
+import { ServerOptions } from './types/ServerOptions';
+
 export default {
   secretKey: 'THISISMYSECURETOKEN',
   host: 'http://localhost',
@@ -95,11 +97,11 @@ export default {
     redisPrefix: 'docker',
   },
   aws_s3: {
-    region: 'sa-east-1',
+    region: 'sa-east-1' as any,
     access_key_id: null,
     secret_key: null,
     defaultBucketName: null,
     endpoint: null,
     forcePathStyle: null,
   },
-};
+} as unknown as ServerOptions;
