@@ -1209,7 +1209,7 @@
       "get": {
         "tags": ["Auth"],
         "description": "",
-        "operationId": "statusSession",
+        "operationId": "closeSession",
         "parameters": [
           {
             "name": "session",
