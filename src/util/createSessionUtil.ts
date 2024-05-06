@@ -60,7 +60,7 @@ export default class CreateSessionUtil {
           args: ['--no-sandbox'],
           headless: 'new',
           executablePath:
-            '..\\node_modules\\chromium\\lib\\chromium\\chrome-win\\chrome.exe',
+            '..\\..\\node_modules\\chromium\\lib\\chromium\\chrome-win\\chrome.exe',
           userDataDir: req.serverOptions.customUserDataDir + session,
           ignoreHTTPSErrors: true,
           slowMo: 150,
