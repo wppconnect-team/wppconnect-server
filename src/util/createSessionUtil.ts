@@ -59,8 +59,6 @@ export default class CreateSessionUtil {
         req.serverOptions.createOptions.puppeteerOptions = {
           args: ['--no-sandbox'],
           headless: 'new',
-          executablePath:
-            '..\\..\\node_modules\\chromium\\lib\\chromium\\chrome-win\\chrome.exe',
           userDataDir: req.serverOptions.customUserDataDir + session,
           ignoreHTTPSErrors: true,
           slowMo: 150,
