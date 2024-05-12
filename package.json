@@ -48,7 +48,7 @@
     "socket.io": "^4.7.5",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0",
-    "unzipper": "^0.11.5",
+    "unzipper": "^0.11.6",
     "winston": "^3.13.0"
   },
   "devDependencies": {
