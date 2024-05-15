@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.569.0",
+    "@aws-sdk/client-s3": "^3.574.0",
     "@wppconnect-team/wppconnect": "^1.30.3",
     "archiver": "^7.0.1",
     "axios": "^1.6.8",
@@ -48,7 +48,7 @@
     "socket.io": "^4.7.5",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.0",
-    "unzipper": "^0.11.5",
+    "unzipper": "^0.11.6",
     "winston": "^3.13.0"
   },
   "devDependencies": {
@@ -60,7 +60,7 @@
     "@babel/plugin-transform-runtime": "^7.24.3",
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-typescript": "^7.24.1",
-    "@commitlint/cli": "^19.2.2",
+    "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@commitlint/cz-commitlint": "^19.2.0",
     "@types/archiver": "^6.0.2",
@@ -97,9 +97,9 @@
     "prom-client": "^14.2.0",
     "redis": "^4.6.13",
     "release-it": "^17.2.1",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.7",
     "shx": "^0.3.4",
-    "swagger-ui-dist": "^5.17.7",
+    "swagger-ui-dist": "^5.17.9",
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "tsx": "^4.7.3",
