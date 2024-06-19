@@ -235,27 +235,6 @@ export async function getGroupMembers(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.requestBody = {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              groupId: { type: "string" }
-            },
-            required: ["groupId"]
-          },
-          examples: {
-            "Default": {
-              value: {
-                groupId: "<groupId>"
-              }
-            }
-          }
-        }
-      }
-    }
    */
   const { groupId } = req.params;
 
@@ -376,7 +355,7 @@ export async function removeParticipant(req: Request, res: Response) {
   const { groupId, phone } = req.body;
 
   try {
-    let response = {};
+    let response: any = {};
     const arrayGroups: any = [];
 
     for (const group of groupToArray(groupId)) {
@@ -1042,6 +1021,33 @@ export async function setGroupProfilePic(req: Request, res: Response) {
     return res.status(500).json({
       status: 'error',
       message: 'Error changing group photo',
+      error: e,
+    });
+  }
+}
+
+export async function getCommonGroups(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Group"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["wid"] = {
+      schema: '5521999999999@c.us'
+     }
+   */
+  const { wid } = req.params;
+  try {
+    return res.status(200).json(await (req.client as any).getCommonGroups(wid));
+  } catch (e) {
+    req.logger.error(e);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error on get common groups',
       error: e,
     });
   }

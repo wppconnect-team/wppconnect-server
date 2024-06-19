@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -18,7 +18,7 @@ jobs:
         run: git fetch --tags -f || true
 
       - name: Setup Node
-        uses: actions/setup-node@v3.8.1
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: 18.x
           registry-url: 'https://registry.npmjs.org'
@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Setup yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -77,7 +77,7 @@ jobs:
         run: yarn swagger:generate
 
       - name: Deploy Page
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

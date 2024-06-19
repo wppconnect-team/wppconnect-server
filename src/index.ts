@@ -16,18 +16,20 @@
 
 import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';
-import express, { NextFunction } from 'express';
+import express, { Express, NextFunction, Router } from 'express';
 import boolParser from 'express-query-boolean';
 import { createServer } from 'http';
 import mergeDeep from 'merge-deep';
 import process from 'process';
 import { Server as Socket } from 'socket.io';
+import { Logger } from 'winston';
 
 import { version } from '../package.json';
 import config from './config';
 import { convert } from './mapper/index';
 import { verifyTokenSocket } from './middleware/auth';
 import routes from './routes';
+import { ServerOptions } from './types/ServerOptions';
 import {
   createFolders,
   setMaxListners,
@@ -39,15 +41,21 @@ import { createLogger } from './util/logger';
 
 export const logger = createLogger(config.log);
 
-export function initServer(serverOptions: any) {
+export function initServer(serverOptions: Partial<ServerOptions>): {
+  app: Express;
+  routes: Router;
+  logger: Logger;
+} {
   if (typeof serverOptions !== 'object') {
     serverOptions = {};
   }
 
   serverOptions = mergeDeep({}, config, serverOptions);
-  defaultLogger.level = serverOptions.log.level;
+  defaultLogger.level = serverOptions?.log?.level
+    ? serverOptions.log.level
+    : 'silly';
 
-  setMaxListners(serverOptions);
+  setMaxListners(serverOptions as ServerOptions);
 
   const app = express();
   const PORT = process.env.PORT || serverOptions.port;

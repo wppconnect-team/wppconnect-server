@@ -586,7 +586,117 @@
             "bearerAuth": []
           }
         ],
-        "requestBody": {}
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Send message to contact": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "isNewsletter": false,
+                    "message": "Hi from WPPConnect"
+                  }
+                },
+                "Send message with reply": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "isNewsletter": false,
+                    "message": "Hi from WPPConnect with reply",
+                    "options": {
+                      "quotedMsg": "true_...@c.us_3EB01DE65ACC6_out"
+                    }
+                  }
+                },
+                "Send message to group": {
+                  "value": {
+                    "phone": "8865623215244578",
+                    "isGroup": true,
+                    "message": "Hi from WPPConnect"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/edit-message": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "newText": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Edit a message": {
+                  "value": {
+                    "id": "true_5521999999999@c.us_3EB04FCAA1527EB6D9DEC8",
+                    "newText": "New text for message"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-image": {
@@ -630,6 +740,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "filename": {
                     "type": "string"
                   },
@@ -646,6 +759,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "filename": "file name lol",
                     "caption": "caption for my file",
                     "base64": "<base64> string"
@@ -881,6 +995,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "filename": {
                     "type": "string"
                   },
@@ -897,6 +1014,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "filename": "file name lol",
                     "caption": "caption for my file",
                     "base64": "<base64> string"
@@ -949,6 +1067,9 @@
                   "isGroup": {
                     "type": "boolean"
                   },
+                  "isNewsletter": {
+                    "type": "boolean"
+                  },
                   "filename": {
                     "type": "string"
                   },
@@ -965,6 +1086,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
+                    "isNewsletter": false,
                     "filename": "file name lol",
                     "caption": "caption for my file",
                     "base64": "<base64> string"
@@ -1438,7 +1560,166 @@
             "bearerAuth": []
           }
         ],
-        "deprecated": true
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "sections": {
+                    "type": "array"
+                  },
+                  "buttonText": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Send list message": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "description": "Desc for list",
+                    "buttonText": "Select a option",
+                    "sections": [
+                      {
+                        "title": "Section 1",
+                        "rows": [
+                          {
+                            "rowId": "my_custom_id",
+                            "title": "Test 1",
+                            "description": "Description 1"
+                          },
+                          {
+                            "rowId": "2",
+                            "title": "Test 2",
+                            "description": "Description 2"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/send-order-message": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "isGroup": {
+                    "type": "boolean"
+                  },
+                  "items": {
+                    "type": "object"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Send with custom items": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "custom",
+                        "name": "Item test",
+                        "price": 120000,
+                        "qnt": 2
+                      },
+                      {
+                        "type": "custom",
+                        "name": "Item test 2",
+                        "price": 145000,
+                        "qnt": 2
+                      }
+                    ]
+                  }
+                },
+                "Send with product items": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "product",
+                        "id": "37878774457",
+                        "price": 148000,
+                        "qnt": 2
+                      }
+                    ]
+                  }
+                },
+                "Send with custom items and options": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "isGroup": false,
+                    "items": [
+                      {
+                        "type": "custom",
+                        "name": "Item test",
+                        "price": 120000,
+                        "qnt": 2
+                      }
+                    ],
+                    "options": {
+                      "tax": 10000,
+                      "shipping": 4000,
+                      "discount": 10000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-poll-message": {
@@ -1560,6 +1841,14 @@
               "example": "<groupId>"
             },
             "in": "query"
+          },
+          {
+            "name": "wid",
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
+            },
+            "in": "query"
           }
         ],
         "responses": {
@@ -1634,30 +1923,46 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "groupId": {
-                    "type": "string"
-                  }
-                },
-                "required": ["groupId"]
-              },
-              "examples": {
-                "Default": {
-                  "value": {
-                    "groupId": "<groupId>"
-                  }
-                }
-              }
+        ]
+      }
+    },
+    "/api/{session}/common-groups/{wid}": {
+      "get": {
+        "tags": ["Group"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "wid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
             }
           }
-        }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/{session}/group-admins/{groupId}": {
@@ -3675,6 +3980,9 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -3699,6 +4007,12 @@
                   },
                   "messageId": {
                     "type": "string"
+                  },
+                  "onlyLocal": {
+                    "type": "boolean"
+                  },
+                  "deleteMediaInDevice": {
+                    "type": "boolean"
                   }
                 }
               },
@@ -3813,7 +4127,7 @@
                   "isGroup": {
                     "type": "boolean"
                   },
-                  "messageid": {
+                  "messageId": {
                     "type": "string"
                   }
                 }
@@ -3823,7 +4137,7 @@
                   "value": {
                     "phone": "5521999999999",
                     "isGroup": false,
-                    "messageid": "<messageId>"
+                    "messageId": "<messageId>"
                   }
                 }
               }
@@ -6673,6 +6987,14 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "5521999999999@c.us"
+            }
           }
         ],
         "responses": {
@@ -6687,7 +7009,7 @@
         ]
       }
     },
-    "/api/{session}/get-order-by-messageId": {
+    "/api/{session}/get-order-by-messageId/{messageId}": {
       "get": {
         "tags": ["Catalog & Bussiness"],
         "description": "",
@@ -6700,6 +7022,15 @@
               "type": "string",
               "example": "NERDWHATS_AMERICA"
             }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "true_5521999999999@c.us_3EB0E69ACC5B396B21F2FE"
+            }
           }
         ],
         "responses": {
@@ -6711,30 +7042,7 @@
           {
             "bearerAuth": []
           }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "messageId": {
-                    "type": "string"
-                  }
-                },
-                "required": ["messageId"]
-              },
-              "examples": {
-                "Default": {
-                  "value": {
-                    "messageId": "<message_id>"
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/api/{secretkey}/backup-sessions": {
@@ -7269,6 +7577,229 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/{session}/newsletter": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "operationId": "createNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "schema": {
+              "type": "string",
+              "example": "<newsletter_id>"
+            },
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Edit newsletter/channel": {
+                  "value": {
+                    "name": "New name of channel",
+                    "description": "New description of channel",
+                    "picture": "<new_base64_image> or send null"
+                  }
+                },
+                "Create newsletter/channel": {
+                  "value": {
+                    "name": "Name for your channel",
+                    "options": {
+                      "description": "Description of channel",
+                      "picture": "<base64_image>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/newsletter/{id}": {
+      "put": {
+        "tags": [],
+        "description": "",
+        "operationId": "editNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "picture": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Edit newsletter/channel": {
+                  "value": {
+                    "name": "New name of channel",
+                    "description": "New description of channel",
+                    "picture": "<new_base64_image> or send null"
+                  }
+                },
+                "Create newsletter/channel": {
+                  "value": {
+                    "name": "Name for your channel",
+                    "options": {
+                      "description": "Description of channel",
+                      "picture": "<base64_image>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [],
+        "description": "",
+        "operationId": "destroyNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/{session}/mute-newsletter/{id}": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "operationId": "muteNewsletter",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NEWSLETTER ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
           }
         },
         "security": [

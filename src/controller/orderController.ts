@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 WPPConnect Team
+ * Copyright 2023 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,16 +59,19 @@ export async function getBusinessProfilesProducts(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
+     #swagger.parameters["phone"] = {
+      in: 'query',
+      schema: '5521999999999@c.us',
+     }
    */
   const session = req.session;
-  const { phone } = req.body;
+  const { phone } = req.query as unknown as any;
 
   try {
     const results: any = [];
 
-    for (const contato of phone) {
-      results.push(await req.client.getBusinessProfilesProducts(contato));
-    }
+    const result = await req.client.getBusinessProfilesProducts(phone);
+    results.push(result);
 
     returnSucess(res, session, phone, results);
   } catch (error) {
@@ -85,33 +88,15 @@ export async function getOrderbyMsg(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.requestBody = {
-      required: true,
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              messageId: { type: 'string' },
-            },
-            required: ['messageId'],
-          },
-          examples: {
-            'Default': {
-              value: {
-                messageId: '<message_id>',
-              },
-            },
-          },
-        },
-      },
-    }
+     #swagger.parameters["messageId"] = {
+      schema: 'true_5521999999999@c.us_3EB0E69ACC5B396B21F2FE'
+     }
    */
   const session = req.session;
-  const { messageId } = req.body;
+  const { messageId } = req.params;
 
   try {
-    const result = await req.client.getOrderbyMsg(messageId);
+    const result = await (req.client as any).getOrder(messageId);
 
     returnSucess(res, session, null, result);
   } catch (error) {

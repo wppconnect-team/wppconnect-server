@@ -19,7 +19,7 @@ import { Request } from 'express';
 import { download } from '../controller/sessionController';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
-import { callSocket, callWebHook, startHelper } from './functions';
+import { autoDownload, callSocket, callWebHook, startHelper } from './functions';
 import { clientsArray, eventEmitter } from './sessionUtil';
 import Factory from './tokenStore/factory';
 
@@ -236,11 +236,18 @@ export default class CreateSessionUtil {
         });
     });
 
-    await client.onAnyMessage((message: any) => {
+    await client.onAnyMessage(async (message: any) => {
       message.session = client.session;
 
       if (message.type === 'sticker') {
         download(message, client, req.logger);
+      }
+
+      if (
+        req.serverOptions?.websocket?.autoDownload ||
+        (req.serverOptions?.webhook?.autoDownload && message.fromMe == false)
+      ) {
+        await autoDownload(client, req, message);
       }
 
       req.io.emit('received-message', { response: message });

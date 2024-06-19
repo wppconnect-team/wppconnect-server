@@ -41,39 +41,51 @@ export async function sendMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-     #swagger.requestBody = {
-        required: true,
-        "@content": {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                $phone: { type: "string" },
-                $isGroup: { type: "boolean" },
-                $message: { type: "string" }
-                $options: { type: "object" }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              isNewsletter: { type: "boolean" },
+              message: { type: "string" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Send message to contact": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                isNewsletter: false,
+                message: 'Hi from WPPConnect',
               }
             },
-            examples: {
-              "Default": {
-                value: {
-                  phone: '5521999999999',
-                  isGroup: false,
-                  message: 'Hello, welcome to WPPConnect'
-                  options: {
-                    linkPreview: {
-                      title: 'Another text',
-                      description: 'Another description'
-                    },
-                    markIsRead: true,
-                    mentionedList: [],
-                  },
-                },
-              },
+            "Send message with reply": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                isNewsletter: false,
+                message: 'Hi from WPPConnect with reply',
+                options: {
+                  quotedMsg: 'true_...@c.us_3EB01DE65ACC6_out',
+                }
+              }
+            },
+            "Send message to group": {
+              value: {
+                phone: '8865623215244578',
+                isGroup: true,
+                message: 'Hi from WPPConnect',
+              }
             },
           }
         }
       }
+     }
    */
   const { phone, message } = req.body;
 
@@ -98,6 +110,53 @@ export async function sendMessage(req: Request, res: Response) {
   }
 }
 
+export async function editMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              newText: { type: "string" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Edit a message": {
+              value: { 
+                id: 'true_5521999999999@c.us_3EB04FCAA1527EB6D9DEC8',
+                newText: 'New text for message'
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+  const { id, newText } = req.body;
+
+  const options = req.body.options || {};
+  try {
+    const edited = await (req.client as any).editMessage(id, newText, options);
+
+    req.io.emit('edited-message', edited);
+    returnSucess(res, edited);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
 export async function sendFile(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
@@ -117,6 +176,7 @@ export async function sendFile(req: Request, res: Response) {
                 properties: {
                     "phone": { type: "string" },
                     "isGroup": { type: "boolean" },
+                    "isNewsletter": { type: "boolean" },
                     "filename": { type: "string" },
                     "caption": { type: "string" },
                     "base64": { type: "string" }
@@ -127,6 +187,7 @@ export async function sendFile(req: Request, res: Response) {
                     value: {
                         "phone": "5521999999999",
                         "isGroup": false,
+                        "isNewsletter": false,
                         "filename": "file name lol",
                         "caption": "caption for my file",
                         "base64": "<base64> string"
@@ -137,7 +198,15 @@ export async function sendFile(req: Request, res: Response) {
       }
     }
    */
-  const { phone, path, base64, filename = 'file', message, caption } = req.body;
+  const {
+    phone,
+    path,
+    base64,
+    filename = 'file',
+    message,
+    caption,
+    quotedMessageId,
+  } = req.body;
 
   const options = req.body.options || {};
 
@@ -156,6 +225,7 @@ export async function sendFile(req: Request, res: Response) {
         await req.client.sendFile(contact, pathFile, {
           filename: filename,
           caption: msg,
+          quotedMsg: quotedMessageId,
           ...options,
         })
       );
@@ -272,13 +342,19 @@ export async function sendVoice64(req: Request, res: Response) {
         }
     }
    */
-  const { phone, base64Ptt } = req.body;
+  const { phone, base64Ptt, quotedMessageId } = req.body;
 
   try {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendPttFromBase64(contato, base64Ptt, 'Voice Audio')
+        await req.client.sendPttFromBase64(
+          contato,
+          base64Ptt,
+          'Voice Audio',
+          '',
+          quotedMessageId
+        )
       );
     }
 
@@ -449,7 +525,50 @@ export async function sendListMessage(req: Request, res: Response) {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA',
      }
-     #swagger.deprecated=true
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              description: { type: "string" },
+              sections: { type: "array" },
+              buttonText: { type: "string" },
+            }
+          },
+          examples: {
+            "Send list message": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                description: 'Desc for list',
+                buttonText: 'Select a option',
+                sections: [
+                  {
+                    title: 'Section 1',
+                    rows: [
+                      {
+                        rowId: 'my_custom_id',
+                        title: 'Test 1',
+                        description: 'Description 1',
+                      },
+                      {
+                        rowId: '2',
+                        title: 'Test 2',
+                        description: 'Description 2',
+                      },
+                    ],
+                  },
+                ],
+              }
+            },
+          }
+        }
+      }
+     }
    */
   const {
     phone,
@@ -474,6 +593,107 @@ export async function sendListMessage(req: Request, res: Response) {
     if (results.length === 0)
       return returnError(req, res, 'Error sending list buttons');
 
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
+export async function sendOrderMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              items: { type: "object" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Send with custom items": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                items: [
+                  {
+                    type: 'custom',
+                    name: 'Item test',
+                    price: 120000,
+                    qnt: 2,
+                  },
+                  {
+                    type: 'custom',
+                    name: 'Item test 2',
+                    price: 145000,
+                    qnt: 2,
+                  },
+                ],
+              }
+            },
+            "Send with product items": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                items: [
+                  {
+                    type: 'product',
+                    id: '37878774457',
+                    price: 148000,
+                    qnt: 2,
+                  },
+                ],
+              }
+            },
+            "Send with custom items and options": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                items: [
+                  {
+                    type: 'custom',
+                    name: 'Item test',
+                    price: 120000,
+                    qnt: 2,
+                  },
+                ],
+                options: {
+                  tax: 10000,
+                  shipping: 4000,
+                  discount: 10000,
+                }
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+  const { phone, items } = req.body;
+
+  const options = req.body.options || {};
+
+  try {
+    const results: any = [];
+    for (const contato of phone) {
+      results.push(await req.client.sendOrderMessage(contato, items, options));
+    }
+
+    if (results.length === 0)
+      return res.status(400).json('Error sending order message');
+    req.io.emit('mensagem-enviada', results);
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
