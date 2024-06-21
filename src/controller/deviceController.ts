@@ -377,7 +377,7 @@ export async function getChatById(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
      #swagger.parameters["phone"] = {
-      schema: '5521999999999'
+      schema: '5521999999999@c.us'
      }
      #swagger.parameters["isGroup"] = {
       schema: 'false'
@@ -387,11 +387,9 @@ export async function getChatById(req: Request, res: Response) {
   const { isGroup } = req.query;
 
   try {
-    let result = {} as Chat;
-    if (isGroup) {
-      result = await req.client.getChatById(`${phone}@g.us`);
-    } else {
-      result = await req.client.getChatById(`${phone}@c.us`);
+    let result;
+    for (const contato of contactToArray(phone as string, isGroup)) {
+      result = await req.client.getNumberProfile(contato);
     }
 
     return res.status(200).json(result);
