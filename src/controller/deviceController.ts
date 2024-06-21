@@ -389,7 +389,7 @@ export async function getChatById(req: Request, res: Response) {
   try {
     let result;
     for (const contato of contactToArray(phone as string, isGroup)) {
-      result = await req.client.getNumberProfile(contato);
+      result = await req.client.getChatById(contato);
     }
 
     return res.status(200).json(result);
