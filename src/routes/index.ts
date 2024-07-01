@@ -37,7 +37,7 @@ import statusConnection from '../middleware/statusConnection';
 import swaggerDocument from '../swagger.json';
 
 const upload = multer(uploadConfig as any);
-const routes = Router();
+const routes: Router = Router();
 
 // Generate Token
 routes.post('/api/:session/:secretkey/generate-token', encryptSession);

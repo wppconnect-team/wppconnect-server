@@ -1,3 +1,33 @@
+## 2.5.2 (2024-06-24)
+
+### Bug Fixes
+
+- **deps:** update dependency @wppconnect-team/wppconnect to ^1.32.3 ([#1926](https://github.com/wppconnect-team/wppconnect-server/issues/1926)) ([5c596b4](https://github.com/wppconnect-team/wppconnect-server/commit/5c596b4e5b8ec3549c6e378f01acb6af3606a524))
+
+## 2.5.1 (2024-06-18)
+
+### Bug Fixes
+
+- **deps:** update dependency @wppconnect-team/wppconnect to ^1.32.2 ([#1915](https://github.com/wppconnect-team/wppconnect-server/issues/1915)) ([5cb0b0e](https://github.com/wppconnect-team/wppconnect-server/commit/5cb0b0e59667e11cec32e4761dec66ffee2cd6c9))
+
+# 2.5.0 (2024-06-13)
+
+### Bug Fixes
+
+- **deps:** update dependency @wppconnect-team/wppconnect to ^1.32.0 ([#1901](https://github.com/wppconnect-team/wppconnect-server/issues/1901)) ([765810d](https://github.com/wppconnect-team/wppconnect-server/commit/765810dde565d79c1b1c1aa7571010a79b054edd))
+
+## 2.4.6 (2024-06-12)
+
+## 2.4.5 (2024-06-11)
+
+## 2.4.4 (2024-05-04)
+
+## 2.4.3 (2024-04-25)
+
+### Bug Fixes
+
+- **deps:** update dependency @wppconnect-team/wppconnect to ^1.30.2 ([#1826](https://github.com/wppconnect-team/wppconnect-server/issues/1826)) ([6fed8ae](https://github.com/wppconnect-team/wppconnect-server/commit/6fed8aeb2f09ca62e151f7bc8e65c5950dbfcf64))
+
 ## 2.4.2 (2024-03-28)
 
 ### Bug Fixes

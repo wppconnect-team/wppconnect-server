@@ -64,6 +64,17 @@ export async function sendMessage(req: Request, res: Response) {
                 message: 'Hi from WPPConnect',
               }
             },
+            "Send message with reply": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                isNewsletter: false,
+                message: 'Hi from WPPConnect with reply',
+                options: {
+                  quotedMsg: 'true_...@c.us_3EB01DE65ACC6_out',
+                }
+              }
+            },
             "Send message to group": {
               value: {
                 phone: '8865623215244578',
