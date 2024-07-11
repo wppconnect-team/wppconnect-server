@@ -13,7 +13,7 @@ if (config.tokenStoreType === 'mongodb') {
 
   if (!config.db.mongoIsRemote) {
     mongoose.connect(
-      `mongodb://${userAndPassword}${config.db.mongodbHost}:${config.db.mongodbPort}/${config.db.mongodbDatabase}`,
+      `mongodb://root:0AdbskCVa1QIVplisvRPReHNAGJzg6fnHBErKx1CvosAk1UwaAeeJNDhNf97bfng@w4kkkok:27017/?directConnection=true`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
