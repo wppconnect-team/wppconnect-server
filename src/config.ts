@@ -5,7 +5,7 @@ export default {
   deviceName: 'SysIgreja Whatsapp',
   poweredBy: 'SysIgreja',
   startAllSession: true,
-  tokenStoreType: 'file',
+  tokenStoreType: 'redis',
   maxListeners: 15,
   customUserDataDir: '../userDataDir/',
   webhook: {
@@ -88,11 +88,12 @@ export default {
     mongoIsRemote: true,
     mongoURLRemote: '',
     mongodbPort: 27017,
-    redisHost: 'localhost',
+    redisHost: 'redis',
     redisPort: 6379,
-    redisPassword: '',
+    redisPassword:
+      'O83feb7drQ8u4zJcqLSEKmePDhknFGN9GeQ0UTio4hVhW1GZ8SNq2FkCNrK10QBb@bk8444k',
     redisDb: 0,
-    redisPrefix: 'docker',
+    redisPrefix: '',
   },
   aws_s3: {
     region: 'sa-east-1',
