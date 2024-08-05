@@ -95,7 +95,7 @@
     "prettier": "^2.8.8",
     "pretty-quick": "^4.0.0",
     "prom-client": "^14.2.0",
-    "redis": "^4.6.15",
+    "redis": "^4.7.0",
     "release-it": "^17.6.0",
     "rimraf": "^5.0.10",
     "shx": "^0.3.4",
@@ -109,6 +109,6 @@
   "peerDependencies": {
     "crypto-js": "^4.2.0",
     "mongoose": "^8.5.2",
-    "redis": "^4.6.15"
+    "redis": "^4.7.0"
   }
 }
