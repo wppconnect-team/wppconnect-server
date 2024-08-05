@@ -49,9 +49,8 @@ export default class CreateSessionUtil {
       const myTokenStore = tokenStore.createTokenStory(client);
       const tokenData = await myTokenStore.getToken(session);
 
-      if (!tokenData) {
-        myTokenStore.setToken(session, {});
-      }
+      // we need this to update phone in config every time session starts, so we can ask for code for it again.
+      myTokenStore.setToken(session, tokenData ?? {});
 
       this.startChatWootClient(client);
 
@@ -68,12 +67,22 @@ export default class CreateSessionUtil {
           req.serverOptions.createOptions,
           {
             session: session,
+            phoneNumber: client.config.phone ?? null,
             deviceName:
-              client.config?.deviceName || req.serverOptions.deviceName,
+              client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
+                ? client.config?.deviceName ||
+                  req.serverOptions.deviceName ||
+                  'WppConnect'
+                : undefined,
             poweredBy:
-              client.config?.poweredBy ||
-              req.serverOptions.poweredBy ||
-              'WPPConnect-Server',
+              client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
+                ? client.config?.poweredBy ||
+                  req.serverOptions.poweredBy ||
+                  'WPPConnect-Server'
+                : undefined,
+            catchLinkCode: (code: string) => {
+              this.exportPhoneCode(req, client.config.phone, code, client, res);
+            },
             catchQR: (
               base64Qr: any,
               asciiQR: any,
@@ -140,6 +149,42 @@ export default class CreateSessionUtil {
 
   async opendata(req: Request, session: string, res?: any) {
     await this.createSessionUtil(req, clientsArray, session, res);
+  }
+
+  exportPhoneCode(
+    req: any,
+    phone: any,
+    phoneCode: any,
+    client: WhatsAppServer,
+    res?: any
+  ) {
+    eventEmitter.emit(`phoneCode-${client.session}`, phoneCode, client);
+
+    Object.assign(client, {
+      status: 'PHONECODE',
+      phoneCode: phoneCode,
+      phone: phone,
+    });
+
+    req.io.emit('phoneCode', {
+      data: phoneCode,
+      phone: phone,
+      session: client.session,
+    });
+
+    callWebHook(client, req, 'phoneCode', {
+      phoneCode: phoneCode,
+      phone: phone,
+      session: client.session,
+    });
+
+    if (res && !res._headerSent)
+      res.status(200).json({
+        status: 'phoneCode',
+        phone: phone,
+        phoneCode: phoneCode,
+        session: client.session,
+      });
   }
 
   exportQR(
