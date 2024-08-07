@@ -74,7 +74,7 @@
     "@types/node": "^20.14.14",
     "@types/qrcode": "^1.5.5",
     "@types/swagger-ui-express": "^4.1.6",
-    "@types/unzipper": "^0.10.9",
+    "@types/unzipper": "^0.10.10",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "commitizen": "^4.3.0",
     "conventional-changelog-cli": "^5.0.0",
