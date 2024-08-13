@@ -41,7 +41,8 @@ export default {
   },
   log: {
     level: 'silly', // Before open a issue, change level to silly and retry a action
-    logger: ['console', 'file'],
+    logger: ['console', 'file', 'loki'],
+    loki: 'http://localhost:3100',
   },
   createOptions: {
     browserArgs: [

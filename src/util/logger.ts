@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import winston from 'winston';
-
+import LokiTransport from 'winston-loki';
 // Use JSON logging for log files
 // Here winston.format.errors() just seem to work
 // because there is no winston.format.simple()
@@ -58,6 +58,38 @@ export function createLogger(options: any) {
         level: log_level,
         maxsize: 10485760,
         maxFiles: 3,
+      })
+    );
+  }
+
+  if (options.logger.includes('loki')) {
+    logger.add(
+      new LokiTransport({
+        host: 'http://localhost:3100',
+        json: true,
+        labels: { job: 'wppconnect-server' },
+        format: winston.format.combine(
+          winston.format.errors({ stack: true }),
+          winston.format.timestamp(),
+          winston.format.printf(({ level, message, timestamp, stack }) => {
+            if (stack) {
+              return JSON.stringify({
+                level: level,
+                timestamp: timestamp,
+                message: message,
+                stack: stack,
+                job: 'wppconnect-server',
+              });
+            }
+            return JSON.stringify({
+              level: level,
+              timestamp: timestamp,
+              message: message,
+              job: 'wppconnect-server',
+            });
+          })
+        ),
+        level: log_level,
       })
     );
   }

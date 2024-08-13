@@ -37,6 +37,9 @@ export interface ServerOptions {
   log: {
     level: string;
     logger: string[];
+    loki?: {
+      host: string; // URL do Loki
+    };
   };
   createOptions: {
     browserArgs: string[];
