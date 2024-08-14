@@ -287,12 +287,6 @@ routes.post(
   GroupController.addParticipant
 );
 routes.post(
-  '/api/:session/remove-participant-group',
-  verifyToken,
-  statusConnection,
-  GroupController.removeParticipant
-);
-routes.post(
   '/api/:session/promote-participant-group',
   verifyToken,
   statusConnection,
