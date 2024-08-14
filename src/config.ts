@@ -7,7 +7,7 @@ export default {
   startAllSession: true,
   tokenStoreType: 'mongodb',
   maxListeners: 15,
-  // customUserDataDir: './userDataDir/',
+  customUserDataDir: './userDataDir/',
   webhook: {
     url: null,
     autoDownload: true,
