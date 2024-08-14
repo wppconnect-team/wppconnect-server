@@ -15,6 +15,7 @@
  */
 import { create, SocketState } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
+import { cli } from 'winston/lib/winston/config';
 
 import { download } from '../controller/sessionController';
 import { WhatsAppServer } from '../types/WhatsAppServer';
@@ -65,51 +66,57 @@ export default class CreateSessionUtil {
         };
       }
 
-      const teste = Object.assign(
-        {},
-        { tokenStore: myTokenStore },
-        req.serverOptions.createOptions,
-        {
-          session: session,
-          useChrome: true,
-          deviceName: client.config?.deviceName || req.serverOptions.deviceName,
-          poweredBy:
-            client.config?.poweredBy ||
-            req.serverOptions.poweredBy ||
-            'WPPConnect-Server',
-          catchQR: (
-            base64Qr: any,
-            asciiQR: any,
-            attempt: any,
-            urlCode: string
-          ) => {
-            this.exportQR(req, base64Qr, urlCode, client, res);
-          },
-          onLoadingScreen: (percent: string, message: string) => {
-            req.logger.info(`[${session}] ${percent}% - ${message}`);
-          },
-          statusFind: (statusFind: string) => {
-            try {
-              eventEmitter.emit(`status-${client.session}`, client, statusFind);
-              if (
-                statusFind === 'autocloseCalled' ||
-                statusFind === 'desconnectedMobile'
-              ) {
-                client.status = 'CLOSED';
-                client.qrcode = null;
-                client.close();
-                clientsArray[session] = undefined;
-              }
-              callWebHook(client, req, 'status-find', {
-                status: statusFind,
-                session: client.session,
-              });
-              req.logger.info(statusFind + '\n\n');
-            } catch (error) {}
-          },
-        }
+      const wppClient = await create(
+        Object.assign(
+          {},
+          { tokenStore: myTokenStore },
+          req.serverOptions.createOptions,
+          {
+            session: session,
+            useChrome: true,
+            deviceName:
+              client.config?.deviceName || req.serverOptions.deviceName,
+            poweredBy:
+              client.config?.poweredBy ||
+              req.serverOptions.poweredBy ||
+              'WPPConnect-Server',
+            catchQR: (
+              base64Qr: any,
+              asciiQR: any,
+              attempt: any,
+              urlCode: string
+            ) => {
+              this.exportQR(req, base64Qr, urlCode, client, res);
+            },
+            onLoadingScreen: (percent: string, message: string) => {
+              req.logger.info(`[${session}] ${percent}% - ${message}`);
+            },
+            statusFind: (statusFind: string) => {
+              try {
+                eventEmitter.emit(
+                  `status-${client.session}`,
+                  client,
+                  statusFind
+                );
+                if (
+                  statusFind === 'autocloseCalled' ||
+                  statusFind === 'desconnectedMobile'
+                ) {
+                  client.status = 'CLOSED';
+                  client.qrcode = null;
+                  client.close();
+                  clientsArray[session] = undefined;
+                }
+                callWebHook(client, req, 'status-find', {
+                  status: statusFind,
+                  session: client.session,
+                });
+                req.logger.info(statusFind + '\n\n');
+              } catch (error) {}
+            },
+          }
+        )
       );
-      const wppClient = await create(teste);
 
       client = clientsArray[session] = Object.assign(wppClient, client);
       await this.start(req, client);

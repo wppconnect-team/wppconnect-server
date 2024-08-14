@@ -1,3 +1,4 @@
+import { logger } from '../..';
 import Token from './model/token';
 
 class MongodbTokenStore {
@@ -20,6 +21,7 @@ class MongodbTokenStore {
       token.sessionName = sessionName;
       token.webhook = this.client.config.webhook;
       token.config = JSON.stringify(this.client.config);
+      logger.info(this.client);
 
       const tk = await (Token as any).findOne({ sessionName });
 

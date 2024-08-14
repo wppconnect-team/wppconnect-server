@@ -13,7 +13,7 @@
     "changelog:preview": "conventional-changelog -p angular -u",
     "changelog:update": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "commit": "git-cz",
-    "dev": "cross-env TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true NODE_PATH=src nodemon --watch src --exec ts-node --esm src/server.ts -e ts",
+    "dev": "cross-env TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true NODE_PATH=src nodemon --watch src --exec ts-node src/server.ts -e ts",
     "docs": "ts-node --esm src/swagger.ts -e ts",
     "license:add": "license-check-and-add add",
     "license:check": "license-check-and-add check",
