@@ -18,6 +18,7 @@
 *.zip
 /.idea
 userDataDir
+/dist
 /yarn.lock
 /yarn-error.log
 backupFolder
