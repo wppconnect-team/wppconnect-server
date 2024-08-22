@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.633.0",
+    "@aws-sdk/client-s3": "^3.637.0",
     "@wppconnect-team/wppconnect": "^1.33.0",
     "archiver": "^7.0.1",
     "axios": "^1.7.4",
