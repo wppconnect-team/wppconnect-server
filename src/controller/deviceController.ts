@@ -253,7 +253,7 @@ export async function getAllChatsWithMessages(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllChatsWithMessages();
+    const response = await req.client.listChats();
     return res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -818,7 +818,15 @@ export async function deleteMessage(req: Request, res: Response) {
             }
           },
           examples: {
-            "Default": {
+            "Delete message to all": {
+              value: {
+                phone: "5521999999999",
+                isGroup: false,
+                messageId: "<messageId>",
+                deleteMediaInDevice: true,
+              }
+            },
+            "Delete message only me": {
               value: {
                 phone: "5521999999999",
                 isGroup: false,
