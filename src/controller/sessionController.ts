@@ -511,9 +511,21 @@ export async function getQrCode(req: Request, res: Response) {
    */
   try {
     if (req?.client?.urlcode) {
+
+      // We add options to generate the QR code in higher resolution
+      // The /qrcode-session request will now return a readable qrcode.
+      const qrOptions = {
+        errorCorrectionLevel: 'M' as const,
+        type: 'image/png' as const,
+        scale: 5,
+        width: 500,
+      };
+
       const qr = req.client.urlcode
         ? await QRCode.toDataURL(req.client.urlcode)
+        ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
         : null;
+      
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
         'base64'
