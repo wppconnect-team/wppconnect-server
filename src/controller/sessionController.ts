@@ -522,7 +522,6 @@ export async function getQrCode(req: Request, res: Response) {
       };
 
       const qr = req.client.urlcode
-        ? await QRCode.toDataURL(req.client.urlcode)
         ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
         : null;
       
