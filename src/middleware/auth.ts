@@ -15,7 +15,10 @@
  */
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
+import { Socket } from 'socket.io';
 
+import { logger } from '..';
+import config from '../config';
 import { clientsArray } from '../util/sessionUtil';
 
 function formatSession(session: string) {
@@ -86,6 +89,53 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       error: 'Check that the Session and Token are correct.',
       message: error,
     });
+  }
+};
+
+export const verifyTokenSocket = (socket: Socket, next: any) => {
+  const secureToken = config.secretKey;
+  const { token, session } = socket.handshake.auth;
+  if (!session || !token)
+    return next(new Error('Session or token not informed'));
+
+  try {
+    let tokenDecrypt = '';
+    let sessionDecrypt = '';
+
+    try {
+      sessionDecrypt = session.split(':')[0];
+      tokenDecrypt = token.split(':')[1].replace(/_/g, '/').replace(/-/g, '+');
+    } catch (error) {
+      try {
+        if (token && token !== '' && token.split(' ').length > 0) {
+          const token_value = token.split(' ')[0];
+          if (token_value)
+            tokenDecrypt = token_value.replace(/_/g, '/').replace(/-/g, '+');
+          else tokenDecrypt = token;
+        } else {
+          tokenDecrypt = token;
+        }
+      } catch (e) {
+        logger.error(e);
+        return next(new Error('Check that a Session and Token are correct'));
+      }
+    }
+    bcrypt.compare(
+      sessionDecrypt + secureToken,
+      tokenDecrypt,
+      function (err, result) {
+        if (result) {
+          socket.join(session);
+          logger.info(`ID: ${socket.id} joined the channel ${session}`);
+          return next();
+        } else {
+          return next(new Error('Check that a Session and Token are correct'));
+        }
+      }
+    );
+  } catch (error) {
+    logger.error(error);
+    return next(new Error('Check that a Session and Token are correct'));
   }
 };
 
