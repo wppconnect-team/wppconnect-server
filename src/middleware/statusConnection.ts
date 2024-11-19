@@ -31,13 +31,15 @@ export default async function statusConnection(
       const localArr = contactToArray(
         req.body.phone || [],
         req.body.isGroup,
-        req.body.isNewsletter
+        req.body.isNewsletter,
+        req.body.isLid
       );
       let index = 0;
       for (const contact of localArr) {
         if (req.body.isGroup || req.body.isNewsletter) {
           localArr[index] = contact;
         } else if (numbers.indexOf(contact) < 0) {
+          console.log(contact);
           const profile: any = await req.client
             .checkNumberStatus(contact)
             .catch((error) => console.log(error));
