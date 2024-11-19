@@ -46,7 +46,8 @@ if (config?.websocket?.uploadS3) {
 export function contactToArray(
   number: any,
   isGroup?: boolean,
-  isNewsletter?: boolean
+  isNewsletter?: boolean,
+  isLid?: boolean
 ) {
   const localArr: any = [];
   if (Array.isArray(number)) {
@@ -57,6 +58,8 @@ export function contactToArray(
       if (contact !== '')
         if (isGroup) (localArr as any).push(`${contact}@g.us`);
         else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
+        else if (isLid || contact.length > 14)
+          (localArr as any).push(`${contact}@lid`);
         else (localArr as any).push(`${contact}@c.us`);
     }
   } else {
@@ -68,6 +71,8 @@ export function contactToArray(
       if (contact !== '')
         if (isGroup) (localArr as any).push(`${contact}@g.us`);
         else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
+        else if (isLid || contact.length > 14)
+          (localArr as any).push(`${contact}@lid`);
         else (localArr as any).push(`${contact}@c.us`);
     }
   }

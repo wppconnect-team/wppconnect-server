@@ -144,6 +144,10 @@ export default class CreateSessionUtil {
       }
     } catch (e) {
       req.logger.error(e);
+      if (e instanceof Error && e.name == 'TimeoutError') {
+        const client = this.getClient(session) as any;
+        client.status = 'CLOSED';
+      }
     }
   }
 
