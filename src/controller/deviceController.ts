@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 
 import { contactToArray, unlinkAsync } from '../util/functions';
@@ -384,11 +383,11 @@ export async function getChatById(req: Request, res: Response) {
      }
    */
   const { phone } = req.params;
-  const { isGroup } = req.query;
+  const { isGroup = false } = req.query;
 
   try {
     let result;
-    for (const contato of contactToArray(phone as string, isGroup)) {
+    for (const contato of contactToArray(phone as string, isGroup as boolean)) {
       result = await req.client.getChatById(contato);
     }
 
