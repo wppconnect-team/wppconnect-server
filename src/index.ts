@@ -27,6 +27,7 @@ import { Logger } from 'winston';
 import { version } from '../package.json';
 import config from './config';
 import { convert } from './mapper/index';
+import { verifyTokenSocket } from './middleware/auth';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
 import {
@@ -74,7 +75,7 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   app.use((req: any, res: any, next: NextFunction) => {
     req.serverOptions = serverOptions;
     req.logger = logger;
-    req.io = io as any;
+    req.io = io;
 
     const oldSend = res.send;
 
@@ -107,12 +108,15 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
       origin: '*',
     },
   });
+  io.use(verifyTokenSocket);
 
   io.on('connection', (sock) => {
-    logger.info(`ID: ${sock.id} entrou`);
-
     sock.on('disconnect', () => {
-      logger.info(`ID: ${sock.id} saiu`);
+      logger.info(
+        `ID: ${sock.id} has disconnected. Session: ${
+          sock.handshake.auth?.session || 'Unknown'
+        }`
+      );
     });
   });
 
