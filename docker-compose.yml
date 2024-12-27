@@ -2,6 +2,8 @@ version: "3"
 
 services:
   wppconnect:
+    container_name: wpp-server
+    restart: unless-stopped
     build:
       context: .
     volumes:
