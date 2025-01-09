@@ -77,13 +77,13 @@ export async function setProfileName(req: Request, res: Response) {
   const { name } = req.body;
 
   if (!name)
-    return res
+    res
       .status(400)
       .json({ status: 'error', message: 'Parameter name is required!' });
 
   try {
     const result = await req.client.setProfileName(name);
-    return res.status(200).json({ status: 'success', response: result });
+    res.status(200).json({ status: 'success', response: result });
   } catch (error) {
     req.logger.error(error);
     res.status(500).json({
@@ -133,12 +133,12 @@ export async function getAllChats(req: Request, res: Response) {
    */
   try {
     const response = await req.client.getAllChats();
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: response, mapper: 'chat' });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on get all chats' });
   }
@@ -230,10 +230,10 @@ export async function listChats(req: Request, res: Response) {
       withLabels: withLabels,
     });
 
-    return res.status(200).json(response);
+    res.status(200).json(response);
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on get all chats' });
   }
@@ -254,10 +254,10 @@ export async function getAllChatsWithMessages(req: Request, res: Response) {
    */
   try {
     const response = await req.client.listChats();
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get all chats whit messages',
       error: e,
@@ -307,10 +307,10 @@ export async function getAllMessagesInChat(req: Request, res: Response) {
       );
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get all messages in chat',
       error: e,
@@ -331,10 +331,10 @@ export async function getAllNewMessages(req: Request, res: Response) {
    */
   try {
     const response = await req.client.getAllNewMessages();
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get all messages in chat',
       error: e,
@@ -355,10 +355,10 @@ export async function getAllUnreadMessages(req: Request, res: Response) {
    */
   try {
     const response = await req.client.getAllUnreadMessages();
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get all messages in chat',
       error: e,
@@ -394,10 +394,10 @@ export async function getChatById(req: Request, res: Response) {
       result = await req.client.getChatById(`${phone}@c.us`);
     }
 
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error changing chat by Id',
       error: e,
@@ -445,10 +445,10 @@ export async function getBatteryLevel(req: Request, res: Response) {
    */
   try {
     const response = await req.client.getBatteryLevel();
-    return res.status(200).json({ status: 'Success', response: response });
+    res.status(200).json({ status: 'Success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error retrieving battery status',
       error: e,
@@ -470,14 +470,14 @@ export async function getHostDevice(req: Request, res: Response) {
   try {
     const response = await req.client.getHostDevice();
     const phoneNumber = await req.client.getWid();
-    return res.status(200).json({
+    res.status(200).json({
       status: 'success',
       response: { ...response, phoneNumber },
       mapper: 'device',
     });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Erro ao recuperar dados do telefone',
       error: e,
@@ -498,12 +498,12 @@ export async function getPhoneNumber(req: Request, res: Response) {
    */
   try {
     const phoneNumber = await req.client.getWid();
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: phoneNumber, mapper: 'device' });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error retrieving phone number',
       error: e,
@@ -529,10 +529,10 @@ export async function getBlockList(req: Request, res: Response) {
       return { phone: contato ? contato.split('@')[0] : '' };
     });
 
-    return res.status(200).json({ status: 'success', response: blocked });
+    res.status(200).json({ status: 'success', response: blocked });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error retrieving blocked contact list',
       error: e,
@@ -602,10 +602,10 @@ export async function deleteAllChats(req: Request, res: Response) {
     for (const chat of chats) {
       await req.client.deleteChat((chat as any).chatId);
     }
-    return res.status(200).json({ status: 'success' });
+    res.status(200).json({ status: 'success' });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on delete all chats',
       error: error,
@@ -677,10 +677,10 @@ export async function clearAllChats(req: Request, res: Response) {
     for (const chat of chats) {
       await req.client.clearChat(`${(chat as any).chatId}`);
     }
-    return res.status(201).json({ status: 'success' });
+    res.status(201).json({ status: 'success' });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on clear all chats', error: e });
   }
@@ -726,10 +726,10 @@ export async function archiveChat(req: Request, res: Response) {
 
   try {
     const response = await req.client.archiveChat(`${phone}`, value);
-    return res.status(201).json({ status: 'success', response: response });
+    res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on archive chat', error: e });
   }
@@ -751,10 +751,10 @@ export async function archiveAllChats(req: Request, res: Response) {
     for (const chat of chats) {
       await req.client.archiveChat(`${(chat as any).chatId}`, true);
     }
-    return res.status(201).json({ status: 'success' });
+    res.status(201).json({ status: 'success' });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on archive all chats',
       error: e,
@@ -782,10 +782,10 @@ export async function getAllChatsArchiveds(req: Request, res: Response) {
         archived.push(chat);
       }
     }
-    return res.status(201).json(archived);
+    res.status(201).json(archived);
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on archive all chats',
       error: e,
@@ -848,17 +848,17 @@ export async function deleteMessage(req: Request, res: Response) {
       deleteMediaInDevice
     );
     if (result) {
-      return res
+      res
         .status(200)
         .json({ status: 'success', response: { message: 'Message deleted' } });
     }
-    return res.status(401).json({
+    res.status(401).json({
       status: 'error',
       response: { message: 'Error unknown on delete message' },
     });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on delete message', error: e });
   }
@@ -901,12 +901,12 @@ export async function reactMessage(req: Request, res: Response) {
   try {
     await req.client.sendReactionToMessage(msgId, reaction);
 
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: { message: 'Reaction sended' } });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on send reaction to message',
       error: e,
@@ -956,10 +956,10 @@ export async function reply(req: Request, res: Response) {
 
   try {
     const response = await req.client.reply(`${phone}@c.us`, text, messageid);
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error replying message', error: e });
   }
@@ -1011,10 +1011,10 @@ export async function forwardMessages(req: Request, res: Response) {
       response = await req.client.forwardMessage(`${phone[0]}`, messageId);
     }
 
-    return res.status(201).json({ status: 'success', response: response });
+    res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error forwarding message', error: e });
   }
@@ -1057,12 +1057,12 @@ export async function markUnseenMessage(req: Request, res: Response) {
 
   try {
     await req.client.markUnseenMessage(`${phone}`);
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: { message: 'unseen checked' } });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on mark unseen', error: e });
   }
@@ -1105,12 +1105,12 @@ export async function blockContact(req: Request, res: Response) {
 
   try {
     await req.client.blockContact(`${phone}`);
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: { message: 'Contact blocked' } });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on block contact', error: e });
   }
@@ -1153,12 +1153,12 @@ export async function unblockContact(req: Request, res: Response) {
 
   try {
     await req.client.unblockContact(`${phone}`);
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: { message: 'Contact UnBlocked' } });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on unlock contact', error: e });
   }
@@ -1213,12 +1213,12 @@ export async function pinChat(req: Request, res: Response) {
       await req.client.pinChat(contato, state === 'true', false);
     }
 
-    return res
+    res
       .status(200)
       .json({ status: 'success', response: { message: 'Chat fixed' } });
   } catch (e: any) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: e.text || 'Error on pin chat',
       error: e,
@@ -1244,23 +1244,23 @@ export async function setProfilePic(req: Request, res: Response) {
       }
    */
   if (!req.file)
-    return res
+    res
       .status(400)
       .json({ status: 'Error', message: 'File parameter is required!' });
 
   try {
-    const { path: pathFile } = req.file;
+    const { path: pathFile } = req.file as any;
 
     await req.client.setProfilePic(pathFile);
     await unlinkAsync(pathFile);
 
-    return res.status(200).json({
+    res.status(200).json({
       status: 'success',
       response: { message: 'Profile photo successfully changed' },
     });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error changing profile photo',
       error: e,
@@ -1282,10 +1282,10 @@ export async function getUnreadMessages(req: Request, res: Response) {
    */
   try {
     const response = await req.client.getUnreadMessages(false, false, true);
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', response: 'Error on open list', error: e });
   }
@@ -1308,10 +1308,10 @@ export async function getChatIsOnline(req: Request, res: Response) {
   const { phone } = req.params;
   try {
     const response = await req.client.getChatIsOnline(`${phone}@c.us`);
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       response: 'Error on get chat is online',
       error: e,
@@ -1337,10 +1337,10 @@ export async function getLastSeen(req: Request, res: Response) {
   try {
     const response = await req.client.getLastSeen(`${phone}@c.us`);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       response: 'Error on get chat last seen',
       error: error,
@@ -1366,10 +1366,10 @@ export async function getListMutes(req: Request, res: Response) {
   try {
     const response = await req.client.getListMutes(type);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       response: 'Error on get list mutes',
       error: error,
@@ -1406,10 +1406,10 @@ export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
       includeNotifications as boolean
     );
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res
+    res
       .status(500)
       .json({ status: 'error', response: 'Error on open list', error: error });
   }
@@ -1445,10 +1445,10 @@ export async function getMessages(req: Request, res: Response) {
       direction: direction.toString() as any,
       id: id as string,
     });
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(401)
       .json({ status: 'error', response: 'Error on open list', error: e });
   }
@@ -1502,10 +1502,10 @@ export async function sendContactVcard(req: Request, res: Response) {
       );
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on send contact vcard',
       error: error,
@@ -1558,10 +1558,10 @@ export async function sendMute(req: Request, res: Response) {
       response = await req.client.sendMute(`${contato}`, time, type);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on send mute', error: error });
   }
@@ -1658,10 +1658,10 @@ export async function setChatState(req: Request, res: Response) {
       response = await req.client.setChatState(`${contato}`, chatstate);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on send chat state',
       error: error,
@@ -1712,10 +1712,10 @@ export async function setTemporaryMessages(req: Request, res: Response) {
       response = await req.client.setTemporaryMessages(`${contato}`, value);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on set temporary messages',
       error: error,
@@ -1766,10 +1766,10 @@ export async function setTyping(req: Request, res: Response) {
       else response = await req.client.stopTyping(contato);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on set typing', error: error });
   }
@@ -1821,10 +1821,10 @@ export async function setRecording(req: Request, res: Response) {
       else response = await req.client.stopRecoring(contato);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on set recording',
       error: error,
@@ -1853,10 +1853,10 @@ export async function checkNumberStatus(req: Request, res: Response) {
       response = await req.client.checkNumberStatus(`${contato}`);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on check number status',
       error: error,
@@ -1885,10 +1885,10 @@ export async function getContact(req: Request, res: Response) {
       response = await req.client.getContact(contato);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on get contact', error: error });
   }
@@ -1908,10 +1908,10 @@ export async function getAllContacts(req: Request, res: Response) {
   try {
     const response = await req.client.getAllContacts();
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get all constacts',
       error: error,
@@ -1941,10 +1941,10 @@ export async function getNumberProfile(req: Request, res: Response) {
       response = await req.client.getNumberProfile(contato);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get number profile',
       error: error,
@@ -1974,10 +1974,10 @@ export async function getProfilePicFromServer(req: Request, res: Response) {
       response = await req.client.getProfilePicFromServer(contato);
     }
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on  get profile pic',
       error: error,
@@ -2005,10 +2005,10 @@ export async function getStatus(req: Request, res: Response) {
     for (const contato of contactToArray(phone as string, false)) {
       response = await req.client.getStatus(contato);
     }
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on  get status', error: error });
   }
@@ -2056,10 +2056,10 @@ export async function setProfileStatus(req: Request, res: Response) {
   try {
     const response = await req.client.setProfileStatus(status);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on set profile status' });
   }
@@ -2100,10 +2100,10 @@ export async function rejectCall(req: Request, res: Response) {
   try {
     const response = await req.client.rejectCall(callId);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on rejectCall', error: e });
   }
@@ -2146,10 +2146,10 @@ export async function starMessage(req: Request, res: Response) {
   try {
     const response = await req.client.starMessage(messageId, star);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on  start message',
       error: error,
@@ -2175,10 +2175,10 @@ export async function getReactions(req: Request, res: Response) {
   try {
     const response = await req.client.getReactions(messageId);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get reactions',
       error: error,
@@ -2204,15 +2204,15 @@ export async function getVotes(req: Request, res: Response) {
   try {
     const response = await req.client.getVotes(messageId);
 
-    return res.status(200).json({ status: 'success', response: response });
+    res.status(200).json({ status: 'success', response: response });
   } catch (error) {
     req.logger.error(error);
-    return res
+    res
       .status(500)
       .json({ status: 'error', message: 'Error on get votes', error: error });
   }
 }
-export async function chatWoot(req: Request, res: Response) {
+export async function chatWoot(req: Request, res: Response): Promise<any> {
   /**
      #swagger.tags = ["Misc"]
      #swagger.description = 'You can point your Chatwoot to this route so that it can perform functions.'
@@ -2258,7 +2258,7 @@ export async function chatWoot(req: Request, res: Response) {
         event == 'conversation_resolved' ||
         req.body.private
       ) {
-        return res
+        res
           .status(200)
           .json({ status: 'success', message: 'Success on receive chatwoot' });
       }
@@ -2270,7 +2270,7 @@ export async function chatWoot(req: Request, res: Response) {
       } = req.body;
 
       if (event != 'message_created' && message_type != 'outgoing')
-        return res.status(200);
+        res.status(200);
       for (const contato of contactToArray(phone, false)) {
         if (message_type == 'outgoing') {
           if (message.attachments) {
@@ -2290,13 +2290,13 @@ export async function chatWoot(req: Request, res: Response) {
           }
         }
       }
-      return res
+      res
         .status(200)
         .json({ status: 'success', message: 'Success on  receive chatwoot' });
     }
   } catch (e) {
     console.log(e);
-    return res.status(400).json({
+    res.status(400).json({
       status: 'error',
       message: 'Error on  receive chatwoot',
       error: e,
@@ -2321,10 +2321,10 @@ export async function getPlatformFromMessage(req: Request, res: Response) {
     const result = await req.client.getPlatformFromMessage(
       req.params.messageId
     );
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (e) {
     req.logger.error(e);
-    return res.status(500).json({
+    res.status(500).json({
       status: 'error',
       message: 'Error on get get platform from message',
       error: e,
