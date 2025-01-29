@@ -38,7 +38,7 @@ export async function getProducts(req: Request, res: Response) {
    */
   const { phone, qnt } = req.query;
   if (!phone)
-    return res.status(401).send({
+    res.status(401).send({
       message:
         'Please send the contact number you wish to return the products.',
     });
@@ -79,7 +79,7 @@ export async function getProductById(req: Request, res: Response) {
    */
   const { phone, id } = req.query;
   if (!phone || !id)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'Please send the contact number and productId.',
     });
 
@@ -132,7 +132,7 @@ export async function editProduct(req: Request, res: Response) {
    */
   const { id, options } = req.body;
   if (!id || !options)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'productId or options was not informed',
     });
 
@@ -181,7 +181,7 @@ export async function delProducts(req: Request, res: Response) {
    */
   const { id } = req.body;
   if (!id)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'products Id was not informed',
     });
 
@@ -233,7 +233,7 @@ export async function changeProductImage(req: Request, res: Response) {
    */
   const { id, base64 } = req.body;
   if (!id || !base64)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'productId and base64 was not informed',
     });
 
@@ -302,7 +302,7 @@ export async function addProduct(req: Request, res: Response) {
     currency = 'BRL',
   } = req.body;
   if (!name || !image || !price)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'name, price and image was not informed',
     });
 
@@ -363,7 +363,7 @@ export async function addProductImage(req: Request, res: Response) {
    */
   const { id, base64 } = req.body;
   if (!id || !base64)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'productId and base64 was not informed',
     });
 
@@ -414,7 +414,7 @@ export async function removeProductImage(req: Request, res: Response) {
    */
   const { id, index } = req.body;
   if (!id || !index)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'productId and index image was not informed',
     });
 
@@ -452,7 +452,7 @@ export async function getCollections(req: Request, res: Response) {
    */
   const { phone, qnt, max } = req.query;
   if (!phone)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'phone was not informed',
     });
 
@@ -507,7 +507,7 @@ export async function createCollection(req: Request, res: Response) {
    */
   const { name, products } = req.body;
   if (!name || !products)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'name or products was not informed',
     });
 
@@ -560,7 +560,7 @@ export async function editCollection(req: Request, res: Response) {
    */
   const { id, options } = req.body;
   if (!id || !options)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'id or options was not informed',
     });
 
@@ -609,7 +609,7 @@ export async function deleteCollection(req: Request, res: Response) {
    */
   const { id } = req.body;
   if (!id)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'id was not informed',
     });
 
@@ -667,7 +667,7 @@ export async function setProductVisibility(req: Request, res: Response) {
    */
   const { id, value } = req.body;
   if (!id || !value)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'product id or value (false, true) was not informed',
     });
 
@@ -716,7 +716,7 @@ export async function updateCartEnabled(req: Request, res: Response) {
    */
   const { enabled } = req.body;
   if (!enabled)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'enabled (false, true) was not informed',
     });
 
@@ -767,7 +767,7 @@ export async function sendLinkCatalog(req: Request, res: Response) {
    */
   const { phones, message } = req.body;
   if (!phones)
-    return res.status(401).send({
+    res.status(401).send({
       message: 'phones was not informed',
     });
   const results = [];
@@ -789,7 +789,7 @@ export async function sendLinkCatalog(req: Request, res: Response) {
       );
       (results as any).push({ phone, status: result.id });
     }
-    return res.status(200).json({ status: 'success', response: results });
+    res.status(200).json({ status: 'success', response: results });
   } catch (error) {
     res.status(500).json({
       status: 'Error',
