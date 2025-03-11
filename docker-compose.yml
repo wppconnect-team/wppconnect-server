@@ -11,4 +11,4 @@ services:
       - "21465:21465"
 
 volumes:
-  wppconnect_tokens: {}      
+  wppconnect_tokens: 
