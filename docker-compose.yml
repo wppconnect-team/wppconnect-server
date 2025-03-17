@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   wppconnect:
     container_name: wpp-server
@@ -9,8 +7,9 @@ services:
     volumes:
       - ./config.ts:/usr/src/wpp-server/config.ts
       - ./wppconnect_tokens:/usr/src/wpp-server/tokens
+      - /root/.env:/app/.env
     ports:
-      - "21465:21465"
+      - '21465:21465'
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - WPPCONNECT_HOST=${WPPCONNECT_HOST}
@@ -18,4 +17,4 @@ services:
       - .env
 
 volumes:
-  wppconnect_tokens: {}      
+  wppconnect_tokens: {}
