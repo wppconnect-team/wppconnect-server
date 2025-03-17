@@ -1,8 +1,8 @@
 import { ServerOptions } from './types/ServerOptions';
 
 export default {
-  secretKey: 'THISISMYSECURETOKEN',
-  host: 'http://localhost',
+  secretKey: process.env.SECRET_KEY || 'THISISMYSECURETOKEN',
+  host: process.env.WPPCONNECT_HOST || 'http://localhost',
   port: '21465',
   deviceName: 'WppConnect',
   poweredBy: 'WPPConnect-Server',

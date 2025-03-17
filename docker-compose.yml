@@ -11,6 +11,11 @@ services:
       - ./wppconnect_tokens:/usr/src/wpp-server/tokens
     ports:
       - "21465:21465"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - WPPCONNECT_HOST=${WPPCONNECT_HOST}
+    env_file:
+      - .env
 
 volumes:
   wppconnect_tokens: {}      
