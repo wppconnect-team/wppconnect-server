@@ -7,7 +7,6 @@ services:
     volumes:
       - ./config.ts:/usr/src/wpp-server/config.ts
       - ./wppconnect_tokens:/usr/src/wpp-server/tokens
-      - /root/.env:/app/.env
     ports:
       - '21465:21465'
     environment:
