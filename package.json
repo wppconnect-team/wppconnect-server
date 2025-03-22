@@ -76,7 +76,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/unzipper": "^0.10.11",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^8.14.0",
+    "@typescript-eslint/parser": "^8.27.0",
     "commitizen": "^4.3.1",
     "conventional-changelog-cli": "^5.0.0",
     "crypto-js": "^4.2.0",
