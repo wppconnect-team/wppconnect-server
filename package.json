@@ -104,7 +104,7 @@
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
     "tsx": "^4.17.0",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "webpack-cli": "^5.1.4"
   },
   "peerDependencies": {
