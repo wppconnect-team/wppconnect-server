@@ -100,7 +100,7 @@
     "release-it": "^17.11.0",
     "rimraf": "^5.0.10",
     "shx": "^0.4.0",
-    "swagger-ui-dist": "^5.17.14",
+    "swagger-ui-dist": "^5.20.7",
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
     "tsx": "^4.17.0",
