@@ -1,8 +1,5 @@
 import { ServerOptions } from './types/ServerOptions';
 
-require('dotenv').config();
-
-
 export default {
   secretKey: process.env.SECRET_KEY || 'THISISMYSECURETOKEN',
   host: process.env.WPPCONNECT_HOST || 'http://localhost',
