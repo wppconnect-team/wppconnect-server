@@ -18,7 +18,7 @@ RUN yarn install --production --pure-lockfile && \
 FROM base AS build
 WORKDIR /usr/src/wpp-server
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-RUN echo "SECRET_KEY=${SECRET_KEY}" >> /env
+RUN echo "SECRET_KEY=${SECRET_KEY}" >> .env
 RUN echo "WPPCONNECT_HOST=${WPPCONNECT_HOST}" >> .env
 COPY .env  ./
 COPY package.json  ./

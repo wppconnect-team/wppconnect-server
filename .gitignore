@@ -1,4 +1,5 @@
 /.env
+/src/.env
 /dist
 /node_modules
 /swagger-docs
