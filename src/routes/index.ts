@@ -110,6 +110,12 @@ routes.post(
   MessageController.sendMessage
 );
 routes.post(
+  '/api/:session/send-pix-key',
+  verifyToken,
+  statusConnection,
+  MessageController.sendPixMessage
+);
+routes.post(
   '/api/:session/edit-message',
   verifyToken,
   statusConnection,

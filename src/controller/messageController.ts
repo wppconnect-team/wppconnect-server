@@ -108,6 +108,73 @@ export async function sendMessage(req: Request, res: Response) {
   }
 }
 
+export async function sendPixMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              phone: { type: "string" },
+              isGroup: { type: "boolean" },
+              isNewsletter: { type: "boolean" },
+              isLid: { type: "boolean" },
+              message: { type: "string" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Send message to contact": {
+              value: { 
+                phone: '5521999999999',
+                isGroup: false,
+                isNewsletter: false,
+                isLid: false,
+                keyType: 'PHONE',
+                name: 'WPPCONNECT-TEAM',
+                key: '+5567123456789',
+                instructions: 'teste'
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+  const { phone, keyType, name, key, instructions } = req.body;
+
+  const options = req.body.options || {};
+
+  try {
+    const results: any = [];
+    for (const contato of phone) {
+      results.push(
+        await req.client.sendPixKey(
+          contato,
+          { keyType, name, key, instructions },
+          options
+        )
+      );
+    }
+
+    if (results.length === 0) res.status(400).json('Error sending message');
+    req.io.emit('mensagem-enviada', results);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
+
 export async function editMessage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Messages"]
