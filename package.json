@@ -101,7 +101,7 @@
     "rimraf": "^5.0.10",
     "shx": "^0.4.0",
     "swagger-ui-dist": "^5.20.8",
-    "ts-jest": "^29.3.1",
+    "ts-jest": "^29.3.2",
     "ts-loader": "^9.5.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
