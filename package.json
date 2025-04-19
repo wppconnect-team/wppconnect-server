@@ -81,7 +81,7 @@
     "conventional-changelog-cli": "^5.0.0",
     "crypto-js": "^4.2.0",
     "eslint": "^8.57.1",
-    "eslint-config-love": "^53.0.0",
+    "eslint-config-love": "^119.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^17.17.0",
