@@ -317,24 +317,6 @@ routes.post(
   statusConnection,
   GroupController.demoteParticipant
 );
-routes.get(
-  '/api/:session/group-membership-request/:groupId',
-  verifyToken,
-  statusConnection,
-  GroupController.getGroupMembershipRequests
-);
-routes.post(
-  '/api/:session/approve-group-membership-request',
-  verifyToken,
-  statusConnection,
-  GroupController.approveGroupMembershipRequest
-);
-routes.post(
-  '/api/:session/reject-group-membership-request',
-  verifyToken,
-  statusConnection,
-  GroupController.rejectGroupMembershipRequest
-);
 routes.post(
   '/api/:session/group-info-from-invite-link',
   verifyToken,
