@@ -672,6 +672,52 @@ export async function subscribePresence(req: Request, res: Response) {
   }
 }
 
+export async function setOnlinePresence(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Misc"]
+     #swagger.operationId = 'setOnlinePresence'
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              isOnline: { type: "boolean" },
+            }
+          },
+          example: {
+   isOnline: false,
+          }
+        }
+      }
+     }
+   */
+  try {
+    const { isOnline = true } = req.body;
+
+    await req.client.setOnlinePresence(isOnline);
+
+    res.status(200).json({
+      status: 'success',
+      response: { message: 'Set Online Presence Successfully' },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on set online presence',
+      error: error,
+    });
+  }
+}
+
 export async function editBusinessProfile(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Profile"]
