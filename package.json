@@ -31,7 +31,7 @@
     "node": "22"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.797.0",
+    "@aws-sdk/client-s3": "^3.802.0",
     "@wppconnect-team/wppconnect": "^1.37.1",
     "archiver": "^7.0.1",
     "axios": "^1.9.0",
