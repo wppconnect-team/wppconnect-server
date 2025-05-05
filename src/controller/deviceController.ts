@@ -2279,6 +2279,17 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
             }/${message.attachments[0].data_url.substring(
               message.attachments[0].data_url.indexOf('/rails/') + 1
             )}`;
+
+            // Check if attachments is Push-to-talk and send this
+            if (message.attachments[0].file_type === 'audio') {
+              return client.sendPtt(
+                `${contato}`,
+                base_url,
+                'Voice Audio',
+                message.content
+              );
+            }
+            
             await client.sendFile(
               `${contato}`,
               base_url,
