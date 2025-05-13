@@ -55,13 +55,13 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.1",
+    "@babel/cli": "^7.27.2",
     "@babel/core": "^7.27.1",
     "@babel/eslint-parser": "^7.27.1",
     "@babel/eslint-plugin": "^7.27.1",
     "@babel/node": "^7.27.1",
     "@babel/plugin-transform-runtime": "^7.27.1",
-    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
     "@babel/preset-typescript": "^7.27.1",
     "@babel/runtime": "^7.27.1",
     "@commitlint/cli": "^19.8.0",
