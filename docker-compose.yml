@@ -6,6 +6,7 @@ services:
     restart: unless-stopped
     build:
       context: .
+    shm_size: '1gb'  
     volumes:
       - ./config.ts:/usr/src/wpp-server/config.ts
       - ./wppconnect_tokens:/usr/src/wpp-server/tokens
