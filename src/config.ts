@@ -45,6 +45,8 @@ export default {
   },
   createOptions: {
     browserArgs: [
+	    '--disable-dev-shm-usage',
+	    '--disable-gpu',
       '--disable-web-security',
       '--no-sandbox',
       '--disable-web-security',
