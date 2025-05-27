@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.21 AS base
+FROM node:22.15.0-alpine AS base
 WORKDIR /usr/src/wpp-server
 ENV NODE_ENV=production PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY package.json ./
