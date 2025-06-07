@@ -1,11 +1,11 @@
 import { ServerOptions } from './types/ServerOptions';
 
 export default {
-  secretKey: 'THISISMYSECURETOKEN',
+  secretKey: 'CYBERSNOW',
   host: 'http://localhost',
   port: '21465',
-  deviceName: 'WppConnect',
-  poweredBy: 'WPPConnect-Server',
+  deviceName: 'CyberReach',
+  poweredBy: 'CyberReach',
   startAllSession: true,
   tokenStoreType: 'file',
   maxListeners: 15,
