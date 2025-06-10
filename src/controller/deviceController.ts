@@ -2252,14 +2252,16 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
   try {
     if (await client.isConnected()) {
       const event = req.body.event;
-      const is_private = req.body.private || req.body.is_private
+      const is_private = req.body.private || req.body.is_private;
 
       if (
         event == 'conversation_status_changed' ||
         event == 'conversation_resolved' ||
         is_private
       ) {
-        return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
+        return res
+          .status(200)
+          .json({ status: 'success', message: 'Success on receive chatwoot' });
       }
 
       const {
@@ -2269,7 +2271,9 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
       } = req.body;
 
       if (event != 'message_created' && message_type != 'outgoing')
-        return res.status(200).json({ status: 'success', message: 'Success on receive chatwoot' });
+        return res
+          .status(200)
+          .json({ status: 'success', message: 'Success on receive chatwoot' });
       for (const contato of contactToArray(phone, false)) {
         if (message_type == 'outgoing') {
           if (message.attachments) {
@@ -2288,7 +2292,6 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
                 message.content
               );
             }
-            
             await client.sendFile(
               `${contato}`,
               base_url,
