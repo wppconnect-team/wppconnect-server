@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22.15.0
+          node-version: 22.16.0
 
       - name: Get yarn cache directory
         id: yarn-cache
