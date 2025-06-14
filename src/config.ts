@@ -14,7 +14,7 @@ export default {
     url: null,
     autoDownload: true,
     uploadS3: false,
-    readMessage: true,
+    readMessage: false,
     allUnreadOnStart: false,
     listenAcks: true,
     onPresenceChanged: true,
