@@ -6,6 +6,10 @@
   "author": "kingaspx",
   "license": "Apache-2.0",
   "scripts": {
+    "migrate": "node migrate.js",
+    "test-integration": "node test-integration.js",
+    "start": "npm run migrate && node ./dist/server.js",
+    "dev": "npm run migrate && tsx watch src/server.ts",
     "build:types": "tsc",
     "build:js": "rimraf dist && babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline --copy-files",
     "build": "npm run build:types && npm run build:js",
@@ -31,6 +35,8 @@
     "node": "22.16.0"
   },
   "dependencies": {
+    "pg": "^8.11.3",
+    "chokidar": "^3.5.3",
     "@aws-sdk/client-s3": "^3.802.0",
     "@wppconnect-team/wppconnect": "^1.37.2",
     "archiver": "^7.0.1",
