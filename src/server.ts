@@ -15,5 +15,10 @@
  */
 import config from './config';
 import { initServer } from './index';
+const {
+  initializePostgreSQLIntegration,
+  setupExpressIntegration,
+  setupGracefulShutdown
+} = require('./postgresqlIntegration');
 
 initServer(config);
