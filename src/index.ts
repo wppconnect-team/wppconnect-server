@@ -36,6 +36,14 @@ import {
 } from './util/functions';
 import { createLogger } from './util/logger';
 
+// ADICIONAR ESTAS LINHAS AQUI, LOGO ABAIXO DAS OUTRAS IMPORTAÇÕES
+const {
+  initializePostgreSQLIntegration,
+  setupExpressIntegration,
+  wrapWppConnectCreate,
+  setupGracefulShutdown
+} = require('./postgresqlIntegration' );
+
 //require('dotenv').config();
 
 export const logger = createLogger(config.log);
@@ -101,12 +109,12 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   app.use(routes);
 
   createFolders();
-  const http = createServer(app);
+  const http = createServer(app );
   const io = new Socket(http, {
     cors: {
       origin: '*',
     },
-  });
+  } );
 
   io.on('connection', (sock) => {
     logger.info(`ID: ${sock.id} entrou`);
@@ -116,14 +124,23 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     });
   });
 
-  http.listen(PORT, () => {
+  // ADICIONAR ESTAS LINHAS AQUI, ANTES DE http.listen
+  initializePostgreSQLIntegration( );
+  setupExpressIntegration(app);
+  setupGracefulShutdown();
+
+  http.listen(PORT, ( ) => {
     logger.info(`Server is running on port: ${PORT}`);
     logger.info(
       `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
     );
     logger.info(`WPPConnect-Server version: ${version}`);
 
-    if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
+    // MODIFICAR ESTA LINHA: ENVOLVER startAllSessions com o wrapper
+    if (serverOptions.startAllSession) {
+      const createClient = wrapWppConnectCreate(startAllSessions);
+      createClient(serverOptions, logger);
+    }
   });
 
   if (config.log.level === 'error' || config.log.level === 'warn') {
