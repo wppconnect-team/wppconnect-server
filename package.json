@@ -88,7 +88,7 @@
     "eslint-config-love": "^119.0.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-n": "^17.20.0",
+    "eslint-plugin-n": "^17.21.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
