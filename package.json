@@ -86,7 +86,7 @@
     "crypto-js": "^4.2.0",
     "eslint": "^8.57.1",
     "eslint-config-love": "^121.0.0",
-    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-n": "^17.21.0",
     "eslint-plugin-prettier": "^4.2.1",
