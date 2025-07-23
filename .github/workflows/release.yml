@@ -23,9 +23,9 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Setup Node
-        uses: actions/setup-node@v4.0.4
+        uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22.14.0
+          node-version: 22.17.1
 
       - name: Get yarn cache directory
         id: yarn-cache
