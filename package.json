@@ -63,7 +63,7 @@
     "@babel/plugin-transform-runtime": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-typescript": "^7.27.1",
-    "@babel/runtime": "^7.27.6",
+    "@babel/runtime": "^7.28.2",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@commitlint/cz-commitlint": "^19.8.1",
