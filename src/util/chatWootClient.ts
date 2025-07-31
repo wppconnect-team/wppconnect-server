@@ -248,11 +248,24 @@ export default class chatWootClient {
       return null;
     }
   }
+  normalizeBrazillianNumber(number: string): string {
+    number = number.replace('+', '');
+    if (!number.startsWith('55')) {
+      return number;
+    }
+    number = number.slice(2);
+    if (number.length === 10 && ['8', '9'].includes(number[2])) {
+      number = number.slice(0, 2) + '9' + number.slice(2);
+    }
+    return '55' + number;
+  }
 
   async findContact(query: string) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`
+        `api/v1/accounts/${
+          this.account_id
+        }/contacts/search/?q=${this.normalizeBrazillianNumber(query)}`
       );
       return data;
     } catch (e) {
@@ -272,8 +285,8 @@ export default class chatWootClient {
           ? message.sender.id.user
           : message.sender.id.split('@')[0],
     };
-    body.phone_number = `+${body.phone_number}`;
-    const contact = await this.findContact(body.phone_number.replace('+', ''));
+    body.phone_number = this.normalizeBrazillianNumber(body.phone_number);
+    const contact = await this.findContact(body.phone_number);
     if (contact && contact.meta.count > 0) return contact.payload[0];
 
     try {
