@@ -2274,7 +2274,24 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
         return res
           .status(200)
           .json({ status: 'success', message: 'Success on receive chatwoot' });
+      const contatos: string[] = [];
       for (const contato of contactToArray(phone, false)) {
+        const profile: any = await client
+          .checkNumberStatus(contato)
+          .catch((error: any) => console.log(error));
+        if (!profile?.numberExists) {
+          const num = (contato as string).split('@')[0];
+          return res.status(400).json({
+            response: null,
+            status: 'Connected',
+            message: `O número ${num} não existe.`,
+          });
+        } else if (contatos.indexOf(profile.id._serialized) < 0) {
+          contatos.push(profile.id._serialized);
+        }
+      }
+
+      for (const contato of contatos) {
         if (message_type == 'outgoing') {
           if (message.attachments) {
             const base_url = `${
