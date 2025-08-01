@@ -257,7 +257,7 @@ export default class chatWootClient {
     if (number.length === 10 && ['8', '9'].includes(number[2])) {
       number = number.slice(0, 2) + '9' + number.slice(2);
     }
-    return '55' + number;
+    return '+55' + number;
   }
 
   async findContact(query: string) {
@@ -286,7 +286,7 @@ export default class chatWootClient {
           : message.sender.id.split('@')[0],
     };
     body.phone_number = this.normalizeBrazillianNumber(body.phone_number);
-    const contact = await this.findContact(body.phone_number);
+    const contact = await this.findContact(body.phone_number.replace('+', ''));
     if (contact && contact.meta.count > 0) return contact.payload[0];
 
     try {
