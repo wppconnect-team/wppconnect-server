@@ -2270,6 +2270,13 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
         message = req.body.conversation.messages[0],
       } = req.body;
 
+      // Ignora mensagens internas do Chatwoot wppconnect
+      if (phone.includes('5511889889988')) {
+        return res
+          .status(200)
+          .json({ status: 'success', message: 'Success on receive chatwoot' });
+      }
+
       if (event != 'message_created' && message_type != 'outgoing')
         return res
           .status(200)
