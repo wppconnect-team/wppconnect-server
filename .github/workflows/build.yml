@@ -1,15 +1,13 @@
-name: build
+name: Docker Image CI
 
 on:
   push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
+    branches: [ main ]
+    tags:
       - '*'
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,18 +31,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Build source
-        run: yarn build
-
-  lint:
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          node-version: 22.14.0
       - name: Setup Node
         uses: actions/setup-node@v4.4.0
         with:
@@ -54,17 +50,21 @@ jobs:
         id: yarn-cache
         run: |
           echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Setup yarn cache
-        uses: actions/cache@v4
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          images: promasoud/wppconnect-server
+          tags: |
+            type=ref,event=tag
+            type=ref,event=branch
+            type=sha
 
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Lint source
-        run: yarn lint
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
