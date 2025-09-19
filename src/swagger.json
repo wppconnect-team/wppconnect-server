@@ -512,6 +512,55 @@
         }
       }
     },
+    "/api/{session}/set-online-presence": {
+      "post": {
+        "tags": ["Misc"],
+        "description": "",
+        "operationId": "setOnlinePresence",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "isOnline": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "example": {
+                "isOnline": false
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{session}/download-media": {
       "post": {
         "tags": ["Messages"],
@@ -1870,13 +1919,111 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Group information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234567890@g.us"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Group name"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "Group description"
+                        },
+                        "subject": {
+                          "type": "string",
+                          "example": "Group subject"
+                        },
+                        "subjectUpdatedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-12T08:00:00.000Z"
+                        },
+                        "subjectUpdatedBy": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "1111111111111@c.us"
+                        },
+                        "descriptionUpdatedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-13T09:00:00.000Z"
+                        },
+                        "descriptionUpdatedBy": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2222222222222@c.us"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-10T12:34:56.000Z"
+                        },
+                        "lastActivityAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-15T10:00:00.000Z"
+                        },
+                        "participants": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "1111111111111@c.us"
+                              },
+                              "isAdmin": {
+                                "type": "boolean",
+                                "example": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal error retrieving group info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error getting group info"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2041,6 +2188,144 @@
             }
           }
         }
+      }
+    },
+    "/api/{session}/group-info/{groupId}": {
+      "get": {
+        "tags": ["Group"],
+        "summary": "Get detailed information about a group",
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<groupId>"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234567890@g.us"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Group name"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "Group description"
+                        },
+                        "subject": {
+                          "type": "string",
+                          "example": "Group subject"
+                        },
+                        "subjectUpdatedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-12T08:00:00.000Z"
+                        },
+                        "subjectUpdatedBy": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "1111111111111@c.us"
+                        },
+                        "descriptionUpdatedAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-13T09:00:00.000Z"
+                        },
+                        "descriptionUpdatedBy": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2222222222222@c.us"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-10T12:34:56.000Z"
+                        },
+                        "lastActivityAt": {
+                          "type": "string",
+                          "nullable": true,
+                          "example": "2024-11-15T10:00:00.000Z"
+                        },
+                        "participants": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "1111111111111@c.us"
+                              },
+                              "isAdmin": {
+                                "type": "boolean",
+                                "example": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error retrieving group info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error getting group info"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/{session}/group-invite-link/{groupId}": {

@@ -258,6 +258,12 @@ routes.get(
   GroupController.getGroupAdmins
 );
 routes.get(
+  '/api/:session/group-info/:groupId',
+  verifyToken,
+  statusConnection,
+  GroupController.getGroupInfo
+);
+routes.get(
   '/api/:session/group-invite-link/:groupId',
   verifyToken,
   statusConnection,

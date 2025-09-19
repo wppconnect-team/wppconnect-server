@@ -1052,3 +1052,151 @@ export async function getCommonGroups(req: Request, res: Response) {
     });
   }
 }
+
+export async function getGroupInfo(req: Request, res: Response) {
+  /**
+    #swagger.tags = ["Group"]
+    #swagger.autoBody=false
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.parameters["session"] = { schema: 'NERDWHATS_AMERICA' }
+    #swagger.parameters["groupId"] = { schema: '<groupId>' }
+    #swagger.summary = 'Get detailed information about a group'
+    #swagger.responses[200] = {
+      description: 'Group information retrieved successfully',
+      content: {
+        "application/json": {
+          schema: {
+            type: 'object',
+            properties: {
+              status: { type: 'string', example: 'success' },
+              response: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string', example: '1234567890@g.us' },
+                  name: { type: 'string', example: 'Group name' },
+                  description: { type: 'string', nullable: true, example: 'Group description' },
+                  subject: { type: 'string', example: 'Group subject' },
+                  subjectUpdatedAt: { type: 'string', nullable: true, example: '2024-11-12T08:00:00.000Z' },
+                  subjectUpdatedBy: { type: 'string', nullable: true, example: '1111111111111@c.us' },
+                  descriptionUpdatedAt: { type: 'string', nullable: true, example: '2024-11-13T09:00:00.000Z' },
+                  descriptionUpdatedBy: { type: 'string', nullable: true, example: '2222222222222@c.us' },
+                  createdAt: { type: 'string', nullable: true, example: '2024-11-10T12:34:56.000Z' },
+                  lastActivityAt: { type: 'string', nullable: true, example: '2024-11-15T10:00:00.000Z' },
+                  participants: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'string', example: '1111111111111@c.us' },
+                        isAdmin: { type: 'boolean', example: true }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    #swagger.responses[500] = {
+      description: 'Internal error retrieving group info',
+      content: {
+        "application/json": {
+          schema: {
+            type: 'object',
+            properties: {
+              status: { type: 'string', example: 'error' },
+              message: { type: 'string', example: 'Error getting group info' }
+            }
+          }
+        }
+      }
+    }
+  */
+  const { groupId } = req.params;
+
+  try {
+    let response: any = {};
+    for (const group of groupToArray(groupId)) {
+      const chat: any = await req.client.getChatById(group);
+
+      // Basic fields
+      const id = chat?.id?._serialized || chat?.id?.user || group;
+      const name = chat?.name || chat?.formattedTitle || '';
+      const description =
+        chat?.groupMetadata?.desc || chat?.description || null;
+
+      // Subject and updates
+      const subject = chat?.groupMetadata?.subject || name;
+      const subjectUpdatedAtRaw =
+        chat?.groupMetadata?.subjectTime ||
+        chat?.groupMetadata?.subjectUpdatedAt;
+      const subjectUpdatedAt = subjectUpdatedAtRaw
+        ? new Date((subjectUpdatedAtRaw as number) * 1000).toISOString()
+        : null;
+      const subjectUpdatedBy =
+        chat?.groupMetadata?.subjectOwner?._serialized ||
+        chat?.groupMetadata?.subjectOwner ||
+        chat?.groupMetadata?.subjectUpdatedBy ||
+        null;
+
+      // Description updates
+      const descriptionUpdatedAtRaw =
+        chat?.groupMetadata?.descTime || chat?.groupMetadata?.descriptionTime;
+      const descriptionUpdatedAt = descriptionUpdatedAtRaw
+        ? new Date((descriptionUpdatedAtRaw as number) * 1000).toISOString()
+        : null;
+      const descriptionUpdatedBy =
+        chat?.groupMetadata?.descOwner?._serialized ||
+        chat?.groupMetadata?.descOwner ||
+        chat?.groupMetadata?.descriptionUpdatedBy ||
+        null;
+
+      // Created at
+      const createdAtRaw = chat?.groupMetadata?.creation;
+      const createdAt = createdAtRaw
+        ? new Date((createdAtRaw as number) * 1000).toISOString()
+        : null;
+
+      // Last activity
+      const lastActivityAtRaw = chat?.t || chat?.lastActivity;
+      const lastActivityAt = lastActivityAtRaw
+        ? new Date((lastActivityAtRaw as number) * 1000).toISOString()
+        : null;
+
+      // Participants
+      const participants =
+        chat?.groupMetadata?.participants?.map((p: any) => ({
+          id: p?.id?._serialized || p?.id || '',
+          isAdmin:
+            Boolean(p?.isAdmin) ||
+            Boolean(p?.isSuperAdmin) ||
+            Boolean(p?.admin),
+        })) || [];
+
+      response = {
+        id,
+        name,
+        description,
+        subject,
+        subjectUpdatedAt,
+        subjectUpdatedBy,
+        descriptionUpdatedAt,
+        descriptionUpdatedBy,
+        createdAt,
+        lastActivityAt,
+        participants,
+      };
+    }
+
+    res.status(200).json({ status: 'success', response: response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on get group info',
+      error: e,
+    });
+  }
+}
