@@ -210,11 +210,24 @@ export async function startSession(req: Request, res: Response): Promise<any> {
             properties: {
               webhook: { type: "string" },
               waitQrCode: { type: "boolean" },
+              proxy: {
+                type: "object",
+                properties: {
+                  url: { type: "string" },
+                  username: { type: "string" },
+                  password: { type: "string" },
+                }
+              }
             }
           },
           example: {
             webhook: "",
             waitQrCode: false,
+            proxy: {
+              url: "http://myproxy.com:8080",
+              username: "myuser",
+              password: "mypassword"
+            }
           }
         }
       }

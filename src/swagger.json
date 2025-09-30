@@ -344,12 +344,31 @@
                   },
                   "waitQrCode": {
                     "type": "boolean"
+                  },
+                  "proxy": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      }
+                    }
                   }
                 }
               },
               "example": {
                 "webhook": "",
-                "waitQrCode": false
+                "waitQrCode": false,
+                "proxy": {
+                  "url": "proxy host",
+                  "username": "proxy username",
+                  "password": "proxy password"
+                }
               }
             }
           }
