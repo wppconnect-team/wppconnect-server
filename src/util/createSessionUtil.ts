@@ -64,6 +64,15 @@ export default class CreateSessionUtil {
         Object.assign(
           {},
           { tokenStore: myTokenStore },
+          client.config.proxy
+            ? {
+                proxy: {
+                  url: client.config.proxy?.url,
+                  username: client.config.proxy?.username,
+                  password: client.config.proxy?.password,
+                },
+              }
+            : {},
           req.serverOptions.createOptions,
           {
             session: session,
