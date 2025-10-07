@@ -2309,10 +2309,11 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
 
             // Check if attachments is Push-to-talk and send this
             if (message.attachments[0].file_type === 'audio') {
-              await client.sendPtt(
+              // Gambi: Está dando erro no whatsapp mobile ao dar play em áudios Ptt
+              await client.sendFile(
                 `${contato}`,
                 base_url,
-                'Voice Audio',
+                'file',
                 message.content
               );
             } else {
