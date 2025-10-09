@@ -115,5 +115,8 @@
     "crypto-js": "^4.2.0",
     "mongoose": "^8.19.0",
     "redis": "^4.7.1"
+  },
+  "resolutions": {
+    "sharp": "^0.34.4"
   }
 }
