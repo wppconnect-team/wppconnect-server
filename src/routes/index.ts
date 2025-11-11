@@ -225,6 +225,12 @@ routes.post(
   statusConnection,
   MessageController.sendPollMessage
 );
+routes.post(
+  '/api/:session/send-pix-key',
+  verifyToken,
+  statusConnection,
+  MessageController.sendPixMessage
+);
 
 // Group
 routes.get(
