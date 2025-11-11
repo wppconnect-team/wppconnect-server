@@ -1054,7 +1054,7 @@ export async function sendPixMessage(req: Request, res: Response) {
           schema: {
             type: "object",
             properties: {
-              phone: { type: "array", items: { type: "string" } },
+              phones: { type: "array", items: { type: "string" } },
               keyType: { type: "string" },
               name: { type: "string" },
               key: { type: "string" },
@@ -1065,11 +1065,11 @@ export async function sendPixMessage(req: Request, res: Response) {
           examples: {
             "Send PIX key to contact": {
               value: { 
-                phone: ["5521999999999"],
+                phones: ["5521999999999"],
                 keyType: "PHONE",
                 name: "WPPCONNECT-TEAM",
                 key: "+5567123456789",
-                instructions: "teste",
+                instructions: "some instructions about the pix",
                 options: {}
               }
             },
@@ -1078,16 +1078,15 @@ export async function sendPixMessage(req: Request, res: Response) {
       }
      }
    */
-  const { phone, keyType, name, key, instructions } = req.body;
-
-  const options = req.body.options || {};
+  const { phones, keyType, name, key, instructions, options = {} } = req.body;
 
   try {
-    const results: any = [];
-    for (const contato of phone) {
+    const results: Message[] = [];
+
+    for (const phone of phones) {
       results.push(
         await req.client.sendPixKey(
-          contato,
+          phone,
           { keyType, name, key, instructions },
           options
         )
