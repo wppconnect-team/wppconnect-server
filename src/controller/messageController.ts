@@ -1054,25 +1054,23 @@ export async function sendPixMessage(req: Request, res: Response) {
           schema: {
             type: "object",
             properties: {
-              phone: { type: "string" },
-              isGroup: { type: "boolean" },
-              isNewsletter: { type: "boolean" },
-              isLid: { type: "boolean" },
-              message: { type: "string" },
+              phone: { type: "array", items: { type: "string" } },
+              keyType: { type: "string" },
+              name: { type: "string" },
+              key: { type: "string" },
+              instructions: { type: "string" },
               options: { type: "object" },
             }
           },
           examples: {
-            "Send message to contact": {
+            "Send PIX key to contact": {
               value: { 
-                phone: '5521999999999',
-                isGroup: false,
-                isNewsletter: false,
-                isLid: false,
-                keyType: 'PHONE',
-                name: 'WPPCONNECT-TEAM',
-                key: '+5567123456789',
-                instructions: 'teste'
+                phone: ["5521999999999"],
+                keyType: "PHONE",
+                name: "WPPCONNECT-TEAM",
+                key: "+5567123456789",
+                instructions: "teste",
+                options: {}
               }
             },
           }
