@@ -1053,6 +1053,7 @@ export async function sendPixMessage(req: Request, res: Response) {
         "application/json": {
           schema: {
             type: "object",
+            required: ["phones", "keyType", "name", "key"],
             properties: {
               phones: { type: "array", items: { type: "string" } },
               keyType: { type: "string" },
