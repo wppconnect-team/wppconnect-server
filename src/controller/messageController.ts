@@ -1082,7 +1082,7 @@ export async function sendPixMessage(req: Request, res: Response) {
   const { phones, keyType, name, key, instructions, options = {} } = req.body;
 
   try {
-    const results: Message[] = [];
+    const results: any[] = [];
 
     for (const phone of phones) {
       results.push(
@@ -1101,4 +1101,3 @@ export async function sendPixMessage(req: Request, res: Response) {
     returnError(req, res, error);
   }
 }
-
