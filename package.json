@@ -109,7 +109,7 @@
     "ts-loader": "^9.5.4",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^6.0.1"
   },
   "peerDependencies": {
     "crypto-js": "^4.2.0",
