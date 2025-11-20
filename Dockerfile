@@ -21,7 +21,7 @@ WORKDIR /usr/src/wpp-server
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 COPY package.json ./
 
-# Install all dependencies (including dev dependencies)
+# Install all dependencies (including dev dependencies for build)
 RUN yarn install --production=false --pure-lockfile
 RUN yarn cache clean
 
@@ -56,14 +56,17 @@ RUN apt-get update && \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy node_modules from base stage
-COPY --from=base /usr/src/wpp-server/node_modules ./node_modules
+# Copy package.json first
+COPY package.json ./
+
+# Install ONLY production dependencies + @babel/runtime
+# This is critical because babel transpiled code needs @babel/runtime at runtime
+RUN yarn install --production --pure-lockfile && \
+    yarn add @babel/runtime && \
+    yarn cache clean
 
 # Copy built application from build stage
 COPY --from=build /usr/src/wpp-server/dist ./dist
-
-# Copy package.json for reference
-COPY package.json ./
 
 EXPOSE 21465
 
