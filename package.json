@@ -102,7 +102,7 @@
     "prom-client": "^14.2.0",
     "redis": "^4.7.1",
     "release-it": "^19.0.6",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "shx": "^0.4.0",
     "swagger-ui-dist": "^5.30.2",
     "ts-jest": "^29.4.5",
