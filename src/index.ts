@@ -116,24 +116,13 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     });
   });
 
-  http.listen(PORT, "0.0.0.0", () => {
+  http.listen(PORT, () => {
     logger.info(`Server is running on port: ${PORT}`);
-    logger.info(
-      `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
-    );
+    logger.info(`\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`);
     logger.info(`WPPConnect-Server version: ${version}`);
 
     if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
   });
-
-  if (config.log.level === 'error' || config.log.level === 'warn') {
-    console.log(`\x1b[33m ======================================================
-Attention:
-Your configuration is configured to show only a few logs, before opening an issue, 
-please set the log to 'silly', copy the log that shows the error and open your issue.
-======================================================
-`);
-  }
 
   return {
     app,
