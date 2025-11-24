@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --mode=update-lockfile # TODO: after tracking yarn.lock we need to remove update-lockfile flag
 
       - name: Build source
         run: yarn build
@@ -74,7 +74,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --mode=update-lockfile
 
       - name: Lint source
         run: yarn lint
