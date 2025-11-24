@@ -18,6 +18,7 @@ COPY .yarnrc.yml ./
 
 # Copy only package.json to leverage Docker cache
 COPY package.json ./
+COPY yarn.lock ./
 
 # Enable corepack and prepare yarn 4.12.0
 RUN corepack enable && \
