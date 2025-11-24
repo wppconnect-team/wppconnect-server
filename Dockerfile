@@ -13,7 +13,7 @@ RUN apk update && \
     libc6-compat \
     && rm -rf /var/cache/apk/*
 
-    # To make sure yarn 4 uses node-modules linker
+# To make sure yarn 4 uses node-modules linker
 COPY .yarnrc.yml ./
 
 # Copy only package.json to leverage Docker cache
