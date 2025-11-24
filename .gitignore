@@ -20,6 +20,7 @@
 userDataDir
 /yarn.lock
 /yarn-error.log
+.yarn/install-state.gz
 backupFolder
 tokens/*
 wppconnect_tokens/*
