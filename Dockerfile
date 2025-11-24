@@ -30,6 +30,7 @@ RUN yarn install
 FROM base AS build
 WORKDIR /usr/src/wpp-server
 COPY . .
+RUN yarn install
 RUN yarn build
 
 FROM build AS runtime
