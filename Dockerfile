@@ -1,24 +1,39 @@
 FROM node:22.21.1-alpine AS base
 WORKDIR /usr/src/wpp-server
-ENV NODE_ENV=production
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Install build dependencies for sharp, bcrypt, and other native modules
+RUN apk update && \
+    apk add --no-cache \
+    vips-dev \
+    fftw-dev \
+    gcc \
+    g++ \
+    make \
+    libc6-compat \
+    && rm -rf /var/cache/apk/*
+
+    # To make sure yarn 4 uses node-modules linker
+COPY .yarnrc.yml ./
+
+# Copy only package.json to leverage Docker cache
 COPY package.json ./
+
+# Enable corepack and prepare yarn 4.12.0
 RUN corepack enable && \
     corepack prepare yarn@4.12.0 --activate
-RUN yarn install && \
-    yarn cache clean
+
+    # Install dependencies
+RUN yarn install
 
 FROM base AS build
 WORKDIR /usr/src/wpp-server
 COPY . .
-RUN yarn install
 RUN yarn build
 
 FROM base
 WORKDIR /usr/src/wpp-server/
 RUN apk add --no-cache chromium
-RUN yarn cache clean
-COPY . .
 COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/
 EXPOSE 21465
 ENTRYPOINT ["node", "dist/server.js"]
