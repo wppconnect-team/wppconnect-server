@@ -23,7 +23,7 @@ COPY package.json ./
 RUN corepack enable && \
     corepack prepare yarn@4.12.0 --activate
 
-    # Install dependencies
+# Install dependencies
 RUN yarn install
 
 FROM base AS build
@@ -31,9 +31,8 @@ WORKDIR /usr/src/wpp-server
 COPY . .
 RUN yarn build
 
-FROM base
+FROM build AS runtime
 WORKDIR /usr/src/wpp-server/
 RUN apk add --no-cache chromium
-COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/
 EXPOSE 21465
 ENTRYPOINT ["node", "dist/server.js"]
