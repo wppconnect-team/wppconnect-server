@@ -150,7 +150,7 @@ export async function callWebHook(
           } catch (e) {}
         })
         .catch((e) => {
-          req.logger.warn('Error calling Webhook.', e);
+          req.logger.warn(`Error calling Webhook::POST:${webhook}: `, e);
         });
     } catch (e) {
       req.logger.error(e);
