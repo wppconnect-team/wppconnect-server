@@ -365,9 +365,9 @@
                 "webhook": "",
                 "waitQrCode": false,
                 "proxy": {
-                  "url": "proxy host",
-                  "username": "proxy username",
-                  "password": "proxy password"
+                  "url": "http://myproxy.com:8080",
+                  "username": "myuser",
+                  "password": "mypassword"
                 }
               }
             }
@@ -1866,6 +1866,76 @@
                     "options": {
                       "selectableCount": 1
                     }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{session}/send-pix-key": {
+      "post": {
+        "tags": ["Messages"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone", "keyType", "name", "key"],
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "keyType": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "instructions": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Send PIX key to contact": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "keyType": "PHONE",
+                    "name": "WPPCONNECT-TEAM",
+                    "key": "+5567123456789",
+                    "instructions": "some instructions about the pix",
+                    "options": {}
                   }
                 }
               }
