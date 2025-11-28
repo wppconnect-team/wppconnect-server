@@ -11,7 +11,9 @@ if (config.tokenStoreType === 'redis' && redis) {
   RedisClient = redis.createClient({
     socket: {
       host: config.db.redisHost,
-      port: config.db.redisPort
+      port: config.db.redisPort,
+      connectTimeout: 10000,
+      timeout: 5000
     },
     password: config.db.redisPassword,
     database: config.db.redisDb
