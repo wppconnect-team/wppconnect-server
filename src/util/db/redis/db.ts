@@ -1,5 +1,5 @@
 import config from '../../../config';
-import { createLogger } from '../../util/logger';
+import { createLogger } from '../../logger';
 
 const logger = createLogger(config.log);
 
