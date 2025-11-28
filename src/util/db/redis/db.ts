@@ -5,9 +5,9 @@ const logger = createLogger(config.log);
 
 const redis = config.tokenStoreType === 'redis' ? require('redis') : null;
 
-let RedisClient = null;
+let RedisClient: any = null;
 
-if (config.tokenStoreType === 'redis') {
+if (config.tokenStoreType === 'redis' && redis) {
   RedisClient = redis.createClient({
     socket: {
       host: config.db.redisHost,
@@ -17,17 +17,19 @@ if (config.tokenStoreType === 'redis') {
     database: config.db.redisDb
   });
 
-  RedisClient.connect().catch((err) => {
-    logger.error('Error connecting to Redis:', err);
-  });
-  
-  RedisClient.on('error', (err) => {
-    logger.error('Redis Client Error', err);
-  });
-  
-  RedisClient.on('connect', () => {
-    logger.info('Connected to Redis successfully');
-  });
+  if (RedisClient) {
+    RedisClient.connect().catch((err: any) => {
+      logger.error('Error connecting to Redis:', err);
+    });
+    
+    RedisClient.on('error', (err: any) => {
+      logger.error('Redis Client Error', err);
+    });
+    
+    RedisClient.on('connect', () => {
+      logger.info('Connected to Redis successfully');
+    });
+  }
 }
 
 export default RedisClient;
