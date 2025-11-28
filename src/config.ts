@@ -7,7 +7,7 @@ export default {
   deviceName: 'WppConnect',
   poweredBy: 'WPPConnect-Server',
   startAllSession: true,
-  tokenStoreType: 'file',
+  tokenStoreType: 'redis',
   maxListeners: 15,
   customUserDataDir: './userDataDir/',
   webhook: {
