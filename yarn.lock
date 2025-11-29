@@ -3853,7 +3853,7 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-3.0.1.tgz#bd8b1f824d57e30faa19eb78e4c0951056f72f00"
   integrity sha512-sbgw03xQaCLiT6gcY/6u3qBDn01CWw/nbaXl3gTdTFuJJ75Gffv3E3DBpgvY2fkkrdS1fpjaXNOmJlnbtKauKg==
 
-"@wppconnect-team/wppconnect@^1.37.7":
+"@wppconnect-team/wppconnect@^1.37.8":
   version "1.37.8"
   resolved "https://registry.yarnpkg.com/@wppconnect-team/wppconnect/-/wppconnect-1.37.8.tgz#5fe3c6a0fc2ca601679619a9899134a863124444"
   integrity sha512-8wAEDw2y3l7pGRiy6+L/+IIcr1mJc2PaItMScu2va5QutUQ8jyZeS0r4Kvo2bPllt0zN83LzR47hfl8ChkZP2A==
