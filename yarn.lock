@@ -10773,7 +10773,7 @@ swagger-autogen@^2.23.7:
     glob "^7.1.7"
     json5 "^2.2.3"
 
-swagger-ui-dist@>=5.0.0, swagger-ui-dist@^5.30.2:
+swagger-ui-dist@>=5.0.0, swagger-ui-dist@^5.30.3:
   version "5.30.3"
   resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-5.30.3.tgz#b65d1b689193ded72e6f12692c63e87d7d657b21"
   integrity sha512-giQl7/ToPxCqnUAx2wpnSnDNGZtGzw1LyUw6ZitIpTmdrvpxKFY/94v1hihm0zYNpgp1/VY0jTDk//R0BBgnRQ==
