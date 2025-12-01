@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.855.0",
-    "@wppconnect-team/wppconnect": "https://github.com/wppconnect-team/wppconnect/releases/download/nightly/wppconnect-nightly.tgz",
+    "@wppconnect-team/wppconnect": "https://github.com/wppconnect-team/wppconnect/archive/refs/tags/v1.37.8.tar.gz",
     "archiver": "^7.0.1",
     "axios": "^1.11.0",
     "bcrypt": "^5.1.1",
