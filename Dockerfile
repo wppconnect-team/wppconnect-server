@@ -1,16 +1,11 @@
-FROM node:22.20.0-alpine AS base
+FROM node:22.20.0-bookworm-slim AS base
 WORKDIR /usr/src/wpp-server
-ENV NODE_ENV=production PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV NODE_ENV=production PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true SHARP_IGNORE_GLOBAL_LIBVIPS=true
 COPY package.json ./
-RUN apk update && \
-    apk add --no-cache \
-    vips-dev \
-    fftw-dev \
-    gcc \
-    g++ \
-    make \
-    libc6-compat \
-    && rm -rf /var/cache/apk/*
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    chromium \
+    && rm -rf /var/lib/apt/lists/*
 RUN yarn install --production --pure-lockfile && \
     yarn add sharp --ignore-engines && \
     yarn cache clean
@@ -26,7 +21,6 @@ RUN yarn build
 
 FROM base
 WORKDIR /usr/src/wpp-server/
-RUN apk add --no-cache chromium
 RUN yarn cache clean
 COPY . .
 COPY --from=build /usr/src/wpp-server/ /usr/src/wpp-server/

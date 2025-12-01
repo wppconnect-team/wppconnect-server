@@ -870,6 +870,12 @@ routes.get(
 );
 routes.post('/api/:session/set-limit', MiscController.setLimit);
 
+// Admin - Clear all sessions and tokens
+routes.post(
+  '/api/:secretkey/clear-all-sessions',
+  MiscController.clearAllSessionsData
+);
+
 //Communitys
 routes.post(
   '/api/:session/create-community',

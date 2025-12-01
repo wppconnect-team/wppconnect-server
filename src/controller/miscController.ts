@@ -16,11 +16,14 @@
 
 import { Request, Response } from 'express';
 import fs from 'fs';
+import path from 'path';
 
 import { logger } from '..';
 import config from '../config';
-import { backupSessions, restoreSessions } from '../util/manageSession';
+import { backupSessions, closeAllSessions, restoreSessions } from '../util/manageSession';
 import { clientsArray } from '../util/sessionUtil';
+import Factory from '../util/tokenStore/factory';
+import getAllTokens from '../util/getAllTokens';
 
 export async function backupAllSessions(req: Request, res: Response) {
   /**
@@ -160,10 +163,10 @@ export async function clearSessionData(req: Request, res: Response) {
       delete clientsArray[req.params.session];
       await req.client.logout();
     }
-    const path = config.customUserDataDir + session;
-    const pathToken = __dirname + `../../../tokens/${session}.data.json`;
-    if (fs.existsSync(path)) {
-      await fs.promises.rm(path, {
+    const userDataPath = config.customUserDataDir + session;
+    const pathToken = path.resolve('.', 'tokens', `${session}.data.json`);
+    if (fs.existsSync(userDataPath)) {
+      await fs.promises.rm(userDataPath, {
         recursive: true,
       });
     }
@@ -176,6 +179,84 @@ export async function clearSessionData(req: Request, res: Response) {
     res.status(500).json({
       status: false,
       message: 'Error on clear session data',
+      error: error,
+    });
+  }
+}
+
+export async function clearAllSessionsData(req: Request, res: Response) {
+  /**
+   #swagger.tags = ["Misc"]
+   #swagger.autoBody=false
+    #swagger.parameters["secretkey"] = {
+    required: true,
+    schema: 'THISISMYSECURETOKEN'
+    }
+   */
+  try {
+    const { secretkey } = req.params;
+    if (secretkey !== config.secretKey) {
+      return res.status(400).json({
+        response: 'error',
+        message: 'The token is incorrect',
+      });
+    }
+
+    // 1) Close all active sessions
+    await closeAllSessions(req);
+
+    // 2) Load all session names from the configured token store
+    const sessionNames = (await getAllTokens(req)) || [];
+    const tokenStoreFactory = new Factory();
+    const tokenStore = tokenStoreFactory.createTokenStory({ config: {} });
+
+    // 3) Remove tokens and related files/directories for each session
+    await Promise.all(
+      sessionNames.map(async (session: string) => {
+        try {
+          // Remove from in-memory clients map if still present
+          if (clientsArray[session]) {
+            delete (clientsArray as any)[session];
+          }
+
+          // Remove token via store (file/mongo/redis)
+          if (tokenStore?.removeToken) {
+            await tokenStore.removeToken(session);
+          }
+
+          // Remove user data dir if configured
+          const userDataDir = config.customUserDataDir + session;
+          if (fs.existsSync(userDataDir)) {
+            await fs.promises.rm(userDataDir, {
+              recursive: true,
+              maxRetries: 5,
+              force: true,
+              retryDelay: 1000,
+            });
+          }
+
+          // Also clean legacy file token path if exists
+          const legacyTokenPath = path.resolve('.', 'tokens', `${session}.data.json`);
+          if (fs.existsSync(legacyTokenPath)) {
+            await fs.promises.rm(legacyTokenPath, {
+              recursive: true,
+              maxRetries: 5,
+              force: true,
+              retryDelay: 1000,
+            });
+          }
+        } catch (err) {
+          logger.error(`Failed to clear resources for session ${session}`, err);
+        }
+      })
+    );
+
+    return res.status(200).json({ success: true, cleared: sessionNames });
+  } catch (error: any) {
+    logger.error(error);
+    return res.status(500).json({
+      status: false,
+      message: 'Error on clear all sessions data',
       error: error,
     });
   }
