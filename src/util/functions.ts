@@ -58,7 +58,7 @@ export function contactToArray(
       if (contact !== '')
         if (isGroup) (localArr as any).push(`${contact}@g.us`);
         else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
-        else if (isLid || contact.length > 14)
+        else if (isLid || contact.length >= 14)
           (localArr as any).push(`${contact}@lid`);
         else (localArr as any).push(`${contact}@c.us`);
     }
