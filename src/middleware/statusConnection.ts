@@ -36,7 +36,11 @@ export default async function statusConnection(
       );
       let index = 0;
       for (const contact of localArr) {
-        if (req.body.isGroup || req.body.isNewsletter) {
+        if (
+          req.body.isGroup ||
+          req.body.isNewsletter ||
+          contact.includes('@lid')
+        ) {
           localArr[index] = contact;
         } else if (numbers.indexOf(contact) < 0) {
           console.log(contact);
