@@ -375,6 +375,13 @@ routes.post(
 
 // Chat
 routes.get(
+  '/api/:session/Lid2Wid/:lid',
+  verifyToken,
+  statusConnection,
+  DeviceController.Lid2Wid
+);
+
+routes.get(
   '/api/:session/all-chats',
   verifyToken,
   statusConnection,
