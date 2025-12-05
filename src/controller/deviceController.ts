@@ -118,6 +118,50 @@ export async function showAllContacts(req: Request, res: Response) {
   }
 }
 
+export async function Lid2Wid(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Chat"]
+   * #swagger.summary = 'Gets Old Classic Wid Format By Passing Lid To It'
+   * #swagger.deprecated = false
+   * #swagger.autoBody= false
+   * #swagger.security = [{
+   *        "bearerAuth": []
+   * }]
+   * #swagger.parameters["session"] = {
+   *  schema: 'NERDWHATS_AMERICA'
+   * }
+   */
+  try {
+    const rawLid = (req.params?.lid ?? '').toString();
+    if (!rawLid) return res.status(400).json({ status: 'error', message: 'Missing :lid parameter' });
+
+    const lid = rawLid.includes('@') ? rawLid : `${rawLid}@lid`;
+
+    // Get client instance
+    const client = (req as any).client || (req as any).whatsapp || ((global as any).sessions && (global as any).sessions[req.params.session]?.client);
+    if (!client) return res.status(400).json({ status: 'error', message: 'Whatsapp client not found for session' });
+
+    // Resolve LID
+    let info: any = null;
+    if (typeof client.getPnLidEntry === 'function') {
+      info = await client.getPnLidEntry(lid);
+    } else if (client.lidPnCache && typeof client.lidPnCache.getLidEntry === 'function') {
+      info = await client.lidPnCache.getLidEntry(lid);
+    } else if (client.contact && typeof client.contact.getPnLidEntry === 'function') {
+      info = await client.contact.getPnLidEntry(lid);
+    } else {
+      return res.status(501).json({ status: 'error', message: 'LID resolver not available on client' });
+    }
+
+    if (!info) return res.status(404).json({ status: 'error', message: 'LID could not be resolved', resolved: false });
+
+    return res.status(200).json({ status: 'success', data: info });
+  } catch (err) {
+    (req as any).logger?.error?.(err);
+    return res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+}
+
 export async function getAllChats(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Chat"]
