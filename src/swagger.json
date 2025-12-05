@@ -3291,6 +3291,104 @@
         }
       }
     },
+    "/api/{session}/Lid2Wid/{lid}": {
+      "get": {
+        "tags": ["Chat"],
+        "summary": "Gets Old Classic Wid Format By Passing Lid To It",
+        "deprecated": false,
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "description": "The session name",
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "lid",
+            "in": "path",
+            "required": true,
+            "description": "The LID to resolve",
+            "schema": {
+              "type": "string",
+              "example": "280938726564012@lid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully resolved LID to classic WID",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "data": {
+                    "lid": {
+                      "id": "280938726564012",
+                      "server": "lid",
+                      "_serialized": "280938726564012@lid"
+                    },
+                    "phoneNumber": {
+                      "id": "989057553517",
+                      "server": "c.us",
+                      "_serialized": "989121234567@c.us"
+                    },
+                    "contact": {
+                      "pushname": "mm:D",
+                      "type": "in",
+                      "syncToAddressbook": false,
+                      "isContactSyncCompleted": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing LID parameter",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "message": "Missing :lid parameter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "LID could not be resolved",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "message": "LID could not be resolved",
+                  "resolved": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "error",
+                  "message": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{session}/all-chats": {
       "get": {
         "tags": ["Chat"],
