@@ -6740,6 +6740,47 @@
         ]
       }
     },
+    "/api/{session}/contact/pn-lid/{pnLid}": {
+      "get": {
+        "tags": ["Contact"],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "pnLid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/profile/{phone}": {
       "get": {
         "tags": ["Chat"],
