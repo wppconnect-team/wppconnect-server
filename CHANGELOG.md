@@ -1,3 +1,9 @@
+## <small>2.8.9 (2025-12-10)</small>
+
+* Merge branch 'main' of github.com:wppconnect-team/wppconnect-server ([d42852d](https://github.com/wppconnect-team/wppconnect-server/commit/d42852d))
+
+
+
 ## <small>2.8.8 (2025-12-10)</small>
 
 * docs: Improovment on docs ([7f2b3d3](https://github.com/wppconnect-team/wppconnect-server/commit/7f2b3d3))
