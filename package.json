@@ -117,6 +117,5 @@
     "crypto-js": "^4.2.0",
     "mongoose": "^8.20.2",
     "redis": "^4.7.1"
-  },
-  "packageManager": "yarn@1.22.22"
+  }
 }
