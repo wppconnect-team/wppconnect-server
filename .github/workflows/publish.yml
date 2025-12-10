@@ -47,10 +47,15 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Publish in NPM
-        run: yarn npm publish --access public
+      - name: Configure npm authentication
+        run: |
+          yarn config set npmAuthToken $NODE_AUTH_TOKEN
+          yarn config set npmPublishRegistry "https://registry.npmjs.org"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish in NPM
+        run: yarn npm publish --access public
 
       - name: Generate Changelog
         id: generate_changelog
