@@ -88,6 +88,24 @@ export default {
     enable: false,
     prefix: 'tagone-',
   },
+  rateLimiting: {
+    enabled: true,
+    windowMs: 60000, // 1 minute window
+    defaultMax: 100, // Default max 100 requests per minute per session
+    endpoints: {
+      // Specific limits for different endpoints (requests per window)
+      'send-message': 30,
+      'send-image': 20,
+      'send-file': 20,
+      'send-voice': 20,
+      'send-video': 20,
+      'send-sticker': 20,
+      'send-location': 30,
+      'send-buttons': 30,
+      'send-list-message': 30,
+      'send-poll-message': 20,
+    },
+  },
   db: {
     mongodbDatabase: 'tokens',
     mongodbCollection: '',

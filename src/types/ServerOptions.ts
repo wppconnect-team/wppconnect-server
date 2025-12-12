@@ -44,6 +44,14 @@ export interface ServerOptions {
     enable: boolean;
     prefix: string;
   };
+  rateLimiting: {
+    enabled: boolean;
+    windowMs: number;
+    defaultMax: number;
+    endpoints: {
+      [key: string]: number;
+    };
+  };
   db: {
     mongodbDatabase: string;
     mongodbCollection: string;

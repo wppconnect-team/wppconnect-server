@@ -27,6 +27,7 @@ import { Logger } from 'winston';
 import { version } from '../package.json';
 import config from './config';
 import { convert } from './mapper/index';
+import { initializeRateLimiters } from './middleware/rateLimiter';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
 import {
@@ -55,6 +56,15 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     : 'silly';
 
   setMaxListners(serverOptions as ServerOptions);
+
+  // Initialize rate limiters at startup
+  if (serverOptions.rateLimiting?.enabled) {
+    initializeRateLimiters({
+      windowMs: serverOptions.rateLimiting.windowMs,
+      defaultMax: serverOptions.rateLimiting.defaultMax,
+      endpoints: serverOptions.rateLimiting.endpoints,
+    });
+  }
 
   const app = express();
   const PORT = process.env.PORT || serverOptions.port;
