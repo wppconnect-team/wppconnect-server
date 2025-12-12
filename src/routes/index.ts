@@ -34,6 +34,7 @@ import * as StatusController from '../controller/statusController';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
+import sessionRateLimiter from '../middleware/rateLimiter';
 import statusConnection from '../middleware/statusConnection';
 import swaggerDocument from '../swagger.json';
 
@@ -112,12 +113,14 @@ routes.post(
 routes.post(
   '/api/:session/send-message',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendMessage
 );
 routes.post(
   '/api/:session/edit-message',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.editMessage
 );
@@ -125,6 +128,7 @@ routes.post(
   '/api/:session/send-image',
   upload.single('file'),
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendFile
 );
@@ -132,6 +136,7 @@ routes.post(
   '/api/:session/send-sticker',
   upload.single('file'),
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendImageAsSticker
 );
@@ -139,12 +144,14 @@ routes.post(
   '/api/:session/send-sticker-gif',
   upload.single('file'),
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendImageAsStickerGif
 );
 routes.post(
   '/api/:session/send-reply',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.replyMessage
 );
@@ -152,24 +159,28 @@ routes.post(
   '/api/:session/send-file',
   upload.single('file'),
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
   '/api/:session/send-file-base64',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
   '/api/:session/send-voice',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendVoice
 );
 routes.post(
   '/api/:session/send-voice-base64',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendVoice64
 );
@@ -181,54 +192,63 @@ routes.get(
 routes.post(
   '/api/:session/send-status',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendStatusText
 );
 routes.post(
   '/api/:session/send-link-preview',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendLinkPreview
 );
 routes.post(
   '/api/:session/send-location',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendLocation
 );
 routes.post(
   '/api/:session/send-mentioned',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendMentioned
 );
 routes.post(
   '/api/:session/send-buttons',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendButtons
 );
 routes.post(
   '/api/:session/send-list-message',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendListMessage
 );
 routes.post(
   '/api/:session/send-order-message',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendOrderMessage
 );
 routes.post(
   '/api/:session/send-poll-message',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendPollMessage
 );
 routes.post(
   '/api/:session/send-pix-key',
   verifyToken,
+  sessionRateLimiter,
   statusConnection,
   MessageController.sendPixMessage
 );

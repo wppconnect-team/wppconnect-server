@@ -5404,6 +5404,7 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     express: "npm:4.21.2"
     express-query-boolean: "npm:^2.0.0"
+    express-rate-limit: "npm:^7.5.0"
     form-data: "npm:^4.0.5"
     husky: "npm:^9.1.7"
     jest: "npm:^29.7.0"
@@ -8632,6 +8633,15 @@ __metadata:
   version: 2.0.0
   resolution: "express-query-boolean@npm:2.0.0"
   checksum: 10c0/0f18fc837c12480c4626d2cccdf76f73cd2ee378ec53f726c822dcf1c1cc478ef78d73cc750922989dfc5576decd72b28f88621f42edfa56f7bc4095c01fb60f
+  languageName: node
+  linkType: hard
+
+"express-rate-limit@npm:^7.5.0":
+  version: 7.5.1
+  resolution: "express-rate-limit@npm:7.5.1"
+  peerDependencies:
+    express: ">= 4.11"
+  checksum: 10c0/b07de84d700a2c07c4bf2f040e7558ed5a1f660f03ed5f30bf8ff7b51e98ba7a85215640e70fc48cbbb9151066ea51239d9a1b41febc9b84d98c7915b0186161
   languageName: node
   linkType: hard
 
