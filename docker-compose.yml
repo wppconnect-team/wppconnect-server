@@ -9,7 +9,7 @@ services:
     volumes:
       - ./config.ts:/usr/src/wpp-server/config.ts
       - ./wppconnect_tokens:/usr/src/wpp-server/tokens
-      - /home/wppconnect-sessions:/sessions
+      - ./wppconnect-sessions:${USER_DATA_DIR}
     environment:
       SECRET_KEY: ${SECRET_KEY}
       PUBLIC_URL: ${PUBLIC_URL}
