@@ -103,7 +103,7 @@
     "pretty-quick": "^4.2.2",
     "prom-client": "^14.2.0",
     "redis": "^4.7.1",
-    "release-it": "^19.0.6",
+    "release-it": "^19.1.0",
     "rimraf": "^6.1.2",
     "shx": "^0.4.0",
     "swagger-ui-dist": "^5.30.3",
