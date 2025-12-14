@@ -46,7 +46,10 @@ RUN apk add --no-cache \
     fftw
 
 EXPOSE 21465
-#ENTRYPOINT ["node", "dist/server.js"]
+
+
+ENTRYPOINT ["node", "dist/server.js"]
+
 CMD sh -c '\
   if [ "$CLEAN_USER_DATA_DIR" = "true" ]; then \
     echo "[BOOT] Cleaning Chromium lock files in ${USER_DATA_DIR:-./userDataDir}"; \
@@ -55,6 +58,5 @@ CMD sh -c '\
       -o -name "SingletonSocket" \
       -o -name "SingletonCookie" \
     \) -exec rm -f {} \; ; \
-  fi && \
-  node dist/index.js \
+  fi \
 '
