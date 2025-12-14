@@ -351,33 +351,37 @@ export function cleanLockers(customUserDataDir?: string) {
 
     console.log(`[LOCK-CLEAN] Base dir: ${baseDir}`);
 
-    if (!fs.existsSync(baseDir)) {
-      console.warn(`[LOCK-CLEAN] Base dir not found, skipping`);
-      return;
-    }
+    if (!fs.existsSync(baseDir)) return;
 
-    const entries = fs.readdirSync(baseDir, { withFileTypes: true });
-    const filesToRemove = ['SingletonLock', 'SingletonSocket', 'SingletonCookie'];
+    const sessions = fs.readdirSync(baseDir, { withFileTypes: true });
+    const lockFiles = ['SingletonLock', 'SingletonSocket', 'SingletonCookie'];
 
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
+    for (const s of sessions) {
+      if (!s.isDirectory()) continue;
 
-      const sessionDir = path.join(baseDir, entry.name);
-      console.log(`[LOCK-CLEAN] Checking session: ${sessionDir}`);
+      const sessionDir = path.join(baseDir, s.name);
+      console.log(`[LOCK-CLEAN] Session: ${sessionDir}`);
 
-      for (const file of filesToRemove) {
-        const filePath = path.join(sessionDir, file);
+      for (const file of lockFiles) {
+        const fp = path.join(sessionDir, file);
 
         try {
-          if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-            console.log(`[LOCK-CLEAN] ✔ Removed: ${filePath}`);
+          if (fs.existsSync(fp)) {
+            const stat = fs.lstatSync(fp);
+
+            if (stat.isSymbolicLink()) {
+              fs.unlinkSync(fp);
+              console.log(`[LOCK-CLEAN] 🔗 Symlink removed: ${fp}`);
+            } else {
+              fs.unlinkSync(fp);
+              console.log(`[LOCK-CLEAN] 📄 File removed: ${fp}`);
+            }
           } else {
-            console.log(`[LOCK-CLEAN] – Not found: ${filePath}`);
+            console.log(`[LOCK-CLEAN] – Not found: ${fp}`);
           }
         } catch (err) {
           console.warn(
-            `[LOCK-CLEAN] ⚠ Failed to remove ${filePath}:`,
+            `[LOCK-CLEAN] ⚠ Failed to remove ${fp}:`,
             (err as Error).message
           );
         }
@@ -386,10 +390,7 @@ export function cleanLockers(customUserDataDir?: string) {
 
     console.log(`[LOCK-CLEAN] Finished`);
   } catch (err) {
-    console.error(
-      `[LOCK-CLEAN] ❌ Fatal error while cleaning session locks:`,
-      (err as Error).message
-    );
+    console.error(`[LOCK-CLEAN] ❌ Fatal error:`, (err as Error).message);
   }
 }
 
