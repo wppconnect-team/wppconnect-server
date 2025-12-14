@@ -56,5 +56,5 @@ CMD sh -c '\
       -o -name "SingletonCookie" \
     \) -exec rm -f {} \; ; \
   fi && \
-  node dist/index.js \
+  exec node dist/index.js \
 '
