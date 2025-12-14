@@ -104,6 +104,8 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   createFolders();
 
   try {
+    logger.info(serverOptions);
+
     // Only clean locker files if cleanUserDataDir is enabled
   if ((serverOptions as any).cleanUserDataDir) {
       logger.info(`Cleaning locker files...`);
