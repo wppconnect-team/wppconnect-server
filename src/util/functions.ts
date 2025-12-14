@@ -362,6 +362,9 @@ export function cleanLockers(customUserDataDir?: string) {
       const sessionDir = path.join(baseDir, s.name);
       console.log(`[LOCK-CLEAN] Session: ${sessionDir}`);
 
+      const files = fs.readdirSync(sessionDir);
+      console.log(`[LOCK-CLEAN] Files in session: ${files.join(', ')}`);
+      
       for (const file of lockFiles) {
         const fp = path.join(sessionDir, file);
 
