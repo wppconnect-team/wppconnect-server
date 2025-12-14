@@ -8,6 +8,7 @@ export interface ServerOptions {
   deviceName: string;
   poweredBy: string;
   startAllSession: boolean;
+  cleanUserDataDir: boolean;
   tokenStoreType: string;
   maxListeners: number;
   customUserDataDir: string;

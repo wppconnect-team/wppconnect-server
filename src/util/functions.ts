@@ -239,8 +239,12 @@ export async function autoDownload(client: any, req: any, message: any) {
 
 export async function startAllSessions(config: any, logger: any) {
   try {
+    const hostUrl = config.host.includes('.com') 
+      ? config.host 
+      : `${config.host}:${config.port}`;
+      logger.info(`Starting all sessions via ${hostUrl}/api/${config.secretKey}/start-all`);
     await api.post(
-      `${config.host}:${config.port}/api/${config.secretKey}/start-all`
+      `${hostUrl}/api/${config.secretKey}/start-all`
     );
   } catch (e) {
     logger.error(e);
@@ -336,6 +340,34 @@ export function createFolders() {
   const dirUpload = path.resolve(__dirname, 'uploads');
   if (!fs.existsSync(dirUpload)) {
     fs.mkdirSync(dirUpload);
+  }
+}
+
+export function cleanLockers(customUserDataDir?: string) {
+  try {
+    const baseDir = customUserDataDir
+      ? path.resolve(customUserDataDir)
+      : path.resolve('./userDataDir/');
+
+    if (!fs.existsSync(baseDir)) return;
+
+    const entries = fs.readdirSync(baseDir, { withFileTypes: true });
+    const filesToRemove = ['SingletonLock', 'SingletonSocket', 'SingletonCookie'];
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const sessionDir = path.join(baseDir, entry.name);
+      for (const f of filesToRemove) {
+        const fp = path.join(sessionDir, f);
+        try {
+          if (fs.existsSync(fp)) fs.unlinkSync(fp);
+        } catch (e) {
+          // ignore errors while trying to remove lockers
+        }
+      }
+    }
+  } catch (e) {
+    // silent fail to avoid breaking startup
   }
 }
 
