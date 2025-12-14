@@ -349,27 +349,50 @@ export function cleanLockers(customUserDataDir?: string) {
       ? path.resolve(customUserDataDir)
       : path.resolve('./userDataDir/');
 
-    if (!fs.existsSync(baseDir)) return;
+    console.log(`[LOCK-CLEAN] Base dir: ${baseDir}`);
+
+    if (!fs.existsSync(baseDir)) {
+      console.warn(`[LOCK-CLEAN] Base dir not found, skipping`);
+      return;
+    }
 
     const entries = fs.readdirSync(baseDir, { withFileTypes: true });
     const filesToRemove = ['SingletonLock', 'SingletonSocket', 'SingletonCookie'];
 
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
+
       const sessionDir = path.join(baseDir, entry.name);
-      for (const f of filesToRemove) {
-        const fp = path.join(sessionDir, f);
+      console.log(`[LOCK-CLEAN] Checking session: ${sessionDir}`);
+
+      for (const file of filesToRemove) {
+        const filePath = path.join(sessionDir, file);
+
         try {
-          if (fs.existsSync(fp)) fs.unlinkSync(fp);
-        } catch (e) {
-          // ignore errors while trying to remove lockers
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`[LOCK-CLEAN] ✔ Removed: ${filePath}`);
+          } else {
+            console.log(`[LOCK-CLEAN] – Not found: ${filePath}`);
+          }
+        } catch (err) {
+          console.warn(
+            `[LOCK-CLEAN] ⚠ Failed to remove ${filePath}:`,
+            (err as Error).message
+          );
         }
       }
     }
-  } catch (e) {
-    // silent fail to avoid breaking startup
+
+    console.log(`[LOCK-CLEAN] Finished`);
+  } catch (err) {
+    console.error(
+      `[LOCK-CLEAN] ❌ Fatal error while cleaning session locks:`,
+      (err as Error).message
+    );
   }
 }
+
 
 export function strToBool(s: string) {
   return /^(true|1)$/i.test(s);
