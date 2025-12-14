@@ -130,7 +130,7 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
 
 
     try {
-      logger.info(serverOptions);
+      logger.info('Server options:', JSON.stringify(serverOptions, null, 2));
       // Only clean locker files if cleanUserDataDir is enabled
       if ((serverOptions as any).cleanUserDataDir) {
         logger.info(`Cleaning locker files...`);
