@@ -10,6 +10,7 @@ export default {
   tokenStoreType: process.env.TOKEN_STORE_TYPE ? process.env.TOKEN_STORE_TYPE : 'file',
   maxListeners: process.env.MAX_LISTENERS      ? process.env.MAX_LISTENERS    : 15,
   customUserDataDir: process.env.USER_DATA_DIR ? process.env.USER_DATA_DIR    : './userDataDir/',
+  cleanUserDataDir: process.env.CLEAN_USER_DATA_DIR == "true" ? true : false,
   webhook: {
     url: process.env.WEBHOOK_URL ? process.env.WEBHOOK_URL : null,
     autoDownload: process.env.WEBHOOK_AUTO_DOWNLOAD == "false"            ? false : true,

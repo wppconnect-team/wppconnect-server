@@ -33,6 +33,7 @@ import {
   createFolders,
   setMaxListners,
   startAllSessions,
+  cleanLockers,
 } from './util/functions';
 import { createLogger } from './util/logger';
 
@@ -101,6 +102,12 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   app.use(routes);
 
   createFolders();
+  try {
+    // Only clean locker files if cleanUserDataDir is enabled
+    if ((serverOptions as any).cleanUserDataDir) {
+      cleanLockers((serverOptions as any).customUserDataDir);
+    }
+  } catch (e) {}
   const http = createServer(app);
   const io = new Socket(http, {
     cors: {
