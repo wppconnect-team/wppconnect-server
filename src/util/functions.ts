@@ -369,7 +369,9 @@ export function cleanLockers(customUserDataDir?: string) {
         const fp = path.join(sessionDir, file);
 
         try {
-          if (fs.existsSync(fp)) {
+            const lockFileExists = files.includes(file);
+            
+            if (lockFileExists) {
             const stat = fs.lstatSync(fp);
 
             if (stat.isSymbolicLink()) {
@@ -379,9 +381,9 @@ export function cleanLockers(customUserDataDir?: string) {
               fs.unlinkSync(fp);
               console.log(`[LOCK-CLEAN] 📄 File removed: ${fp}`);
             }
-          } else {
+            } else {
             console.log(`[LOCK-CLEAN] – Not found: ${fp}`);
-          }
+            }
         } catch (err) {
           console.warn(
             `[LOCK-CLEAN] ⚠ Failed to remove ${fp}:`,
