@@ -342,34 +342,6 @@ export function createFolders() {
   }
 }
 
-export function cleanLockers(customUserDataDir?: string) {
-  try {
-    const baseDir = customUserDataDir
-      ? path.resolve(customUserDataDir)
-      : path.resolve('./userDataDir/');
-
-    if (!fs.existsSync(baseDir)) return;
-
-    const entries = fs.readdirSync(baseDir, { withFileTypes: true });
-    const filesToRemove = ['SingletonLock', 'SingletonSocket', 'SingletonCookie'];
-
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const sessionDir = path.join(baseDir, entry.name);
-      for (const f of filesToRemove) {
-        const fp = path.join(sessionDir, f);
-        try {
-          if (fs.existsSync(fp)) fs.unlinkSync(fp);
-        } catch (e) {
-          // ignore errors while trying to remove lockers
-        }
-      }
-    }
-  } catch (e) {
-    // silent fail to avoid breaking startup
-  }
-}
-
 export function strToBool(s: string) {
   return /^(true|1)$/i.test(s);
 }
