@@ -242,6 +242,7 @@ export async function startAllSessions(config: any, logger: any) {
     const hostUrl = config.host.includes('.com') 
       ? config.host 
       : `${config.host}:${config.port}`;
+      logger.info(`Starting all sessions via ${hostUrl}/api/${config.secretKey}/start-all`);
     await api.post(
       `${hostUrl}/api/${config.secretKey}/start-all`
     );
