@@ -343,6 +343,7 @@ export function createFolders() {
   }
 }
 
+// Faz a limpeza dos arquivos de bloqueio (lockers) nas sessões para liberar o navegador
 export function cleanLockers(customUserDataDir?: string) {
   try {
     const baseDir = customUserDataDir
