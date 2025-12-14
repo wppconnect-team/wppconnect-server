@@ -49,14 +49,3 @@ EXPOSE 21465
 
 
 ENTRYPOINT ["node", "dist/server.js"]
-
-CMD sh -c '\
-  if [ "$CLEAN_USER_DATA_DIR" = "true" ]; then \
-    echo "[BOOT] Cleaning Chromium lock files in ${USER_DATA_DIR:-./userDataDir}"; \
-    find ${USER_DATA_DIR:-./userDataDir} -type f \( \
-      -name "SingletonLock" \
-      -o -name "SingletonSocket" \
-      -o -name "SingletonCookie" \
-    \) -exec rm -f {} \; ; \
-  fi \
-'
