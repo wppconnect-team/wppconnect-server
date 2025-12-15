@@ -26,6 +26,7 @@ import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray,deleteSessionByName } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
 import { clientsArray, deleteSessionOnArray } from '../util/sessionUtil';
+import { logger } from '..';
 
 const SessionUtil = new CreateSessionUtil();
 
@@ -254,13 +255,29 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
    */
   const session = req.session;
   try {
+    try {
+      const client = (clientsArray as any)[session];
+
+      if (!client || client.status == null) {
+        logger.info(`Session: ${session} clean folders`);
+        deleteSessionByName(session, config.customUserDataDir);
+        logger.info(`Session: ${session} folders deleted`);
+        return;
+      }
+
+      // segue fluxo normal se existir e tiver status
+    } catch (err) {
+      logger.error(
+        `Error deleting folders ${session}: ${(err as Error).message}`
+      );
+    }
+
     if ((clientsArray as any)[session].status === null) {
       return await res
         .status(200)
         .json({ status: true, message: 'Session successfully closed' });
     } else {
       (clientsArray as any)[session] = { status: null };
-      deleteSessionByName(session, config.customUserDataDir);
       await req.client.close();
       req.io.emit('whatsapp-status', false);
       callWebHook(req.client, req, 'closesession', {
