@@ -78,6 +78,11 @@ export default {
      * linkPreviewApiServers: [ 'https://www.yourserver.com/wa-js-api-server' ]
      */
     linkPreviewApiServers: null,
+
+    /**
+     * Set specific whatsapp version
+     */
+    // whatsappVersion: '2.xxxxx',
   },
   mapper: {
     enable: false,

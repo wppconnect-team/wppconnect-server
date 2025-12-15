@@ -20,20 +20,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4.4.0
         with:
-          node-version: 22.18.0
+          node-version: 22.21.1
           registry-url: 'https://registry.npmjs.org'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Get yarn cache directory
-        id: yarn-cache
-        run: |
-          echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Setup yarn cache
         uses: actions/cache@v4
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
@@ -47,10 +47,15 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Publish in NPM
-        run: yarn publish --access public
+      - name: Configure npm authentication
+        run: |
+          yarn config set npmAuthToken $NODE_AUTH_TOKEN
+          yarn config set npmPublishRegistry "https://registry.npmjs.org"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish in NPM
+        run: yarn npm publish --access public
 
       - name: Generate Changelog
         id: generate_changelog

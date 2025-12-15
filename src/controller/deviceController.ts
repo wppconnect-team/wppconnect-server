@@ -1818,7 +1818,7 @@ export async function setRecording(req: Request, res: Response) {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
       if (value) response = await req.client.startRecording(contato, duration);
-      else response = await req.client.stopRecoring(contato);
+      else response = await req.client.stopRecording(contato);
     }
 
     res.status(200).json({ status: 'success', response: response });
