@@ -401,6 +401,46 @@ export function cleanLockers(customUserDataDir?: string) {
 }
 
 
+
+export function deleteSessionByName(
+  sessionName: string,
+  customUserDataDir?: string
+) {
+  try {
+    if (!sessionName) {
+      throw new Error('Session name is required');
+    }
+
+    const baseDir = customUserDataDir
+      ? path.resolve(customUserDataDir)
+      : path.resolve('./userDataDir/');
+
+    const sessionDir = path.join(baseDir, sessionName);
+
+    console.log(`[SESSION-DELETE] Base dir: ${baseDir}`);
+    console.log(`[SESSION-DELETE] Target session: ${sessionDir}`);
+
+    if (!fs.existsSync(sessionDir)) {
+      console.log(`[SESSION-DELETE] ⚠ Session not found: ${sessionName}`);
+      return;
+    }
+
+    fs.rmSync(sessionDir, {
+      recursive: true,
+      force: true
+    });
+
+    console.log(`[SESSION-DELETE] 🧹 Session deleted: ${sessionName}`);
+  } catch (err) {
+    console.error(
+      `[SESSION-DELETE] ❌ Failed to delete session:`,
+      (err as Error).message
+    );
+  }
+}
+
+
+
 export function strToBool(s: string) {
   return /^(true|1)$/i.test(s);
 }
