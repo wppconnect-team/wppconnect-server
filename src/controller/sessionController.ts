@@ -262,7 +262,9 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
         logger.info(`Session: ${session} clean folders`);
         deleteSessionByName(session, config.customUserDataDir);
         logger.info(`Session: ${session} folders deleted`);
-        return;
+        return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
       }
 
       // segue fluxo normal se existir e tiver status
