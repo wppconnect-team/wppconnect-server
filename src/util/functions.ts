@@ -239,8 +239,12 @@ export async function autoDownload(client: any, req: any, message: any) {
 
 export async function startAllSessions(config: any, logger: any) {
   try {
+    const hostUrl = config.host.includes('.com') 
+      ? config.host 
+      : `${config.host}:${config.port}`;
+      logger.info(`Starting all sessions via ${hostUrl}/api/${config.secretKey}/start-all`);
     await api.post(
-      `${config.host}:${config.port}/api/${config.secretKey}/start-all`
+      `${hostUrl}/api/${config.secretKey}/start-all`
     );
   } catch (e) {
     logger.error(e);
@@ -338,6 +342,104 @@ export function createFolders() {
     fs.mkdirSync(dirUpload);
   }
 }
+
+// Faz a limpeza dos arquivos de bloqueio (lockers) nas sessões para liberar o navegador
+export function cleanLockers(customUserDataDir?: string) {
+  try {
+    const baseDir = customUserDataDir
+      ? path.resolve(customUserDataDir)
+      : path.resolve('./userDataDir/');
+
+    console.log(`[LOCK-CLEAN] Base dir: ${baseDir}`);
+
+    if (!fs.existsSync(baseDir)) return;
+
+    const sessions = fs.readdirSync(baseDir, { withFileTypes: true });
+    const lockFiles = ['SingletonLock', 'SingletonSocket', 'SingletonCookie'];
+
+    for (const s of sessions) {
+      if (!s.isDirectory()) continue;
+
+      const sessionDir = path.join(baseDir, s.name);
+      console.log(`[LOCK-CLEAN] Session: ${sessionDir}`);
+
+      const files = fs.readdirSync(sessionDir);
+      console.log(`[LOCK-CLEAN] Files in session: ${files.join(', ')}`);
+      
+      for (const file of lockFiles) {
+        const fp = path.join(sessionDir, file);
+
+        try {
+            const lockFileExists = files.includes(file);
+            
+            if (lockFileExists) {
+            const stat = fs.lstatSync(fp);
+
+            if (stat.isSymbolicLink()) {
+              fs.unlinkSync(fp);
+              console.log(`[LOCK-CLEAN] 🔗 Symlink removed: ${fp}`);
+            } else {
+              fs.unlinkSync(fp);
+              console.log(`[LOCK-CLEAN] 📄 File removed: ${fp}`);
+            }
+            } else {
+            console.log(`[LOCK-CLEAN] – Not found: ${fp}`);
+            }
+        } catch (err) {
+          console.warn(
+            `[LOCK-CLEAN] ⚠ Failed to remove ${fp}:`,
+            (err as Error).message
+          );
+        }
+      }
+    }
+
+    console.log(`[LOCK-CLEAN] Finished`);
+  } catch (err) {
+    console.error(`[LOCK-CLEAN] ❌ Fatal error:`, (err as Error).message);
+  }
+}
+
+
+
+export function deleteSessionByName(
+  sessionName: string,
+  customUserDataDir?: string
+) {
+  try {
+    if (!sessionName) {
+      throw new Error('Session name is required');
+    }
+
+    const baseDir = customUserDataDir
+      ? path.resolve(customUserDataDir)
+      : path.resolve('./userDataDir/');
+
+    const sessionDir = path.join(baseDir, sessionName);
+
+    console.log(`[SESSION-DELETE] Base dir: ${baseDir}`);
+    console.log(`[SESSION-DELETE] Target session: ${sessionDir}`);
+
+    if (!fs.existsSync(sessionDir)) {
+      console.log(`[SESSION-DELETE] ⚠ Session not found: ${sessionName}`);
+      return;
+    }
+
+    fs.rmSync(sessionDir, {
+      recursive: true,
+      force: true
+    });
+
+    console.log(`[SESSION-DELETE] 🧹 Session deleted: ${sessionName}`);
+  } catch (err) {
+    console.error(
+      `[SESSION-DELETE] ❌ Failed to delete session:`,
+      (err as Error).message
+    );
+  }
+}
+
+
 
 export function strToBool(s: string) {
   return /^(true|1)$/i.test(s);
