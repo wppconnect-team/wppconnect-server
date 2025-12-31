@@ -5409,7 +5409,7 @@ __metadata:
     crypto-js: "npm:^4.2.0"
     dotenv: "npm:^16.6.1"
     eslint: "npm:^8.57.1"
-    eslint-config-love: "npm:^134.0.0"
+    eslint-config-love: "npm:^140.0.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-import: "npm:^2.32.0"
     eslint-plugin-n: "npm:^17.23.1"
@@ -8198,9 +8198,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-love@npm:^134.0.0":
-  version: 134.0.0
-  resolution: "eslint-config-love@npm:134.0.0"
+"eslint-config-love@npm:^140.0.0":
+  version: 140.0.0
+  resolution: "eslint-config-love@npm:140.0.0"
   dependencies:
     "@typescript-eslint/utils": "npm:^8.41.0"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
@@ -8211,7 +8211,7 @@ __metadata:
   peerDependencies:
     eslint: ^9.35.0
     typescript: "*"
-  checksum: 10c0/b5714b7ff5ad197aad4b2445a07be3ac5412066d7550695e6dd108319518d299ded1499846ede31b63ec062a0f0ffc8d067ac0b38b65d884b3e0294baad7d267
+  checksum: 10c0/9124b5545e068427391368210329f21d7278a6bc9dbb2ba8998f379d75e22b4cfc8690a151362450945de0bdba9e7f41ed1cc7261ace8dc3ee8ad90573b74812
   languageName: node
   linkType: hard
 
