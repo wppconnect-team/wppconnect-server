@@ -46,4 +46,6 @@ RUN apk add --no-cache \
     fftw
 
 EXPOSE 21465
+
+
 ENTRYPOINT ["node", "dist/server.js"]
