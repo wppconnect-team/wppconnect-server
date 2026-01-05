@@ -1,3 +1,9 @@
+## <small>2.8.11 (2026-01-05)</small>
+
+* chore: fixed npm publish ([317b05b](https://github.com/wppconnect-team/wppconnect-server/commit/317b05b))
+
+
+
 ## <small>2.8.10 (2025-12-10)</small>
 
 * Merge branch 'main' of github.com:wppconnect-team/wppconnect-server ([39f6934](https://github.com/wppconnect-team/wppconnect-server/commit/39f6934))
