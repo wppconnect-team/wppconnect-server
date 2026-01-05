@@ -5,6 +5,10 @@
   "main": "dist/index.js",
   "author": "kingaspx",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wppconnect-team/wppconnect-server"
+  },
   "scripts": {
     "build:types": "tsc",
     "build:js": "rimraf dist && babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline --copy-files",
