@@ -1,6 +1,6 @@
 {
   "name": "swagger-ui-dist",
-  "version": "5.30.3",
+  "version": "5.31.0",
   "main": "index.js",
   "repository": "git@github.com:swagger-api/swagger-ui.git",
   "contributors": [
