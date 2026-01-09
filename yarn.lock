@@ -5433,7 +5433,7 @@ __metadata:
     prom-client: "npm:^14.2.0"
     qrcode: "npm:^1.5.4"
     redis: "npm:^4.7.1"
-    release-it: "npm:^19.2.2"
+    release-it: "npm:^19.2.3"
     rimraf: "npm:^6.1.2"
     sharp: "npm:^0.34.5"
     shx: "npm:^0.4.0"
@@ -13607,9 +13607,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"release-it@npm:^19.2.2":
-  version: 19.2.2
-  resolution: "release-it@npm:19.2.2"
+"release-it@npm:^19.2.3":
+  version: 19.2.3
+  resolution: "release-it@npm:19.2.3"
   dependencies:
     "@nodeutils/defaults-deep": "npm:1.1.0"
     "@octokit/rest": "npm:22.0.1"
@@ -13636,7 +13636,7 @@ __metadata:
     yargs-parser: "npm:21.1.1"
   bin:
     release-it: bin/release-it.js
-  checksum: 10c0/922a84d79631178da8badb7ae35eb831af09220f368a3b2d8dbb97f884e8942603aa082e166da40c342710afdb479cbdee4ff5b813730cace019e871ee7d0df2
+  checksum: 10c0/8a7c9576b8335ce13d6929f2f94b01a6af953e2e43ed7f2f3c9eb5072b16299b7e6299084e2b402f48e0cc97b6954a986ec68f6e4211e924937626a48e5a16a2
   languageName: node
   linkType: hard
 
