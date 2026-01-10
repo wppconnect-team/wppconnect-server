@@ -64,10 +64,14 @@ export default class CreateSessionUtil {
     try {
       const client = this.getClient(session) as any;
 
+      req.logger.info(
+        `[${session}:server] Checking session status: ${client.status}`
+      );
+
       // Check if session is already active and working
       if (client.status != null && client.status !== 'CLOSED') {
         req.logger.info(
-          `Session ${session} is already active with status: ${client.status}`
+          `[${session}:server] Session already active with status: ${client.status}`
         );
         return;
       }
@@ -75,7 +79,7 @@ export default class CreateSessionUtil {
       // CRITICAL FIX: Check if this session is currently being initialized by another request
       if (initializingPromises.has(session)) {
         req.logger.info(
-          `Session ${session} is already being initialized, waiting...`
+          `[${session}:server] Session is already being initialized, waiting...`
         );
         try {
           // Wait for the existing initialization to complete (with timeout)
@@ -85,19 +89,25 @@ export default class CreateSessionUtil {
             `Timeout waiting for ${session} initialization`
           );
           req.logger.info(
-            `Session ${session} initialization completed by another request`
+            `[${session}:server] Session initialization completed by another request`
           );
 
           // After waiting, get the current client state and return it to the user
           const completedClient = this.getClient(session) as any;
           if (completedClient && res && !res._headerSent) {
             if (completedClient.status === 'CONNECTED') {
+              req.logger.info(
+                `[${session}:server] Returning CONNECTED status after wait`
+              );
               res.status(200).json({
                 status: 'CONNECTED',
                 message: 'Session connected',
                 session: session,
               });
             } else if (completedClient.status === 'QRCODE') {
+              req.logger.info(
+                `[${session}:server] Returning QRCODE status after wait`
+              );
               res.status(200).json({
                 status: 'QRCODE',
                 qrcode: completedClient.qrcode,
@@ -105,6 +115,9 @@ export default class CreateSessionUtil {
                 session: session,
               });
             } else if (completedClient.status === 'PHONECODE') {
+              req.logger.info(
+                `[${session}:server] Returning PHONECODE status after wait`
+              );
               res.status(200).json({
                 status: 'PHONECODE',
                 phone: completedClient.phone,
@@ -113,6 +126,9 @@ export default class CreateSessionUtil {
               });
             } else {
               // Any other status (including CLOSED, null, etc.)
+              req.logger.info(
+                `[${session}:server] Returning status ${completedClient.status} after wait`
+              );
               res.status(200).json({
                 status: completedClient.status || 'CLOSED',
                 session: session,
@@ -126,14 +142,16 @@ export default class CreateSessionUtil {
             error.message.includes('Timeout waiting')
           ) {
             req.logger.error(
-              `Timeout waiting for ${session} initialization, cleaning up and retrying...`
+              `[${session}:server] Timeout waiting for initialization, cleaning up...`
             );
             // Remove the stale promise so we can retry
             initializingPromises.delete(session);
             // Continue to initialize ourselves
           } else {
             // Initialization failed (e.g., Auto Close, network error, etc.)
-            req.logger.warn(`Initialization of ${session} failed: ${error}`);
+            req.logger.warn(
+              `[${session}:server] Initialization failed: ${error}`
+            );
 
             // Get the current client state (should be CLOSED after failure)
             const failedClient = this.getClient(session) as any;
@@ -152,7 +170,12 @@ export default class CreateSessionUtil {
         }
       }
 
-      // Create a promise for this initialization
+      req.logger.info(
+        `[${session}:server] Starting new session initialization`
+      );
+
+      // CRITICAL: Register the promise FIRST before any async work
+      // This acts as an atomic "lock" - first one to set wins
       const initPromise = this.performInitialization(
         req,
         clientsArray,
@@ -162,11 +185,22 @@ export default class CreateSessionUtil {
       );
       initializingPromises.set(session, initPromise);
 
+      req.logger.info(`[${session}:server] Registered initialization promise`);
+
+      // NOW set status and update array (after promise is registered)
+      client.status = 'INITIALIZING';
+      client.config = req.body;
+      clientsArray[session] = client; // Update array so middleware can see it
+
+      req.logger.info(
+        `[${session}:server] Updated client status to INITIALIZING and registered in clientsArray`
+      );
+
       // Set a safety timeout to auto-cleanup if initialization hangs
       const cleanupTimeout = setTimeout(() => {
         if (initializingPromises.get(session) === initPromise) {
           req.logger.error(
-            `Session ${session} initialization exceeded maximum time, forcing cleanup`
+            `[${session}:server] Initialization exceeded maximum time (95s), forcing cleanup`
           );
           initializingPromises.delete(session);
         }
@@ -175,16 +209,25 @@ export default class CreateSessionUtil {
       try {
         await initPromise;
         clearTimeout(cleanupTimeout);
+        req.logger.info(
+          `[${session}:server] Initialization completed successfully`
+        );
       } finally {
         // Always remove from the map when done
         clearTimeout(cleanupTimeout);
         initializingPromises.delete(session);
+        req.logger.info(
+          `[${session}:server] Cleaned up initialization promise`
+        );
       }
     } catch (e) {
-      req.logger.error(e);
+      req.logger.error(`[${session}:server] Error in createSessionUtil: ${e}`);
       if (e instanceof Error && e.name == 'TimeoutError') {
         const client = this.getClient(session) as any;
         client.status = 'CLOSED';
+        req.logger.error(
+          `[${session}:server] TimeoutError - set status to CLOSED`
+        );
       }
       // Remove from initializing map on error
       initializingPromises.delete(session);
@@ -198,8 +241,7 @@ export default class CreateSessionUtil {
     res: any,
     client: any
   ) {
-    client.status = 'INITIALIZING';
-    client.config = req.body;
+    // Status and config already set in createSessionUtil
 
     const tokenStore = new Factory();
     const myTokenStore = tokenStore.createTokenStory(client);
@@ -249,12 +291,35 @@ export default class CreateSessionUtil {
             this.exportPhoneCode(req, client.config.phone, code, client, res);
           },
           catchQR: (
-            base64Qr: any,
-            asciiQR: any,
-            attempt: any,
-            urlCode: string
+            qrCode: string,
+            asciiQR: string,
+            attempt: number,
+            urlCode?: string
           ) => {
-            this.exportQR(req, base64Qr, urlCode, client, res);
+            if (attempt > 1) {
+              // Browser must be closed after first qrcode expires, to prevent accidental qrcode scanning and autoclose being called
+              client.status = 'CLOSED';
+              client.qrcode = null;
+              client.urlcode = null; // Clear urlcode to prevent confusion
+              client.close();
+              clientsArray[session] = undefined;
+
+              eventEmitter.emit(
+                `status-${client.session}`,
+                client,
+                StatusFind.autocloseCalled
+              );
+              callWebHook(client, req, 'status-find', {
+                status: StatusFind.autocloseCalled,
+                session: client.session,
+              });
+
+              req.logger.info(
+                `[${session}:server] Closing Browser as old qrcode is expired!`
+              );
+            } else {
+              this.exportQR(req, qrCode, urlCode, client, res);
+            }
           },
           onLoadingScreen: (percent: string, message: string) => {
             req.logger.info(`[${session}] ${percent}% - ${message}`);
@@ -268,6 +333,7 @@ export default class CreateSessionUtil {
               ) {
                 client.status = 'CLOSED';
                 client.qrcode = null;
+                client.urlcode = null; // Clear urlcode to prevent confusion
                 client.close();
                 clientsArray[session] = undefined;
               }
@@ -275,7 +341,9 @@ export default class CreateSessionUtil {
                 status: statusFind,
                 session: client.session,
               });
-              req.logger.info(statusFind + '\n\n');
+              req.logger.info(
+                `\n\n[${session}:server] Status: ${statusFind}\n\n`
+              );
             } catch (error) {}
           },
         }

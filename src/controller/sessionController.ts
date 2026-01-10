@@ -493,22 +493,38 @@ export async function getSessionState(req: Request, res: Response) {
      }
    */
   try {
+    const sessionName = req.client?.session || 'UNKNOWN';
+
     const { waitQrCode = false } = req.body;
     const client = req.client;
+
+    req.logger.info(
+      `[${sessionName}:server] client status: ${
+        client?.status || 'N/A'
+      }, waitQrCode: ${waitQrCode}`
+    );
+
     const qr =
       client?.urlcode != null && client?.urlcode != ''
         ? await QRCode.toDataURL(client.urlcode)
         : null;
 
-    if ((client == null || client.status == null) && !waitQrCode)
+    req.logger.info(`[${sessionName}:server] QR code generated: ${qr != null}`);
+
+    if ((client == null || client.status == null) && !waitQrCode) {
+      req.logger.info(`[${sessionName}:server] Returning CLOSED status`);
       res.status(200).json({ status: 'CLOSED', qrcode: null });
-    else if (client != null)
+    } else if (client != null) {
+      req.logger.info(
+        `[${sessionName}:server] Returning session state - status: ${client.status}`
+      );
       res.status(200).json({
         status: client.status,
         qrcode: qr,
         urlcode: client.urlcode,
         version: version,
       });
+    }
   } catch (ex) {
     req.logger.error(ex);
     res.status(500).json({
