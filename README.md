@@ -8,7 +8,7 @@
 [![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/project/wppconnect-team/wppconnect-server 'Average time to resolve an issue')
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg 'Percentage of issues still open')
-[![Build Status](https://img.shields.io/github/actions/workflow/status/wppconnect-team/wppconnect-server/build.yml)](https://github.com/wppconnect-team/wppconnect-serer/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/wppconnect-team/wppconnect-server/build.yml)](https://github.com/wppconnect-team/wppconnect-server/actions)
 [![Build](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml)
 [![release-it](https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-release--it-e10079.svg)](https://github.com/release-it/release-it)
 
@@ -123,7 +123,7 @@ This server use config.ts file to define some options, default values are:
 
 ```javascript
 {
-  /* secret key to genereta access token */
+  /* secret key to generate access token */
   secretKey: 'THISISMYSECURETOKEN',
   host: 'http://localhost',
   port: '21465',
@@ -150,7 +150,7 @@ This server use config.ts file to define some options, default values are:
     readMessage: true,
     //sends all unread messages to the webhook when the server starts
     allUnreadOnStart: false,
-    // send all events of message status (read, sended, etc)
+    // send all events of message status (read, sent, etc)
     listenAcks: true,
     // send all events of contacts online or offline for webook and socket
     onPresenceChanged: true,
@@ -164,7 +164,7 @@ This server use config.ts file to define some options, default values are:
     onRevokedMessage: true,
     // send all events of labels for webook and socket
     onLabelUpdated: true,
-    // 'event', 'from' ou 'type' to ignore and not send to webhook
+    // 'event', 'from' or 'type' to ignore and not send to webhook
     ignore: [],
   },
   websocket: {
@@ -186,7 +186,7 @@ This server use config.ts file to define some options, default values are:
     daysToArchive: 45,
   },
   log: {
-    level: 'silly', // Before open a issue, change level to silly and retry a action
+    level: 'silly', // Before open a issue, change level to silly and retry an action
     logger: ['console', 'file'],
   },
   // create options for using on wppconnect-lib
@@ -236,12 +236,12 @@ This server use config.ts file to define some options, default values are:
     redisDb: 0,
     redisPrefix: 'docker',
   },
-  // Your configurations yo upload on AWS
+  // Your configurations to upload on AWS
   aws_s3: {
     region: 'sa-east-1',
     access_key_id: '',
     secret_key: '',
-    // If you already have a bucket created that will be used. Will bestored: you-default-bucket/{session}/{filename}
+    // If you already have a bucket created that will be used. Will be stored: you-default-bucket/{session}/{filename}
     defaultBucketName: ''
   },
 }
@@ -314,7 +314,7 @@ curl -X POST --location "http://localhost:21465/api/mySession/send-message" \
         }"
 ```
 
-See the `routes file` for all the routes. [here](/src/routes/index.js) and HTTP [file](/requests.http).
+See the `routes` file for all the routes. [here](/src/routes/index.js) and HTTP [file](/requests.http).
 
 # Swagger UI
 
