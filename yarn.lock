@@ -5618,7 +5618,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.53.1"
     "@wppconnect-team/wppconnect": "npm:^1.37.9"
     archiver: "npm:^7.0.1"
-    axios: "npm:^1.13.2"
+    axios: "npm:^1.13.4"
     bcrypt: "npm:^6.0.0"
     buffer-to-stream: "npm:1.0.0"
     commitizen: "npm:^4.3.1"
@@ -6124,6 +6124,17 @@ __metadata:
     form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
   checksum: 10c0/e8a42e37e5568ae9c7a28c348db0e8cf3e43d06fcbef73f0048669edfe4f71219664da7b6cc991b0c0f01c28a48f037c515263cb79be1f1ae8ff034cd813867b
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.13.4":
+  version: 1.13.4
+  resolution: "axios@npm:1.13.4"
+  dependencies:
+    follow-redirects: "npm:^1.15.6"
+    form-data: "npm:^4.0.4"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/474c00b7d71f4de4ad562589dae6b615149df7c2583bbc5ebba96229f3f85bfb0775d23705338df072f12e48d3e85685c065a3cf6855d58968a672d19214c728
   languageName: node
   linkType: hard
 
