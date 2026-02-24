@@ -75,7 +75,6 @@ export default class CreateSessionUtil {
             : {},
           req.serverOptions.createOptions,
           {
-            whatsappVersion: '2.3000.1031x',
             session: session,
             phoneNumber: client.config.phone ?? null,
             deviceName:
