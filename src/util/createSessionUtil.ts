@@ -61,8 +61,11 @@ export default class CreateSessionUtil {
         };
 
         req.logger.info(
-          `[${session}] Create Options`,
-          req.serverOptions.createOptions
+          `[${session}] Puppeteer Options: ${JSON.stringify(
+            req.serverOptions.createOptions?.puppeteerOptions ?? {},
+            null,
+            2
+          )}`
         );
       }
 
