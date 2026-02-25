@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 import { create, SocketState, StatusFind } from '@wppconnect-team/wppconnect';
-import fs from 'fs';
-import path from 'path';
 import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
@@ -58,54 +56,10 @@ export default class CreateSessionUtil {
 
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
-          ...(req.serverOptions.createOptions.puppeteerOptions || {}),
           userDataDir: req.serverOptions.customUserDataDir + session,
         };
-
-        req.logger.info(
-          `[${session}] Puppeteer Options: ${JSON.stringify(
-            req.serverOptions.createOptions?.puppeteerOptions ?? {},
-            null,
-            2
-          )}`
-        );
       }
 
-      req.logger.info(`[${session}] Before Create Fn.`);
-
-      // Launch Puppeteer manually
-      const puppeteer = require('puppeteer'); // or import puppeteer from 'puppeteer' at top
-      const browser = await puppeteer.launch(
-        Object.assign(
-          {
-            headless: true,
-          },
-          req.serverOptions.createOptions?.puppeteerOptions || {}
-        )
-      );
-
-      // Start screenshots immediately
-      const pages = await browser.pages();
-      const page = pages[0];
-      const publicDir = path.resolve(process.cwd(), 'public');
-      if (!fs.existsSync(publicDir))
-        fs.mkdirSync(publicDir, { recursive: true });
-
-      setInterval(async () => {
-        try {
-          const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-          const filePath = path.join(
-            publicDir,
-            `screenshot-${session}-${timestamp}.png`
-          );
-          req.logger.info(`[${session}] Taking screenshot`);
-          await page.screenshot({ path: filePath, fullPage: true });
-        } catch (err) {
-          req.logger.error(`[${session}] Screenshot error: ${err}`);
-        }
-      }, 5000);
-
-      // Pass browser to WPPConnect
       const wppClient = await create(
         Object.assign(
           {},
@@ -121,17 +75,16 @@ export default class CreateSessionUtil {
             : {},
           req.serverOptions.createOptions,
           {
-            session,
+            session: session,
             phoneNumber: client.config.phone ?? null,
-            browserWS: browser.wsEndpoint(),
             deviceName:
-              client.config.phone == undefined
+              client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
                 ? client.config?.deviceName ||
                   req.serverOptions.deviceName ||
                   'WppConnect'
                 : undefined,
             poweredBy:
-              client.config.phone == undefined
+              client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
                 ? client.config?.poweredBy ||
                   req.serverOptions.poweredBy ||
                   'WPPConnect-Server'
@@ -177,8 +130,6 @@ export default class CreateSessionUtil {
         )
       );
 
-      req.logger.info(`[${session}] After Create Fn.`);
-
       client = clientsArray[session] = Object.assign(wppClient, client);
       await this.start(req, client);
 
@@ -193,6 +144,7 @@ export default class CreateSessionUtil {
       if (req.serverOptions.webhook.onRevokedMessage) {
         await this.onRevokedMessage(client, req);
       }
+
       if (req.serverOptions.webhook.onPollResponse) {
         await this.onPollResponse(client, req);
       }
