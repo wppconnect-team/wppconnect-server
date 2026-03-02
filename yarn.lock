@@ -5700,7 +5700,7 @@ __metadata:
     shx: "npm:^0.4.0"
     socket.io: "npm:^4.8.3"
     swagger-autogen: "npm:^2.23.7"
-    swagger-ui-dist: "npm:^5.31.2"
+    swagger-ui-dist: "npm:^5.32.0"
     swagger-ui-express: "npm:^5.0.1"
     ts-jest: "npm:^29.4.6"
     ts-loader: "npm:^9.5.4"
@@ -15154,12 +15154,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.31.2":
-  version: 5.31.2
-  resolution: "swagger-ui-dist@npm:5.31.2"
+"swagger-ui-dist@npm:^5.32.0":
+  version: 5.32.0
+  resolution: "swagger-ui-dist@npm:5.32.0"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/a7770f5dfb02933e61873e1e82d1fbc831c0abdd7926a64827771946ad68def71a421fc773a7c8b9e2a91e7e2fdc6da87a4484e6e4d820b69aa6fcc44e40623e
+  checksum: 10c0/4be29b5c8b03f4660b4a7316d337d17d3ea6a8a6f547657fe9fa0bdb35ecaec9948eb26e864dd8d541475cc1e95beca5bdfb31e9d7a6eaf1b01081d2e09f8115
   languageName: node
   linkType: hard
 
