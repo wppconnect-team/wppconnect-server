@@ -1,27 +1,19 @@
 ## <small>2.8.11 (2026-01-05)</small>
 
-* chore: fixed npm publish ([317b05b](https://github.com/wppconnect-team/wppconnect-server/commit/317b05b))
-
-
+- chore: fixed npm publish ([317b05b](https://github.com/wppconnect-team/wppconnect-server/commit/317b05b))
 
 ## <small>2.8.10 (2025-12-10)</small>
 
-* Merge branch 'main' of github.com:wppconnect-team/wppconnect-server ([39f6934](https://github.com/wppconnect-team/wppconnect-server/commit/39f6934))
-
-
+- Merge branch 'main' of github.com:wppconnect-team/wppconnect-server ([39f6934](https://github.com/wppconnect-team/wppconnect-server/commit/39f6934))
 
 ## <small>2.8.9 (2025-12-10)</small>
 
-* Merge branch 'main' of github.com:wppconnect-team/wppconnect-server ([d42852d](https://github.com/wppconnect-team/wppconnect-server/commit/d42852d))
-
-
+- Merge branch 'main' of github.com:wppconnect-team/wppconnect-server ([d42852d](https://github.com/wppconnect-team/wppconnect-server/commit/d42852d))
 
 ## <small>2.8.8 (2025-12-10)</small>
 
-* docs: Improovment on docs ([7f2b3d3](https://github.com/wppconnect-team/wppconnect-server/commit/7f2b3d3))
-* fix: update yarn cache setup to use Corepack and simplify cache paths ([e6c97e1](https://github.com/wppconnect-team/wppconnect-server/commit/e6c97e1))
-
-
+- docs: Improovment on docs ([7f2b3d3](https://github.com/wppconnect-team/wppconnect-server/commit/7f2b3d3))
+- fix: update yarn cache setup to use Corepack and simplify cache paths ([e6c97e1](https://github.com/wppconnect-team/wppconnect-server/commit/e6c97e1))
 
 ## 2.8.7 (2025-11-25)
 
