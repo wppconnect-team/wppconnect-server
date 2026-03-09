@@ -5044,12 +5044,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.19.5":
-  version: 22.19.5
-  resolution: "@types/node@npm:22.19.5"
+"@types/node@npm:^22.19.15":
+  version: 22.19.15
+  resolution: "@types/node@npm:22.19.15"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/753c86850d2e3d9a7ccaa2569d565ab20d9a69389871e45283f71035c62fed649511aee7e05da8209b41e15438085c43b533d01e9ed3bb2e9dbd570aef732354
+  checksum: 10c0/f17eaf3d0d1da5e93ad9e287efb78201f8a5282973c004c5f70d91675c5c6b926a23acaa7b158a42b3d7e27e36b349d65a531710c91c308fca53dd7fa280ef98
   languageName: node
   linkType: hard
 
@@ -5660,7 +5660,7 @@ __metadata:
     "@types/merge-deep": "npm:^3.0.3"
     "@types/mime-types": "npm:^3.0.1"
     "@types/multer": "npm:^1.4.13"
-    "@types/node": "npm:^22.19.5"
+    "@types/node": "npm:^22.19.15"
     "@types/qrcode": "npm:^1.5.6"
     "@types/swagger-ui-express": "npm:^4.1.8"
     "@types/unzipper": "npm:^0.10.11"
