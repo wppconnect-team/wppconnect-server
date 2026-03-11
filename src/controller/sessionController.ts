@@ -25,6 +25,7 @@ import config from '../config';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
+import { closeAllSessions } from '../util/manageSession';
 import { clientsArray, deleteSessionOnArray } from '../util/sessionUtil';
 
 const SessionUtil = new CreateSessionUtil();
@@ -188,6 +189,84 @@ export async function showAllSessions(
   });
 
   res.status(200).json({ response: await getAllTokens(req) });
+}
+
+export async function clearAllSessions(
+  req: Request,
+  res: Response
+): Promise<any> {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.autoBody=false
+     #swagger.operationId = 'clearAllSessions'
+     #swagger.description = 'Close and clear all sessions data'
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["secretkey"] = {
+      schema: 'THISISMYSECURETOKEN'
+     }
+   */
+  const { secretkey } = req.params;
+  const { authorization: token } = req.headers;
+
+  let tokenDecrypt = '';
+
+  if (secretkey === undefined) {
+    tokenDecrypt = (token as any).split(' ')[0];
+  } else {
+    tokenDecrypt = secretkey;
+  }
+
+  if (tokenDecrypt !== req.serverOptions.secretKey) {
+    return res.status(400).json({
+      response: 'error',
+      message: 'The token is incorrect',
+    });
+  }
+
+  try {
+    await closeAllSessions(req);
+
+    const pathUserData = config.customUserDataDir;
+    const pathTokens = __dirname + '/../../tokens';
+
+    if (fs.existsSync(pathUserData)) {
+      const sessions = fs.readdirSync(pathUserData);
+      for (const session of sessions) {
+        await fs.promises.rm(`${pathUserData}${session}`, {
+          recursive: true,
+          maxRetries: 5,
+          force: true,
+          retryDelay: 1000,
+        });
+      }
+    }
+
+    if (fs.existsSync(pathTokens)) {
+      const tokenFiles = fs.readdirSync(pathTokens);
+      for (const file of tokenFiles) {
+        await fs.promises.rm(`${pathTokens}/${file}`, {
+          recursive: true,
+          maxRetries: 5,
+          force: true,
+          retryDelay: 1000,
+        });
+      }
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'All sessions cleared successfully',
+    });
+  } catch (error) {
+    req.logger.error(error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Error clearing all sessions',
+      error,
+    });
+  }
 }
 
 export async function startSession(req: Request, res: Response): Promise<any> {
