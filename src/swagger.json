@@ -54,7 +54,9 @@
   "paths": {
     "/api/{session}/{secretkey}/generate-token": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "parameters": [
           {
@@ -91,7 +93,9 @@
     },
     "/api/{secretkey}/show-all-sessions": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "showAllSessions",
         "parameters": [
@@ -122,7 +126,9 @@
     },
     "/api/{secretkey}/start-all": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "startAllSessions",
         "parameters": [
@@ -168,7 +174,9 @@
     },
     "/api/{session}/check-connection-session": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "CheckConnectionState",
         "parameters": [
@@ -196,7 +204,9 @@
     },
     "/api/{session}/get-media-by-message/{messageId}": {
       "get": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "operationId": "getMediaByMessage",
         "parameters": [
@@ -238,7 +248,9 @@
     },
     "/api/{session}/get-platform-from-message/{messageId}": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -277,7 +289,9 @@
     },
     "/api/{session}/qrcode-session": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "getQrCode",
         "parameters": [
@@ -308,7 +322,9 @@
     },
     "/api/{session}/start-session": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "startSession",
         "parameters": [
@@ -365,9 +381,9 @@
                 "webhook": "",
                 "waitQrCode": false,
                 "proxy": {
-                  "url": "proxy host",
-                  "username": "proxy username",
-                  "password": "proxy password"
+                  "url": "http://myproxy.com:8080",
+                  "username": "myuser",
+                  "password": "mypassword"
                 }
               }
             }
@@ -377,7 +393,9 @@
     },
     "/api/{session}/logout-session": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "This route logout and delete session data",
         "operationId": "logoutSession",
         "parameters": [
@@ -408,7 +426,9 @@
     },
     "/api/{session}/{secretkey}/clear-session-data": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -445,7 +465,9 @@
     },
     "/api/{session}/close-session": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "closeSession",
         "parameters": [
@@ -476,7 +498,9 @@
     },
     "/api/{session}/subscribe-presence": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "operationId": "subscribePresence",
         "parameters": [
@@ -533,7 +557,9 @@
     },
     "/api/{session}/set-online-presence": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "operationId": "setOnlinePresence",
         "parameters": [
@@ -582,7 +608,9 @@
     },
     "/api/{session}/download-media": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "operationId": "downloadMediabyMessage",
         "parameters": [
@@ -631,7 +659,9 @@
     },
     "/api/{session}/send-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -718,7 +748,9 @@
     },
     "/api/{session}/edit-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -774,7 +806,9 @@
     },
     "/api/{session}/send-image": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -850,7 +884,9 @@
     },
     "/api/{session}/send-sticker": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -893,7 +929,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["phone", "path"]
+                "required": [
+                  "phone",
+                  "path"
+                ]
               },
               "examples": {
                 "Default": {
@@ -911,7 +950,9 @@
     },
     "/api/{session}/send-sticker-gif": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -954,7 +995,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["phone", "path"]
+                "required": [
+                  "phone",
+                  "path"
+                ]
               },
               "examples": {
                 "Default": {
@@ -972,7 +1016,9 @@
     },
     "/api/{session}/send-reply": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1033,7 +1079,9 @@
     },
     "/api/{session}/send-file": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1109,7 +1157,9 @@
     },
     "/api/{session}/send-file-base64": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1185,7 +1235,9 @@
     },
     "/api/{session}/send-voice": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1246,7 +1298,9 @@
     },
     "/api/{session}/send-voice-base64": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1303,7 +1357,9 @@
     },
     "/api/{session}/status-session": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "operationId": "closeSession",
         "parameters": [
@@ -1334,7 +1390,9 @@
     },
     "/api/{session}/send-status": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1377,7 +1435,11 @@
                     "type": "string"
                   }
                 },
-                "required": ["phone", "isGroup", "message"]
+                "required": [
+                  "phone",
+                  "isGroup",
+                  "message"
+                ]
               },
               "examples": {
                 "Default": {
@@ -1396,7 +1458,9 @@
     },
     "/api/{session}/send-link-preview": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1457,7 +1521,9 @@
     },
     "/api/{session}/send-location": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1526,7 +1592,9 @@
     },
     "/api/{session}/send-mentioned": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1575,7 +1643,11 @@
                     }
                   }
                 },
-                "required": ["phone", "message", "mentioned"]
+                "required": [
+                  "phone",
+                  "message",
+                  "mentioned"
+                ]
               },
               "examples": {
                 "Default": {
@@ -1583,7 +1655,9 @@
                     "phone": "groupId@g.us",
                     "isGroup": true,
                     "message": "Your text message",
-                    "mentioned": ["556593077171@c.us"]
+                    "mentioned": [
+                      "556593077171@c.us"
+                    ]
                   }
                 }
               }
@@ -1594,7 +1668,9 @@
     },
     "/api/{session}/send-buttons": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1622,7 +1698,9 @@
     },
     "/api/{session}/send-list-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1703,7 +1781,9 @@
     },
     "/api/{session}/send-order-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1809,7 +1889,9 @@
     },
     "/api/{session}/send-poll-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1862,7 +1944,11 @@
                     "phone": "5521999999999",
                     "isGroup": false,
                     "name": "Poll name",
-                    "choices": ["Option 1", "Option 2", "Option 3"],
+                    "choices": [
+                      "Option 1",
+                      "Option 2",
+                      "Option 3"
+                    ],
                     "options": {
                       "selectableCount": 1
                     }
@@ -1874,9 +1960,88 @@
         }
       }
     },
+    "/api/{session}/send-pix-key": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phone",
+                  "keyType",
+                  "name",
+                  "key"
+                ],
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "keyType": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "instructions": {
+                    "type": "string"
+                  },
+                  "options": {
+                    "type": "object"
+                  }
+                }
+              },
+              "examples": {
+                "Send PIX key to contact": {
+                  "value": {
+                    "phone": "5521999999999",
+                    "keyType": "PHONE",
+                    "name": "WPPCONNECT-TEAM",
+                    "key": "+5567123456789",
+                    "instructions": "some instructions about the pix",
+                    "options": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{session}/all-broadcast-list": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1906,7 +2071,9 @@
     },
     "/api/{session}/all-groups": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "summary": "Deprecated in favor of ",
         "description": "",
         "parameters": [
@@ -2073,7 +2240,9 @@
     },
     "/api/{session}/group-members/{groupId}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2111,7 +2280,9 @@
     },
     "/api/{session}/common-groups/{wid}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2150,7 +2321,9 @@
     },
     "/api/{session}/group-admins/{groupId}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2195,7 +2368,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["groupId"]
+                "required": [
+                  "groupId"
+                ]
               },
               "examples": {
                 "Default": {
@@ -2211,7 +2386,9 @@
     },
     "/api/{session}/group-info/{groupId}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "summary": "Get detailed information about a group",
         "description": "",
         "parameters": [
@@ -2349,7 +2526,9 @@
     },
     "/api/{session}/group-invite-link/{groupId}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2402,7 +2581,9 @@
     },
     "/api/{session}/group-revoke-link/{groupId}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2455,7 +2636,9 @@
     },
     "/api/{session}/group-members-ids/{groupId}": {
       "get": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2494,7 +2677,9 @@
     },
     "/api/{session}/create-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2537,12 +2722,17 @@
                     "type": "string"
                   }
                 },
-                "required": ["participants", "name"]
+                "required": [
+                  "participants",
+                  "name"
+                ]
               },
               "examples": {
                 "Default": {
                   "value": {
-                    "participants": ["5521999999999"],
+                    "participants": [
+                      "5521999999999"
+                    ],
                     "name": "Group name"
                   }
                 }
@@ -2554,7 +2744,9 @@
     },
     "/api/{session}/leave-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2591,7 +2783,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["groupId"]
+                "required": [
+                  "groupId"
+                ]
               }
             }
           }
@@ -2600,7 +2794,9 @@
     },
     "/api/{session}/join-code": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2640,7 +2836,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["inviteCode"]
+                "required": [
+                  "inviteCode"
+                ]
               },
               "examples": {
                 "Default": {
@@ -2656,7 +2854,9 @@
     },
     "/api/{session}/add-participant-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2696,7 +2896,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["groupId", "phone"]
+                "required": [
+                  "groupId",
+                  "phone"
+                ]
               },
               "examples": {
                 "Default": {
@@ -2713,7 +2916,9 @@
     },
     "/api/{session}/remove-participant-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2753,7 +2958,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["groupId", "phone"]
+                "required": [
+                  "groupId",
+                  "phone"
+                ]
               },
               "examples": {
                 "Default": {
@@ -2770,7 +2978,9 @@
     },
     "/api/{session}/promote-participant-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2810,7 +3020,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["groupId", "phone"]
+                "required": [
+                  "groupId",
+                  "phone"
+                ]
               },
               "examples": {
                 "Default": {
@@ -2827,7 +3040,9 @@
     },
     "/api/{session}/demote-participant-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2867,7 +3082,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["groupId", "phone"]
+                "required": [
+                  "groupId",
+                  "phone"
+                ]
               },
               "examples": {
                 "Default": {
@@ -2884,7 +3102,9 @@
     },
     "/api/{session}/group-info-from-invite-link": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2929,7 +3149,9 @@
     },
     "/api/{session}/group-description": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2977,7 +3199,9 @@
     },
     "/api/{session}/group-property": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3028,7 +3252,9 @@
     },
     "/api/{session}/group-subject": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3076,7 +3302,9 @@
     },
     "/api/{session}/messages-admins-only": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3124,7 +3352,9 @@
     },
     "/api/{session}/group-pic": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3175,7 +3405,9 @@
     },
     "/api/{session}/change-privacy-group": {
       "post": {
-        "tags": ["Group"],
+        "tags": [
+          "Group"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3223,7 +3455,9 @@
     },
     "/api/{session}/all-chats": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "summary": "Deprecated in favor of ",
         "description": "This body is not required. Not sent body to get all chats or filter.",
         "parameters": [
@@ -3288,7 +3522,9 @@
                   "example": "My new status"
                 }
               },
-              "required": ["status"]
+              "required": [
+                "status"
+              ]
             }
           },
           {
@@ -3396,7 +3632,9 @@
     },
     "/api/{session}/list-chats": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "summary": "Retrieve a list of chats",
         "description": "This body is not required. Not sent body to get all chats or filter.",
         "parameters": [
@@ -3493,7 +3731,9 @@
     },
     "/api/{session}/all-chats-archived": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "Retrieves all archived chats.",
         "parameters": [
           {
@@ -3523,7 +3763,9 @@
     },
     "/api/{session}/all-chats-with-messages": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "summary": "Deprecated in favor of list-chats",
         "description": "",
         "parameters": [
@@ -3555,7 +3797,9 @@
     },
     "/api/{session}/all-messages-in-chat/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3618,7 +3862,9 @@
     },
     "/api/{session}/all-new-messages": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3648,7 +3894,9 @@
     },
     "/api/{session}/unread-messages": {
       "get": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3679,7 +3927,9 @@
     },
     "/api/{session}/all-unread-messages": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3709,7 +3959,9 @@
     },
     "/api/{session}/chat-by-id/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3756,7 +4008,9 @@
     },
     "/api/{session}/message-by-id/{messageId}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3792,7 +4046,9 @@
     },
     "/api/{session}/chat-is-online/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3831,7 +4087,9 @@
     },
     "/api/{session}/last-seen/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3870,7 +4128,9 @@
     },
     "/api/{session}/list-mutes/{type}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3909,7 +4169,9 @@
     },
     "/api/{session}/load-messages-in-chat/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -3965,7 +4227,9 @@
     },
     "/api/{session}/get-messages/{phone}": {
       "get": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4028,7 +4292,9 @@
     },
     "/api/{session}/archive-chat": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4088,7 +4354,9 @@
     },
     "/api/{session}/archive-all-chats": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4118,7 +4386,9 @@
     },
     "/api/{session}/clear-chat": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4171,7 +4441,9 @@
     },
     "/api/{session}/clear-all-chats": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4201,7 +4473,9 @@
     },
     "/api/{session}/delete-chat": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4254,7 +4528,9 @@
     },
     "/api/{session}/delete-all-chats": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4284,7 +4560,9 @@
     },
     "/api/{session}/delete-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4361,7 +4639,9 @@
     },
     "/api/{session}/react-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4417,7 +4697,9 @@
     },
     "/api/{session}/forward-messages": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4477,7 +4759,9 @@
     },
     "/api/{session}/mark-unseen": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4533,7 +4817,9 @@
     },
     "/api/{session}/pin-chat": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4564,7 +4850,11 @@
                   "example": true
                 }
               },
-              "required": ["phone", "isGroup", "state"]
+              "required": [
+                "phone",
+                "isGroup",
+                "state"
+              ]
             }
           }
         ],
@@ -4614,7 +4904,9 @@
     },
     "/api/{session}/contact-vcard": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4667,7 +4959,9 @@
                     "phone": "5521999999999",
                     "isGroup": false,
                     "name": "Name of contact",
-                    "contactsId": ["5521999999999"]
+                    "contactsId": [
+                      "5521999999999"
+                    ]
                   }
                 }
               }
@@ -4678,7 +4972,9 @@
     },
     "/api/{session}/send-mute": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4742,7 +5038,9 @@
     },
     "/api/{session}/send-seen": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4795,7 +5093,9 @@
     },
     "/api/{session}/chat-state": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4856,7 +5156,9 @@
     },
     "/api/{session}/temporary-messages": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4916,7 +5218,9 @@
     },
     "/api/{session}/typing": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -4976,7 +5280,9 @@
     },
     "/api/{session}/recording": {
       "post": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5040,7 +5346,9 @@
     },
     "/api/{session}/star-message": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5096,7 +5404,9 @@
     },
     "/api/{session}/reactions/{id}": {
       "get": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5142,7 +5452,9 @@
     },
     "/api/{session}/votes/{id}": {
       "get": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5188,7 +5500,9 @@
     },
     "/api/{session}/reject-call": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5240,7 +5554,9 @@
     },
     "/api/{session}/get-products": {
       "get": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5289,7 +5605,9 @@
     },
     "/api/{session}/get-product-by-id": {
       "get": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5338,7 +5656,9 @@
     },
     "/api/{session}/add-product": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5417,7 +5737,9 @@
     },
     "/api/{session}/edit-product": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5478,7 +5800,9 @@
     },
     "/api/{session}/del-products": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5533,7 +5857,9 @@
     },
     "/api/{session}/change-product-image": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5592,7 +5918,9 @@
     },
     "/api/{session}/add-product-image": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5651,7 +5979,9 @@
     },
     "/api/{session}/remove-product-image": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5710,7 +6040,9 @@
     },
     "/api/{session}/get-collections": {
       "get": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5767,7 +6099,9 @@
     },
     "/api/{session}/create-collection": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5815,7 +6149,10 @@
                 "Default": {
                   "value": {
                     "name": "Collection name",
-                    "products": ["<id_product1>", "<id_product2>"]
+                    "products": [
+                      "<id_product1>",
+                      "<id_product2>"
+                    ]
                   }
                 }
               }
@@ -5826,7 +6163,9 @@
     },
     "/api/{session}/edit-collection": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5887,7 +6226,9 @@
     },
     "/api/{session}/del-collection": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5942,7 +6283,9 @@
     },
     "/api/{session}/send-link-catalog": {
       "post": {
-        "tags": ["Messages"],
+        "tags": [
+          "Messages"
+        ],
         "description": "",
         "parameters": [
           {
@@ -5989,7 +6332,9 @@
               "examples": {
                 "Default": {
                   "value": {
-                    "phones": ["<array_phone_id"],
+                    "phones": [
+                      "<array_phone_id"
+                    ],
                     "message": "Message"
                   }
                 }
@@ -6001,7 +6346,9 @@
     },
     "/api/{session}/set-product-visibility": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6028,7 +6375,10 @@
                   "example": false
                 }
               },
-              "required": ["id", "value"]
+              "required": [
+                "id",
+                "value"
+              ]
             }
           }
         ],
@@ -6078,7 +6428,9 @@
     },
     "/api/{session}/set-cart-enabled": {
       "post": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6133,7 +6485,9 @@
     },
     "/api/{session}/send-text-storie": {
       "post": {
-        "tags": ["Status Stories"],
+        "tags": [
+          "Status Stories"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6199,7 +6553,9 @@
                     "type": "object"
                   }
                 },
-                "required": ["text"]
+                "required": [
+                  "text"
+                ]
               },
               "examples": {
                 "Default": {
@@ -6219,7 +6575,9 @@
     },
     "/api/{session}/send-image-storie": {
       "post": {
-        "tags": ["Status Stories"],
+        "tags": [
+          "Status Stories"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6256,7 +6614,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["path"]
+                "required": [
+                  "path"
+                ]
               },
               "examples": {
                 "Default": {
@@ -6272,7 +6632,9 @@
     },
     "/api/{session}/send-video-storie": {
       "post": {
-        "tags": ["Status Stories"],
+        "tags": [
+          "Status Stories"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6309,7 +6671,9 @@
                     "type": "string"
                   }
                 },
-                "required": ["path"]
+                "required": [
+                  "path"
+                ]
               },
               "examples": {
                 "Default": {
@@ -6325,7 +6689,9 @@
     },
     "/api/{session}/add-new-label": {
       "post": {
-        "tags": ["Labels"],
+        "tags": [
+          "Labels"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6373,7 +6739,10 @@
                     }
                   }
                 },
-                "required": ["name", "options"]
+                "required": [
+                  "name",
+                  "options"
+                ]
               },
               "examples": {
                 "Default": {
@@ -6392,7 +6761,9 @@
     },
     "/api/{session}/add-or-remove-label": {
       "post": {
-        "tags": ["Labels"],
+        "tags": [
+          "Labels"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6449,12 +6820,16 @@
                     }
                   }
                 },
-                "required": ["chatIds"]
+                "required": [
+                  "chatIds"
+                ]
               },
               "examples": {
                 "Default": {
                   "value": {
-                    "chatIds": ["5521999999999"],
+                    "chatIds": [
+                      "5521999999999"
+                    ],
                     "options": [
                       {
                         "labelId": "76",
@@ -6475,7 +6850,9 @@
     },
     "/api/{session}/get-all-labels": {
       "get": {
-        "tags": ["Labels"],
+        "tags": [
+          "Labels"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6505,7 +6882,9 @@
     },
     "/api/{session}/delete-all-labels": {
       "put": {
-        "tags": ["Labels"],
+        "tags": [
+          "Labels"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6535,7 +6914,9 @@
     },
     "/api/{session}/delete-label/{id}": {
       "put": {
-        "tags": ["Labels"],
+        "tags": [
+          "Labels"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6574,7 +6955,9 @@
     },
     "/api/{session}/check-number-status/{phone}": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6633,7 +7016,9 @@
     },
     "/api/{session}/contact/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6670,9 +7055,54 @@
         ]
       }
     },
+    "/api/{session}/contact/pn-lid/{pnLid}": {
+      "get": {
+        "tags": [
+          "Contact"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "NERDWHATS_AMERICA"
+            }
+          },
+          {
+            "name": "pnLid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/{session}/profile/{phone}": {
       "get": {
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6712,7 +7142,9 @@
     },
     "/api/{session}/profile-pic/{phone}": {
       "get": {
-        "tags": ["Contact"],
+        "tags": [
+          "Contact"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6758,7 +7190,9 @@
     },
     "/api/{session}/profile-status/{phone}": {
       "get": {
-        "tags": ["Contact"],
+        "tags": [
+          "Contact"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6797,7 +7231,9 @@
     },
     "/api/{session}/blocklist": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6827,7 +7263,9 @@
     },
     "/api/{session}/block-contact": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6883,7 +7321,9 @@
     },
     "/api/{session}/unblock-contact": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6939,7 +7379,9 @@
     },
     "/api/{session}/get-battery-level": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6969,7 +7411,9 @@
     },
     "/api/{session}/host-device": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -6999,7 +7443,9 @@
     },
     "/api/{session}/get-phone-number": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7029,7 +7475,9 @@
     },
     "/api/{session}/set-profile-pic": {
       "post": {
-        "tags": ["Profile"],
+        "tags": [
+          "Profile"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7070,7 +7518,9 @@
     },
     "/api/{session}/profile-status": {
       "post": {
-        "tags": ["Profile"],
+        "tags": [
+          "Profile"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7093,7 +7543,9 @@
                   "example": "My new status"
                 }
               },
-              "required": ["status"]
+              "required": [
+                "status"
+              ]
             }
           }
         ],
@@ -7136,7 +7588,9 @@
     },
     "/api/{session}/change-username": {
       "post": {
-        "tags": ["Profile"],
+        "tags": [
+          "Profile"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7191,7 +7645,9 @@
     },
     "/api/{session}/edit-business-profile": {
       "post": {
-        "tags": ["Profile"],
+        "tags": [
+          "Profile"
+        ],
         "description": "Edit your bussiness profile",
         "operationId": "editBusinessProfile",
         "parameters": [
@@ -7234,7 +7690,11 @@
                       "example": false
                     }
                   },
-                  "required": ["id", "localized_display_name", "not_a_biz"]
+                  "required": [
+                    "id",
+                    "localized_display_name",
+                    "not_a_biz"
+                  ]
                 },
                 "website": {
                   "type": "array",
@@ -7247,7 +7707,12 @@
                   }
                 }
               },
-              "required": ["adress", "email", "categories", "website"]
+              "required": [
+                "adress",
+                "email",
+                "categories",
+                "website"
+              ]
             }
           }
         ],
@@ -7305,7 +7770,9 @@
     },
     "/api/{session}/get-business-profiles-products": {
       "get": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7340,7 +7807,9 @@
     },
     "/api/{session}/get-order-by-messageId/{messageId}": {
       "get": {
-        "tags": ["Catalog & Bussiness"],
+        "tags": [
+          "Catalog & Bussiness"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7376,9 +7845,13 @@
     },
     "/api/{secretkey}/backup-sessions": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "Please, open the router in your browser, in swagger this not run",
-        "produces": ["application/zip"],
+        "produces": [
+          "application/zip"
+        ],
         "parameters": [
           {
             "name": "secretkey",
@@ -7410,7 +7883,9 @@
     },
     "/api/{secretkey}/restore-sessions": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7446,7 +7921,9 @@
                     "format": "binary"
                   }
                 },
-                "required": ["file"]
+                "required": [
+                  "file"
+                ]
               }
             }
           }
@@ -7455,7 +7932,9 @@
     },
     "/api/{session}/take-screenshot": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7485,7 +7964,9 @@
     },
     "/api/{session}/set-limit": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "Change limits of whatsapp web. Types value: maxMediaSize, maxFileSize, maxShare, statusVideoMaxDuration, unlimitedPin;",
         "parameters": [
           {
@@ -7525,7 +8006,10 @@
                     "type": "any"
                   }
                 },
-                "required": ["type", "value"]
+                "required": [
+                  "type",
+                  "value"
+                ]
               },
               "examples": {
                 "Default": {
@@ -7542,7 +8026,9 @@
     },
     "/api/{session}/create-community": {
       "post": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7591,7 +8077,10 @@
                   "value": {
                     "name": "My community name",
                     "description": "Description for your community",
-                    "groupIds": ["groupId1", "groupId2"]
+                    "groupIds": [
+                      "groupId1",
+                      "groupId2"
+                    ]
                   }
                 }
               }
@@ -7602,7 +8091,9 @@
     },
     "/api/{session}/deactivate-community": {
       "post": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7654,7 +8145,9 @@
     },
     "/api/{session}/add-community-subgroup": {
       "post": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7699,7 +8192,9 @@
                 "Default": {
                   "value": {
                     "id": "<you_community_id@g.us>",
-                    "groupsIds": ["group1Id@g.us"]
+                    "groupsIds": [
+                      "group1Id@g.us"
+                    ]
                   }
                 }
               }
@@ -7710,7 +8205,9 @@
     },
     "/api/{session}/remove-community-subgroup": {
       "post": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7755,7 +8252,9 @@
                 "Default": {
                   "value": {
                     "id": "<you_community_id@g.us>",
-                    "groupsIds": ["group1Id@g.us"]
+                    "groupsIds": [
+                      "group1Id@g.us"
+                    ]
                   }
                 }
               }
@@ -7766,7 +8265,9 @@
     },
     "/api/{session}/promote-community-participant": {
       "post": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7811,7 +8312,9 @@
                 "Default": {
                   "value": {
                     "id": "<you_community_id@g.us>",
-                    "participantsId": ["group1Id@g.us"]
+                    "participantsId": [
+                      "group1Id@g.us"
+                    ]
                   }
                 }
               }
@@ -7822,7 +8325,9 @@
     },
     "/api/{session}/demote-community-participant": {
       "post": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -7867,7 +8372,9 @@
                 "Default": {
                   "value": {
                     "id": "<you_community_id@g.us>",
-                    "participantsId": ["group1Id@g.us"]
+                    "participantsId": [
+                      "group1Id@g.us"
+                    ]
                   }
                 }
               }
@@ -7878,7 +8385,9 @@
     },
     "/api/{session}/community-participants/{id}": {
       "get": {
-        "tags": ["Community"],
+        "tags": [
+          "Community"
+        ],
         "description": "",
         "parameters": [
           {
@@ -8140,7 +8649,9 @@
     },
     "/api/{session}/chatwoot": {
       "post": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "You can point your Chatwoot to this route so that it can perform functions.",
         "parameters": [
           {
@@ -8206,7 +8717,9 @@
     },
     "/healthz": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "This endpoint can be used to check the health status of the API. It returns a response with a status code indicating the API",
         "responses": {
           "default": {
@@ -8217,7 +8730,9 @@
     },
     "/unhealthy": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "This endpoint is used to force the API into an unhealthy state. It can be useful for testing error handling or simulating service disruptions.",
         "responses": {
           "default": {
@@ -8228,7 +8743,9 @@
     },
     "/metrics": {
       "get": {
-        "tags": ["Misc"],
+        "tags": [
+          "Misc"
+        ],
         "description": "This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.",
         "responses": {
           "default": {

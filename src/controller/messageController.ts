@@ -1036,3 +1036,70 @@ export async function sendImageAsStickerGif(req: Request, res: Response) {
     returnError(req, res, error);
   }
 }
+
+export async function sendPixMessage(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Messages"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+    #swagger.requestBody = {
+      required: true,
+      "@content": {
+        "application/json": {
+          schema: {
+            type: "object",
+            required: ["phone", "keyType", "name", "key"],
+            properties: {
+              phone: { type: "string" },
+              keyType: { type: "string" },
+              name: { type: "string" },
+              key: { type: "string" },
+              instructions: { type: "string" },
+              options: { type: "object" },
+            }
+          },
+          examples: {
+            "Send PIX key to contact": {
+              value: { 
+                phone: "5521999999999",
+                keyType: "PHONE",
+                name: "WPPCONNECT-TEAM",
+                key: "+5567123456789",
+                instructions: "some instructions about the pix",
+                options: {}
+              }
+            },
+          }
+        }
+      }
+     }
+   */
+
+  const { phone, keyType, name, key, instructions } = req.body;
+
+  const options = req.body.options || {};
+
+  try {
+    const results: any = [];
+    for (const contato of phone) {
+      results.push(
+        await req.client.sendPixKey(
+          contato,
+          { keyType, name, key, instructions },
+          options
+        )
+      );
+    }
+
+    if (results.length === 0) res.status(400).json('Error sending message');
+    req.io.emit('mensagem-enviada', results);
+    returnSucess(res, results);
+  } catch (error) {
+    returnError(req, res, error);
+  }
+}
