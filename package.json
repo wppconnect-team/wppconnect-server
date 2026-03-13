@@ -1,6 +1,6 @@
 {
   "name": "@wppconnect/server",
-  "version": "2.8.11",
+  "version": "2.9.0",
   "description": "Projeto feito para autenticar a automomacao do WhatsappWeb com multi-clientes de forma dinamica. Backend feito em Nodejs(express, socketio), FrontEnd (ReactJS)",
   "main": "dist/index.js",
   "author": "kingaspx",
@@ -32,12 +32,12 @@
     "test": "jest"
   },
   "engines": {
-    "node": "22.21.1"
+    "node": "22.22.1"
   },
   "packageManager": "yarn@4.12.0",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1000.0",
-    "@wppconnect-team/wppconnect": "^1.37.9",
+    "@aws-sdk/client-s3": "^3.1004.0",
+    "@wppconnect-team/wppconnect": "^1.41.0",
     "archiver": "^7.0.1",
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
@@ -71,9 +71,9 @@
     "@babel/preset-env": "^7.29.0",
     "@babel/preset-typescript": "^7.28.5",
     "@babel/runtime": "^7.28.6",
-    "@commitlint/cli": "^20.4.2",
-    "@commitlint/config-conventional": "^20.4.2",
-    "@commitlint/cz-commitlint": "^20.4.1",
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
+    "@commitlint/cz-commitlint": "^20.4.3",
     "@types/archiver": "^7.0.0",
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
@@ -82,13 +82,13 @@
     "@types/merge-deep": "^3.0.3",
     "@types/mime-types": "^3.0.1",
     "@types/multer": "^1.4.13",
-    "@types/node": "^22.19.5",
+    "@types/node": "^22.19.15",
     "@types/pidusage": "^2.0.2",
     "@types/qrcode": "^1.5.6",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/unzipper": "^0.10.11",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^8.56.1",
+    "@typescript-eslint/parser": "^8.57.0",
     "commitizen": "^4.3.1",
     "conventional-changelog-cli": "^5.0.0",
     "crypto-js": "^4.2.0",
