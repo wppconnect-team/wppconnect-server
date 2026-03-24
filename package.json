@@ -34,7 +34,7 @@
   "engines": {
     "node": "22.22.1"
   },
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.13.0",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1014.0",
     "@wppconnect-team/wppconnect": "^1.41.1",
