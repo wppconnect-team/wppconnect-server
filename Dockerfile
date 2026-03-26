@@ -1,4 +1,4 @@
-FROM node:22.22.1-alpine AS base
+FROM node:22.22.2-alpine AS base
 WORKDIR /usr/src/wpp-server
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 

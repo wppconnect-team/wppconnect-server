@@ -32,7 +32,7 @@
     "test": "jest"
   },
   "engines": {
-    "node": "22.22.1"
+    "node": "22.22.2"
   },
   "packageManager": "yarn@4.13.0",
   "dependencies": {
