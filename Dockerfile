@@ -23,9 +23,9 @@ COPY .yarnrc.yml ./
 COPY package.json ./
 COPY yarn.lock ./
 
-# Enable corepack and prepare yarn 4.12.0
+# Enable corepack and prepare yarn 4.14.1
 RUN corepack enable && \
-    corepack prepare yarn@4.12.0 --activate
+    corepack prepare yarn@4.14.1 --activate
 
 # Install dependencies with immutable lockfile
 RUN yarn install --immutable
