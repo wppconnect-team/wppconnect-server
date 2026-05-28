@@ -1,8 +1,10 @@
-FROM node:22.22.2-alpine AS base
+FROM node:22-alpine3.22 AS base
+
 WORKDIR /usr/src/wpp-server
+
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Install build dependencies and runtime libraries for sharp
+# Install build dependencies
 RUN apk update && \
     apk add --no-cache \
     vips \
@@ -16,34 +18,47 @@ RUN apk update && \
     python3 \
     && rm -rf /var/cache/apk/*
 
-# To make sure yarn 4 uses node-modules linker
+# Copy Yarn configuration and package files
 COPY .yarnrc.yml ./
-
-# Copy only package.json to leverage Docker cache
 COPY package.json ./
 COPY yarn.lock ./
 
-# Enable corepack and prepare yarn 4.12.0
-RUN corepack enable && \
+# === CORREÇÃO: Remover Yarn 1 antigo + Instalar Corepack corretamente ===
+RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg && \
+    npm install -g corepack@latest && \
+    corepack enable && \
     corepack prepare yarn@4.12.0 --activate
 
-# Install dependencies with immutable lockfile
+# Install dependencies (agora com Yarn 4 via Corepack)
 RUN yarn install --immutable
 
+# Cria pasta
+RUN mkdir -p /data && chmod -R 755 /data
+
+# ====================== BUILD STAGE ======================
 FROM base AS build
+
 WORKDIR /usr/src/wpp-server
+
 COPY . .
-RUN yarn install
+
+RUN yarn install --immutable
 RUN yarn build
 
+# ====================== RUNTIME STAGE ======================
 FROM build AS runtime
+
 WORKDIR /usr/src/wpp-server/
 
-# Install runtime dependencies (chromium and vips libraries)
+# Runtime dependencies only
 RUN apk add --no-cache \
     chromium \
     vips \
     fftw
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 21465
-ENTRYPOINT ["node", "dist/server.js"]
+
+ENTRYPOINT ["/entrypoint.sh"]

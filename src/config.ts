@@ -1,7 +1,7 @@
 import { ServerOptions } from './types/ServerOptions';
 
 export default {
-  secretKey: 'THISISMYSECURETOKEN',
+  secretKey: '3kgeT4RXFnfOBi9IRt01flPn',
   host: 'http://localhost',
   port: '21465',
   deviceName: 'WppConnect',
@@ -9,9 +9,9 @@ export default {
   startAllSession: true,
   tokenStoreType: 'file',
   maxListeners: 15,
-  customUserDataDir: './userDataDir/',
+  customUserDataDir: '/data/userDataDir/',
   webhook: {
-    url: null,
+    url: 'http://n8n:5678/webhook/wpp',
     autoDownload: true,
     uploadS3: false,
     readMessage: true,
@@ -82,7 +82,7 @@ export default {
     /**
      * Set specific whatsapp version
      */
-    // whatsappVersion: '2.xxxxx',
+    whatsappVersion: null,
   },
   mapper: {
     enable: false,
@@ -97,11 +97,11 @@ export default {
     mongoIsRemote: true,
     mongoURLRemote: '',
     mongodbPort: 27017,
-    redisHost: 'localhost',
+    redisHost: 'redis',
     redisPort: 6379,
-    redisPassword: '',
+    redisPassword: 'pilotoazul564',
     redisDb: 0,
-    redisPrefix: 'docker',
+    redisPrefix: 'wpp_docker',
   },
   aws_s3: {
     region: 'sa-east-1' as any,
