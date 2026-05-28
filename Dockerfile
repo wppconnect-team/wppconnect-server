@@ -27,7 +27,7 @@ COPY yarn.lock ./
 RUN rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg && \
     npm install -g corepack@latest && \
     corepack enable && \
-    corepack prepare yarn@4.12.0 --activate
+    corepack prepare yarn@4.14.1 --activate
 
 # Install dependencies (agora com Yarn 4 via Corepack)
 RUN yarn install --immutable
