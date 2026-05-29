@@ -15,9 +15,5 @@ services:
       - n8n_n8n-net
 volumes:
   wppconnect_tokens: {}
-networks:
-  chatwoot_net:
-    external: true
-  n8n_n8n-net:
-    external: true
+
 
