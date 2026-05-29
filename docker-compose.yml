@@ -10,9 +10,6 @@ services:
       - ./data:/data
     ports:
       - "21465:21465"
-    networks:
-      - chatwoot_net
-      - n8n_n8n-net
 volumes:
   wppconnect_tokens: {}
 
