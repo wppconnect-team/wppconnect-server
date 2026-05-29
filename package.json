@@ -126,5 +126,12 @@
     "crypto-js": "^4.2.0",
     "mongoose": "^8.23.0",
     "redis": "^4.7.1"
+  },
+  "optionalDependencies": {
+    "@whiskeysockets/baileys": "7.0.0-rc13",
+    "@zapo-js/store-sqlite": "0.3.0",
+    "better-sqlite3": "^12.10.0",
+    "whaileys": "^6.4.14",
+    "zapo-js": "^0.3.0"
   }
 }

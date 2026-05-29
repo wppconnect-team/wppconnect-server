@@ -19,7 +19,9 @@ import { EventEmitter } from 'events';
 
 import { BaileysAdapter } from './baileys/BaileysAdapter';
 import { ProviderAdapter, ProviderId } from './ProviderAdapter';
+import { WhaileysAdapter } from './whaileys/WhaileysAdapter';
 import { WppConnectAdapter } from './wppconnect/WppConnectAdapter';
+import { ZapoAdapter } from './zapo/ZapoAdapter';
 
 /**
  * Set of providers that are gated behind the experimental feature flag. Only
@@ -72,6 +74,10 @@ export class ProviderFactory {
     switch (providerId) {
       case 'baileys':
         return new BaileysAdapter(sessionName, bus);
+      case 'whaileys':
+        return new WhaileysAdapter(sessionName, bus);
+      case 'zapo':
+        return new ZapoAdapter(sessionName, bus);
       default:
         throw new Error(`Provider "${providerId}" is not implemented yet.`);
     }

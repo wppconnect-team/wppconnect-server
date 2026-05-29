@@ -17,6 +17,8 @@ import { create, SocketState, StatusFind } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
+import { EventDispatcher } from '../core/events/EventDispatcher';
+import { ProviderId } from '../core/provider/ProviderAdapter';
 import { providerFactory } from '../core/provider/ProviderFactory';
 import { sessionManager } from '../core/session/SessionManager';
 import { WhatsAppServer } from '../types/WhatsAppServer';
@@ -46,6 +48,16 @@ export default class CreateSessionUtil {
       if (client.status != null && client.status !== 'CLOSED') return;
       client.status = 'INITIALIZING';
       client.config = req.body;
+
+      // Provider selection: experimental socket-based providers (baileys,
+      // whaileys, zapo) take a separate creation path — they don't use the
+      // wppconnect `create()` browser flow.
+      const requestedProvider = (client.config?.provider ??
+        'wppconnect') as ProviderId;
+      if (requestedProvider !== 'wppconnect') {
+        await this.createExperimentalSession(req, session, requestedProvider);
+        return;
+      }
 
       const tokenStore = new Factory();
       const myTokenStore = tokenStore.createTokenStory(client);
@@ -138,14 +150,9 @@ export default class CreateSessionUtil {
       // Register the session in the SessionManager and wrap the live client in
       // its provider adapter. `clientsArray` stays in sync (same reference), so
       // existing `req.client.*` call sites are unaffected; `req.provider` now
-      // resolves to a real adapter via auth middleware.
-      // The active creation flow instantiates a wppconnect client; record the
-      // requested provider (from the start-session body) for visibility, but
-      // wrap with the wppconnect adapter that backs this client. Routing the
-      // creation through an experimental provider is a follow-up step.
-      const requestedProvider = client.config?.provider ?? 'wppconnect';
+      // resolves to a real adapter via auth middleware. (Only the wppconnect
+      // path reaches here — experimental providers return early above.)
       const handle = sessionManager.getOrCreate(session, 'wppconnect');
-      handle.providerId = requestedProvider;
       handle.adapter = providerFactory.createWppConnect(client);
       handle.status = (client.status as any) ?? 'INITIALIZING';
       handle.config = client.config;
@@ -181,6 +188,67 @@ export default class CreateSessionUtil {
 
   async opendata(req: Request, session: string, res?: any) {
     await this.createSessionUtil(req, clientsArray, session, res);
+  }
+
+  /**
+   * Creation path for the experimental socket-based providers (baileys,
+   * whaileys, zapo). Builds the adapter via the factory (which enforces the
+   * ENABLE_EXPERIMENTAL_PROVIDERS flag), registers it in the SessionManager,
+   * and wires its normalized event bus to the EventDispatcher so webhooks and
+   * socket.io fire exactly like the wppconnect path.
+   */
+  async createExperimentalSession(
+    req: any,
+    session: string,
+    providerId: ProviderId
+  ) {
+    try {
+      const handle = sessionManager.getOrCreate(session, providerId);
+      const adapter = providerFactory.createExperimental(
+        providerId,
+        session,
+        handle.bus
+      );
+      handle.adapter = adapter;
+      handle.config = req.body;
+      handle.status = 'INITIALIZING';
+
+      // Fan normalized provider events out to webhook + socket.io. The
+      // dispatcher uses the adapter's raw socket for any client calls.
+      const dispatcher = new EventDispatcher(adapter.raw(), req);
+      const forward = (event: any) => (data: any) => {
+        if (event === 'qr') {
+          const handleRef = sessionManager.get(session);
+          if (handleRef) {
+            handleRef.status = 'QRCODE';
+            handleRef.qrcode = (data as any)?.qrcode;
+          }
+          req.io.emit('qrCode', { data: (data as any)?.qrcode, session });
+        }
+        if (event === 'connection-state') {
+          const handleRef = sessionManager.get(session);
+          if (handleRef)
+            handleRef.status = (data as any)?.status ?? handleRef.status;
+          if ((data as any)?.status === 'CONNECTED')
+            req.io.emit('session-logged', { status: true, session });
+        }
+        dispatcher.dispatch(event, data);
+      };
+
+      adapter.on('qr', forward('qr'));
+      adapter.on('connection-state', forward('connection-state'));
+      adapter.on('message', forward('message'));
+      adapter.on('ack', forward('ack'));
+
+      await adapter.session.start();
+      req.logger.info(
+        `[${session}] experimental provider ${providerId} started`
+      );
+    } catch (e) {
+      req.logger.error(e);
+      const handleRef = sessionManager.get(session);
+      if (handleRef) handleRef.status = 'CLOSED';
+    }
   }
 
   exportPhoneCode(

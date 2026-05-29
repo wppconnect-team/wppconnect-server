@@ -19,19 +19,14 @@ import { EventEmitter } from 'events';
 import { SocketProviderAdapter } from '../socket/SocketProviderAdapter';
 
 /**
- * EXPERIMENTAL provider backed by the Baileys family. Prefers the controlled
- * fork `@wppconnect/baileys`, falling back to upstream `@whiskeysockets/baileys`
- * until the fork is published. See {@link SocketProviderAdapter} for behavior.
+ * EXPERIMENTAL provider backed by whaileys (canove's Baileys fork). Prefers the
+ * controlled fork `@wppconnect/whaileys`, falling back to upstream `whaileys`.
+ * Same socket-based API as Baileys — see {@link SocketProviderAdapter}.
  *
  * Gated behind `ENABLE_EXPERIMENTAL_PROVIDERS=true` via ProviderFactory.
  */
-export class BaileysAdapter extends SocketProviderAdapter {
+export class WhaileysAdapter extends SocketProviderAdapter {
   constructor(sessionName: string, bus?: EventEmitter) {
-    super(
-      'baileys',
-      ['@wppconnect/baileys', '@whiskeysockets/baileys'],
-      sessionName,
-      bus
-    );
+    super('whaileys', ['@wppconnect/whaileys', 'whaileys'], sessionName, bus);
   }
 }
