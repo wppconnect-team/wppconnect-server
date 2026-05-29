@@ -15,8 +15,8 @@
  */
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
-import { getClient } from '../core/provider/useProvider';
 
+import { getClient } from '../core/provider/useProvider';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
 
@@ -956,7 +956,11 @@ export async function reply(req: Request, res: Response) {
   const { phone, text, messageid } = req.body;
 
   try {
-    const response = await getClient(req).reply(`${phone}@c.us`, text, messageid);
+    const response = await getClient(req).reply(
+      `${phone}@c.us`,
+      text,
+      messageid
+    );
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -1007,9 +1011,15 @@ export async function forwardMessages(req: Request, res: Response) {
     let response;
 
     if (!isGroup) {
-      response = await getClient(req).forwardMessagesV2(`${phone[0]}`, messageId);
+      response = await getClient(req).forwardMessagesV2(
+        `${phone[0]}`,
+        messageId
+      );
     } else {
-      response = await getClient(req).forwardMessagesV2(`${phone[0]}`, messageId);
+      response = await getClient(req).forwardMessagesV2(
+        `${phone[0]}`,
+        messageId
+      );
     }
 
     res.status(201).json({ status: 'success', response: response });
@@ -1818,7 +1828,8 @@ export async function setRecording(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      if (value) response = await getClient(req).startRecording(contato, duration);
+      if (value)
+        response = await getClient(req).startRecording(contato, duration);
       else response = await getClient(req).stopRecording(contato);
     }
 

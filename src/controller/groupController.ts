@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { Request, Response } from 'express';
-import { getClient } from '../core/provider/useProvider';
 
+import { getClient } from '../core/provider/useProvider';
 import {
   contactToArray,
   groupNameToArray,
@@ -296,7 +296,10 @@ export async function addParticipant(req: Request, res: Response) {
     const arrayGroups: any = [];
 
     for (const group of groupToArray(groupId)) {
-      response = await getClient(req).addParticipant(group, contactToArray(phone));
+      response = await getClient(req).addParticipant(
+        group,
+        contactToArray(phone)
+      );
       arrayGroups.push(response);
     }
 
@@ -700,7 +703,9 @@ export async function getGroupInfoFromInviteLink(req: Request, res: Response) {
    */
   try {
     const { invitecode } = req.body;
-    const response = await getClient(req).getGroupInfoFromInviteLink(invitecode);
+    const response = await getClient(req).getGroupInfoFromInviteLink(
+      invitecode
+    );
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);

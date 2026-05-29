@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+
 import { getClient } from '../core/provider/useProvider';
 
 export async function createCommunity(req: Request, res: Response) {
@@ -204,7 +205,10 @@ export async function removeSubgroupsCommunity(req: Request, res: Response) {
   const { id, groupsIds } = req.body;
 
   try {
-    const response = await getClient(req).removeSubgroupsCommunity(id, groupsIds);
+    const response = await getClient(req).removeSubgroupsCommunity(
+      id,
+      groupsIds
+    );
 
     res.status(200).json(response);
   } catch (error) {

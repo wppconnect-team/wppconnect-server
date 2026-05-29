@@ -15,11 +15,11 @@
  */
 
 import { Request, Response } from 'express';
-import { getClient } from '../core/provider/useProvider';
 import fs from 'fs';
 
 import { logger } from '..';
 import config from '../config';
+import { getClient } from '../core/provider/useProvider';
 import { backupSessions, restoreSessions } from '../util/manageSession';
 import { clientsArray } from '../util/sessionUtil';
 

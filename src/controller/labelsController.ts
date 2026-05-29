@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+
 import { getClient } from '../core/provider/useProvider';
 
 export async function addNewLabel(req: Request, res: Response) {

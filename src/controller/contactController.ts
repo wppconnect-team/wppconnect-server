@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import { getClient } from '../core/provider/useProvider';
 
 export default class ContactController {

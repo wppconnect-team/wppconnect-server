@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { getClient } from '../core/provider/useProvider';
 
+import { getClient } from '../core/provider/useProvider';
 import { unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {

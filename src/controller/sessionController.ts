@@ -15,7 +15,6 @@
  */
 import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
-import { getClient } from '../core/provider/useProvider';
 import fs from 'fs';
 import mime from 'mime-types';
 import QRCode from 'qrcode';
@@ -23,6 +22,7 @@ import { Logger } from 'winston';
 
 import { version } from '../../package.json';
 import config from '../config';
+import { getClient } from '../core/provider/useProvider';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';

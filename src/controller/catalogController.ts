@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { Request, Response } from 'express';
-import { getClient } from '../core/provider/useProvider';
 
+import { getClient } from '../core/provider/useProvider';
 import { createCatalogLink } from '../util/functions';
 
 export async function getProducts(req: Request, res: Response) {
