@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { Request, Response } from 'express';
+import { getClient } from '../core/provider/useProvider';
 
 import { createCatalogLink } from '../util/functions';
 
@@ -44,7 +45,7 @@ export async function getProducts(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client?.getProducts(
+    const result = await getClient(req)?.getProducts(
       phone as string,
       qnt as unknown as number
     );
@@ -84,7 +85,7 @@ export async function getProductById(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.getProductById(
+    const result = await getClient(req).getProductById(
       phone as string,
       id as string
     );
@@ -137,7 +138,7 @@ export async function editProduct(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.editProduct(id, options);
+    const result = await getClient(req).editProduct(id, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -186,7 +187,7 @@ export async function delProducts(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.delProducts(id);
+    const result = await getClient(req).delProducts(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -238,7 +239,7 @@ export async function changeProductImage(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.changeProductImage(id, base64);
+    const result = await getClient(req).changeProductImage(id, base64);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -307,7 +308,7 @@ export async function addProduct(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.createProduct(
+    const result = await getClient(req).createProduct(
       name,
       image,
       description,
@@ -368,7 +369,7 @@ export async function addProductImage(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.addProductImage(id, base64);
+    const result = await getClient(req).addProductImage(id, base64);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -419,7 +420,7 @@ export async function removeProductImage(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.removeProductImage(id, index);
+    const result = await getClient(req).removeProductImage(id, index);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -457,7 +458,7 @@ export async function getCollections(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.getCollections(
+    const result = await getClient(req).getCollections(
       phone as string,
       qnt as string,
       max as string
@@ -512,7 +513,7 @@ export async function createCollection(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.createCollection(name, products);
+    const result = await getClient(req).createCollection(name, products);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -565,7 +566,7 @@ export async function editCollection(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.editCollection(id, options);
+    const result = await getClient(req).editCollection(id, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -614,7 +615,7 @@ export async function deleteCollection(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.deleteCollection(id);
+    const result = await getClient(req).deleteCollection(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -672,7 +673,7 @@ export async function setProductVisibility(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.setProductVisibility(id, value);
+    const result = await getClient(req).setProductVisibility(id, value);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -721,7 +722,7 @@ export async function updateCartEnabled(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.updateCartEnabled(enabled);
+    const result = await getClient(req).updateCartEnabled(enabled);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -772,10 +773,10 @@ export async function sendLinkCatalog(req: Request, res: Response) {
     });
   const results = [];
   try {
-    const session = await req.client.getWid();
+    const session = await getClient(req).getWid();
     const catalogLink = createCatalogLink(session);
     for (const phone of phones) {
-      const result = await req.client.sendText(
+      const result = await getClient(req).sendText(
         phone,
         `${message} ${catalogLink}`,
         {

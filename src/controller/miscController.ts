@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+import { getClient } from '../core/provider/useProvider';
 import fs from 'fs';
 
 import { logger } from '..';
@@ -123,7 +124,7 @@ export async function takeScreenshot(req: Request, res: Response) {
   */
 
   try {
-    const result = await req.client.takeScreenshot();
+    const result = await getClient(req).takeScreenshot();
     res.status(200).json(result);
   } catch (error: any) {
     res.status(500).json({
@@ -158,7 +159,7 @@ export async function clearSessionData(req: Request, res: Response) {
     }
     if (req?.client?.page) {
       delete clientsArray[req.params.session];
-      await req.client.logout();
+      await getClient(req).logout();
     }
     const path = config.customUserDataDir + session;
     const pathToken = __dirname + `../../../tokens/${session}.data.json`;
@@ -221,7 +222,7 @@ export async function setLimit(req: Request, res: Response) {
     const { type, value } = req.body;
     if (!type || !value) throw new Error('Send de type and value');
 
-    const result = await req.client.setLimit(type, value);
+    const result = await getClient(req).setLimit(type, value);
     res.status(200).json(result);
   } catch (error: any) {
     res.status(500).json({

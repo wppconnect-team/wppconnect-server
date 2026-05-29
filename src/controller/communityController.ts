@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+import { getClient } from '../core/provider/useProvider';
 
 export async function createCommunity(req: Request, res: Response) {
   /**
@@ -54,7 +55,7 @@ export async function createCommunity(req: Request, res: Response) {
   const { name, description, groupIds } = req.body;
 
   try {
-    const response = await req.client.createCommunity(
+    const response = await getClient(req).createCommunity(
       name,
       description,
       groupIds
@@ -105,7 +106,7 @@ export async function deactivateCommunity(req: Request, res: Response) {
   const { id } = req.body;
 
   try {
-    const response = await req.client.deactivateCommunity(id);
+    const response = await getClient(req).deactivateCommunity(id);
 
     res.status(200).json(response);
   } catch (error) {
@@ -154,7 +155,7 @@ export async function addSubgroupsCommunity(req: Request, res: Response) {
   const { id, groupsIds } = req.body;
 
   try {
-    const response = await req.client.addSubgroupsCommunity(id, groupsIds);
+    const response = await getClient(req).addSubgroupsCommunity(id, groupsIds);
 
     res.status(200).json(response);
   } catch (error) {
@@ -203,7 +204,7 @@ export async function removeSubgroupsCommunity(req: Request, res: Response) {
   const { id, groupsIds } = req.body;
 
   try {
-    const response = await req.client.removeSubgroupsCommunity(id, groupsIds);
+    const response = await getClient(req).removeSubgroupsCommunity(id, groupsIds);
 
     res.status(200).json(response);
   } catch (error) {
@@ -252,7 +253,7 @@ export async function demoteCommunityParticipant(req: Request, res: Response) {
   const { id, participantsId } = req.body;
 
   try {
-    const response = await req.client.demoteCommunityParticipant(
+    const response = await getClient(req).demoteCommunityParticipant(
       id,
       participantsId
     );
@@ -304,7 +305,7 @@ export async function promoteCommunityParticipant(req: Request, res: Response) {
   const { id, participantsId } = req.body;
 
   try {
-    const response = await req.client.promoteCommunityParticipant(
+    const response = await getClient(req).promoteCommunityParticipant(
       id,
       participantsId
     );
@@ -337,7 +338,7 @@ export async function getCommunityParticipants(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const response = await req.client.getCommunityParticipants(id);
+    const response = await getClient(req).getCommunityParticipants(id);
 
     res.status(200).json(response);
   } catch (error) {

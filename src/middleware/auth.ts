@@ -16,6 +16,7 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 
+import { sessionManager } from '../core/session/SessionManager';
 import { clientsArray } from '../util/sessionUtil';
 
 function formatSession(session: string) {
@@ -71,6 +72,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
         if (result) {
           req.session = formatSession(req.params.session);
           req.token = tokenDecrypt;
+          // `provider` is additive: populated when the session already has a
+          // live adapter, otherwise undefined. `client` stays the source of
+          // truth until controllers migrate to `provider` (PR4-PR6).
+          req.provider = sessionManager.get(req.session)?.adapter;
           req.client = clientsArray[req.session];
           next();
         } else {

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import expressPlugin from '@fastify/express';
 import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';
-import express, { Express, NextFunction, Router } from 'express';
+import express, { NextFunction, Router } from 'express';
 import boolParser from 'express-query-boolean';
-import { createServer } from 'http';
+import Fastify, { FastifyInstance } from 'fastify';
 import mergeDeep from 'merge-deep';
 import process from 'process';
 import { Server as Socket } from 'socket.io';
@@ -27,6 +28,7 @@ import { Logger } from 'winston';
 import { version } from '../package.json';
 import config from './config';
 import { convert } from './mapper/index';
+import { providerErrorHandler } from './middleware/errorHandler';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
 import {
@@ -40,11 +42,21 @@ import { createLogger } from './util/logger';
 
 export const logger = createLogger(config.log);
 
-export function initServer(serverOptions: Partial<ServerOptions>): {
-  app: Express;
+/**
+ * Boots the HTTP server on Fastify, running the existing Express middleware
+ * stack and routes through `@fastify/express`. This preserves the full public
+ * contract — same routes, payloads, auth, swagger and socket.io channels —
+ * while moving the underlying engine to Fastify (faster, schema-ready).
+ *
+ * `initServer` is now async (Fastify registers plugins asynchronously). The
+ * single caller (`server.ts`) does not await the result, so behavior is
+ * unchanged — startup continues in the background exactly as before.
+ */
+export async function initServer(serverOptions: Partial<ServerOptions>): Promise<{
+  app: FastifyInstance;
   routes: Router;
   logger: Logger;
-} {
+}> {
   if (typeof serverOptions !== 'object') {
     serverOptions = {};
   }
@@ -56,8 +68,20 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
 
   setMaxListners(serverOptions as ServerOptions);
 
-  const app = express();
-  const PORT = process.env.PORT || serverOptions.port;
+  // 50mb body limit matches the previous Express config (base64 media uploads).
+  const app = Fastify({ logger: false, bodyLimit: 50 * 1024 * 1024 });
+  // Run the Express-style middleware/routes on top of Fastify. Importing the
+  // plugin also augments FastifyInstance with `.use()`.
+  await app.register(expressPlugin);
+
+  const PORT = Number(process.env.PORT || serverOptions.port);
+
+  // Socket.io is attached to Fastify's underlying HTTP server.
+  const io = new Socket(app.server, {
+    cors: {
+      origin: '*',
+    },
+  });
 
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
@@ -100,13 +124,12 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
 
   app.use(routes);
 
+  // Central handler for provider-layer errors (NotSupported -> 501,
+  // SessionNotReady -> 404). Other errors pass through, preserving the
+  // existing per-controller 500 responses.
+  app.use(providerErrorHandler);
+
   createFolders();
-  const http = createServer(app);
-  const io = new Socket(http, {
-    cors: {
-      origin: '*',
-    },
-  });
 
   io.on('connection', (sock) => {
     logger.info(`ID: ${sock.id} entrou`);
@@ -116,20 +139,21 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     });
   });
 
-  http.listen(PORT, () => {
-    logger.info(`Server is running on port: ${PORT}`);
-    logger.info(
-      `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
-    );
-    logger.info(`WPPConnect-Server version: ${version}`);
+  await app.ready();
+  await app.listen({ port: PORT, host: '0.0.0.0' });
 
-    if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
-  });
+  logger.info(`Server is running on port: ${PORT}`);
+  logger.info(
+    `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
+  );
+  logger.info(`WPPConnect-Server version: ${version}`);
+
+  if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
 
   if (config.log.level === 'error' || config.log.level === 'warn') {
     console.log(`\x1b[33m ======================================================
 Attention:
-Your configuration is configured to show only a few logs, before opening an issue, 
+Your configuration is configured to show only a few logs, before opening an issue,
 please set the log to 'silly', copy the log that shows the error and open your issue.
 ======================================================
 `);

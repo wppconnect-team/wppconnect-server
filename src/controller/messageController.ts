@@ -16,9 +16,33 @@
 
 import { Request, Response } from 'express';
 
+import {
+  NotSupportedError,
+  SessionNotReadyError,
+} from '../core/provider/capabilities';
+import { requireCapability } from '../core/provider/requireCapability';
 import { unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {
+  // Typed provider errors carry their own HTTP status; let the central handler
+  // translate them (501 / 404) instead of masking them as a generic 500.
+  if (error instanceof NotSupportedError) {
+    res.status(error.httpStatus).json({
+      status: 'not_supported',
+      provider: error.providerId,
+      capability: error.capability,
+      message: error.message,
+    });
+    return;
+  }
+  if (error instanceof SessionNotReadyError) {
+    res.status(error.httpStatus).json({
+      status: 'disconnected',
+      session: error.session,
+      message: error.message,
+    });
+    return;
+  }
   req.logger.error(error);
   res.status(500).json({
     status: 'Error',
@@ -95,9 +119,19 @@ export async function sendMessage(req: Request, res: Response) {
   const options = req.body.options || {};
 
   try {
+    // Provider-based path: when a provider is attached, guard the capability
+    // and route through the typed messaging API; otherwise fall back to the
+    // legacy `req.client` so behavior is identical while controllers migrate.
+    if (req.provider) requireCapability(req.provider, 'messaging.text');
+    const messaging = req.provider?.messaging;
+
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.sendText(contato, message, options));
+      results.push(
+        messaging
+          ? await messaging.sendText(contato, message, options)
+          : await req.client.sendText(contato, message, options)
+      );
     }
 
     if (results.length === 0) res.status(400).json('Error sending message');

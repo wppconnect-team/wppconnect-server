@@ -17,6 +17,8 @@ import { create, SocketState, StatusFind } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
+import { providerFactory } from '../core/provider/ProviderFactory';
+import { sessionManager } from '../core/session/SessionManager';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
@@ -118,6 +120,7 @@ export default class CreateSessionUtil {
                   client.qrcode = null;
                   client.close();
                   clientsArray[session] = undefined;
+                  sessionManager.delete(session);
                 }
                 callWebHook(client, req, 'status-find', {
                   status: statusFind,
@@ -131,6 +134,22 @@ export default class CreateSessionUtil {
       );
 
       client = clientsArray[session] = Object.assign(wppClient, client);
+
+      // Register the session in the SessionManager and wrap the live client in
+      // its provider adapter. `clientsArray` stays in sync (same reference), so
+      // existing `req.client.*` call sites are unaffected; `req.provider` now
+      // resolves to a real adapter via auth middleware.
+      // The active creation flow instantiates a wppconnect client; record the
+      // requested provider (from the start-session body) for visibility, but
+      // wrap with the wppconnect adapter that backs this client. Routing the
+      // creation through an experimental provider is a follow-up step.
+      const requestedProvider = client.config?.provider ?? 'wppconnect';
+      const handle = sessionManager.getOrCreate(session, 'wppconnect');
+      handle.providerId = requestedProvider;
+      handle.adapter = providerFactory.createWppConnect(client);
+      handle.status = (client.status as any) ?? 'INITIALIZING';
+      handle.config = client.config;
+
       await this.start(req, client);
 
       if (req.serverOptions.webhook.onParticipantsChanged) {
@@ -247,6 +266,13 @@ export default class CreateSessionUtil {
     try {
       await client.isConnected();
       Object.assign(client, { status: 'CONNECTED', qrcode: null });
+
+      const handle = sessionManager.get(client.session);
+      if (handle) {
+        handle.status = 'CONNECTED';
+        handle.qrcode = undefined;
+        handle.metadata.lastStateChangeAt = Date.now();
+      }
 
       req.logger.info(`Started Session: ${client.session}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});

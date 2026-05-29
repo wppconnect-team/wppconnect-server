@@ -15,6 +15,7 @@
  */
 import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
+import { getClient } from '../core/provider/useProvider';
 import fs from 'fs';
 import mime from 'mime-types';
 import QRCode from 'qrcode';
@@ -261,9 +262,9 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
     } else {
       (clientsArray as any)[session] = { status: null };
 
-      await req.client.close();
+      await getClient(req).close();
       req.io.emit('whatsapp-status', false);
-      callWebHook(req.client, req, 'closesession', {
+      callWebHook(getClient(req), req, 'closesession', {
         message: `Session: ${session} disconnected`,
         connected: false,
       });
@@ -295,7 +296,7 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
    */
   try {
     const session = req.session;
-    await req.client.logout();
+    await getClient(req).logout();
     deleteSessionOnArray(req.session);
 
     setTimeout(async () => {
@@ -320,7 +321,7 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
       }
 
       req.io.emit('whatsapp-status', false);
-      callWebHook(req.client, req, 'logoutsession', {
+      callWebHook(getClient(req), req, 'logoutsession', {
         message: `Session: ${session} logged out`,
         connected: false,
       });
@@ -330,7 +331,7 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
         .json({ status: true, message: 'Session successfully closed' });
     }, 500);
     /*try {
-      await req.client.close();
+      await getClient(req).close();
     } catch (error) {}*/
   } catch (error) {
     req.logger.error(error);
@@ -356,7 +357,7 @@ export async function checkConnectionSession(
      }
    */
   try {
-    await req.client.isConnected();
+    await getClient(req).isConnected();
 
     res.status(200).json({ status: true, message: 'Connected' });
   } catch (error) {
@@ -392,7 +393,7 @@ export async function downloadMediaByMessage(req: Request, res: Response) {
       }
      }
    */
-  const client = req.client;
+  const client = getClient(req);
   const { messageId } = req.body;
 
   let message;
@@ -446,7 +447,7 @@ export async function getMediaByMessage(req: Request, res: Response) {
       schema: 'messageId'
      }
    */
-  const client = req.client;
+  const client = getClient(req);
   const { messageId } = req.params;
 
   try {
@@ -494,7 +495,7 @@ export async function getSessionState(req: Request, res: Response) {
    */
   try {
     const { waitQrCode = false } = req.body;
-    const client = req.client;
+    const client = getClient(req);
     const qr =
       client?.urlcode != null && client?.urlcode != ''
         ? await QRCode.toDataURL(client.urlcode)
@@ -541,8 +542,8 @@ export async function getQrCode(req: Request, res: Response) {
         scale: 5,
         width: 500,
       };
-      const qr = req.client.urlcode
-        ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
+      const qr = getClient(req).urlcode
+        ? await QRCode.toDataURL(getClient(req).urlcode, qrOptions)
         : null;
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
@@ -553,7 +554,7 @@ export async function getQrCode(req: Request, res: Response) {
         'Content-Length': img.length,
       });
       res.end(img);
-    } else if (typeof req.client === 'undefined') {
+    } else if (typeof getClient(req) === 'undefined') {
       res.status(200).json({
         status: null,
         message:
@@ -561,7 +562,7 @@ export async function getQrCode(req: Request, res: Response) {
       });
     } else {
       res.status(200).json({
-        status: req.client.status,
+        status: getClient(req).status,
         message: 'QRCode is not available...',
       });
     }
@@ -660,16 +661,16 @@ export async function subscribePresence(req: Request, res: Response) {
     if (all) {
       let contacts;
       if (isGroup) {
-        const groups = await req.client.getAllGroups(false);
+        const groups = await getClient(req).getAllGroups(false);
         contacts = groups.map((p: any) => p.id._serialized);
       } else {
-        const chats = await req.client.getAllContacts();
+        const chats = await getClient(req).getAllContacts();
         contacts = chats.map((c: any) => c.id._serialized);
       }
-      await req.client.subscribePresence(contacts);
+      await getClient(req).subscribePresence(contacts);
     } else
       for (const contato of contactToArray(phone, isGroup)) {
-        await req.client.subscribePresence(contato);
+        await getClient(req).subscribePresence(contato);
       }
 
     res.status(200).json({
@@ -716,7 +717,7 @@ export async function setOnlinePresence(req: Request, res: Response) {
   try {
     const { isOnline = true } = req.body;
 
-    await req.client.setOnlinePresence(isOnline);
+    await getClient(req).setOnlinePresence(isOnline);
 
     res.status(200).json({
       status: 'success',
@@ -791,7 +792,7 @@ export async function editBusinessProfile(req: Request, res: Response) {
      }
    */
   try {
-    res.status(200).json(await req.client.editBusinessProfile(req.body));
+    res.status(200).json(await getClient(req).editBusinessProfile(req.body));
   } catch (error) {
     res.status(500).json({
       status: 'error',

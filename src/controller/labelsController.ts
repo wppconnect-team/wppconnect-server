@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+import { getClient } from '../core/provider/useProvider';
 
 export async function addNewLabel(req: Request, res: Response) {
   /**
@@ -62,7 +63,7 @@ export async function addNewLabel(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.addNewLabel(name, options);
+    const result = await getClient(req).addNewLabel(name, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -131,7 +132,7 @@ export async function addOrRemoveLabels(req: Request, res: Response) {
     });
 
   try {
-    const result = await req.client.addOrRemoveLabels(chatIds, options);
+    const result = await getClient(req).addOrRemoveLabels(chatIds, options);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -154,7 +155,7 @@ export async function getAllLabels(req: Request, res: Response) {
      }
    */
   try {
-    const result = await req.client.getAllLabels();
+    const result = await getClient(req).getAllLabels();
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -177,7 +178,7 @@ export async function deleteAllLabels(req: Request, res: Response) {
      }
    */
   try {
-    const result = await req.client.deleteAllLabels();
+    const result = await getClient(req).deleteAllLabels();
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
@@ -204,7 +205,7 @@ export async function deleteLabel(req: Request, res: Response) {
    */
   const { id } = req.params;
   try {
-    const result = await req.client.deleteLabel(id);
+    const result = await getClient(req).deleteLabel(id);
     res.status(201).json({ status: 'success', response: result });
   } catch (error) {
     res.status(500).json({
