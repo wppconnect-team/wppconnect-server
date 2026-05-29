@@ -52,7 +52,9 @@ export const logger = createLogger(config.log);
  * single caller (`server.ts`) does not await the result, so behavior is
  * unchanged — startup continues in the background exactly as before.
  */
-export async function initServer(serverOptions: Partial<ServerOptions>): Promise<{
+export async function initServer(
+  serverOptions: Partial<ServerOptions>
+): Promise<{
   app: FastifyInstance;
   routes: Router;
   logger: Logger;
