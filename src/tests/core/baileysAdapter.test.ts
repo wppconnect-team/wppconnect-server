@@ -23,30 +23,32 @@ describe('BaileysAdapter', function () {
 
   it('throws when sending before the socket is started', async function () {
     const adapter = new BaileysAdapter('s1');
-    await expect(adapter.messaging.sendText('x@c.us', 'hi')).rejects.toThrow(
+    await expect(adapter.messaging.sendText('5511999@c.us', 'hi')).rejects.toThrow(
       /not started/
     );
   });
 });
 
-describe('ProviderFactory experimental gating', function () {
-  const original = process.env.ENABLE_EXPERIMENTAL_PROVIDERS;
-  afterEach(() => {
-    process.env.ENABLE_EXPERIMENTAL_PROVIDERS = original;
-  });
-
-  it('rejects baileys when the flag is off', function () {
-    process.env.ENABLE_EXPERIMENTAL_PROVIDERS = 'false';
-    const factory = new ProviderFactory();
-    expect(() => factory.assertSupported('baileys')).toThrow(/experimental/);
-  });
-
-  it('allows baileys when the flag is on', function () {
-    process.env.ENABLE_EXPERIMENTAL_PROVIDERS = 'true';
+describe('ProviderFactory (no flag — all providers first-class)', function () {
+  it('builds baileys by name without any flag', function () {
     const factory = new ProviderFactory();
     expect(() => factory.assertSupported('baileys')).not.toThrow();
-    const adapter = factory.createExperimental('baileys', 's1');
+    const adapter = factory.createSocketProvider('baileys', 's1');
     expect(adapter.id).toBe('baileys');
+  });
+
+  it('recognizes all four providers as known', function () {
+    const factory = new ProviderFactory();
+    expect(factory.isKnown('wppconnect')).toBe(true);
+    expect(factory.isKnown('baileys')).toBe(true);
+    expect(factory.isKnown('whaileys')).toBe(true);
+    expect(factory.isKnown('zapo')).toBe(true);
+  });
+
+  it('flags socket providers vs wppconnect', function () {
+    const factory = new ProviderFactory();
+    expect(factory.isSocketProvider('baileys')).toBe(true);
+    expect(factory.isSocketProvider('wppconnect')).toBe(false);
   });
 
   it('rejects unknown providers', function () {
@@ -54,7 +56,7 @@ describe('ProviderFactory experimental gating', function () {
     expect(() => factory.assertSupported('nope' as any)).toThrow(/Unknown/);
   });
 
-  it('accepts wppconnect without a flag', function () {
+  it('accepts wppconnect', function () {
     const factory = new ProviderFactory();
     expect(() => factory.assertSupported('wppconnect')).not.toThrow();
   });

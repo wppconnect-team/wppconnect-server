@@ -43,6 +43,8 @@
 
 import axios, { AxiosInstance } from 'axios';
 import express from 'express';
+import path from 'path';
+import QRCode from 'qrcode';
 import qrcode from 'qrcode-terminal';
 
 const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:21465';
@@ -141,11 +143,12 @@ async function main() {
     auth
   );
 
-  // 3. poll status, render QR when present
+  // 3. poll status, render QR when present (re-render when it rotates)
   console.log('\n⏳ Waiting for QR / connection...');
-  let printedQr = false;
+  let lastQr = '';
   let connected = false;
-  for (let i = 0; i < 120 && !connected; i++) {
+  // ~15 min window so there is plenty of time to read the QR and scan.
+  for (let i = 0; i < 450 && !connected; i++) {
     const status = await api
       .get(`/api/${SESSION}/status-session`, auth)
       .then((r) => r.data)
@@ -155,10 +158,19 @@ async function main() {
       connected = true;
       break;
     }
-    if (!printedQr && (status?.qrcode || status?.urlcode)) {
-      console.log('\n🔳 Scan this QR with WhatsApp:\n');
-      qrcode.generate(status.urlcode || status.qrcode, { small: true });
-      printedQr = true;
+    const qr = status?.urlcode || status?.qrcode;
+    if (qr && qr !== lastQr) {
+      console.log('\n🔳 Scan this QR with WhatsApp (rotates ~every 20s):\n');
+      qrcode.generate(qr, { small: true });
+      // Also write a PNG — far more reliable to scan than terminal ASCII.
+      const pngPath = path.resolve(`qr-${PROVIDER}.png`);
+      try {
+        await QRCode.toFile(pngPath, qr, { width: 400, margin: 2 });
+        console.log(`\n🖼️  QR PNG saved to: ${pngPath}`);
+      } catch {
+        /* ignore PNG write errors */
+      }
+      lastQr = qr;
     }
     await sleep(2000);
   }
@@ -182,9 +194,7 @@ async function main() {
   await step('get-battery-level', () =>
     api.get(`/api/${SESSION}/get-battery-level`, auth)
   );
-  await step('host-device', () =>
-    api.get(`/api/${SESSION}/host-device`, auth)
-  );
+  await step('host-device', () => api.get(`/api/${SESSION}/host-device`, auth));
   await step('get-phone-number', () =>
     api.get(`/api/${SESSION}/get-phone-number`, auth)
   );
@@ -231,12 +241,12 @@ async function main() {
     api.get(`/api/${SESSION}/all-chats-with-messages`, auth)
   );
 
-  console.log('\n── Groups ── (501 expected on providers without group support)');
-  await step(
-    'all-groups',
-    () => api.get(`/api/${SESSION}/all-groups`, auth),
-    { allowNotSupported: true }
+  console.log(
+    '\n── Groups ── (501 expected on providers without group support)'
   );
+  await step('all-groups', () => api.get(`/api/${SESSION}/all-groups`, auth), {
+    allowNotSupported: true,
+  });
 
   console.log('\n── Labels (Business only) ──');
   await step(

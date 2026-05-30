@@ -92,6 +92,22 @@ export class NotSupportedError extends Error {
 }
 
 /**
+ * Thrown when a specific client method has no equivalent in the active provider
+ * (e.g. a wppconnect-only method called on a socket provider). Maps to HTTP 501.
+ */
+export class MethodNotSupportedError extends Error {
+  public readonly httpStatus = 501;
+
+  constructor(
+    public readonly providerId: string,
+    public readonly method: string
+  ) {
+    super(`Method "${method}" is not supported by provider "${providerId}".`);
+    this.name = 'MethodNotSupportedError';
+  }
+}
+
+/**
  * Thrown when an action is attempted on a session that has no live provider
  * yet (not started / not connected). The central error handler maps this to
  * HTTP 404, preserving the current "session not connected" semantics.

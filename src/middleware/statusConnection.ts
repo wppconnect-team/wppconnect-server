@@ -16,6 +16,7 @@
 
 import { NextFunction, Request, Response } from 'express';
 
+import { sessionManager } from '../core/session/SessionManager';
 import { contactToArray } from '../util/functions';
 
 export default async function statusConnection(
@@ -24,6 +25,24 @@ export default async function statusConnection(
   next: NextFunction
 ) {
   try {
+    // Socket-based providers (baileys, whaileys, zapo) have no `req.client`;
+    // their state lives on the SessionManager handle. When connected, let the
+    // request through — the adapter normalizes recipients (createJid) itself, so
+    // we skip the wppconnect-specific checkNumberStatus pre-validation.
+    const handle = sessionManager.get(req.session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      if (handle.status === 'CONNECTED') {
+        next();
+      } else {
+        res.status(404).json({
+          response: null,
+          status: 'Disconnected',
+          message: 'A sessão do WhatsApp não está ativa.',
+        });
+      }
+      return;
+    }
+
     const numbers: any = [];
     if (req.client && req.client.isConnected) {
       await req.client.isConnected();

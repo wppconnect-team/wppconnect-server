@@ -22,7 +22,9 @@ import { Logger } from 'winston';
 
 import { version } from '../../package.json';
 import config from '../config';
+import { providerFactory } from '../core/provider/ProviderFactory';
 import { getClient } from '../core/provider/useProvider';
+import { sessionManager } from '../core/session/SessionManager';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
@@ -236,6 +238,22 @@ export async function startSession(req: Request, res: Response): Promise<any> {
    */
   const session = req.session;
   const { waitQrCode = false } = req.body;
+
+  // Socket-based providers (baileys, whaileys, zapo) don't deliver the QR
+  // through the response like wppconnect's `exportQR`; they expose it via the
+  // SessionManager handle (polled by /status-session). So we start the session
+  // and respond immediately with the current status — never holding `res`.
+  const requestedProvider = req.body?.provider ?? 'wppconnect';
+  if (providerFactory.isSocketProvider(requestedProvider)) {
+    SessionUtil.opendata(req, session); // fire-and-forget (async)
+    res.status(200).json({
+      status: 'INITIALIZING',
+      session,
+      provider: requestedProvider,
+      message: 'Session starting. Poll /status-session for the QR code.',
+    });
+    return;
+  }
 
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
@@ -495,6 +513,23 @@ export async function getSessionState(req: Request, res: Response) {
    */
   try {
     const { waitQrCode = false } = req.body;
+
+    // Experimental (socket-based) providers keep their state on the
+    // SessionManager handle, not on a wppconnect `client`. Prefer the handle
+    // when it carries a non-wppconnect provider so status/QR work for them.
+    const handle = sessionManager.get(req.session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      const urlcode = handle.qrcode ?? null;
+      const qr = urlcode ? await QRCode.toDataURL(urlcode) : null;
+      res.status(200).json({
+        status: handle.status,
+        qrcode: qr,
+        urlcode,
+        version: version,
+      });
+      return;
+    }
+
     const client = getClient(req);
     const qr =
       client?.urlcode != null && client?.urlcode != ''
@@ -533,7 +568,14 @@ export async function getQrCode(req: Request, res: Response) {
      }
    */
   try {
-    if (req?.client?.urlcode) {
+    // Socket-based providers keep the QR on the SessionManager handle.
+    const handle = sessionManager.get(req.session);
+    const urlcode =
+      handle && handle.providerId !== 'wppconnect'
+        ? handle.qrcode
+        : req?.client?.urlcode;
+
+    if (urlcode) {
       // We add options to generate the QR code in higher resolution
       // The /qrcode-session request will now return a readable qrcode.
       const qrOptions = {
@@ -542,9 +584,7 @@ export async function getQrCode(req: Request, res: Response) {
         scale: 5,
         width: 500,
       };
-      const qr = getClient(req).urlcode
-        ? await QRCode.toDataURL(getClient(req).urlcode, qrOptions)
-        : null;
+      const qr = await QRCode.toDataURL(urlcode, qrOptions);
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
         'base64'

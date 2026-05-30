@@ -3,7 +3,7 @@ import { SocketProviderAdapter } from '../../core/provider/socket/SocketProvider
 import { WhaileysAdapter } from '../../core/provider/whaileys/WhaileysAdapter';
 import { ZapoAdapter } from '../../core/provider/zapo/ZapoAdapter';
 
-describe('experimental provider adapters', function () {
+describe('socket provider adapters', function () {
   it('whaileys declares its id and socket capabilities', function () {
     const a = new WhaileysAdapter('s1');
     expect(a.id).toBe('whaileys');
@@ -20,29 +20,15 @@ describe('experimental provider adapters', function () {
     expect(a.capabilities.stories).toBe(false);
   });
 
-  it('factory builds all three when the flag is on', function () {
-    const original = process.env.ENABLE_EXPERIMENTAL_PROVIDERS;
-    process.env.ENABLE_EXPERIMENTAL_PROVIDERS = 'true';
-    try {
-      const f = new ProviderFactory();
-      expect(f.createExperimental('baileys', 's').id).toBe('baileys');
-      expect(f.createExperimental('whaileys', 's').id).toBe('whaileys');
-      expect(f.createExperimental('zapo', 's').id).toBe('zapo');
-    } finally {
-      process.env.ENABLE_EXPERIMENTAL_PROVIDERS = original;
-    }
+  it('factory builds all three socket providers by name (no flag)', function () {
+    const f = new ProviderFactory();
+    expect(f.createSocketProvider('baileys', 's').id).toBe('baileys');
+    expect(f.createSocketProvider('whaileys', 's').id).toBe('whaileys');
+    expect(f.createSocketProvider('zapo', 's').id).toBe('zapo');
   });
 
-  it('factory rejects experimental providers when the flag is off', function () {
-    const original = process.env.ENABLE_EXPERIMENTAL_PROVIDERS;
-    process.env.ENABLE_EXPERIMENTAL_PROVIDERS = 'false';
-    try {
-      const f = new ProviderFactory();
-      expect(() => f.createExperimental('whaileys', 's')).toThrow(
-        /experimental/
-      );
-    } finally {
-      process.env.ENABLE_EXPERIMENTAL_PROVIDERS = original;
-    }
+  it('factory rejects unknown providers', function () {
+    const f = new ProviderFactory();
+    expect(() => f.assertSupported('nope' as any)).toThrow(/Unknown/);
   });
 });

@@ -49,13 +49,13 @@ export default class CreateSessionUtil {
       client.status = 'INITIALIZING';
       client.config = req.body;
 
-      // Provider selection: experimental socket-based providers (baileys,
-      // whaileys, zapo) take a separate creation path — they don't use the
-      // wppconnect `create()` browser flow.
+      // Provider selection: socket-based providers (baileys, whaileys, zapo)
+      // take a separate creation path — they don't use the wppconnect `create()`
+      // browser flow. All providers are first-class (no feature flag).
       const requestedProvider = (client.config?.provider ??
         'wppconnect') as ProviderId;
-      if (requestedProvider !== 'wppconnect') {
-        await this.createExperimentalSession(req, session, requestedProvider);
+      if (providerFactory.isSocketProvider(requestedProvider)) {
+        await this.createSocketSession(req, session, requestedProvider);
         return;
       }
 
@@ -191,20 +191,15 @@ export default class CreateSessionUtil {
   }
 
   /**
-   * Creation path for the experimental socket-based providers (baileys,
-   * whaileys, zapo). Builds the adapter via the factory (which enforces the
-   * ENABLE_EXPERIMENTAL_PROVIDERS flag), registers it in the SessionManager,
-   * and wires its normalized event bus to the EventDispatcher so webhooks and
+   * Creation path for the socket-based providers (baileys, whaileys, zapo).
+   * Builds the adapter via the factory, registers it in the SessionManager, and
+   * wires its normalized event bus to the EventDispatcher so webhooks and
    * socket.io fire exactly like the wppconnect path.
    */
-  async createExperimentalSession(
-    req: any,
-    session: string,
-    providerId: ProviderId
-  ) {
+  async createSocketSession(req: any, session: string, providerId: ProviderId) {
     try {
       const handle = sessionManager.getOrCreate(session, providerId);
-      const adapter = providerFactory.createExperimental(
+      const adapter = providerFactory.createSocketProvider(
         providerId,
         session,
         handle.bus

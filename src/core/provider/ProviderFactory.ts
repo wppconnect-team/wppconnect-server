@@ -23,28 +23,21 @@ import { WhaileysAdapter } from './whaileys/WhaileysAdapter';
 import { WppConnectAdapter } from './wppconnect/WppConnectAdapter';
 import { ZapoAdapter } from './zapo/ZapoAdapter';
 
-/**
- * Set of providers that are gated behind the experimental feature flag. Only
- * `wppconnect` is stable in PR1; the rest become available once their adapters
- * land (PR8) and `ENABLE_EXPERIMENTAL_PROVIDERS` is set.
- */
-const EXPERIMENTAL_PROVIDERS: ReadonlySet<ProviderId> = new Set<ProviderId>([
+/** Provider ids backed by a socket library (created on demand by name). */
+const SOCKET_PROVIDERS: ReadonlySet<ProviderId> = new Set<ProviderId>([
   'baileys',
   'whaileys',
   'zapo',
 ]);
 
-function experimentalEnabled(): boolean {
-  return process.env.ENABLE_EXPERIMENTAL_PROVIDERS === 'true';
-}
-
 /**
  * Builds {@link ProviderAdapter} instances, mirroring the existing
  * `tokenStore/factory.ts` pattern (select-by-type, return the abstraction).
  *
- * In PR1 the only concrete adapter is wppconnect, created by wrapping a client
- * that was already instantiated by `createSessionUtil`. Experimental providers
- * throw until their adapters exist and the flag is enabled.
+ * All providers are first-class: `wppconnect` wraps the browser client created
+ * by `createSessionUtil`; the socket providers (baileys, whaileys, zapo) are
+ * created by name. No feature flag — the provider is chosen per session via the
+ * `provider` field on `start-session`.
  */
 export class ProviderFactory {
   /**
@@ -60,17 +53,14 @@ export class ProviderFactory {
   }
 
   /**
-   * Creates an experimental provider adapter (currently only Baileys), after
-   * verifying the feature flag is enabled. The session name is needed for the
-   * provider's own credential storage.
+   * Creates a socket-based provider adapter (baileys, whaileys, zapo) by id.
+   * The session name is needed for the provider's own credential storage.
    */
-  public createExperimental(
+  public createSocketProvider(
     providerId: ProviderId,
     sessionName: string,
     bus?: EventEmitter
   ): ProviderAdapter {
-    this.assertSupported(providerId);
-
     switch (providerId) {
       case 'baileys':
         return new BaileysAdapter(sessionName, bus);
@@ -79,24 +69,24 @@ export class ProviderFactory {
       case 'zapo':
         return new ZapoAdapter(sessionName, bus);
       default:
-        throw new Error(`Provider "${providerId}" is not implemented yet.`);
+        throw new Error(`Provider "${providerId}" is not a socket provider.`);
     }
   }
 
-  /**
-   * Validates a provider id can be used in the current configuration.
-   * Experimental providers require `ENABLE_EXPERIMENTAL_PROVIDERS=true`.
-   */
-  public assertSupported(providerId: ProviderId): void {
-    if (providerId === 'wppconnect') return;
+  /** Whether a provider id is known/supported. */
+  public isKnown(providerId: ProviderId): boolean {
+    return providerId === 'wppconnect' || SOCKET_PROVIDERS.has(providerId);
+  }
 
-    if (!EXPERIMENTAL_PROVIDERS.has(providerId)) {
+  /** Whether a provider is socket-based (vs the wppconnect browser flow). */
+  public isSocketProvider(providerId: ProviderId): boolean {
+    return SOCKET_PROVIDERS.has(providerId);
+  }
+
+  /** Validates a provider id can be used. Throws for unknown providers. */
+  public assertSupported(providerId: ProviderId): void {
+    if (!this.isKnown(providerId)) {
       throw new Error(`Unknown provider "${providerId}".`);
-    }
-    if (!experimentalEnabled()) {
-      throw new Error(
-        `Provider "${providerId}" is experimental. Set ENABLE_EXPERIMENTAL_PROVIDERS=true to use it.`
-      );
     }
   }
 }
