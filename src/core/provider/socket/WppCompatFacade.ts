@@ -35,6 +35,10 @@ export class WppCompatFacade {
   public status = 'CONNECTED';
   public session: string;
   public urlcode?: string;
+  // Mirrors wppconnect's `client.config` so callWebHook (which reads
+  // `client.config.webhook`) fires for socket providers too. Populated by
+  // createSocketSession from the start-session body.
+  public config: any = {};
 
   constructor(private readonly sock: any, session: string) {
     this.session = session;

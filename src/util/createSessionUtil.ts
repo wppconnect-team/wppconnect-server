@@ -208,10 +208,17 @@ export default class CreateSessionUtil {
       handle.config = req.body;
       handle.status = 'INITIALIZING';
 
-      // Fan normalized provider events out to webhook + socket.io. The
-      // dispatcher uses the adapter's raw socket for any client calls.
-      const dispatcher = new EventDispatcher(adapter.raw(), req);
+      // Fan normalized provider events out to webhook + socket.io. The facade
+      // (adapter.raw()) is resolved per-event because the socket only exists
+      // after start(); we set client.config (webhook URL) on it so callWebHook
+      // fires for socket providers just like for wppconnect.
       const forward = (event: any) => (data: any) => {
+        const client = adapter.raw() as any;
+        if (client) {
+          client.config = req.body;
+          client.session = session;
+        }
+        const dispatcher = new EventDispatcher(client, req);
         if (event === 'qr') {
           const handleRef = sessionManager.get(session);
           if (handleRef) {
