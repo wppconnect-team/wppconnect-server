@@ -24,7 +24,7 @@ jobs:
         run: corepack enable
 
       - name: Setup Yarn
-        run: corepack prepare yarn@4.12.0 --activate
+        run: corepack prepare yarn@4.14.1 --activate
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -59,7 +59,7 @@ jobs:
         run: corepack enable
 
       - name: Setup Yarn
-        run: corepack prepare yarn@4.12.0 --activate
+        run: corepack prepare yarn@4.14.1 --activate
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
