@@ -19,6 +19,7 @@
     "commit": "git-cz",
     "dev": "tsx watch src/server.ts",
     "e2e": "tsx e2e/test-runner.ts",
+    "test:runtime-real": "cross-env MATRIX_REAL=1 MATRIX_INTERACTIVE=1 tsx e2e/runtime-matrix.ts",
     "test:runtime-matrix": "tsx e2e/runtime-matrix.ts",
     "docs": "tsx src/swagger.ts",
     "license:add": "license-check-and-add add",

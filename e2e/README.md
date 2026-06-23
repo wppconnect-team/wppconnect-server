@@ -49,6 +49,40 @@ The scoped packages `@wppconnect/baileys`, `@wppconnect/whaileys` and
 When native WPPConnect forks are published, replace those alias versions in
 `optionalDependencies`.
 
+### Real runtime tests
+
+Use this when you need to prove the servers actually connect and send messages.
+It requires scanning the QR code for every runtime/provider under test and it
+sends real WhatsApp messages to `MATRIX_TARGET`.
+
+```bash
+MATRIX_TARGET=5521999999999 yarn test:runtime-real
+```
+
+PowerShell:
+
+```powershell
+$env:MATRIX_TARGET='5521999999999'; yarn test:runtime-real
+```
+
+Useful filters:
+
+```bash
+MATRIX_TARGET=5521999999999 MATRIX_PROVIDERS=wppconnect yarn test:runtime-real
+MATRIX_TARGET=5521999999999 MATRIX_PROVIDERS=baileys MATRIX_TEST_GO=0 yarn test:runtime-real
+MATRIX_TARGET=5521999999999 MATRIX_TEST_NODE=0 yarn test:runtime-real
+```
+
+The real mode validates:
+
+1. QR rendering in terminal and `e2e/.runtime-qrs/*.png`
+2. `status-session` reaches `CONNECTED` / `inChat`
+3. dashboard stats are reachable
+4. `check-number-status` against `MATRIX_TARGET`
+5. real `send-message`
+6. real `send-location` for Node providers
+7. real `send-image` and `send-seen` for the Go server
+
 ### Full route E2E
 
 In one terminal, start the server:
