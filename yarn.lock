@@ -6087,7 +6087,7 @@ __metadata:
     "@wppconnect-team/wppconnect": "npm:^2.1.0"
     "@wppconnect/baileys": "npm:7.0.0-rc13"
     "@wppconnect/whaileys": "npm:^6.4.14"
-    "@wppconnect/zapo": "npm:^0.3.0"
+    "@wppconnect/zapo": "npm:^0.3.1"
     "@zapo-js/store-sqlite": "npm:0.3.0"
     archiver: "npm:^7.0.1"
     axios: "npm:^1.14.0"
@@ -6222,9 +6222,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wppconnect/zapo@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@wppconnect/zapo@npm:0.3.0"
+"@wppconnect/zapo@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@wppconnect/zapo@npm:0.3.1"
   peerDependencies:
     argo-codec: ^0.2.1
     pino: ^9.0.0
@@ -6239,7 +6239,7 @@ __metadata:
       optional: true
     ws:
       optional: true
-  checksum: 10c0/e42d35fef7be9f17924e472e28173bcf889ac21f10eb0cdc5231f8c69ce756981ab3e1256d58d7983456ed4f5fb9b8782d9551d6ca5eb7bd65e16ff75e138ca4
+  checksum: 10c0/df4ddad70fd81813a4a3085951f4577837286254c87c5b77e508fc860688cbc71395eb5050d1779bf36fd38105f4a4ff0f80bcd4fd8d869b97025191e5ad6397
   languageName: node
   linkType: hard
 

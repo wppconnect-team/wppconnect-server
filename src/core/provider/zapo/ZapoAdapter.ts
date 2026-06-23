@@ -141,6 +141,7 @@ export class ZapoAdapter implements ProviderAdapter {
         messages: 'sqlite',
         threads: 'sqlite',
         contacts: 'sqlite',
+        privacyToken: 'sqlite',
       },
     });
 

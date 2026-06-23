@@ -133,7 +133,7 @@
     "@whiskeysockets/baileys": "7.0.0-rc13",
     "@wppconnect/baileys": "7.0.0-rc13",
     "@wppconnect/whaileys": "^6.4.14",
-    "@wppconnect/zapo": "^0.3.0",
+    "@wppconnect/zapo": "^0.3.1",
     "@zapo-js/store-sqlite": "0.3.0",
     "better-sqlite3": "^12.10.0",
     "whaileys": "^6.4.14",
