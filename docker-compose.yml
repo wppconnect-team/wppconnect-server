@@ -3,6 +3,7 @@ version: "3"
 services:
   wppconnect:
     container_name: wpp-server
+    image: wppconnect/wppconnect-server:latest
     restart: unless-stopped
     build:
       context: .
