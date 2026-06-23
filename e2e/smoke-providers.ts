@@ -7,7 +7,7 @@
  * (scanning). Anything else (or an error) is reported. No HTTP server / phone
  * needed.
  *
- * Run with: ENABLE_EXPERIMENTAL_PROVIDERS=true npx tsx e2e/smoke-providers.ts
+ * Run with: yarn tsx e2e/smoke-providers.ts
  */
 import { ProviderId } from '../src/core/provider/ProviderAdapter';
 import { providerFactory } from '../src/core/provider/ProviderFactory';
@@ -15,7 +15,7 @@ import { providerFactory } from '../src/core/provider/ProviderFactory';
 const PROVIDERS: ProviderId[] = ['baileys', 'whaileys', 'zapo'];
 
 async function smoke(id: ProviderId): Promise<string> {
-  const adapter = providerFactory.createExperimental(id, `SMOKE_${id}`);
+  const adapter = providerFactory.createSocketProvider(id, `SMOKE_${id}`);
   return new Promise<string>((resolve) => {
     let settled = false;
     const done = (msg: string) => {

@@ -19,6 +19,7 @@
     "commit": "git-cz",
     "dev": "tsx watch src/server.ts",
     "e2e": "tsx e2e/test-runner.ts",
+    "test:runtime-matrix": "tsx e2e/runtime-matrix.ts",
     "docs": "tsx src/swagger.ts",
     "license:add": "license-check-and-add add",
     "license:check": "license-check-and-add check",
@@ -129,6 +130,9 @@
   },
   "optionalDependencies": {
     "@whiskeysockets/baileys": "7.0.0-rc13",
+    "@wppconnect/baileys": "npm:@whiskeysockets/baileys@7.0.0-rc13",
+    "@wppconnect/whaileys": "npm:whaileys@^6.4.14",
+    "@wppconnect/zapo": "npm:zapo-js@^0.3.0",
     "@zapo-js/store-sqlite": "0.3.0",
     "better-sqlite3": "^12.10.0",
     "whaileys": "^6.4.14",

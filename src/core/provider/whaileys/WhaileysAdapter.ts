@@ -20,10 +20,10 @@ import { SocketProviderAdapter } from '../socket/SocketProviderAdapter';
 
 /**
  * EXPERIMENTAL provider backed by whaileys (canove's Baileys fork). Prefers the
- * controlled fork `@wppconnect/whaileys`, falling back to upstream `whaileys`.
+ * controlled package name `@wppconnect/whaileys`, falling back to upstream
+ * `whaileys`. The scoped package is currently installed as an npm alias, so
+ * runtime imports keep working until a native fork is published.
  * Same socket-based API as Baileys — see {@link SocketProviderAdapter}.
- *
- * Gated behind `ENABLE_EXPERIMENTAL_PROVIDERS=true` via ProviderFactory.
  */
 export class WhaileysAdapter extends SocketProviderAdapter {
   constructor(sessionName: string, bus?: EventEmitter) {

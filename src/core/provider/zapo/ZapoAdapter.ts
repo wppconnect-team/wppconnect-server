@@ -34,11 +34,10 @@ import {
  * pluggable `createStore`, QR delivered via the `auth_qr` event — so it has a
  * dedicated adapter rather than sharing the socket base.
  *
- * Loaded dynamically; prefers the controlled fork `@wppconnect/zapo`, falling
- * back to upstream `zapo-js`. Uses an in-memory store by default (no native
- * deps); set a SQLite store for persistence in production.
- *
- * Gated behind `ENABLE_EXPERIMENTAL_PROVIDERS=true` via ProviderFactory.
+ * Loaded dynamically; prefers the controlled package name `@wppconnect/zapo`,
+ * falling back to upstream `zapo-js`. The scoped package is currently installed
+ * as an npm alias, so runtime imports keep working until a native fork is
+ * published.
  */
 export class ZapoAdapter implements ProviderAdapter {
   public readonly id: ProviderId = 'zapo';

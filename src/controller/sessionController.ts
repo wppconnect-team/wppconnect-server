@@ -273,16 +273,33 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
    */
   const session = req.session;
   try {
-    if ((clientsArray as any)[session].status === null) {
+    const handle = sessionManager.get(session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      await handle.adapter?.session.close();
+      sessionManager.delete(session);
+      deleteSessionOnArray(session);
+      req.io.emit('whatsapp-status', false);
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
+    }
+
+    const client = getClient(req) as any;
+    if (!client || client.status === null) {
       return await res
         .status(200)
         .json({ status: true, message: 'Session successfully closed' });
     } else {
+      if (typeof client.close === 'function') {
+        await client.close();
+      } else if (typeof client.page?.browser === 'function') {
+        await client.page.browser().close();
+      }
+
       (clientsArray as any)[session] = { status: null };
 
-      await getClient(req).close();
       req.io.emit('whatsapp-status', false);
-      callWebHook(getClient(req), req, 'closesession', {
+      callWebHook(client, req, 'closesession', {
         message: `Session: ${session} disconnected`,
         connected: false,
       });
@@ -311,9 +328,20 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-   */
+  */
   try {
     const session = req.session;
+    const handle = sessionManager.get(session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      await handle.adapter?.session.logout();
+      sessionManager.delete(session);
+      deleteSessionOnArray(session);
+      req.io.emit('whatsapp-status', false);
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
+    }
+
     await getClient(req).logout();
     deleteSessionOnArray(req.session);
 

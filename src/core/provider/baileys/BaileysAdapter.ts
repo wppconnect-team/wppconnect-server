@@ -20,10 +20,10 @@ import { SocketProviderAdapter } from '../socket/SocketProviderAdapter';
 
 /**
  * EXPERIMENTAL provider backed by the Baileys family. Prefers the controlled
- * fork `@wppconnect/baileys`, falling back to upstream `@whiskeysockets/baileys`
- * until the fork is published. See {@link SocketProviderAdapter} for behavior.
- *
- * Gated behind `ENABLE_EXPERIMENTAL_PROVIDERS=true` via ProviderFactory.
+ * package name `@wppconnect/baileys`, falling back to upstream
+ * `@whiskeysockets/baileys`. The scoped package is currently installed as an
+ * npm alias, so runtime imports keep working until a native fork is published.
+ * See {@link SocketProviderAdapter} for behavior.
  */
 export class BaileysAdapter extends SocketProviderAdapter {
   constructor(sessionName: string, bus?: EventEmitter) {

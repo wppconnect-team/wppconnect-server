@@ -15,6 +15,42 @@ part of `yarn test` (the Jest suite).
 
 ## How to run
 
+### Runtime matrix
+
+Use this first when validating the Node providers and the Go server:
+
+```bash
+yarn test:runtime-matrix
+```
+
+By default it starts the Node server and the sibling `../wppconnect-server-go`
+server, then checks each runtime up to QR emission. The Node server is started
+with `startAllSession=false` and a temporary `userDataDir`, so local saved
+sessions do not pollute the smoke run.
+
+Useful overrides:
+
+```bash
+MATRIX_PROVIDERS=wppconnect,baileys yarn test:runtime-matrix
+MATRIX_TEST_GO=0 yarn test:runtime-matrix
+MATRIX_INTERACTIVE=1 MATRIX_QR_TIMEOUT_MS=300000 yarn test:runtime-matrix
+MATRIX_START_NODE=0 MATRIX_NODE_BASE_URL=http://localhost:21465 yarn test:runtime-matrix
+```
+
+PowerShell examples:
+
+```powershell
+$env:MATRIX_PROVIDERS='wppconnect,baileys'; yarn test:runtime-matrix
+$env:MATRIX_INTERACTIVE='1'; $env:MATRIX_QR_TIMEOUT_MS='300000'; yarn test:runtime-matrix
+```
+
+The scoped packages `@wppconnect/baileys`, `@wppconnect/whaileys` and
+`@wppconnect/zapo` are npm aliases to the currently published upstream packages.
+When native WPPConnect forks are published, replace those alias versions in
+`optionalDependencies`.
+
+### Full route E2E
+
 In one terminal, start the server:
 
 ```bash
@@ -47,14 +83,12 @@ Example sending to a specific number:
 E2E_TARGET=5521999999999 yarn e2e
 ```
 
-### Testing the experimental Baileys provider
+### Testing the Baileys provider
 
 ```bash
-# 1. install a baileys implementation (fork preferred, upstream as fallback)
-yarn add @whiskeysockets/baileys
-# 2. start the server with the flag on
-ENABLE_EXPERIMENTAL_PROVIDERS=true yarn dev
-# 3. run the E2E against the baileys provider
+# 1. start the server
+yarn dev
+# 2. run the E2E against the baileys provider
 E2E_PROVIDER=baileys yarn e2e
 ```
 
