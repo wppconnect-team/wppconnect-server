@@ -131,9 +131,9 @@
   },
   "optionalDependencies": {
     "@whiskeysockets/baileys": "7.0.0-rc13",
-    "@wppconnect/baileys": "npm:@whiskeysockets/baileys@7.0.0-rc13",
-    "@wppconnect/whaileys": "npm:whaileys@^6.4.14",
-    "@wppconnect/zapo": "npm:zapo-js@^0.3.0",
+    "@wppconnect/baileys": "7.0.0-rc13",
+    "@wppconnect/whaileys": "^6.4.14",
+    "@wppconnect/zapo": "^0.3.0",
     "@zapo-js/store-sqlite": "0.3.0",
     "better-sqlite3": "^12.10.0",
     "whaileys": "^6.4.14",
