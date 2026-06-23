@@ -23,9 +23,9 @@ describe('BaileysAdapter', function () {
 
   it('throws when sending before the socket is started', async function () {
     const adapter = new BaileysAdapter('s1');
-    await expect(adapter.messaging.sendText('5511999@c.us', 'hi')).rejects.toThrow(
-      /not started/
-    );
+    await expect(
+      adapter.messaging.sendText('5511999@c.us', 'hi')
+    ).rejects.toThrow(/not started/);
   });
 });
 
