@@ -1,17 +1,33 @@
-version: "3"
-
 services:
   wppconnect:
     container_name: wpp-server
-    image: wppconnect/wppconnect-server:latest
+    image: wppconnect/wppconnect-server:${WPP_SERVER_TAG:-latest}
     restart: unless-stopped
-    build:
-      context: .
+    environment:
+      PORT: "21465"
+      HOST: "http://localhost"
+      SECRET_KEY: "${SECRET_KEY:-THISISMYSECURETOKEN}"
+      WEBHOOK_URL: "${WEBHOOK_URL:-}"
+      TOKEN_STORE_TYPE: "${TOKEN_STORE_TYPE:-file}"
+      CUSTOM_USER_DATA_DIR: "/usr/src/wpp-server/userDataDir/"
     volumes:
-      - ./config.ts:/usr/src/wpp-server/config.ts
-      - ./wppconnect_tokens:/usr/src/wpp-server/tokens
+      - wppconnect_tokens:/usr/src/wpp-server/tokens
+      - wppconnect_user_data:/usr/src/wpp-server/userDataDir
+      - wppconnect_uploads:/usr/src/wpp-server/uploads
+      - wppconnect_images:/usr/src/wpp-server/WhatsAppImages
+      - wppconnect_logs:/usr/src/wpp-server/log
     ports:
       - "21465:21465"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:$${PORT:-21465}/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 volumes:
-  wppconnect_tokens: {}      
+  wppconnect_tokens: {}
+  wppconnect_user_data: {}
+  wppconnect_uploads: {}
+  wppconnect_images: {}
+  wppconnect_logs: {}

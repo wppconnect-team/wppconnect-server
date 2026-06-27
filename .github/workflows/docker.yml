@@ -2,8 +2,15 @@ name: Docker
 
 on:
   push:
+    branches:
+      - main
+      - develop
     tags:
       - 'v*'
+  pull_request:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
 
 permissions:
@@ -36,6 +43,7 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
+            type=ref,event=pr
             type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
