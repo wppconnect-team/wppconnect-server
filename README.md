@@ -115,6 +115,43 @@ yarn dev
 yarn build
 ```
 
+## Docker
+
+The official image is published to Docker Hub as
+`wppconnect/wppconnect-server`.
+
+Run the production compose example:
+
+```sh
+SECRET_KEY=change-me docker compose up -d
+curl http://localhost:21465/healthz
+```
+
+Use `WPP_SERVER_TAG` to pin a specific image tag:
+
+```sh
+WPP_SERVER_TAG=2.10.0 SECRET_KEY=change-me docker compose up -d
+```
+
+The container accepts these Docker-friendly environment variables while keeping
+the same defaults as `src/config.ts`: `PORT`, `HOST`, `SECRET_KEY`,
+`WEBHOOK_URL`, `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS`,
+`REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX`,
+`MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`,
+`MONGODB_HOST`, `MONGODB_PORT`, and `MONGO_URL_REMOTE`.
+
+Docker image publishing is handled by GitHub Actions:
+
+- pushes to `main` publish the moving `main` tag and a `sha-*` tag;
+- pushes to `develop` publish the moving `develop` tag and a `sha-*` tag;
+- tags like `v2.10.0` publish `2.10.0`, `2.10`, `2`, the git ref tag,
+  `sha-*`, and `latest`;
+- pull requests build the image without pushing it.
+
+The Docker Hub organization must contain a public repository named
+`wppconnect-server`, and this GitHub repository must have the secrets
+`DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+
 ---
 
 # Configuration

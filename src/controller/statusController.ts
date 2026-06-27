@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { getClient } from '../core/provider/useProvider';
 import { unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {
@@ -63,7 +64,7 @@ export async function sendTextStorie(req: Request, res: Response) {
 
   try {
     const results: any = [];
-    results.push(await req.client.sendTextStatus(text, options));
+    results.push(await getClient(req).sendTextStatus(text, options));
 
     if (results.length === 0)
       res.status(400).json('Error sending the text of stories');
@@ -116,7 +117,7 @@ export async function sendImageStorie(req: Request, res: Response) {
 
   try {
     const results: any = [];
-    results.push(await req.client.sendImageStatus(pathFile));
+    results.push(await getClient(req).sendImageStatus(pathFile));
 
     if (results.length === 0)
       res.status(400).json('Error sending the image of stories');
@@ -170,7 +171,7 @@ export async function sendVideoStorie(req: Request, res: Response) {
   try {
     const results: any = [];
 
-    results.push(await req.client.sendVideoStatus(pathFile));
+    results.push(await getClient(req).sendVideoStatus(pathFile));
 
     if (results.length === 0) res.status(400).json('Error sending message');
     if (req.file) await unlinkAsync(pathFile);

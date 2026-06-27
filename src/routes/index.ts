@@ -31,6 +31,7 @@ import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
+import { sessionManager } from '../core/session/SessionManager';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
@@ -39,6 +40,50 @@ import swaggerDocument from '../swagger.json';
 
 const upload = multer(uploadConfig as any) as any;
 const routes: Router = Router();
+
+routes.get('/api/dashboard/stats', async (_req, res) => {
+  const sessions = await Promise.all(
+    sessionManager.list().map(async (handle) => {
+      const health = handle.adapter
+        ? await handle.adapter.health().catch((error: Error) => ({
+            connected: false,
+            state: handle.status,
+            error: error.message,
+          }))
+        : { connected: false, state: handle.status };
+
+      return {
+        session: handle.name,
+        origin: handle.config?.origin ?? 'unknown',
+        runtime: 'wppconnect-server',
+        provider: handle.providerId,
+        status: handle.status,
+        health,
+        createdAt: new Date(handle.metadata.createdAt).toISOString(),
+        updatedAt: new Date(handle.metadata.lastStateChangeAt).toISOString(),
+      };
+    })
+  );
+
+  const byProvider = sessions.reduce<Record<string, number>>((acc, item) => {
+    acc[item.provider] = (acc[item.provider] || 0) + 1;
+    return acc;
+  }, {});
+  const connected = sessions.filter((item) => item.health?.connected).length;
+
+  res.status(200).json({
+    updatedAt: new Date().toISOString(),
+    overview: {
+      runtime: 'wppconnect-server',
+      sessions: sessions.length,
+      totalSessions: sessions.length,
+      connected,
+      disconnected: sessions.length - connected,
+      byProvider,
+    },
+    sessions,
+  });
+});
 
 // Generate Token
 routes.post('/api/:session/:secretkey/generate-token', encryptSession);

@@ -15,6 +15,7 @@
  */
 import { Request, Response } from 'express';
 
+import { getClient } from '../core/provider/useProvider';
 import {
   contactToArray,
   groupNameToArray,
@@ -35,7 +36,7 @@ export async function getAllGroups(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllGroups();
+    const response = await getClient(req).getAllGroups();
 
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -86,7 +87,7 @@ export async function joinGroupByCode(req: Request, res: Response) {
     res.status(400).send({ message: 'Invitation Code is required' });
 
   try {
-    await req.client.joinGroup(inviteCode);
+    await getClient(req).joinGroup(inviteCode);
     res.status(201).json({
       status: 'success',
       response: {
@@ -152,7 +153,7 @@ export async function createGroup(req: Request, res: Response) {
     const infoGroup: any = [];
 
     for (const group of groupNameToArray(name)) {
-      response = await req.client.createGroup(
+      response = await getClient(req).createGroup(
         group,
         contactToArray(participants)
       );
@@ -208,7 +209,7 @@ export async function leaveGroup(req: Request, res: Response) {
 
   try {
     for (const group of groupToArray(groupId)) {
-      await req.client.leaveGroup(group);
+      await getClient(req).leaveGroup(group);
     }
 
     res.status(200).json({
@@ -241,7 +242,7 @@ export async function getGroupMembers(req: Request, res: Response) {
   try {
     let response = {};
     for (const group of groupToArray(groupId)) {
-      response = await req.client.getGroupMembers(group);
+      response = await getClient(req).getGroupMembers(group);
     }
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -295,7 +296,10 @@ export async function addParticipant(req: Request, res: Response) {
     const arrayGroups: any = [];
 
     for (const group of groupToArray(groupId)) {
-      response = await req.client.addParticipant(group, contactToArray(phone));
+      response = await getClient(req).addParticipant(
+        group,
+        contactToArray(phone)
+      );
       arrayGroups.push(response);
     }
 
@@ -359,7 +363,7 @@ export async function removeParticipant(req: Request, res: Response) {
     const arrayGroups: any = [];
 
     for (const group of groupToArray(groupId)) {
-      response = await req.client.removeParticipant(
+      response = await getClient(req).removeParticipant(
         group,
         contactToArray(phone)
       );
@@ -423,7 +427,7 @@ export async function promoteParticipant(req: Request, res: Response) {
   try {
     const arrayGroups: any = [];
     for (const group of groupToArray(groupId)) {
-      await req.client.promoteParticipant(group, contactToArray(phone));
+      await getClient(req).promoteParticipant(group, contactToArray(phone));
       arrayGroups.push(group);
     }
 
@@ -484,7 +488,7 @@ export async function demoteParticipant(req: Request, res: Response) {
   try {
     const arrayGroups: any = [];
     for (const group of groupToArray(groupId)) {
-      await req.client.demoteParticipant(group, contactToArray(phone));
+      await getClient(req).demoteParticipant(group, contactToArray(phone));
       arrayGroups.push(group);
     }
 
@@ -545,7 +549,7 @@ export async function getGroupAdmins(req: Request, res: Response) {
     const arrayGroups: any = [];
 
     for (const group of groupToArray(groupId)) {
-      response = await req.client.getGroupAdmins(group);
+      response = await getClient(req).getGroupAdmins(group);
       arrayGroups.push(response);
     }
 
@@ -588,7 +592,7 @@ export async function getGroupInviteLink(req: Request, res: Response) {
   try {
     let response = {};
     for (const group of groupToArray(groupId)) {
-      response = await req.client.getGroupInviteLink(group);
+      response = await getClient(req).getGroupInviteLink(group);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -632,7 +636,7 @@ export async function revokeGroupInviteLink(req: Request, res: Response) {
 
   try {
     for (const group of groupToArray(groupId)) {
-      response = await req.client.revokeGroupInviteLink(group);
+      response = await getClient(req).revokeGroupInviteLink(group);
     }
 
     res.status(200).json({
@@ -661,7 +665,7 @@ export async function getAllBroadcastList(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllBroadcastList();
+    const response = await getClient(req).getAllBroadcastList();
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -699,7 +703,9 @@ export async function getGroupInfoFromInviteLink(req: Request, res: Response) {
    */
   try {
     const { invitecode } = req.body;
-    const response = await req.client.getGroupInfoFromInviteLink(invitecode);
+    const response = await getClient(req).getGroupInfoFromInviteLink(
+      invitecode
+    );
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -729,7 +735,7 @@ export async function getGroupMembersIds(req: Request, res: Response) {
   let response = {};
   try {
     for (const group of groupToArray(groupId)) {
-      response = await req.client.getGroupMembersIds(group);
+      response = await getClient(req).getGroupMembersIds(group);
     }
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -773,7 +779,7 @@ export async function setGroupDescription(req: Request, res: Response) {
 
   try {
     for (const group of groupToArray(groupId)) {
-      response = await req.client.setGroupDescription(group, description);
+      response = await getClient(req).setGroupDescription(group, description);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -819,7 +825,7 @@ export async function setGroupProperty(req: Request, res: Response) {
 
   try {
     for (const group of groupToArray(groupId)) {
-      response = await req.client.setGroupProperty(group, property, value);
+      response = await getClient(req).setGroupProperty(group, property, value);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -864,7 +870,7 @@ export async function setGroupSubject(req: Request, res: Response) {
 
   try {
     for (const group of groupToArray(groupId)) {
-      response = await req.client.setGroupSubject(group, title);
+      response = await getClient(req).setGroupSubject(group, title);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -909,7 +915,7 @@ export async function setMessagesAdminsOnly(req: Request, res: Response) {
 
   try {
     for (const group of groupToArray(groupId)) {
-      response = await req.client.setMessagesAdminsOnly(group, value);
+      response = await getClient(req).setMessagesAdminsOnly(group, value);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -952,7 +958,7 @@ export async function changePrivacyGroup(req: Request, res: Response) {
 
   try {
     for (const group of contactToArray(groupId)) {
-      await req.client.setGroupProperty(
+      await getClient(req).setGroupProperty(
         group,
         'restrict' as any,
         status === 'true'
@@ -1009,7 +1015,7 @@ export async function setGroupProfilePic(req: Request, res: Response) {
 
   try {
     for (const contact of contactToArray(groupId, true)) {
-      await req.client.setGroupIcon(contact, pathFile);
+      await getClient(req).setGroupIcon(contact, pathFile);
     }
 
     res.status(201).json({
@@ -1042,7 +1048,7 @@ export async function getCommonGroups(req: Request, res: Response) {
    */
   const { wid } = req.params;
   try {
-    res.status(200).json(await (req.client as any).getCommonGroups(wid));
+    res.status(200).json(await (getClient(req) as any).getCommonGroups(wid));
   } catch (e) {
     req.logger.error(e);
     res.status(500).json({
@@ -1119,7 +1125,7 @@ export async function getGroupInfo(req: Request, res: Response) {
   try {
     let response: any = {};
     for (const group of groupToArray(groupId)) {
-      const chat: any = await req.client.getChatById(group);
+      const chat: any = await getClient(req).getChatById(group);
 
       // Basic fields
       const id = chat?.id?._serialized || chat?.id?.user || group;

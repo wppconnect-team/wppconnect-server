@@ -15,6 +15,8 @@
  */
 import { Request, Response } from 'express';
 
+import { getClient } from '../core/provider/useProvider';
+
 function returnError(
   req: Request,
   res: Response,
@@ -73,7 +75,7 @@ export async function createNewsletter(req: Request, res: Response) {
   const { name, options } = req.body;
 
   try {
-    res.status(201).json(await req.client.createNewsletter(name, options));
+    res.status(201).json(await getClient(req).createNewsletter(name, options));
   } catch (error) {
     returnError(req, res, session, error);
   }
@@ -133,7 +135,7 @@ export async function editNewsletter(req: Request, res: Response) {
 
   try {
     res.status(201).json(
-      await req.client.editNewsletter(id, {
+      await getClient(req).editNewsletter(id, {
         name,
         description,
         picture,
@@ -163,7 +165,7 @@ export async function destroyNewsletter(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    res.status(201).json(await req.client.destroyNewsletter(id));
+    res.status(201).json(await getClient(req).destroyNewsletter(id));
   } catch (error) {
     returnError(req, res, session, error);
   }
@@ -188,7 +190,7 @@ export async function muteNewsletter(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    res.status(201).json(await req.client.muteNesletter(id));
+    res.status(201).json(await getClient(req).muteNesletter(id));
   } catch (error) {
     returnError(req, res, session, error);
   }

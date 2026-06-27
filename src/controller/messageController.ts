@@ -16,13 +16,29 @@
 
 import { Request, Response } from 'express';
 
+import { requireCapability } from '../core/provider/requireCapability';
+import { getClient } from '../core/provider/useProvider';
 import { unlinkAsync } from '../util/functions';
 
 function returnError(req: Request, res: Response, error: any) {
+  // Typed provider errors carry their own HTTP status (501 not-supported,
+  // 404 not-ready, etc). Honor any error exposing an httpStatus instead of
+  // masking it as a generic 500.
+  if (error && typeof error.httpStatus === 'number') {
+    res.status(error.httpStatus).json({
+      status: error.httpStatus === 501 ? 'not_supported' : 'error',
+      provider: error.providerId,
+      method: error.method,
+      capability: error.capability,
+      session: error.session,
+      message: error.message,
+    });
+    return;
+  }
   req.logger.error(error);
   res.status(500).json({
     status: 'Error',
-    message: 'Erro ao enviar a mensagem.',
+    message: 'Error sending the message.',
     error: error,
   });
 }
@@ -95,9 +111,19 @@ export async function sendMessage(req: Request, res: Response) {
   const options = req.body.options || {};
 
   try {
+    // Provider-based path: when a provider is attached, guard the capability
+    // and route through the typed messaging API; otherwise fall back to the
+    // legacy `getClient(req)` so behavior is identical while controllers migrate.
+    if (req.provider) requireCapability(req.provider, 'messaging.text');
+    const messaging = req.provider?.messaging;
+
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.sendText(contato, message, options));
+      results.push(
+        messaging
+          ? await messaging.sendText(contato, message, options)
+          : await getClient(req).sendText(contato, message, options)
+      );
     }
 
     if (results.length === 0) res.status(400).json('Error sending message');
@@ -146,7 +172,11 @@ export async function editMessage(req: Request, res: Response) {
 
   const options = req.body.options || {};
   try {
-    const edited = await (req.client as any).editMessage(id, newText, options);
+    const edited = await (getClient(req) as any).editMessage(
+      id,
+      newText,
+      options
+    );
 
     req.io.emit('edited-message', edited);
     returnSucess(res, edited);
@@ -222,7 +252,7 @@ export async function sendFile(req: Request, res: Response) {
     const results: any = [];
     for (const contact of phone) {
       results.push(
-        await req.client.sendFile(contact, pathFile, {
+        await getClient(req).sendFile(contact, pathFile, {
           filename: filename,
           caption: msg,
           quotedMsg: quotedMessageId,
@@ -288,7 +318,7 @@ export async function sendVoice(req: Request, res: Response) {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendPtt(
+        await getClient(req).sendPtt(
           contato,
           path,
           filename,
@@ -346,7 +376,7 @@ export async function sendVoice64(req: Request, res: Response) {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendPttFromBase64(
+        await getClient(req).sendPttFromBase64(
           contato,
           base64Ptt,
           'Voice Audio',
@@ -406,7 +436,7 @@ export async function sendLinkPreview(req: Request, res: Response) {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendLinkPreview(`${contato}`, url, caption)
+        await getClient(req).sendLinkPreview(`${contato}`, url, caption)
       );
     }
 
@@ -464,7 +494,7 @@ export async function sendLocation(req: Request, res: Response) {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendLocation(contato, {
+        await getClient(req).sendLocation(contato, {
           lat: lat,
           lng: lng,
           address: address,
@@ -498,7 +528,7 @@ export async function sendButtons(req: Request, res: Response) {
     const results: any = [];
 
     for (const contact of phone) {
-      results.push(await req.client.sendText(contact, message, options));
+      results.push(await getClient(req).sendText(contact, message, options));
     }
 
     if (results.length === 0)
@@ -577,7 +607,7 @@ export async function sendListMessage(req: Request, res: Response) {
 
     for (const contact of phone) {
       results.push(
-        await req.client.sendListMessage(contact, {
+        await getClient(req).sendListMessage(contact, {
           buttonText: buttonText,
           description: description,
           sections: sections,
@@ -683,7 +713,9 @@ export async function sendOrderMessage(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.sendOrderMessage(contato, items, options));
+      results.push(
+        await getClient(req).sendOrderMessage(contato, items, options)
+      );
     }
 
     if (results.length === 0)
@@ -743,7 +775,7 @@ export async function sendPollMessage(req: Request, res: Response) {
 
     for (const contact of phone) {
       results.push(
-        await req.client.sendPollMessage(contact, name, choices, options)
+        await getClient(req).sendPollMessage(contact, name, choices, options)
       );
     }
 
@@ -798,7 +830,7 @@ export async function sendStatusText(req: Request, res: Response) {
 
   try {
     const results: any = [];
-    results.push(await req.client.sendText('status@broadcast', message));
+    results.push(await getClient(req).sendText('status@broadcast', message));
 
     if (results.length === 0) res.status(400).json('Error sending message');
     returnSucess(res, results);
@@ -849,7 +881,7 @@ export async function replyMessage(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.reply(contato, message, messageId));
+      results.push(await getClient(req).reply(contato, message, messageId));
     }
 
     if (results.length === 0) res.status(400).json('Error sending message');
@@ -903,7 +935,7 @@ export async function sendMentioned(req: Request, res: Response) {
   try {
     let response;
     for (const contato of phone) {
-      response = await req.client.sendMentioned(
+      response = await getClient(req).sendMentioned(
         `${contato}`,
         message,
         mentioned
@@ -968,7 +1000,7 @@ export async function sendImageAsSticker(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.sendImageAsSticker(contato, pathFile));
+      results.push(await getClient(req).sendImageAsSticker(contato, pathFile));
     }
 
     if (results.length === 0) res.status(400).json('Error sending message');
@@ -1026,7 +1058,9 @@ export async function sendImageAsStickerGif(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.sendImageAsStickerGif(contato, pathFile));
+      results.push(
+        await getClient(req).sendImageAsStickerGif(contato, pathFile)
+      );
     }
 
     if (results.length === 0) res.status(400).json('Error sending message');
@@ -1088,7 +1122,7 @@ export async function sendPixMessage(req: Request, res: Response) {
     const results: any = [];
     for (const contato of phone) {
       results.push(
-        await req.client.sendPixKey(
+        await getClient(req).sendPixKey(
           contato,
           { keyType, name, key, instructions },
           options

@@ -17,6 +17,10 @@ import { create, SocketState, StatusFind } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
+import { EventDispatcher } from '../core/events/EventDispatcher';
+import { ProviderId } from '../core/provider/ProviderAdapter';
+import { providerFactory } from '../core/provider/ProviderFactory';
+import { sessionManager } from '../core/session/SessionManager';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
@@ -44,6 +48,16 @@ export default class CreateSessionUtil {
       if (client.status != null && client.status !== 'CLOSED') return;
       client.status = 'INITIALIZING';
       client.config = req.body;
+
+      // Provider selection: socket-based providers (baileys, whaileys, zapo)
+      // take a separate creation path — they don't use the wppconnect `create()`
+      // browser flow. All providers are first-class (no feature flag).
+      const requestedProvider = (client.config?.provider ??
+        'wppconnect') as ProviderId;
+      if (providerFactory.isSocketProvider(requestedProvider)) {
+        await this.createSocketSession(req, session, requestedProvider);
+        return;
+      }
 
       const tokenStore = new Factory();
       const myTokenStore = tokenStore.createTokenStory(client);
@@ -118,6 +132,7 @@ export default class CreateSessionUtil {
                   client.qrcode = null;
                   client.close();
                   clientsArray[session] = undefined;
+                  sessionManager.delete(session);
                 }
                 callWebHook(client, req, 'status-find', {
                   status: statusFind,
@@ -131,6 +146,17 @@ export default class CreateSessionUtil {
       );
 
       client = clientsArray[session] = Object.assign(wppClient, client);
+
+      // Register the session in the SessionManager and wrap the live client in
+      // its provider adapter. `clientsArray` stays in sync (same reference), so
+      // existing `req.client.*` call sites are unaffected; `req.provider` now
+      // resolves to a real adapter via auth middleware. (Only the wppconnect
+      // path reaches here — experimental providers return early above.)
+      const handle = sessionManager.getOrCreate(session, 'wppconnect');
+      handle.adapter = providerFactory.createWppConnect(client);
+      handle.status = (client.status as any) ?? 'INITIALIZING';
+      handle.config = client.config;
+
       await this.start(req, client);
 
       if (req.serverOptions.webhook.onParticipantsChanged) {
@@ -162,6 +188,69 @@ export default class CreateSessionUtil {
 
   async opendata(req: Request, session: string, res?: any) {
     await this.createSessionUtil(req, clientsArray, session, res);
+  }
+
+  /**
+   * Creation path for the socket-based providers (baileys, whaileys, zapo).
+   * Builds the adapter via the factory, registers it in the SessionManager, and
+   * wires its normalized event bus to the EventDispatcher so webhooks and
+   * socket.io fire exactly like the wppconnect path.
+   */
+  async createSocketSession(req: any, session: string, providerId: ProviderId) {
+    try {
+      const handle = sessionManager.getOrCreate(session, providerId);
+      const adapter = providerFactory.createSocketProvider(
+        providerId,
+        session,
+        handle.bus
+      );
+      handle.adapter = adapter;
+      handle.config = req.body;
+      handle.status = 'INITIALIZING';
+
+      // Fan normalized provider events out to webhook + socket.io. The facade
+      // (adapter.raw()) is resolved per-event because the socket only exists
+      // after start(); we set client.config (webhook URL) on it so callWebHook
+      // fires for socket providers just like for wppconnect.
+      const forward = (event: any) => (data: any) => {
+        const client = adapter.raw() as any;
+        if (client) {
+          client.config = req.body;
+          client.session = session;
+        }
+        const dispatcher = new EventDispatcher(client, req);
+        if (event === 'qr') {
+          const handleRef = sessionManager.get(session);
+          if (handleRef) {
+            handleRef.status = 'QRCODE';
+            handleRef.qrcode = (data as any)?.qrcode;
+          }
+          req.io.emit('qrCode', { data: (data as any)?.qrcode, session });
+        }
+        if (event === 'connection-state') {
+          const handleRef = sessionManager.get(session);
+          if (handleRef)
+            handleRef.status = (data as any)?.status ?? handleRef.status;
+          if ((data as any)?.status === 'CONNECTED')
+            req.io.emit('session-logged', { status: true, session });
+        }
+        dispatcher.dispatch(event, data);
+      };
+
+      adapter.on('qr', forward('qr'));
+      adapter.on('connection-state', forward('connection-state'));
+      adapter.on('message', forward('message'));
+      adapter.on('ack', forward('ack'));
+
+      await adapter.session.start();
+      req.logger.info(
+        `[${session}] experimental provider ${providerId} started`
+      );
+    } catch (e) {
+      req.logger.error(e);
+      const handleRef = sessionManager.get(session);
+      if (handleRef) handleRef.status = 'CLOSED';
+    }
   }
 
   exportPhoneCode(
@@ -247,6 +336,13 @@ export default class CreateSessionUtil {
     try {
       await client.isConnected();
       Object.assign(client, { status: 'CONNECTED', qrcode: null });
+
+      const handle = sessionManager.get(client.session);
+      if (handle) {
+        handle.status = 'CONNECTED';
+        handle.qrcode = undefined;
+        handle.metadata.lastStateChangeAt = Date.now();
+      }
 
       req.logger.info(`Started Session: ${client.session}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
