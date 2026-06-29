@@ -37,6 +37,7 @@ import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
 import statusConnection from '../middleware/statusConnection';
 import swaggerDocument from '../swagger.json';
+import { clientsArray } from '../util/sessionUtil';
 
 const upload = multer(uploadConfig as any) as any;
 const routes: Router = Router();
@@ -63,6 +64,27 @@ routes.get('/api/dashboard/stats', async (_req, res) => {
         updatedAt: new Date(handle.metadata.lastStateChangeAt).toISOString(),
       };
     })
+  );
+
+  const registered = new Set(sessions.map((item) => item.session));
+  Object.entries(clientsArray as Record<string, any>).forEach(
+    ([session, client]) => {
+      if (!client || registered.has(session) || client.status == null) return;
+      const provider = client.config?.provider ?? 'wppconnect';
+      sessions.push({
+        session,
+        origin: client.config?.origin ?? 'unknown',
+        runtime: 'wppconnect-server',
+        provider,
+        status: client.status,
+        health: {
+          connected: client.status === 'CONNECTED',
+          state: client.status,
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    }
   );
 
   const byProvider = sessions.reduce<Record<string, number>>((acc, item) => {
