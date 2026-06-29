@@ -90,6 +90,9 @@ export default class CreateSessionUtil {
           req.serverOptions.createOptions,
           {
             session: session,
+            ...(client.config.autoClose !== undefined
+              ? { autoClose: client.config.autoClose }
+              : {}),
             phoneNumber: client.config.phone ?? null,
             deviceName:
               client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
