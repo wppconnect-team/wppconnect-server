@@ -179,3 +179,79 @@ export async function sendVideoStorie(req: Request, res: Response) {
     returnError(req, res, error);
   }
 }
+
+export async function getStatusStories(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Status Stories"]
+     #swagger.autoBody=false
+     #swagger.security = [{
+            "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+      schema: 'NERDWHATS_AMERICA'
+     }
+     #swagger.parameters["page"] = {
+      in: 'query',
+      type: 'integer',
+      description: 'Page number',
+      default: 1
+     }
+     #swagger.parameters["limit"] = {
+      in: 'query',
+      type: 'integer',
+      description: 'Items per page (0 to return all)',
+      default: 20
+     }
+   */
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 20;
+
+  try {
+    const response = await req.client.page.evaluate(
+      (p, l) => {
+        const WPPLocal = (window as any).WPP;
+        if (
+          !WPPLocal ||
+          !WPPLocal.whatsapp ||
+          !WPPLocal.whatsapp.StatusV3Store
+        ) {
+          return {
+            total: 0,
+            page: p,
+            limit: l,
+            pages: 0,
+            results: [],
+          };
+        }
+
+        const models = WPPLocal.whatsapp.StatusV3Store.toArray();
+        let paginatedModels = models;
+
+        if (l > 0) {
+          const startIndex = (p - 1) * l;
+          const endIndex = p * l;
+          paginatedModels = models.slice(startIndex, endIndex);
+        }
+
+        return {
+          total: models.length,
+          page: l > 0 ? p : 1,
+          limit: l > 0 ? l : models.length,
+          pages: l > 0 ? Math.ceil(models.length / l) : 1,
+          results: paginatedModels.map((m: any) => m.toJSON()),
+        };
+      },
+      page,
+      limit
+    );
+
+    res.status(200).json({ status: 'success', response: response });
+  } catch (error) {
+    req.logger.error(error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error retrieving status stories',
+      error: error,
+    });
+  }
+}

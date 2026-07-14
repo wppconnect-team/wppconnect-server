@@ -45,7 +45,7 @@ export default async function statusConnection(
             .catch((error) => console.log(error));
           if (!profile?.numberExists) {
             const num = (contact as any).split('@')[0];
-            res.status(400).json({
+            return res.status(400).json({
               response: null,
               status: 'Connected',
               message: `O número ${num} não existe.`,
