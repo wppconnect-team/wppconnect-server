@@ -1,4 +1,5 @@
 import { BucketLocationConstraint } from '@aws-sdk/client-s3';
+import { CreateConfig } from '@wppconnect-team/wppconnect';
 
 export interface ServerOptions {
   secretKey: string;
@@ -38,9 +39,7 @@ export interface ServerOptions {
     level: string;
     logger: string[];
   };
-  createOptions: {
-    browserArgs: string[];
-  };
+  createOptions: CreateConfig;
   mapper: {
     enable: boolean;
     prefix: string;
