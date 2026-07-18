@@ -3156,9 +3156,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@img/sharp-win32-x64@npm:0.34.5, @img/sharp-win32-x64@npm:^0.34.5":
+"@img/sharp-win32-x64@npm:0.34.5":
   version: 0.34.5
   resolution: "@img/sharp-win32-x64@npm:0.34.5"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@img/sharp-win32-x64@npm:^0.35.3":
+  version: 0.35.3
+  resolution: "@img/sharp-win32-x64@npm:0.35.3"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3978,9 +3985,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@puppeteer/browsers@npm:2.13.0":
-  version: 2.13.0
-  resolution: "@puppeteer/browsers@npm:2.13.0"
+"@puppeteer/browsers@npm:2.13.2":
+  version: 2.13.2
+  resolution: "@puppeteer/browsers@npm:2.13.2"
   dependencies:
     debug: "npm:^4.4.3"
     extract-zip: "npm:^2.0.1"
@@ -3991,7 +3998,7 @@ __metadata:
     yargs: "npm:^17.7.2"
   bin:
     browsers: lib/cjs/main-cli.js
-  checksum: 10c0/90c761200da538234100a7f7cd0677c60cfcfbf710445fb2d82ece34bf3b5a015958919d110d7041a0680fe1d690e3e7737594fe2efd6a7dac8681ef646ecc3e
+  checksum: 10c0/d4f7a6b160a87598f9bb6524d475e4bb16effb7ee39e82a731e51af3454858e95d80c1cfe2030dfadfc407b77d7ef60f0f8c1a2dcf4532dce30f09c09df29082
   languageName: node
   linkType: hard
 
@@ -5593,15 +5600,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wppconnect-team/wppconnect@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@wppconnect-team/wppconnect@npm:2.1.0"
+"@wppconnect-team/wppconnect@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "@wppconnect-team/wppconnect@npm:2.2.3"
   dependencies:
-    "@img/sharp-win32-x64": "npm:^0.34.5"
-    "@wppconnect/wa-js": "npm:^4.2.0"
+    "@img/sharp-win32-x64": "npm:^0.35.3"
+    "@wppconnect/wa-js": "npm:^4.4.1"
     "@wppconnect/wa-version": "npm:^1.5.3941"
     atob: "npm:^2.1.2"
-    axios: "npm:^1.16.1"
+    axios: "npm:^1.18.1"
     boxen: "npm:^5.1.2"
     catch-exit: "npm:^2.0.0"
     chalk: "npm:~4.1.2"
@@ -5614,7 +5621,7 @@ __metadata:
     logform: "npm:^2.7.0"
     lookpath: "npm:^1.2.3"
     mime-types: "npm:^3.0.2"
-    puppeteer: "npm:^24.37.5"
+    puppeteer: "npm:^24.43.1"
     puppeteer-extra: "npm:^3.3.6"
     puppeteer-extra-plugin-stealth: "npm:^2.11.2"
     puppeteer-extra-plugin-user-data-dir: "npm:^2.4.1"
@@ -5624,16 +5631,16 @@ __metadata:
     rimraf: "npm:^3.0.2"
     sanitize-filename: "npm:^1.6.4"
     sharp: "npm:0.34.5"
-    tmp: "npm:^0.2.5"
+    tmp: "npm:^0.2.7"
     tree-kill: "npm:^1.2.2"
     winston: "npm:^3.19.0"
-    ws: "npm:^8.19.0"
+    ws: "npm:^8.21.0"
   dependenciesMeta:
     "@img/sharp-win32-x64":
       optional: true
     fsevents:
       optional: true
-  checksum: 10c0/b341d00f8195846c688bee59fa05ccbd5c8d8435da4b2e46bb19ae2b213dc90ed133fc66a68121c43b669c4222ae78fdf6426ab9b642a1b05ae2cf418d0123d9
+  checksum: 10c0/38b85f5d1e28cfd6bdff97c60b659a26f616f6f9710d34859d2b5ab93ca6b1a2c0f3f110d5622e04e1d760f27ea739ffeb6e7360d37706c441e71cbee4b23603
   languageName: node
   linkType: hard
 
@@ -5668,7 +5675,7 @@ __metadata:
     "@types/unzipper": "npm:^0.10.11"
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
     "@typescript-eslint/parser": "npm:^8.57.2"
-    "@wppconnect-team/wppconnect": "npm:^2.1.0"
+    "@wppconnect-team/wppconnect": "npm:^2.2.3"
     archiver: "npm:^7.0.1"
     axios: "npm:^1.14.0"
     bcrypt: "npm:^6.0.0"
@@ -5726,10 +5733,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wppconnect/wa-js@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "@wppconnect/wa-js@npm:4.2.0"
-  checksum: 10c0/41dd2a6f46a37c02f3e812ccf28f46b77ceaf923620d539f2c7629a7478211f4600557e9d40b6a82f0498e87ebdae756bb86b67554a40c483f8e5c3e11d3a3f8
+"@wppconnect/wa-js@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "@wppconnect/wa-js@npm:4.4.1"
+  checksum: 10c0/8d11482296459c18a9a8b971c15ae33caafe4d3349d1186a9dd51f3d7c19d0c838dd892c15fc3ab7a576ee100f83fd3e2f4c6bdceb5a089e6ee7e1860ce92323
   languageName: node
   linkType: hard
 
@@ -6176,15 +6183,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.16.1":
-  version: 1.16.1
-  resolution: "axios@npm:1.16.1"
+"axios@npm:^1.18.1":
+  version: 1.18.1
+  resolution: "axios@npm:1.18.1"
   dependencies:
     follow-redirects: "npm:^1.16.0"
     form-data: "npm:^4.0.5"
     https-proxy-agent: "npm:^5.0.1"
     proxy-from-env: "npm:^2.1.0"
-  checksum: 10c0/2f77e37e6552bbff8a772d058fb09500198e9188c6b20dc799d82dbe12a8cb506f6eed4e4e62a9ba612a35cbab496faa26d68f9bff14a53af6d15c3e136391a7
+  checksum: 10c0/9d9378a3af0d0ad730a52ad9d15ec7201f3926ad6e7e8bbffc5ae21ca2835ad11d1d9598698f5dd9718917486039f55ea1d7dc23d8e44fa827a55cc3262c02fc
   languageName: node
   linkType: hard
 
@@ -8061,10 +8068,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devtools-protocol@npm:0.0.1581282":
-  version: 0.0.1581282
-  resolution: "devtools-protocol@npm:0.0.1581282"
-  checksum: 10c0/8df3b3bccaa8e5ac8915c29bb6ebece350ca8781ec7689bec90dfa6a479682a1b389abd964fe7dc7610d91c96850311aa614c4414b478bee70cabd3cf154ac93
+"devtools-protocol@npm:0.0.1608973":
+  version: 0.0.1608973
+  resolution: "devtools-protocol@npm:0.0.1608973"
+  checksum: 10c0/1e634ebf2645718c76d00d3704a4c90254b9ecbfb350b018c53729114ec0de31e88d43e43f391136a71834e4629db34ac677778044f2214bda9c433456f48a77
   languageName: node
   linkType: hard
 
@@ -13576,18 +13583,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer-core@npm:24.38.0":
-  version: 24.38.0
-  resolution: "puppeteer-core@npm:24.38.0"
+"puppeteer-core@npm:24.43.1":
+  version: 24.43.1
+  resolution: "puppeteer-core@npm:24.43.1"
   dependencies:
-    "@puppeteer/browsers": "npm:2.13.0"
+    "@puppeteer/browsers": "npm:2.13.2"
     chromium-bidi: "npm:14.0.0"
     debug: "npm:^4.4.3"
-    devtools-protocol: "npm:0.0.1581282"
-    typed-query-selector: "npm:^2.12.1"
+    devtools-protocol: "npm:0.0.1608973"
+    typed-query-selector: "npm:^2.12.2"
     webdriver-bidi-protocol: "npm:0.4.1"
-    ws: "npm:^8.19.0"
-  checksum: 10c0/999cf60c5a4b35750b85477a5a342a23603298c430ded378927a8c681d5020a0022d541ef0f31a53886ce111810771a211ba89904d92e78ddd1ad91313a9d14a
+    ws: "npm:^8.20.0"
+  checksum: 10c0/720cdc67a3c70b1743e27783ede0e5f03323ff75e3f1332b645900f78210091fb57c49d4ac42d61d3550a0352294d9ade08a30647290e98632e70fe71225489d
   languageName: node
   linkType: hard
 
@@ -13691,19 +13698,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:^24.37.5":
-  version: 24.38.0
-  resolution: "puppeteer@npm:24.38.0"
+"puppeteer@npm:^24.43.1":
+  version: 24.43.1
+  resolution: "puppeteer@npm:24.43.1"
   dependencies:
-    "@puppeteer/browsers": "npm:2.13.0"
+    "@puppeteer/browsers": "npm:2.13.2"
     chromium-bidi: "npm:14.0.0"
     cosmiconfig: "npm:^9.0.0"
-    devtools-protocol: "npm:0.0.1581282"
-    puppeteer-core: "npm:24.38.0"
-    typed-query-selector: "npm:^2.12.1"
+    devtools-protocol: "npm:0.0.1608973"
+    puppeteer-core: "npm:24.43.1"
+    typed-query-selector: "npm:^2.12.2"
   bin:
     puppeteer: lib/cjs/puppeteer/node/cli.js
-  checksum: 10c0/0f195e5d1fe2b9e71034b9f63cb74f48b7ede1f42714caa1935361bc93376e2d488323339314ac2b4c9622c46221122f6d411ef371e074334a9d6ba37dadccd6
+  checksum: 10c0/14e6efbd33ee0f6af377f3f17a11bd409925ef8504ccbc06318a995aba6bc4a3caa3f4d84ca323cdbaa396a20f1f91f284e8501723d557cfdb8c354985465675
   languageName: node
   linkType: hard
 
@@ -15399,10 +15406,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tmp@npm:^0.2.5":
-  version: 0.2.5
-  resolution: "tmp@npm:0.2.5"
-  checksum: 10c0/cee5bb7d674bb4ba3ab3f3841c2ca7e46daeb2109eec395c1ec7329a91d52fcb21032b79ac25161a37b2565c4858fefab927af9735926a113ef7bac9091a6e0e
+"tmp@npm:^0.2.7":
+  version: 0.2.7
+  resolution: "tmp@npm:0.2.7"
+  checksum: 10c0/59eb55584f2f07210d3231b6a1f6b5c2b9794d8a7b509c8ee867ed2acad6d2245ee2448b7937b676ffbff3155a70077edde8a69f9d7cf0f90c86a62e8910c357
   languageName: node
   linkType: hard
 
@@ -15732,10 +15739,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typed-query-selector@npm:^2.12.1":
-  version: 2.12.1
-  resolution: "typed-query-selector@npm:2.12.1"
-  checksum: 10c0/2c81c8560910d87f98a64e1c0b03247a7c94c3703d11f2f048553718c18da8dcab8469be76a39d2d258f0ff5a9b0bf419394d8b1c804fdf72a06181a0631d70d
+"typed-query-selector@npm:^2.12.2":
+  version: 2.12.2
+  resolution: "typed-query-selector@npm:2.12.2"
+  checksum: 10c0/2710369ada5bde578606b043eefb8a6d7f9178630ae4950a4dfd4f70cceb8196d5bbc735a905cd3e06953127e4dd1825c3e0be06d64e5a6e5609965cffee701d
   languageName: node
   linkType: hard
 
@@ -16376,9 +16383,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.19.0":
-  version: 8.19.0
-  resolution: "ws@npm:8.19.0"
+"ws@npm:^8.20.0, ws@npm:^8.21.0":
+  version: 8.21.1
+  resolution: "ws@npm:8.21.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -16387,7 +16394,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 10c0/4741d9b9bc3f9c791880882414f96e36b8b254e34d4b503279d6400d9a4b87a033834856dbdd94ee4b637944df17ea8afc4bce0ff4a1560d2166be8855da5b04
+  checksum: 10c0/c4c6f1d95f6d465262de2037c57c715725d67e078dd49420ede4e19115668aba159cb64d85c5e89c06eb2826be599e62e5095860ad6cc54ff42e8bd7684e1db8
   languageName: node
   linkType: hard
 
