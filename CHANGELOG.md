@@ -1,3 +1,10 @@
+## 2.10.1 (2026-07-30)
+
+
+### Bug Fixes
+
+* bump wppconnect version to 2.2.6 ([#2520](https://github.com/wppconnect-team/wppconnect-server/issues/2520)) ([2755e64](https://github.com/wppconnect-team/wppconnect-server/commit/2755e64f5741320627f65df334eef80d12b4e0a9))
+
 # 2.10.0 (2026-05-16)
 
 # 2.9.0 (2026-03-06)
