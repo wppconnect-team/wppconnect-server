@@ -16,6 +16,7 @@
 
 import { Request, Response } from 'express';
 import fs from 'fs';
+import path from 'path';
 
 import { logger } from '..';
 import config from '../config';
@@ -160,10 +161,10 @@ export async function clearSessionData(req: Request, res: Response) {
       delete clientsArray[req.params.session];
       await req.client.logout();
     }
-    const path = config.customUserDataDir + session;
-    const pathToken = __dirname + `../../../tokens/${session}.data.json`;
-    if (fs.existsSync(path)) {
-      await fs.promises.rm(path, {
+    const pathUserData = config.customUserDataDir + session;
+    const pathToken = path.resolve(process.cwd(), 'tokens', `${session}.data.json`);
+    if (fs.existsSync(pathUserData)) {
+      await fs.promises.rm(pathUserData, {
         recursive: true,
       });
     }
