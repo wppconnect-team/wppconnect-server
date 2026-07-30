@@ -37,7 +37,7 @@
   "packageManager": "yarn@4.14.1",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1019.0",
-    "@wppconnect-team/wppconnect": "^2.1.0",
+    "@wppconnect-team/wppconnect": "^2.2.5",
     "archiver": "^7.0.1",
     "axios": "^1.14.0",
     "bcrypt": "^6.0.0",
