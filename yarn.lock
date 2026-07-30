@@ -5600,13 +5600,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wppconnect-team/wppconnect@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "@wppconnect-team/wppconnect@npm:2.2.5"
+"@wppconnect-team/wppconnect@npm:^2.2.6":
+  version: 2.2.6
+  resolution: "@wppconnect-team/wppconnect@npm:2.2.6"
   dependencies:
     "@img/sharp-win32-x64": "npm:^0.35.3"
     "@wppconnect/wa-js": "npm:^4.4.3"
-    "@wppconnect/wa-version": "npm:^1.5.3941"
+    "@wppconnect/wa-version": "npm:^1.5.4472"
     atob: "npm:^2.1.2"
     axios: "npm:^1.18.1"
     boxen: "npm:^5.1.2"
@@ -5640,7 +5640,7 @@ __metadata:
       optional: true
     fsevents:
       optional: true
-  checksum: 10c0/cecf79aedd19cc213c70859501c0700b8d594e56ce44f74afa82ac01e0188d5e782f60e698c372117ca8448b2fafceb55624a86831d3f2530c03edd26df77cbf
+  checksum: 10c0/2890e8053f01f320850030523ce647315d766a923841b3affd5f4ae758c90e2e386451f16c4fe92a0c8b34505121615a6447cd68b2b24d4fa2940ba725860e81
   languageName: node
   linkType: hard
 
@@ -5675,7 +5675,7 @@ __metadata:
     "@types/unzipper": "npm:^0.10.11"
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
     "@typescript-eslint/parser": "npm:^8.57.2"
-    "@wppconnect-team/wppconnect": "npm:^2.2.5"
+    "@wppconnect-team/wppconnect": "npm:^2.2.6"
     archiver: "npm:^7.0.1"
     axios: "npm:^1.14.0"
     bcrypt: "npm:^6.0.0"
@@ -5740,13 +5740,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wppconnect/wa-version@npm:^1.5.3941":
-  version: 1.5.3947
-  resolution: "@wppconnect/wa-version@npm:1.5.3947"
+"@wppconnect/wa-version@npm:^1.5.4472":
+  version: 1.5.4472
+  resolution: "@wppconnect/wa-version@npm:1.5.4472"
   dependencies:
     node-fetch: "npm:^2.7.0"
-    semver: "npm:^7.7.4"
-  checksum: 10c0/64be6742204171b8b8c1490d6e522c0a4afcab319eee5b9a0840ee8a6ba4f822c100fb2c4b59031f003cc68d6a62128c0f5645b798138873b432aa67322f8ab5
+    semver: "npm:^7.8.5"
+  checksum: 10c0/98d535a4082ef996c4a7d029ad366d982596baa25e9dd1449d1bdcc38f7c5567f7c9f3d5166a7490cf7f52b1a43eb454de91a8089b6e87ea12a7c7046a5acb28
   languageName: node
   linkType: hard
 
@@ -14413,6 +14413,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10c0/5215ad0234e2845d4ea5bb9d836d42b03499546ddafb12075566899fc617f68794bb6f146076b6881d755de17d6c6cc73372555879ec7dce2c2feee947866ad2
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.8.5":
+  version: 7.8.5
+  resolution: "semver@npm:7.8.5"
+  bin:
+    semver: bin/semver.js
+  checksum: 10c0/b1f3127a5be8125a94f37188b361c212466c292c6910adce3ec106cff5dc211ccaedc4739c11bb70fda59d6fc1f040a9bca289f4e093451521a2372e5231fe0c
   languageName: node
   linkType: hard
 
