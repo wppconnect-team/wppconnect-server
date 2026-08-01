@@ -16,14 +16,19 @@
 
 import { Request, Response } from 'express';
 
-import config from '../config';
 import { SessionResourceMonitor } from '../util/SessionResourceMonitor';
 
-// Initialize the resource monitor with custom userDataDir from config
-const resourceMonitor = new SessionResourceMonitor(
-  config.customUserDataDir || './userDataDir/',
-  5000 // 5 seconds cache
-);
+function getResourceMonitor(req: Request): SessionResourceMonitor {
+  const customUserDataDir =
+    req.serverOptions?.customUserDataDir || './userDataDir/';
+  const cacheDuration =
+    req.serverOptions?.resourceMonitor?.cacheDuration || 5000;
+  return new SessionResourceMonitor(customUserDataDir, cacheDuration);
+}
+
+function isResourceMonitorEnabled(req: Request): boolean {
+  return Boolean(req.serverOptions?.resourceMonitor?.enable);
+}
 
 /**
  * Get resource usage for a specific session
@@ -41,6 +46,13 @@ export async function getSessionResourceUsage(req: Request, res: Response) {
    schema: 'NERDWHATS_AMERICA'
    }
    */
+  if (!isResourceMonitorEnabled(req)) {
+    return res.status(403).json({
+      success: false,
+      message: 'Resource monitoring is disabled in server configuration',
+    });
+  }
+
   try {
     const { session } = req.params;
 
@@ -51,18 +63,18 @@ export async function getSessionResourceUsage(req: Request, res: Response) {
       });
     }
 
-    const usage = await resourceMonitor.getSessionUsage(session);
+    const monitor = getResourceMonitor(req);
+    const usage = await monitor.getSessionUsage(session);
 
     return res.json({
       success: true,
       data: usage,
     });
   } catch (error) {
-    console.error('Error getting session resource usage:', error);
+    req.logger?.error(error);
     return res.status(500).json({
       success: false,
       error: 'Failed to get session resource usage',
-      // message: error.message,
     });
   }
 }
@@ -85,6 +97,13 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
    schema: 'THISISMYSECURETOKEN'
    }
    */
+  if (!isResourceMonitorEnabled(req)) {
+    return res.status(403).json({
+      success: false,
+      message: 'Resource monitoring is disabled in server configuration',
+    });
+  }
+
   const { secretkey } = req.params;
   const { authorization: token } = req.headers;
 
@@ -97,25 +116,25 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
   }
 
   if (tokenDecrypt !== req.serverOptions.secretKey) {
-    res.status(400).json({
+    return res.status(400).json({
       response: false,
       message: 'The token is incorrect',
     });
   }
 
   try {
-    const usage = await resourceMonitor.getAllSessionsUsage();
+    const monitor = getResourceMonitor(req);
+    const usage = await monitor.getAllSessionsUsage();
 
     return res.json({
       success: true,
       data: usage,
     });
   } catch (error) {
-    console.error('Error getting all sessions resource usage:', error);
+    req.logger?.error(error);
     return res.status(500).json({
       success: false,
       error: 'Failed to get resource usage for all sessions',
-      // message: error.message
     });
   }
 }
@@ -125,28 +144,35 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
  * POST /api/resource-usage/clear-cache
  */
 export async function clearResourceCache(req: Request, res: Response) {
+  if (!isResourceMonitorEnabled(req)) {
+    return res.status(403).json({
+      success: false,
+      message: 'Resource monitoring is disabled in server configuration',
+    });
+  }
+
   try {
     const { session } = req.body;
+    const monitor = getResourceMonitor(req);
 
     if (session) {
-      resourceMonitor.clearSessionCache(session);
+      monitor.clearSessionCache(session);
       return res.json({
         success: true,
         message: `Cache cleared for session: ${session}`,
       });
     } else {
-      resourceMonitor.clearCache();
+      monitor.clearCache();
       return res.json({
         success: true,
         message: 'All cache cleared',
       });
     }
   } catch (error) {
-    console.error('Error clearing resource cache:', error);
+    req.logger?.error(error);
     return res.status(500).json({
       success: false,
       error: 'Failed to clear cache',
-      // message: error.message
     });
   }
 }
