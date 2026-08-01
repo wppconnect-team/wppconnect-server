@@ -30,11 +30,17 @@ import { convert } from './mapper/index';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
 import {
+  consumeMediaTicket,
+  setCallMediaNamespace,
+} from './util/callMediaUtil';
+import { pushOutgoingPcm16 } from './util/callUtil';
+import {
   createFolders,
   setMaxListners,
   startAllSessions,
 } from './util/functions';
 import { createLogger } from './util/logger';
+import { clientsArray } from './util/sessionUtil';
 
 //require('dotenv').config();
 
@@ -114,6 +120,44 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     sock.on('disconnect', () => {
       logger.info(`ID: ${sock.id} saiu`);
     });
+  });
+
+  const callMedia = io.of('/call-media');
+  setCallMediaNamespace(callMedia);
+  callMedia.use((socket, next) => {
+    const ticket = String(socket.handshake.auth?.ticket || '');
+    const authorization = consumeMediaTicket(ticket);
+    if (!authorization)
+      return next(new Error('Invalid or expired media ticket'));
+    socket.data.session = authorization.session;
+    next();
+  });
+  callMedia.on('connection', (socket) => {
+    const session = String(socket.data.session);
+    socket.join(session);
+    socket.on(
+      'outgoing-audio',
+      async (payload: { data?: string; sampleRate?: number }, acknowledge) => {
+        try {
+          const client = clientsArray[session];
+          if (!client?.page) throw new Error('Session is not connected');
+          const attached = await pushOutgoingPcm16(
+            client.page,
+            String(payload?.data || ''),
+            Number(payload?.sampleRate || 48_000)
+          );
+          if (typeof acknowledge === 'function') acknowledge({ attached });
+        } catch (error) {
+          logger.error(error);
+          if (typeof acknowledge === 'function') {
+            acknowledge({
+              attached: false,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+        }
+      }
+    );
   });
 
   http.listen(PORT, () => {

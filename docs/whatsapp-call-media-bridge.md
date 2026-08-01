@@ -8,18 +8,35 @@ explicitly creates signalling only; it does not attach audio or video tracks.
 Consequently, the HTTP endpoints in this branch must not report that a usable
 voice call exists until a media bridge has been implemented.
 
-This branch also contains an experimental phase-two receiver. Calling
+This branch also contains an experimental phase-two media bridge. Calling
 `POST /api/{session}/start-incoming-call-audio` before accepting a call
-instruments WebRTC and publishes chunks through the Socket.IO `call-audio`
-event. Each payload contains `session`, `mimeType`, Base64 `data`, `sequence`,
-and `timestamp`. Use
+instruments WebRTC and publishes chunks through the authenticated Socket.IO
+`/call-media` namespace's `incoming-audio` event. Each payload contains
+`mimeType`, Base64 `data`, `sequence`, and `timestamp`. Use
 `POST /api/{session}/stop-incoming-call-audio` to stop active recorders.
 
-This receiver is a proof of concept, not a production media endpoint. The
-server's existing Socket.IO connection is not authenticated or isolated into
-session rooms, so raw call audio could be observed by another connected socket.
-Production deployment requires a call-scoped authenticated namespace or a
-dedicated media gateway before this feature can be enabled by default.
+Create a short-lived connection ticket with
+`POST /api/{session}/call-media-ticket`, authenticated with the normal bearer
+token. Connect to `/call-media` with `auth: { ticket }`. Tickets are random,
+single-use, valid for at most five minutes, and bind the socket to one session
+room. Never put the normal session bearer token in a Socket.IO handshake.
+
+For outbound audio, emit `outgoing-audio` on the authenticated media socket:
+
+```json
+{
+  "data": "<base64 little-endian signed PCM16>",
+  "sampleRate": 48000
+}
+```
+
+The acknowledgement contains `attached: true` after the Web Audio track has
+replaced an existing audio sender. An `attached: false` response means that no
+active WebRTC connection/audio sender was available yet. Clients should send
+small timestamped chunks at their original cadence and use bounded queues.
+
+The bridge remains experimental. It must be validated against a real WhatsApp
+call and the exact pinned WhatsApp Web build before production use.
 
 ## Proposed architecture
 

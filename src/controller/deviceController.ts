@@ -16,6 +16,7 @@
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 
+import { createMediaTicket, emitIncomingAudio } from '../util/callMediaUtil';
 import * as CallUtil from '../util/callUtil';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
@@ -2245,14 +2246,15 @@ export async function startIncomingCallAudio(req: Request, res: Response) {
     await CallUtil.installIncomingAudioCapture(
       req.client.page,
       (chunk) => {
-        req.io.emit('call-audio', { session: req.session, ...chunk });
+        emitIncomingAudio(req.session, chunk);
       },
       { timesliceMs: parsedTimeslice }
     );
     res.status(200).json({
       status: 'success',
       response: true,
-      event: 'call-audio',
+      namespace: '/call-media',
+      event: 'incoming-audio',
       mediaDirection: 'incoming',
       experimental: true,
     });
@@ -2263,6 +2265,20 @@ export async function startIncomingCallAudio(req: Request, res: Response) {
       message: 'Error on startIncomingCallAudio',
     });
   }
+}
+
+export async function createCallMediaTicket(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Creates a short-lived, single-use ticket for the authenticated call media Socket.IO namespace."
+     #swagger.security = [{ "bearerAuth": [] }]
+   */
+  const { ttlMs = 60_000 } = req.body || {};
+  const result = createMediaTicket(req.session, Number(ttlMs));
+  res.status(200).json({
+    status: 'success',
+    response: { ...result, namespace: '/call-media' },
+  });
 }
 
 export async function stopIncomingCallAudio(req: Request, res: Response) {

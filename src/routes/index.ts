@@ -630,6 +630,12 @@ routes.post(
   DeviceController.startIncomingCallAudio
 );
 routes.post(
+  '/api/:session/call-media-ticket',
+  verifyToken,
+  statusConnection,
+  DeviceController.createCallMediaTicket
+);
+routes.post(
   '/api/:session/stop-incoming-call-audio',
   verifyToken,
   statusConnection,

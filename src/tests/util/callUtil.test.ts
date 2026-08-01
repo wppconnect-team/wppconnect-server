@@ -22,6 +22,7 @@ import {
   installIncomingAudioCapture,
   normalizeCallDestination,
   offerCall,
+  pushOutgoingPcm16,
   stopIncomingAudioCapture,
 } from '../../util/callUtil';
 
@@ -79,5 +80,31 @@ describe('Call utilities', () => {
       callbackName: '__wppconnectIncomingCallAudioChunk',
       timesliceMs: 500,
     });
+  });
+
+  it('pushes outgoing PCM16 audio into the browser bridge', async () => {
+    const page = mockPage(true);
+
+    await expect(pushOutgoingPcm16(page, 'AAECAw==', 16_000)).resolves.toBe(
+      true
+    );
+    expect(page.evaluate).toHaveBeenCalledWith(expect.any(Function), {
+      base64Data: 'AAECAw==',
+      sampleRate: 16_000,
+    });
+  });
+
+  it('rejects invalid outgoing audio settings', async () => {
+    const page = mockPage();
+
+    await expect(pushOutgoingPcm16(page, '')).rejects.toThrow(
+      'Audio data is required'
+    );
+    await expect(pushOutgoingPcm16(page, 'AA==', 100)).rejects.toThrow(
+      'sampleRate must be between 8000 and 48000'
+    );
+    await expect(pushOutgoingPcm16(page, 'A'.repeat(350_001))).rejects.toThrow(
+      'Audio chunk exceeds the 256 KiB limit'
+    );
   });
 });

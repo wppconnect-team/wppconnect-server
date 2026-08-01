@@ -121,6 +121,7 @@ export async function installIncomingAudioCapture(
 
       scope.__wppconnectCallAudioCaptureInstalled = true;
       scope.__wppconnectCallAudioRecorders = new Set<MediaRecorder>();
+      scope.__wppconnectCallPeerConnections = new Set<RTCPeerConnection>();
       let sequence = 0;
 
       const captureTrack = (track: MediaStreamTrack) => {
@@ -155,6 +156,12 @@ export async function installIncomingAudioCapture(
       const instrument = (connection: RTCPeerConnection) => {
         if ((connection as any).__wppconnectAudioCaptureAttached) return;
         (connection as any).__wppconnectAudioCaptureAttached = true;
+        scope.__wppconnectCallPeerConnections.add(connection);
+        connection.addEventListener('connectionstatechange', () => {
+          if (connection.connectionState === 'closed') {
+            scope.__wppconnectCallPeerConnections.delete(connection);
+          }
+        });
         originalAddTrack.call(connection, 'track', (event: Event) => {
           captureTrack((event as RTCTrackEvent).track);
         });
@@ -181,4 +188,84 @@ export async function stopIncomingAudioCapture(page: Page): Promise<void> {
       if (recorder.state !== 'inactive') recorder.stop();
     });
   });
+}
+
+export async function pushOutgoingPcm16(
+  page: Page,
+  base64Data: string,
+  sampleRate = 48_000
+): Promise<boolean> {
+  if (!base64Data) throw new Error('Audio data is required');
+  if (base64Data.length > 350_000) {
+    throw new Error('Audio chunk exceeds the 256 KiB limit');
+  }
+  if (
+    !Number.isFinite(sampleRate) ||
+    sampleRate < 8_000 ||
+    sampleRate > 48_000
+  ) {
+    throw new Error('sampleRate must be between 8000 and 48000');
+  }
+
+  return page.evaluate(
+    async ({ base64Data, sampleRate }) => {
+      const scope = globalThis as any;
+      const connections = scope.__wppconnectCallPeerConnections as
+        | Set<RTCPeerConnection>
+        | undefined;
+      const connection = connections
+        ? [...connections].find((item) => item.connectionState !== 'closed')
+        : undefined;
+      if (!connection) return false;
+
+      if (!scope.__wppconnectOutgoingAudio) {
+        const context = new AudioContext({ sampleRate });
+        const source = context.createScriptProcessor(2048, 0, 1);
+        const destination = context.createMediaStreamDestination();
+        const queue: number[] = [];
+        let offset = 0;
+        source.onaudioprocess = (event) => {
+          const output = event.outputBuffer.getChannelData(0);
+          for (let index = 0; index < output.length; index++) {
+            output[index] = queue[offset++] ?? 0;
+          }
+          if (offset > 8_192) {
+            queue.splice(0, offset);
+            offset = 0;
+          }
+        };
+        source.connect(destination);
+        await context.resume();
+        scope.__wppconnectOutgoingAudio = {
+          context,
+          destination,
+          get offset() {
+            return offset;
+          },
+          queue,
+        };
+      }
+
+      const bridge = scope.__wppconnectOutgoingAudio;
+      const binary = atob(base64Data);
+      for (let index = 0; index + 1 < binary.length; index += 2) {
+        const value =
+          binary.charCodeAt(index) | (binary.charCodeAt(index + 1) << 8);
+        bridge.queue.push((value > 32767 ? value - 65536 : value) / 32768);
+      }
+      const bufferedSamples = bridge.queue.length - bridge.offset;
+      if (bufferedSamples > sampleRate * 5) {
+        bridge.queue.splice(bridge.offset, bufferedSamples - sampleRate * 5);
+      }
+
+      const track = bridge.destination.stream.getAudioTracks()[0];
+      const sender = connection
+        .getSenders()
+        .find((item) => item.track?.kind === 'audio');
+      if (!sender) return false;
+      await sender.replaceTrack(track);
+      return true;
+    },
+    { base64Data, sampleRate }
+  );
 }
