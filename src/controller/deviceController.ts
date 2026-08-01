@@ -16,6 +16,7 @@
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 
+import * as CallUtil from '../util/callUtil';
 import { contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
 
@@ -2106,6 +2107,121 @@ export async function rejectCall(req: Request, res: Response) {
     res
       .status(500)
       .json({ status: 'error', message: 'Error on rejectCall', error: e });
+  }
+}
+
+export async function enableCallInterface(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Enables the WhatsApp Web call interface for the current session."
+     #swagger.security = [{ "bearerAuth": [] }]
+   */
+  try {
+    await CallUtil.enableCallInterface(req.client.page);
+    res.status(200).json({ status: 'success', response: true });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on enableCallInterface',
+    });
+  }
+}
+
+export async function acceptCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: false,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: { callId: { type: "string" } }
+           }
+         }
+       }
+     }
+   */
+  const { callId } = req.body || {};
+  try {
+    const response = await CallUtil.acceptCall(req.client.page, callId);
+    res.status(200).json({ status: 'success', response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on acceptCall' });
+  }
+}
+
+export async function endCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: false,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: { callId: { type: "string" } }
+           }
+         }
+       }
+     }
+   */
+  const { callId } = req.body || {};
+  try {
+    const response = await CallUtil.endCall(req.client.page, callId);
+    res.status(200).json({ status: 'success', response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on endCall' });
+  }
+}
+
+export async function offerCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Sends a WhatsApp call signalling offer. This endpoint does not transport audio or video media."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["phone"],
+             properties: {
+               phone: { type: "string" },
+               isVideo: { type: "boolean", default: false }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { phone, isVideo = false } = req.body || {};
+  if (typeof phone !== 'string' || !phone.trim()) {
+    res
+      .status(400)
+      .json({ status: 'error', message: 'Parameter phone is required!' });
+    return;
+  }
+
+  try {
+    const response = await CallUtil.offerCall(req.client.page, phone, {
+      isVideo: Boolean(isVideo),
+    });
+    res.status(200).json({
+      status: 'success',
+      response,
+      mediaTransport: false,
+      message: 'Call offer sent without audio/video media transport',
+    });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on offerCall' });
   }
 }
 
