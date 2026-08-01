@@ -384,11 +384,16 @@ export async function getChatById(req: Request, res: Response) {
      }
    */
   const { phone } = req.params;
-  const { isGroup = false } = req.query;
+  const { isGroup = false, isNewsletter = false, isLid = false } = req.query;
 
   try {
     let result = {} as Chat;
-    for (const contato of contactToArray(phone as string, isGroup as boolean)) {
+    for (const contato of contactToArray(
+      phone as string,
+      isGroup as boolean,
+      isNewsletter as boolean,
+      isLid as boolean
+    )) {
       result = await req.client.getChatById(contato);
     }
 
