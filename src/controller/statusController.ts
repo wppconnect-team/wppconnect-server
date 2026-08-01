@@ -203,8 +203,10 @@ export async function getStatusStories(req: Request, res: Response) {
       default: 20
      }
    */
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 20;
+  const rawPage = Number.parseInt(req.query.page as string, 10);
+  const rawLimit = Number.parseInt(req.query.limit as string, 10);
+  const page = Number.isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
+  const limit = Number.isNaN(rawLimit) || rawLimit < 0 ? 20 : rawLimit;
 
   try {
     const response = await req.client.page.evaluate(
@@ -216,34 +218,47 @@ export async function getStatusStories(req: Request, res: Response) {
           !WPPLocal.whatsapp.StatusV3Store
         ) {
           return {
-            total: 0,
-            page: p,
-            limit: l,
-            pages: 0,
-            results: [],
+            error: true,
+            message: 'WPP is not initialized or StatusV3Store is unavailable',
           };
         }
 
         const models = WPPLocal.whatsapp.StatusV3Store.toArray();
-        let paginatedModels = models;
+        const total = models.length;
 
-        if (l > 0) {
-          const startIndex = (p - 1) * l;
-          const endIndex = p * l;
-          paginatedModels = models.slice(startIndex, endIndex);
+        if (l === 0) {
+          return {
+            total,
+            page: 1,
+            limit: 0,
+            pages: 1,
+            results: models.map((m: any) => m.toJSON()),
+          };
         }
 
+        const pages = Math.ceil(total / l) || 1;
+        const startIndex = (p - 1) * l;
+        const endIndex = p * l;
+        const paginatedModels = models.slice(startIndex, endIndex);
+
         return {
-          total: models.length,
-          page: l > 0 ? p : 1,
-          limit: l > 0 ? l : models.length,
-          pages: l > 0 ? Math.ceil(models.length / l) : 1,
+          total,
+          page: p,
+          limit: l,
+          pages,
           results: paginatedModels.map((m: any) => m.toJSON()),
         };
       },
       page,
       limit
     );
+
+    if (response?.error) {
+      return res.status(400).json({
+        status: 'error',
+        message: response.message || 'WPP is not initialized',
+      });
+    }
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {

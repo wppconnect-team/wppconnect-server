@@ -1003,9 +1003,7 @@ export async function forwardMessages(req: Request, res: Response) {
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
-    const contacts = Array.isArray(phone)
-      ? phone
-      : contactToArray(phone, isGroup);
+    const contacts = contactToArray(phone, isGroup);
     let response;
 
     for (const contato of contacts) {

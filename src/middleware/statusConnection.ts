@@ -60,17 +60,17 @@ export default async function statusConnection(
         index++;
       }
       req.body.phone = localArr;
+      return next();
     } else {
-      res.status(404).json({
+      return res.status(404).json({
         response: null,
         status: 'Disconnected',
         message: 'A sessão do WhatsApp não está ativa.',
       });
     }
-    next();
   } catch (error) {
     req.logger.error(error);
-    res.status(404).json({
+    return res.status(404).json({
       response: null,
       status: 'Disconnected',
       message: 'A sessão do WhatsApp não está ativa.',
