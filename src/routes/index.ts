@@ -29,6 +29,7 @@ import * as MessageController from '../controller/messageController';
 import * as MiscController from '../controller/miscController';
 import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
+import * as ResourceController from '../controller/resourceController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
 import verifyToken from '../middleware/auth';
@@ -48,9 +49,18 @@ routes.get(
   '/api/:secretkey/show-all-sessions',
   SessionController.showAllSessions
 );
+routes.get(
+  '/api/:secretkey/all-sessions-resource-usage',
+  ResourceController.getAllSessionsResourceUsage
+);
 routes.post('/api/:secretkey/start-all', SessionController.startAllSessions);
 
 // Sessions
+routes.get(
+  '/api/:session/resource-usage',
+  verifyToken,
+  ResourceController.getSessionResourceUsage
+);
 routes.get(
   '/api/:session/check-connection-session',
   verifyToken,

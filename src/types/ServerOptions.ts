@@ -44,6 +44,10 @@ export interface ServerOptions {
     enable: boolean;
     prefix: string;
   };
+  resourceMonitor: {
+    enable: boolean;
+    cacheDuration: number;
+  };
   db: {
     mongodbDatabase: string;
     mongodbCollection: string;
