@@ -111,6 +111,10 @@ export default {
     enable: false,
     prefix: 'tagone-',
   },
+  resourceMonitor: {
+    enable: false,
+    cacheDuration: 5000,
+  },
   db: {
     mongodbDatabase: env.MONGODB_DATABASE || 'tokens',
     mongodbCollection: env.MONGODB_COLLECTION || '',

@@ -174,24 +174,47 @@ export class SessionResourceMonitor {
 
       let totalCpu = 0;
       let totalMemory = 0;
+      const validPids: number[] = [];
 
-      // Chromium creates multiple processes (main + renderers + GPU)
       for (const pid of pids) {
-        if (stats[pid]) {
-          totalCpu += stats[pid].cpu;
-          totalMemory += stats[pid].memory;
+        if (stats && stats[pid]) {
+          totalCpu += stats[pid].cpu || 0;
+          totalMemory += stats[pid].memory || 0;
+          validPids.push(pid);
         }
       }
 
       return {
         cpu: totalCpu,
         memory: totalMemory,
-        count: pids.length,
-        processes: pids,
+        count: validPids.length,
+        processes: validPids,
       };
     } catch (error) {
-      console.error('Error getting process usage:', error);
-      return { cpu: 0, memory: 0, count: 0, processes: [] };
+      // Fallback for stale/exited PIDs: query each PID individually and filter out dead ones
+      let totalCpu = 0;
+      let totalMemory = 0;
+      const validPids: number[] = [];
+
+      for (const pid of pids) {
+        try {
+          const stat = await pidusage(pid);
+          if (stat) {
+            totalCpu += stat.cpu || 0;
+            totalMemory += stat.memory || 0;
+            validPids.push(pid);
+          }
+        } catch {
+          // Ignore dead process
+        }
+      }
+
+      return {
+        cpu: totalCpu,
+        memory: totalMemory,
+        count: validPids.length,
+        processes: validPids,
+      };
     }
   }
 
@@ -215,6 +238,15 @@ export class SessionResourceMonitor {
     }
 
     const usage = await this.getProcessesUsage(pids);
+
+    if (usage.count === 0) {
+      return {
+        sessionName,
+        status: 'not_running',
+        message: 'No Chromium processes found for this session',
+        timestamp: new Date().toISOString(),
+      };
+    }
 
     return {
       sessionName,
@@ -241,35 +273,31 @@ export class SessionResourceMonitor {
    * @returns Usage information for all sessions with summary
    */
   public async getAllSessionsUsage(): Promise<AllSessionsUsageResult> {
-    try {
-      // Get all session directories
-      const sessionNames = await this.getSessionNames();
+    // Get all session directories
+    const sessionNames = await this.getSessionNames();
 
-      const results: SessionUsageResult[] = [];
-      let totalCpu = 0;
-      let totalMemory = 0;
+    const results: SessionUsageResult[] = [];
+    let totalCpu = 0;
+    let totalMemory = 0;
 
-      for (const sessionName of sessionNames) {
-        const usage = await this.getSessionUsage(sessionName);
-        if (usage.status === 'running' && usage.chromium) {
-          results.push(usage);
-          totalCpu += usage.chromium.cpu.raw;
-          totalMemory += usage.chromium.memory.bytes;
-        }
+    for (const sessionName of sessionNames) {
+      const usage = await this.getSessionUsage(sessionName);
+      if (usage.status === 'running' && usage.chromium) {
+        results.push(usage);
+        totalCpu += usage.chromium.cpu.raw;
+        totalMemory += usage.chromium.memory.bytes;
       }
-
-      return {
-        sessions: results,
-        summary: {
-          totalSessions: sessionNames.length,
-          runningSessions: results.length,
-          totalCpu: `${totalCpu.toFixed(2)}%`,
-          totalMemory: `${(totalMemory / 1024 / 1024).toFixed(2)} MB`,
-        },
-      };
-    } catch (error) {
-      throw error;
     }
+
+    return {
+      sessions: results,
+      summary: {
+        totalSessions: sessionNames.length,
+        runningSessions: results.length,
+        totalCpu: `${totalCpu.toFixed(2)}%`,
+        totalMemory: `${(totalMemory / 1024 / 1024).toFixed(2)} MB`,
+      },
+    };
   }
 
   /**
