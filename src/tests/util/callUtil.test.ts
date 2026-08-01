@@ -19,8 +19,10 @@ import {
   acceptCall,
   enableCallInterface,
   endCall,
+  installIncomingAudioCapture,
   normalizeCallDestination,
   offerCall,
+  stopIncomingAudioCapture,
 } from '../../util/callUtil';
 
 function mockPage(result: unknown = true) {
@@ -55,6 +57,27 @@ describe('Call utilities', () => {
     expect(page.evaluate).toHaveBeenLastCalledWith(expect.any(Function), {
       to: '5534999577020@c.us',
       isVideo: true,
+    });
+  });
+
+  it('installs and stops incoming audio capture in the browser', async () => {
+    const page = {
+      evaluate: jest.fn().mockResolvedValue(undefined),
+      exposeFunction: jest.fn().mockResolvedValue(undefined),
+    } as unknown as Page;
+    const onChunk = jest.fn();
+
+    await installIncomingAudioCapture(page, onChunk, { timesliceMs: 500 });
+    await stopIncomingAudioCapture(page);
+
+    expect(page.exposeFunction).toHaveBeenCalledWith(
+      '__wppconnectIncomingCallAudioChunk',
+      onChunk
+    );
+    expect(page.evaluate).toHaveBeenCalledTimes(2);
+    expect(page.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), {
+      callbackName: '__wppconnectIncomingCallAudioChunk',
+      timesliceMs: 500,
     });
   });
 });

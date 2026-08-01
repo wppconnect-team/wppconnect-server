@@ -623,6 +623,18 @@ routes.post(
   statusConnection,
   DeviceController.offerCall
 );
+routes.post(
+  '/api/:session/start-incoming-call-audio',
+  verifyToken,
+  statusConnection,
+  DeviceController.startIncomingCallAudio
+);
+routes.post(
+  '/api/:session/stop-incoming-call-audio',
+  verifyToken,
+  statusConnection,
+  DeviceController.stopIncomingCallAudio
+);
 
 // Catalog
 routes.get(

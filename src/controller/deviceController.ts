@@ -2225,6 +2225,64 @@ export async function offerCall(req: Request, res: Response) {
   }
 }
 
+export async function startIncomingCallAudio(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Experimental: captures incoming WebRTC call audio and emits call-audio chunks through Socket.IO. Start before accepting the call."
+     #swagger.security = [{ "bearerAuth": [] }]
+   */
+  const { timesliceMs = 250 } = req.body || {};
+  const parsedTimeslice = Number(timesliceMs);
+  if (!Number.isFinite(parsedTimeslice) || parsedTimeslice < 100) {
+    res.status(400).json({
+      status: 'error',
+      message: 'timesliceMs must be a number greater than or equal to 100',
+    });
+    return;
+  }
+
+  try {
+    await CallUtil.installIncomingAudioCapture(
+      req.client.page,
+      (chunk) => {
+        req.io.emit('call-audio', { session: req.session, ...chunk });
+      },
+      { timesliceMs: parsedTimeslice }
+    );
+    res.status(200).json({
+      status: 'success',
+      response: true,
+      event: 'call-audio',
+      mediaDirection: 'incoming',
+      experimental: true,
+    });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on startIncomingCallAudio',
+    });
+  }
+}
+
+export async function stopIncomingCallAudio(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Stops all experimental incoming call audio recorders for the session."
+     #swagger.security = [{ "bearerAuth": [] }]
+   */
+  try {
+    await CallUtil.stopIncomingAudioCapture(req.client.page);
+    res.status(200).json({ status: 'success', response: true });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on stopIncomingCallAudio',
+    });
+  }
+}
+
 export async function starMessage(req: Request, res: Response) {
   /**
      #swagger.tags = ["Messages"]

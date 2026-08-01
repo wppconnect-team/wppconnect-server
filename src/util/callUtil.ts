@@ -19,6 +19,19 @@ export interface CallOfferOptions {
   isVideo?: boolean;
 }
 
+export interface IncomingCallAudioChunk {
+  mimeType: string;
+  data: string;
+  sequence: number;
+  timestamp: number;
+}
+
+export interface IncomingAudioCaptureOptions {
+  timesliceMs?: number;
+}
+
+const AUDIO_CHUNK_CALLBACK = '__wppconnectIncomingCallAudioChunk';
+
 export function normalizeCallDestination(phone: string): string {
   const trimmed = phone.trim();
 
@@ -78,4 +91,94 @@ export async function offerCall(
       }),
     { to, isVideo: Boolean(options.isVideo) }
   );
+}
+
+/**
+ * Experimental incoming WebRTC audio capture. It must be installed before the
+ * call peer connection receives its remote track.
+ */
+export async function installIncomingAudioCapture(
+  page: Page,
+  onChunk: (chunk: IncomingCallAudioChunk) => void | Promise<void>,
+  options: IncomingAudioCaptureOptions = {}
+): Promise<void> {
+  try {
+    await page.exposeFunction(AUDIO_CHUNK_CALLBACK, onChunk);
+  } catch (error) {
+    if (
+      !(error instanceof Error) ||
+      !error.message.includes('already exists')
+    ) {
+      throw error;
+    }
+  }
+
+  const timesliceMs = Math.max(100, options.timesliceMs ?? 250);
+  await page.evaluate(
+    ({ callbackName, timesliceMs }) => {
+      const scope = globalThis as any;
+      if (scope.__wppconnectCallAudioCaptureInstalled) return;
+
+      scope.__wppconnectCallAudioCaptureInstalled = true;
+      scope.__wppconnectCallAudioRecorders = new Set<MediaRecorder>();
+      let sequence = 0;
+
+      const captureTrack = (track: MediaStreamTrack) => {
+        if (track.kind !== 'audio' || typeof MediaRecorder === 'undefined') {
+          return;
+        }
+
+        const stream = new MediaStream([track]);
+        const recorder = new MediaRecorder(stream);
+        scope.__wppconnectCallAudioRecorders.add(recorder);
+
+        recorder.addEventListener('dataavailable', async (event) => {
+          if (!event.data.size) return;
+          const bytes = new Uint8Array(await event.data.arrayBuffer());
+          let binary = '';
+          for (const byte of bytes) binary += String.fromCharCode(byte);
+          await scope[callbackName]({
+            mimeType: recorder.mimeType || event.data.type,
+            data: btoa(binary),
+            sequence: sequence++,
+            timestamp: Date.now(),
+          });
+        });
+        recorder.addEventListener('stop', () => {
+          scope.__wppconnectCallAudioRecorders.delete(recorder);
+        });
+        track.addEventListener('ended', () => recorder.stop(), { once: true });
+        recorder.start(timesliceMs);
+      };
+
+      const originalAddTrack = RTCPeerConnection.prototype.addEventListener;
+      const instrument = (connection: RTCPeerConnection) => {
+        if ((connection as any).__wppconnectAudioCaptureAttached) return;
+        (connection as any).__wppconnectAudioCaptureAttached = true;
+        originalAddTrack.call(connection, 'track', (event: Event) => {
+          captureTrack((event as RTCTrackEvent).track);
+        });
+      };
+
+      const originalSetRemoteDescription =
+        RTCPeerConnection.prototype.setRemoteDescription;
+      RTCPeerConnection.prototype.setRemoteDescription = function (...args) {
+        instrument(this);
+        return originalSetRemoteDescription.apply(this, args as any);
+      };
+    },
+    { callbackName: AUDIO_CHUNK_CALLBACK, timesliceMs }
+  );
+}
+
+export async function stopIncomingAudioCapture(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const scope = globalThis as any;
+    const recorders = scope.__wppconnectCallAudioRecorders as
+      | Set<MediaRecorder>
+      | undefined;
+    recorders?.forEach((recorder) => {
+      if (recorder.state !== 'inactive') recorder.stop();
+    });
+  });
 }

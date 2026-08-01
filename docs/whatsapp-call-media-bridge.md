@@ -8,6 +8,19 @@ explicitly creates signalling only; it does not attach audio or video tracks.
 Consequently, the HTTP endpoints in this branch must not report that a usable
 voice call exists until a media bridge has been implemented.
 
+This branch also contains an experimental phase-two receiver. Calling
+`POST /api/{session}/start-incoming-call-audio` before accepting a call
+instruments WebRTC and publishes chunks through the Socket.IO `call-audio`
+event. Each payload contains `session`, `mimeType`, Base64 `data`, `sequence`,
+and `timestamp`. Use
+`POST /api/{session}/stop-incoming-call-audio` to stop active recorders.
+
+This receiver is a proof of concept, not a production media endpoint. The
+server's existing Socket.IO connection is not authenticated or isolated into
+session rooms, so raw call audio could be observed by another connected socket.
+Production deployment requires a call-scoped authenticated namespace or a
+dedicated media gateway before this feature can be enabled by default.
+
 ## Proposed architecture
 
 Keep WhatsApp signalling and encryption inside the browser session. Add a
