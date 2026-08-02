@@ -10,9 +10,10 @@ voice call exists until a media bridge has been implemented.
 
 This branch also contains an experimental phase-two media bridge. Calling
 `POST /api/{session}/start-incoming-call-audio` before accepting a call
-instruments WebRTC and publishes chunks through the authenticated Socket.IO
-`/call-media` namespace's `incoming-audio` event. Each payload contains
-`mimeType`, Base64 `data`, `sequence`, and `timestamp`. Use
+instruments WebRTC and publishes signed little-endian PCM16 chunks through the
+authenticated Socket.IO `/call-media` namespace's `incoming-audio` event. Each
+payload contains `mimeType` (including the browser sample rate), Base64 `data`,
+`sequence`, and `timestamp`. Use
 `POST /api/{session}/stop-incoming-call-audio` to stop active recorders.
 
 Create a short-lived connection ticket with

@@ -120,36 +120,70 @@ export async function installIncomingAudioCapture(
       if (scope.__wppconnectCallAudioCaptureInstalled) return;
 
       scope.__wppconnectCallAudioCaptureInstalled = true;
-      scope.__wppconnectCallAudioRecorders = new Set<MediaRecorder>();
+      scope.__wppconnectCallAudioCaptures = new Set<AudioContext>();
       scope.__wppconnectCallPeerConnections = new Set<RTCPeerConnection>();
+      scope.__wppconnectCallAudioCaptureDiagnostics = {
+        callbackErrors: [],
+        dataEvents: 0,
+      };
       let sequence = 0;
 
       const captureTrack = (track: MediaStreamTrack) => {
-        if (track.kind !== 'audio' || typeof MediaRecorder === 'undefined') {
-          return;
-        }
+        if (track.kind !== 'audio') return;
 
         const stream = new MediaStream([track]);
-        const recorder = new MediaRecorder(stream);
-        scope.__wppconnectCallAudioRecorders.add(recorder);
+        const context = new AudioContext();
+        const source = context.createMediaStreamSource(stream);
+        const processor = context.createScriptProcessor(2048, 1, 1);
+        const silentSink = context.createGain();
+        silentSink.gain.value = 0;
+        const samples: number[] = [];
+        const targetSamples = Math.round(
+          context.sampleRate * (timesliceMs / 1000)
+        );
+        scope.__wppconnectCallAudioCaptures.add(context);
 
-        recorder.addEventListener('dataavailable', async (event) => {
-          if (!event.data.size) return;
-          const bytes = new Uint8Array(await event.data.arrayBuffer());
+        processor.onaudioprocess = async (event) => {
+          scope.__wppconnectCallAudioCaptureDiagnostics.dataEvents++;
+          const input = event.inputBuffer.getChannelData(0);
+          for (const sample of input) samples.push(sample);
+          if (samples.length < targetSamples) return;
+
+          const chunk = samples.splice(0, targetSamples);
+          const pcm = new Int16Array(chunk.length);
+          for (let index = 0; index < pcm.length; index++) {
+            const sample = Math.max(-1, Math.min(1, chunk[index]));
+            pcm[index] = sample < 0 ? sample * 32768 : sample * 32767;
+          }
+          const bytes = new Uint8Array(pcm.buffer);
           let binary = '';
           for (const byte of bytes) binary += String.fromCharCode(byte);
-          await scope[callbackName]({
-            mimeType: recorder.mimeType || event.data.type,
-            data: btoa(binary),
-            sequence: sequence++,
-            timestamp: Date.now(),
-          });
-        });
-        recorder.addEventListener('stop', () => {
-          scope.__wppconnectCallAudioRecorders.delete(recorder);
-        });
-        track.addEventListener('ended', () => recorder.stop(), { once: true });
-        recorder.start(timesliceMs);
+          try {
+            await scope[callbackName]({
+              mimeType: `audio/pcm;rate=${context.sampleRate};encoding=signed-integer;bits=16`,
+              data: btoa(binary),
+              sequence: sequence++,
+              timestamp: Date.now(),
+            });
+          } catch (error) {
+            scope.__wppconnectCallAudioCaptureDiagnostics.callbackErrors.push(
+              String(error)
+            );
+          }
+        };
+        source.connect(processor);
+        processor.connect(silentSink).connect(context.destination);
+        void context.resume();
+        track.addEventListener(
+          'ended',
+          () => {
+            processor.disconnect();
+            source.disconnect();
+            void context.close();
+            scope.__wppconnectCallAudioCaptures.delete(context);
+          },
+          { once: true }
+        );
       };
 
       const originalAddTrack = RTCPeerConnection.prototype.addEventListener;
@@ -181,12 +215,24 @@ export async function installIncomingAudioCapture(
 export async function stopIncomingAudioCapture(page: Page): Promise<void> {
   await page.evaluate(() => {
     const scope = globalThis as any;
-    const recorders = scope.__wppconnectCallAudioRecorders as
-      | Set<MediaRecorder>
+    const captures = scope.__wppconnectCallAudioCaptures as
+      | Set<AudioContext>
       | undefined;
-    recorders?.forEach((recorder) => {
-      if (recorder.state !== 'inactive') recorder.stop();
+    captures?.forEach((context) => {
+      void context.close();
     });
+    captures?.clear();
+  });
+}
+
+export async function stopOutgoingAudio(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const scope = globalThis as any;
+    const bridge = scope.__wppconnectOutgoingAudio;
+    if (!bridge) return;
+    bridge.queue.length = 0;
+    await bridge.context.close();
+    delete scope.__wppconnectOutgoingAudio;
   });
 }
 
@@ -214,7 +260,11 @@ export async function pushOutgoingPcm16(
         | Set<RTCPeerConnection>
         | undefined;
       const connection = connections
-        ? [...connections].find((item) => item.connectionState !== 'closed')
+        ? [...connections].find(
+            (item) =>
+              item.connectionState !== 'closed' &&
+              item.getSenders().some((sender) => sender.track?.kind === 'audio')
+          )
         : undefined;
       if (!connection) return false;
 

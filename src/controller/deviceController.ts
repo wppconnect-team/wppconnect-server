@@ -2174,6 +2174,10 @@ export async function endCall(req: Request, res: Response) {
   const { callId } = req.body || {};
   try {
     const response = await CallUtil.endCall(req.client.page, callId);
+    await Promise.allSettled([
+      CallUtil.stopIncomingAudioCapture(req.client.page),
+      CallUtil.stopOutgoingAudio(req.client.page),
+    ]);
     res.status(200).json({ status: 'success', response });
   } catch (e) {
     req.logger.error(e);
@@ -2288,7 +2292,10 @@ export async function stopIncomingCallAudio(req: Request, res: Response) {
      #swagger.security = [{ "bearerAuth": [] }]
    */
   try {
-    await CallUtil.stopIncomingAudioCapture(req.client.page);
+    await Promise.all([
+      CallUtil.stopIncomingAudioCapture(req.client.page),
+      CallUtil.stopOutgoingAudio(req.client.page),
+    ]);
     res.status(200).json({ status: 'success', response: true });
   } catch (e) {
     req.logger.error(e);

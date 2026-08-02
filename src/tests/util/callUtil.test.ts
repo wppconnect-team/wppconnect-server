@@ -24,6 +24,7 @@ import {
   offerCall,
   pushOutgoingPcm16,
   stopIncomingAudioCapture,
+  stopOutgoingAudio,
 } from '../../util/callUtil';
 
 function mockPage(result: unknown = true) {
@@ -70,12 +71,13 @@ describe('Call utilities', () => {
 
     await installIncomingAudioCapture(page, onChunk, { timesliceMs: 500 });
     await stopIncomingAudioCapture(page);
+    await stopOutgoingAudio(page);
 
     expect(page.exposeFunction).toHaveBeenCalledWith(
       '__wppconnectIncomingCallAudioChunk',
       onChunk
     );
-    expect(page.evaluate).toHaveBeenCalledTimes(2);
+    expect(page.evaluate).toHaveBeenCalledTimes(3);
     expect(page.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), {
       callbackName: '__wppconnectIncomingCallAudioChunk',
       timesliceMs: 500,
