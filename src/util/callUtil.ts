@@ -460,8 +460,15 @@ export async function getCallInterfaceDiagnostics(
             ),
             captureSampleRate:
               scope.__wppconnectVoipScriptBridge.captureSampleRate,
-            outgoingQueued:
-              scope.__wppconnectVoipScriptBridge.outgoingQueue?.length || 0,
+            outgoingQueued: Math.max(
+              0,
+              (scope.__wppconnectVoipScriptBridge.outgoingQueue?.length || 0) -
+                (scope.__wppconnectVoipScriptBridge.outgoingReadOffset || 0)
+            ),
+            outgoingUnderruns:
+              scope.__wppconnectVoipScriptBridge.outgoingUnderruns || 0,
+            outgoingOverflowSamples:
+              scope.__wppconnectVoipScriptBridge.outgoingOverflowSamples || 0,
             playbackQueued:
               scope.__wppconnectVoipScriptBridge.playbackSamples?.length || 0,
           }
@@ -762,7 +769,11 @@ export async function installIncomingAudioCapture(
         captureProcessor: null,
         captureSampleRate: 48_000,
         outgoingQueue: [],
+        outgoingReadOffset: 0,
         outgoingStarted: false,
+        outgoingUnderflowing: false,
+        outgoingUnderruns: 0,
+        outgoingOverflowSamples: 0,
         lastOutgoingSample: 0,
         playbackSamples: [],
       };
@@ -817,9 +828,11 @@ export async function installIncomingAudioCapture(
             const prebufferSamples = Math.round(
               bridge.captureSampleRate * 0.12
             );
+            const availableSamples =
+              bridge.outgoingQueue.length - bridge.outgoingReadOffset;
             if (
               !bridge.outgoingStarted &&
-              bridge.outgoingQueue.length >= prebufferSamples
+              availableSamples >= prebufferSamples
             ) {
               bridge.outgoingStarted = true;
             }
@@ -828,8 +841,9 @@ export async function installIncomingAudioCapture(
                 input[index] = 0;
                 continue;
               }
-              const queued = bridge.outgoingQueue.shift();
+              const queued = bridge.outgoingQueue[bridge.outgoingReadOffset++];
               if (queued == null) {
+                bridge.outgoingReadOffset = bridge.outgoingQueue.length;
                 const remaining = input.length - index;
                 for (let fade = index; fade < input.length; fade++) {
                   input[fade] =
@@ -837,11 +851,22 @@ export async function installIncomingAudioCapture(
                     ((input.length - fade - 1) / Math.max(1, remaining));
                 }
                 bridge.lastOutgoingSample = 0;
-                bridge.outgoingStarted = false;
+                if (!bridge.outgoingUnderflowing) {
+                  bridge.outgoingUnderflowing = true;
+                  bridge.outgoingUnderruns++;
+                }
                 break;
               }
+              bridge.outgoingUnderflowing = false;
               input[index] = queued;
               bridge.lastOutgoingSample = queued;
+            }
+            if (
+              bridge.outgoingReadOffset > 48_000 &&
+              bridge.outgoingReadOffset * 2 > bridge.outgoingQueue.length
+            ) {
+              bridge.outgoingQueue.splice(0, bridge.outgoingReadOffset);
+              bridge.outgoingReadOffset = 0;
             }
             original?.call(processor, event);
           };
@@ -1094,11 +1119,20 @@ export async function pushOutgoingPcm16(
           const sample = input[left] * (1 - fraction) + input[right] * fraction;
           voipBridge.outgoingQueue.push(sample / 32768);
         }
-        if (voipBridge.outgoingQueue.length > outputRate * 5) {
-          voipBridge.outgoingQueue.splice(
-            0,
-            voipBridge.outgoingQueue.length - outputRate * 5
-          );
+        const queuedSamples =
+          voipBridge.outgoingQueue.length - voipBridge.outgoingReadOffset;
+        const maxBufferedSamples = outputRate * 180;
+        if (queuedSamples > maxBufferedSamples) {
+          const excess = queuedSamples - maxBufferedSamples;
+          voipBridge.outgoingReadOffset += excess;
+          voipBridge.outgoingOverflowSamples += excess;
+        }
+        if (
+          voipBridge.outgoingReadOffset > outputRate &&
+          voipBridge.outgoingReadOffset * 2 > voipBridge.outgoingQueue.length
+        ) {
+          voipBridge.outgoingQueue.splice(0, voipBridge.outgoingReadOffset);
+          voipBridge.outgoingReadOffset = 0;
         }
         return true;
       }
