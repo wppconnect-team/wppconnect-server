@@ -140,11 +140,19 @@ export function normalizeCallDestination(phone: string): string {
 }
 
 export async function enableCallInterface(page: Page): Promise<void> {
-  await page.evaluate(() =>
-    (
+  await page.evaluate(async () => {
+    const activation = (
       globalThis as typeof globalThis & { WPP: any }
-    ).WPP.call.enableCallInterface()
-  );
+    ).WPP.call.enableCallInterface();
+
+    // On current WhatsApp Web builds WA-JS applies the call interface but its
+    // promise may remain pending indefinitely. Do not block the HTTP request
+    // (and consequently auto-answer) after the activation was dispatched.
+    await Promise.race([
+      Promise.resolve(activation),
+      new Promise<void>((resolve) => setTimeout(resolve, 3_000)),
+    ]);
+  });
 }
 
 export async function acceptCall(
