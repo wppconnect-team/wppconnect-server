@@ -2130,10 +2130,14 @@ export async function enableCallInterface(req: Request, res: Response) {
     });
     await CallUtil.installIncomingAudioCapture(req.client.page);
     await CallUtil.enableCallInterface(req.client.page);
+    const diagnostics = await CallUtil.getCallInterfaceDiagnostics(
+      req.client.page
+    );
     res.status(200).json({
       status: 'success',
       response: true,
       mediaInstrumentationReady: true,
+      diagnostics,
     });
   } catch (e) {
     req.logger.error(e);

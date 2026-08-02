@@ -33,7 +33,10 @@ export const chromiumArgs = [
   '--disable-translate', // Disables translation
   '--hide-scrollbars', // Hides scrollbars
   '--metrics-recording-only', // Records metrics only
-  '--mute-audio', // Mutes audio
+  '--use-fake-ui-for-media-stream',
+  '--use-fake-device-for-media-stream',
+  '--enable-features=SharedArrayBuffer', // Required by the WhatsApp VoIP backend
+  '--use-file-for-fake-audio-capture=/usr/src/wpp-server/silence.wav',
   '--no-first-run', // Skips first run
   '--safebrowsing-disable-auto-update', // Disables Safe Browsing auto-update
   '--ignore-certificate-errors', // Ignores certificate errors

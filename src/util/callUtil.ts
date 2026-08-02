@@ -87,12 +87,25 @@ export async function installIncomingCallWatcher(
       if (scope.__wppconnectIncomingCallWatcherInstalled) return;
       const store = scope.WPP?.whatsapp?.CallStore;
       if (!store) throw new Error('WhatsApp CallStore is not available');
+      let ongoingStore: any;
+      try {
+        const module =
+          scope.importNamespace?.('WAWebVoipOngoingCallCollection') ||
+          scope.require?.('WAWebVoipOngoingCallCollection');
+        ongoingStore = module?.WAWebVoipOngoingCallCollection;
+      } catch {
+        ongoingStore = undefined;
+      }
 
       scope.__wppconnectIncomingCallWatcherInstalled = true;
       const seen = new Set<string>();
       const serialize = (call: any): BrowserIncomingCall => ({
-        id: String(call.id || ''),
-        peerJid: call.peerJid?.toString?.() || String(call.peerJid || ''),
+        id: String(call.id || call.callId || call.getCallId?.() || ''),
+        peerJid:
+          call.peerJid?.toString?.() ||
+          call.peerWid?.toString?.() ||
+          call.chatId?.toString?.() ||
+          String(call.peerJid || call.peerWid || call.chatId || ''),
         offerTime: Number(call.offerTime || 0),
         isVideo: Boolean(call.isVideo),
         isGroup: Boolean(call.isGroup),
@@ -107,11 +120,60 @@ export async function installIncomingCallWatcher(
 
       store.on('add', (call: any) => void emit(call));
       store.on('change', (call: any) => void emit(call));
+      ongoingStore?.on?.('add', (call: any) => void emit(call));
+      ongoingStore?.on?.('change', (call: any) => void emit(call));
+      const modelsOf = (collection: any): any[] => {
+        if (!collection) return [];
+        if (typeof collection.getModelsArray === 'function') {
+          return collection.getModelsArray();
+        }
+        if (Array.isArray(collection.models)) return collection.models;
+        const models = collection._models;
+        if (models instanceof Map) return [...models.values()];
+        if (Array.isArray(models)) return models;
+        return models && typeof models === 'object'
+          ? Object.values(models)
+          : [];
+      };
       const scan = () => {
         const nowSeconds = Date.now() / 1000;
         store.getModelsArray().forEach((call: any) => {
           if (Number(call.offerTime || 0) >= nowSeconds - 120) void emit(call);
         });
+        modelsOf(ongoingStore).forEach((call: any) => void emit(call));
+
+        // The native VoIP UI is the authoritative incoming-call surface on
+        // current WhatsApp Web builds. Some offers are rendered there without
+        // being mirrored to either exported call collection.
+        const nativeAnswerVisible = [
+          ...document.querySelectorAll<HTMLElement>('button, [role="button"]'),
+        ].some((element) => {
+          const label = [
+            element.getAttribute('aria-label'),
+            element.getAttribute('title'),
+            element.textContent,
+          ]
+            .filter(Boolean)
+            .join(' ');
+          return (
+            /\b(atender|aceitar|answer|accept)\b/i.test(label) &&
+            element.getClientRects().length > 0 &&
+            getComputedStyle(element).visibility !== 'hidden'
+          );
+        });
+        if (nativeAnswerVisible && !scope.__wppconnectNativeIncomingVisible) {
+          scope.__wppconnectNativeIncomingVisible = true;
+          void emit({
+            id: `native-ui-${Date.now()}`,
+            peerJid: '',
+            offerTime: Date.now() / 1000,
+            isVideo: false,
+            isGroup: false,
+            outgoing: false,
+          });
+        } else if (!nativeAnswerVisible) {
+          scope.__wppconnectNativeIncomingVisible = false;
+        }
       };
       scan();
 
@@ -141,6 +203,7 @@ export function normalizeCallDestination(phone: string): string {
 
 export async function enableCallInterface(page: Page): Promise<void> {
   await page.evaluate(async () => {
+    const scope = globalThis as any;
     const activation = (
       globalThis as typeof globalThis & { WPP: any }
     ).WPP.call.enableCallInterface();
@@ -152,6 +215,232 @@ export async function enableCallInterface(page: Page): Promise<void> {
       Promise.resolve(activation),
       new Promise<void>((resolve) => setTimeout(resolve, 3_000)),
     ]);
+
+    // WA-JS currently discovers Meta modules by their exported function
+    // shape. Recent WhatsApp builds register the VoIP modules by stable Meta
+    // identifiers but wrap their exports, so the shape lookup can remain
+    // unresolved. Fall back to the official module identifiers and initialize
+    // the backend explicitly.
+    const importModule = (id: string) => {
+      try {
+        return scope.importNamespace?.(id) || scope.require?.(id);
+      } catch {
+        return undefined;
+      }
+    };
+    const loadable = importModule('WAWebVoipBackendLoadable');
+    const requireBackend =
+      loadable?.requireVoipJsBackend ||
+      loadable?.default?.requireVoipJsBackend ||
+      (typeof loadable?.default === 'function' ? loadable.default : undefined);
+    let backend: any;
+    if (typeof requireBackend === 'function') {
+      backend = await requireBackend();
+    }
+    const initModule = backend?.WAWebVoipInit || importModule('WAWebVoipInit');
+    const initialize =
+      initModule?.initWAWebVoip || initModule?.default?.initWAWebVoip;
+    if (typeof initialize === 'function') {
+      await initialize();
+    }
+    const ensureModule = importModule('WAWebEnsureVoipInited');
+    const ensureInitialized =
+      ensureModule?.ensureVoipInitialized ||
+      ensureModule?.default?.ensureVoipInitialized;
+    if (typeof ensureInitialized === 'function') {
+      await ensureInitialized();
+    }
+  });
+}
+
+export async function getCallInterfaceDiagnostics(
+  page: Page
+): Promise<unknown> {
+  return page.evaluate(async () => {
+    const scope = globalThis as any;
+    const whatsapp = scope.WPP?.whatsapp;
+    let backend: any;
+    let backendError: string | undefined;
+    let stack: any;
+    let stackError: string | undefined;
+    let matchingModuleIds: string[] = [];
+    const directModules: Record<string, unknown> = {};
+    let recentOngoingCalls: unknown[] = [];
+    let voipInitState: unknown;
+    const functionKeys = (value: any) =>
+      value
+        ? Object.keys(value)
+            .filter((key) => typeof value[key] === 'function')
+            .sort()
+        : [];
+    try {
+      const modulesMap = scope.require?.('__debug')?.modulesMap || {};
+      matchingModuleIds = Object.keys(modulesMap)
+        .filter((id) => /voip|call/i.test(id))
+        .sort();
+      for (const id of [
+        'WAWebVoipBackendLoadable',
+        'WAWebVoipInit',
+        'WAWebEnsureVoipInited',
+        'WAWebVoipStackInterface',
+        'WAWebVoipStackInterfaceImpl',
+        'WAWebVoipOngoingCallCollection',
+        'WAWebVoipLocalCallStateStore',
+        'WAWebVoipInitEventEmitter',
+        'WAWebCallNotificationBus',
+        'WAWebVoipHandleNativeCallEvent',
+        'WAWebNotificationsCallNotification',
+      ]) {
+        try {
+          const module = scope.importNamespace?.(id) || scope.require?.(id);
+          directModules[id] = {
+            keys: module ? Object.keys(module).sort() : [],
+            functionKeys: functionKeys(module),
+            exports: module
+              ? Object.fromEntries(
+                  Object.entries(module).map(([key, value]) => [
+                    key,
+                    {
+                      type: typeof value,
+                      keys:
+                        value && typeof value === 'object'
+                          ? Object.keys(value).sort()
+                          : [],
+                      prototypeMethods:
+                        value &&
+                        (typeof value === 'object' ||
+                          typeof value === 'function')
+                          ? Object.getOwnPropertyNames(
+                              Object.getPrototypeOf(value) || {}
+                            )
+                              .filter(
+                                (name) =>
+                                  name !== 'constructor' &&
+                                  typeof (value as any)[name] === 'function'
+                              )
+                              .sort()
+                          : [],
+                    },
+                  ])
+                )
+              : {},
+          };
+        } catch (error) {
+          directModules[id] = {
+            error: error instanceof Error ? error.message : String(error),
+          };
+        }
+      }
+      try {
+        const ongoingModule =
+          scope.importNamespace?.('WAWebVoipOngoingCallCollection') ||
+          scope.require?.('WAWebVoipOngoingCallCollection');
+        const collection = ongoingModule?.WAWebVoipOngoingCallCollection;
+        const rawModels = collection?._models;
+        const models =
+          typeof collection?.getModelsArray === 'function'
+            ? collection.getModelsArray()
+            : rawModels instanceof Map
+            ? [...rawModels.values()]
+            : Array.isArray(rawModels)
+            ? rawModels
+            : rawModels && typeof rawModels === 'object'
+            ? Object.values(rawModels)
+            : [];
+        recentOngoingCalls = models.slice(-10).map((model: any) => ({
+          keys: Object.keys(model).sort(),
+          primitiveFields: Object.fromEntries(
+            Object.entries(model).filter(
+              ([, value]) =>
+                value == null ||
+                ['string', 'number', 'boolean'].includes(typeof value)
+            )
+          ),
+          id: String(model.id || model.callId || model.getCallId?.() || ''),
+          peerJid:
+            model.peerJid?.toString?.() ||
+            model.peerWid?.toString?.() ||
+            model.chatId?.toString?.() ||
+            '',
+        }));
+      } catch {
+        recentOngoingCalls = [];
+      }
+      try {
+        const initEventModule =
+          scope.importNamespace?.('WAWebVoipInitEventEmitter') ||
+          scope.require?.('WAWebVoipInitEventEmitter');
+        const emitter = initEventModule?.VoipInitEventEmitter;
+        voipInitState = {
+          initialized: emitter?.getIsVoipInited?.(),
+          error: emitter?.getDidVoipInitError?.(),
+          failureClass: emitter?.getVoipInitFailureClass?.(),
+        };
+      } catch (error) {
+        voipInitState = {
+          diagnosticError:
+            error instanceof Error ? error.message : String(error),
+        };
+      }
+    } catch {
+      // The diagnostic remains useful on legacy webpack builds.
+    }
+    try {
+      backend = await whatsapp?.requireVoipJsBackend?.();
+    } catch (error) {
+      backendError = error instanceof Error ? error.message : String(error);
+    }
+    try {
+      stack = await whatsapp?.getVoipStackInterface?.();
+    } catch (error) {
+      stackError = error instanceof Error ? error.message : String(error);
+    }
+    return {
+      crossOriginIsolated: scope.crossOriginIsolated,
+      sharedArrayBuffer: typeof scope.SharedArrayBuffer === 'function',
+      audioContext: typeof scope.AudioContext === 'function',
+      rtcPeerConnection: typeof scope.RTCPeerConnection === 'function',
+      mediaDevices: Boolean(scope.navigator?.mediaDevices),
+      callStore: Boolean(whatsapp?.CallStore),
+      recentCalls: whatsapp?.CallStore
+        ? whatsapp.CallStore.getModelsArray()
+            .slice(-10)
+            .map((call: any) => ({
+              id: String(call.id || ''),
+              peerJid: call.peerJid?.toString?.() || String(call.peerJid || ''),
+              offerTime: Number(call.offerTime || 0),
+              state: call.getState?.(),
+              outgoing: Boolean(call.outgoing),
+              wasEverConnected: Boolean(call.wasEverConnected),
+            }))
+        : [],
+      recentOngoingCalls,
+      voipInitState,
+      whatsappVoipKeys: whatsapp
+        ? Object.keys(whatsapp)
+            .filter((key) => /voip|call/i.test(key))
+            .sort()
+        : [],
+      matchingModuleIds,
+      directModules,
+      callingEnabled: whatsapp?.isCallingEnabled?.(),
+      unsupportedBrowser: whatsapp?.isUnsupportedBrowserForWebCalling?.(),
+      voipDownloadEnabled: whatsapp?.isVoipDownloadEnabled?.(),
+      backendError,
+      backendKeys: backend ? Object.keys(backend).sort() : [],
+      backendFunctionKeys: functionKeys(backend),
+      backendModuleFunctionKeys: backend
+        ? Object.fromEntries(
+            Object.entries(backend)
+              .filter(([, value]) => value && typeof value === 'object')
+              .map(([key, value]) => [key, functionKeys(value)])
+              .filter(([, keys]) => (keys as string[]).length)
+          )
+        : {},
+      stackError,
+      stackKeys: stack ? Object.keys(stack).sort() : [],
+      stackFunctionKeys: functionKeys(stack),
+    };
   });
 }
 
@@ -162,12 +451,98 @@ export async function acceptCall(
   return page.evaluate(
     async ({ callId }) => {
       const scope = globalThis as typeof globalThis & { WPP: any };
-      const call = callId
+      const nativeAnswerAvailable = [
+        ...document.querySelectorAll<HTMLElement>('button, [role="button"]'),
+      ].some((element) => {
+        const label = [
+          element.getAttribute('aria-label'),
+          element.getAttribute('title'),
+          element.textContent,
+        ]
+          .filter(Boolean)
+          .join(' ');
+        return (
+          /\b(atender|aceitar|answer|accept)\b/i.test(label) &&
+          element.getClientRects().length > 0
+        );
+      });
+      const call = nativeAnswerAvailable
+        ? undefined
+        : callId
         ? scope.WPP.whatsapp.CallStore.get(callId)
         : scope.WPP.whatsapp.CallStore.getModelsArray().find(
             (item: any) => item.getState?.() === 3 && !item.outgoing
           );
-      if (!call) return scope.WPP.call.accept(callId);
+      const waitForPeerConnection = async (timeoutMs = 8_000) =>
+        new Promise<boolean>((resolve) => {
+          const deadline = Date.now() + timeoutMs;
+          const inspect = () => {
+            const peerConnections = [
+              ...((scope as any).__wppconnectCallPeerConnections || []),
+            ];
+            const connected = peerConnections.some(
+              (connection: RTCPeerConnection) =>
+                connection.connectionState === 'connected' ||
+                connection.iceConnectionState === 'connected' ||
+                connection.iceConnectionState === 'completed'
+            );
+            if (connected) resolve(true);
+            else if (Date.now() >= deadline) resolve(false);
+            else setTimeout(inspect, 100);
+          };
+          inspect();
+        });
+
+      if (!call) {
+        const elements = [
+          ...document.querySelectorAll<HTMLElement>('button, [role="button"]'),
+        ];
+        const labelOf = (element: HTMLElement) =>
+          [
+            element.getAttribute('aria-label'),
+            element.getAttribute('title'),
+            element.getAttribute('data-testid'),
+            element.textContent,
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+        const answerPattern = /\b(atender|aceitar|answer|accept)\b/i;
+        const rejectPattern = /\b(rejeitar|recusar|decline|reject|ignore)\b/i;
+        const answerButton = elements.find((element) => {
+          const label = labelOf(element);
+          const style = getComputedStyle(element);
+          return (
+            answerPattern.test(label) &&
+            !rejectPattern.test(label) &&
+            style.display !== 'none' &&
+            style.visibility !== 'hidden' &&
+            element.getClientRects().length > 0
+          );
+        });
+        if (!answerButton) {
+          const visibleLabels = elements
+            .filter((element) => element.getClientRects().length > 0)
+            .map(labelOf)
+            .filter(Boolean)
+            .slice(0, 100);
+          throw new Error(
+            `Native WhatsApp answer button not found; visible controls=${JSON.stringify(
+              visibleLabels
+            )}`
+          );
+        }
+        answerButton.click();
+        if (!(await waitForPeerConnection())) {
+          throw new Error(
+            `Native WhatsApp answer button was clicked but WebRTC did not connect (control=${labelOf(
+              answerButton
+            )})`
+          );
+        }
+        return true;
+      }
 
       const state = call.getState?.();
       const peerJid = call.peerJid;
@@ -192,13 +567,26 @@ export async function acceptCall(
         peerJid.toString = () => phoneNumber;
       }
       try {
-        const acceptance = scope.WPP.call.accept(callId || String(call.id));
-        return await Promise.race([
-          acceptance,
-          new Promise<boolean>((resolve) =>
-            setTimeout(() => resolve(true), 3_000)
+        await Promise.race([
+          scope.WPP.call.accept(callId || String(call.id)),
+          new Promise<void>((_, reject) =>
+            setTimeout(
+              () => reject(new Error('Timed out sending the call acceptance')),
+              3_000
+            )
           ),
         ]);
+
+        const connected =
+          call.wasEverConnected === true || (await waitForPeerConnection());
+        if (!connected) {
+          throw new Error(
+            `WhatsApp did not confirm call connection (state=${String(
+              call.getState?.()
+            )}, wasEverConnected=${String(call.wasEverConnected)})`
+          );
+        }
+        return true;
       } finally {
         call.getState = originalGetState;
         if (isLid && originalIsGroupCall) {
