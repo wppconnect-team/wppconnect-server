@@ -24,7 +24,7 @@ import {
   emitIncomingAudio,
 } from '../util/callMediaUtil';
 import * as CallUtil from '../util/callUtil';
-import { contactToArray, unlinkAsync } from '../util/functions';
+import { callWebHook, contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
 
 function returnSucess(res: any, session: any, phone: any, data: any) {
@@ -2124,6 +2124,10 @@ export async function enableCallInterface(req: Request, res: Response) {
      #swagger.security = [{ "bearerAuth": [] }]
   */
   try {
+    await CallUtil.installIncomingCallWatcher(req.client.page, (call) => {
+      req.io.emit('incomingcall', call);
+      void callWebHook(req.client, req, 'incomingcall', call);
+    });
     await CallUtil.installIncomingAudioCapture(req.client.page);
     await CallUtil.enableCallInterface(req.client.page);
     res.status(200).json({

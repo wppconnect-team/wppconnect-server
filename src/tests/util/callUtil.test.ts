@@ -20,6 +20,7 @@ import {
   enableCallInterface,
   endCall,
   installIncomingAudioCapture,
+  installIncomingCallWatcher,
   normalizeCallDestination,
   offerCall,
   pushOutgoingPcm16,
@@ -101,6 +102,35 @@ describe('Call utilities', () => {
       callbackName: '__wppconnectIncomingCallAudioChunk',
       endedCallbackName: '__wppconnectIncomingCallAudioEnded',
       timesliceMs: 500,
+    });
+  });
+
+  it('installs a modern CallStore watcher and dispatches incoming calls', async () => {
+    const page = {
+      evaluate: jest.fn().mockResolvedValue(undefined),
+      exposeFunction: jest.fn().mockResolvedValue(undefined),
+    } as unknown as Page;
+    const onCall = jest.fn();
+
+    await installIncomingCallWatcher(page, onCall);
+
+    expect(page.exposeFunction).toHaveBeenCalledWith(
+      '__wppconnectIncomingCallDetected',
+      expect.any(Function)
+    );
+    const dispatch = (page.exposeFunction as jest.Mock).mock.calls[0][1];
+    const call = {
+      id: 'call-modern-1',
+      peerJid: '110024831549535@lid',
+      offerTime: 123,
+      isVideo: false,
+      isGroup: false,
+      outgoing: false,
+    };
+    await dispatch(call);
+    expect(onCall).toHaveBeenCalledWith(call);
+    expect(page.evaluate).toHaveBeenCalledWith(expect.any(Function), {
+      callbackName: '__wppconnectIncomingCallDetected',
     });
   });
 

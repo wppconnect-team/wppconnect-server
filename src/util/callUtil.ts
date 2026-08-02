@@ -30,8 +30,18 @@ export interface IncomingAudioCaptureOptions {
   timesliceMs?: number;
 }
 
+export interface BrowserIncomingCall {
+  id: string;
+  peerJid: string;
+  offerTime: number;
+  isVideo: boolean;
+  isGroup: boolean;
+  outgoing: boolean;
+}
+
 const AUDIO_CHUNK_CALLBACK = '__wppconnectIncomingCallAudioChunk';
 const AUDIO_ENDED_CALLBACK = '__wppconnectIncomingCallAudioEnded';
+const INCOMING_CALL_CALLBACK = '__wppconnectIncomingCallDetected';
 const incomingAudioHandlers = new WeakMap<
   Page,
   Set<(chunk: IncomingCallAudioChunk) => void | Promise<void>>
@@ -40,6 +50,71 @@ const incomingAudioEndedHandlers = new WeakMap<
   Page,
   Set<() => void | Promise<void>>
 >();
+const incomingCallHandlers = new WeakMap<
+  Page,
+  (call: BrowserIncomingCall) => void | Promise<void>
+>();
+
+/**
+ * Watches the modern WhatsApp CallStore directly. The legacy WAPI
+ * onIncomingCall hook no longer fires reliably on recent WhatsApp Web builds.
+ */
+export async function installIncomingCallWatcher(
+  page: Page,
+  onCall: (call: BrowserIncomingCall) => void | Promise<void>
+): Promise<void> {
+  incomingCallHandlers.set(page, onCall);
+  try {
+    await page.exposeFunction(
+      INCOMING_CALL_CALLBACK,
+      async (call: BrowserIncomingCall) => {
+        const handler = incomingCallHandlers.get(page);
+        if (handler) await handler(call);
+      }
+    );
+  } catch (error) {
+    if (
+      !(error instanceof Error) ||
+      !error.message.includes('already exists')
+    ) {
+      throw error;
+    }
+  }
+
+  await page.evaluate(
+    ({ callbackName }) => {
+      const scope = globalThis as any;
+      if (scope.__wppconnectIncomingCallWatcherInstalled) return;
+      const store = scope.WPP?.whatsapp?.CallStore;
+      if (!store) throw new Error('WhatsApp CallStore is not available');
+
+      scope.__wppconnectIncomingCallWatcherInstalled = true;
+      const seen = new Set<string>();
+      const serialize = (call: any): BrowserIncomingCall => ({
+        id: String(call.id || ''),
+        peerJid: call.peerJid?.toString?.() || String(call.peerJid || ''),
+        offerTime: Number(call.offerTime || 0),
+        isVideo: Boolean(call.isVideo),
+        isGroup: Boolean(call.isGroup),
+        outgoing: Boolean(call.outgoing),
+      });
+      const emit = async (call: any) => {
+        const value = serialize(call);
+        if (!value.id || value.outgoing || seen.has(value.id)) return;
+        seen.add(value.id);
+        await scope[callbackName](value);
+      };
+
+      store.on('add', (call: any) => void emit(call));
+      store.on('change', (call: any) => void emit(call));
+      const nowSeconds = Date.now() / 1000;
+      store.getModelsArray().forEach((call: any) => {
+        if (Number(call.offerTime || 0) >= nowSeconds - 120) void emit(call);
+      });
+    },
+    { callbackName: INCOMING_CALL_CALLBACK }
+  );
+}
 
 export function normalizeCallDestination(phone: string): string {
   const trimmed = phone.trim();
