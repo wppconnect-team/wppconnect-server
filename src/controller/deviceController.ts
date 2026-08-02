@@ -2123,9 +2123,7 @@ export async function enableCallInterface(req: Request, res: Response) {
      #swagger.security = [{ "bearerAuth": [] }]
   */
   try {
-    await CallUtil.installIncomingAudioCapture(req.client.page, () => {
-      // The call-scoped handler is registered by startIncomingCallAudio.
-    });
+    await CallUtil.installIncomingAudioCapture(req.client.page);
     await CallUtil.enableCallInterface(req.client.page);
     res.status(200).json({
       status: 'success',
@@ -2185,7 +2183,7 @@ export async function endCall(req: Request, res: Response) {
    */
   const { callId } = req.body || {};
   try {
-    const response = await CallUtil.endCall(req.client.page, callId);
+    const response = await CallUtil.endCall(req.client.page);
     await Promise.allSettled([
       CallUtil.stopIncomingAudioCapture(req.client.page),
       CallUtil.stopOutgoingAudio(req.client.page),

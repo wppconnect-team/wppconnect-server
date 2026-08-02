@@ -70,11 +70,9 @@ export async function acceptCall(
   );
 }
 
-export async function endCall(page: Page, callId?: string): Promise<boolean> {
-  return page.evaluate(
-    ({ callId }) =>
-      (globalThis as typeof globalThis & { WPP: any }).WPP.call.end(callId),
-    { callId }
+export async function endCall(page: Page): Promise<boolean> {
+  return page.evaluate(() =>
+    (globalThis as typeof globalThis & { WPP: any }).WPP.call.end()
   );
 }
 
@@ -103,7 +101,7 @@ export async function offerCall(
  */
 export async function installIncomingAudioCapture(
   page: Page,
-  onChunk: (chunk: IncomingCallAudioChunk) => void | Promise<void>,
+  onChunk?: (chunk: IncomingCallAudioChunk) => void | Promise<void>,
   options: IncomingAudioCaptureOptions = {}
 ): Promise<void> {
   let handlers = incomingAudioHandlers.get(page);
@@ -128,7 +126,7 @@ export async function installIncomingAudioCapture(
       }
     }
   }
-  handlers.add(onChunk);
+  if (onChunk) handlers.add(onChunk);
 
   const timesliceMs = Math.max(100, options.timesliceMs ?? 250);
   await page.evaluate(

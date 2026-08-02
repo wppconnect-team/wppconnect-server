@@ -30,6 +30,11 @@ Run the REST and Socket.IO endpoints behind TLS. A media ticket is a bearer
 credential during its short lifetime and must not appear in URLs, logs, or
 metrics.
 
+Tickets and active-call bindings are intentionally held in process memory. A
+multi-process or multi-node deployment must route ticket creation and the
+subsequent Socket.IO handshake to the same WPPConnect process (sticky routing),
+or replace the ticket registry with an atomic shared store.
+
 For outbound audio, emit `outgoing-audio` on the authenticated media socket:
 
 ```json

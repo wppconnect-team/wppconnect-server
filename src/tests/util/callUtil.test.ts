@@ -52,7 +52,7 @@ describe('Call utilities', () => {
 
     await enableCallInterface(page);
     await acceptCall(page, 'call-1');
-    await endCall(page, 'call-1');
+    await endCall(page);
     await offerCall(page, '5534999577020', { isVideo: true });
 
     expect(page.evaluate).toHaveBeenCalledTimes(4);
@@ -74,6 +74,7 @@ describe('Call utilities', () => {
     await installIncomingAudioCapture(page, secondHandler, {
       timesliceMs: 500,
     });
+    await installIncomingAudioCapture(page, undefined, { timesliceMs: 500 });
     expect(page.exposeFunction).toHaveBeenCalledWith(
       '__wppconnectIncomingCallAudioChunk',
       expect.any(Function)
@@ -86,7 +87,7 @@ describe('Call utilities', () => {
     await stopIncomingAudioCapture(page);
     await stopOutgoingAudio(page);
     expect(page.exposeFunction).toHaveBeenCalledTimes(1);
-    expect(page.evaluate).toHaveBeenCalledTimes(4);
+    expect(page.evaluate).toHaveBeenCalledTimes(5);
     expect(page.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), {
       callbackName: '__wppconnectIncomingCallAudioChunk',
       timesliceMs: 500,

@@ -16,7 +16,7 @@
 import { randomBytes } from 'crypto';
 import { Namespace } from 'socket.io';
 
-import { IncomingCallAudioChunk } from './callUtil';
+import type { IncomingCallAudioChunk } from './callUtil';
 
 interface MediaTicket {
   callId: string;
