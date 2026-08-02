@@ -107,10 +107,18 @@ export async function installIncomingCallWatcher(
 
       store.on('add', (call: any) => void emit(call));
       store.on('change', (call: any) => void emit(call));
-      const nowSeconds = Date.now() / 1000;
-      store.getModelsArray().forEach((call: any) => {
-        if (Number(call.offerTime || 0) >= nowSeconds - 120) void emit(call);
-      });
+      const scan = () => {
+        const nowSeconds = Date.now() / 1000;
+        store.getModelsArray().forEach((call: any) => {
+          if (Number(call.offerTime || 0) >= nowSeconds - 120) void emit(call);
+        });
+      };
+      scan();
+
+      // Recent WhatsApp Web builds update CallStore without reliably emitting
+      // the Backbone-style add/change events. Keep a lightweight fallback scan
+      // so an incoming call cannot be missed; `seen` keeps delivery idempotent.
+      scope.__wppconnectIncomingCallWatcherTimer = setInterval(scan, 500);
     },
     { callbackName: INCOMING_CALL_CALLBACK }
   );
