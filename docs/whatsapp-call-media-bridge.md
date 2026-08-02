@@ -44,10 +44,12 @@ For outbound audio, emit `outgoing-audio` on the authenticated media socket:
 }
 ```
 
-The acknowledgement contains the bound `callId` and `attached: true` after the Web Audio track has
-replaced an existing audio sender. An `attached: false` response means that no
-active WebRTC connection/audio sender was available yet. Clients should send
-small timestamped chunks at their original cadence and use bounded queues.
+The acknowledgement contains the bound `callId` and `attached: true` after a
+generated media track has replaced an existing audio sender. Chromium uses
+`MediaStreamTrackGenerator` with paced 20 ms audio frames when available and a
+Web Audio bridge as a compatibility fallback. An `attached: false` response
+means that no active WebRTC connection/audio sender was available yet. Clients
+should send small chunks at their original cadence and use bounded queues.
 
 The bridge remains experimental. It must be validated against a real WhatsApp
 call and the exact pinned WhatsApp Web build before production use.

@@ -93,13 +93,53 @@ describe('Call media browser bridge', () => {
           };
         });
 
+        const baseline = await page.evaluate(async () => {
+          const test = (globalThis as any).__callMediaTest;
+          test.receiverTone.stop();
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          const report = await test.caller.getReceivers()[0].getStats();
+          const inbound = [...report.values()].find(
+            (entry: any) =>
+              entry.type === 'inbound-rtp' && entry.kind === 'audio'
+          );
+          return {
+            bytesReceived: inbound?.bytesReceived || 0,
+          };
+        });
+        const sampleRate = 16_000;
+        const tone = Buffer.alloc(sampleRate * 2);
+        for (let index = 0; index < sampleRate; index++) {
+          tone.writeInt16LE(
+            Math.round(
+              Math.sin((2 * Math.PI * 440 * index) / sampleRate) * 12_000
+            ),
+            index * 2
+          );
+        }
         await expect(
-          pushOutgoingPcm16(
-            page,
-            Buffer.alloc(3_200).toString('base64'),
-            16_000
-          )
+          pushOutgoingPcm16(page, tone.toString('base64'), sampleRate)
         ).resolves.toBe(true);
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        const afterInjection = await page.evaluate(async () => {
+          const test = (globalThis as any).__callMediaTest;
+          const report = await test.caller.getReceivers()[0].getStats();
+          const inbound = [...report.values()].find(
+            (entry: any) =>
+              entry.type === 'inbound-rtp' && entry.kind === 'audio'
+          );
+          return {
+            bytesReceived: inbound?.bytesReceived || 0,
+            framesWritten: (globalThis as any).__wppconnectOutgoingAudio
+              ?.framesWritten,
+            lastPeak:
+              (globalThis as any).__wppconnectOutgoingAudio?.lastPeak || 0,
+          };
+        });
+        expect(afterInjection.bytesReceived).toBeGreaterThan(
+          baseline.bytesReceived
+        );
+        expect(afterInjection.framesWritten).toBe(sampleRate);
+        expect(afterInjection.lastPeak).toBeGreaterThan(0);
 
         const deadline = Date.now() + 10_000;
         while (!chunks.length && Date.now() < deadline) {

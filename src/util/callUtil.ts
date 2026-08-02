@@ -246,8 +246,14 @@ export async function stopOutgoingAudio(page: Page): Promise<void> {
     const scope = globalThis as any;
     const bridge = scope.__wppconnectOutgoingAudio;
     if (!bridge) return;
-    bridge.queue.length = 0;
-    await bridge.context.close();
+    if (bridge.kind === 'generator') {
+      await bridge.writer.close();
+      bridge.track.stop();
+    } else {
+      bridge.queue.length = 0;
+      bridge.clock.stop();
+      await bridge.context.close();
+    }
     delete scope.__wppconnectOutgoingAudio;
   });
 }
@@ -283,11 +289,34 @@ export async function pushOutgoingPcm16(
           )
         : undefined;
       if (!connection) return false;
+      const sender = connection
+        .getSenders()
+        .find((item) => item.track?.kind === 'audio');
+      if (!sender) return false;
+
+      if (
+        !scope.__wppconnectOutgoingAudio &&
+        scope.MediaStreamTrackGenerator &&
+        scope.AudioData
+      ) {
+        const track = new scope.MediaStreamTrackGenerator({ kind: 'audio' });
+        scope.__wppconnectOutgoingAudio = {
+          framesWritten: 0,
+          kind: 'generator',
+          lastPeak: 0,
+          nextTimestamp: 0,
+          sampleRate,
+          track,
+          writer: track.writable.getWriter(),
+        };
+      }
 
       if (!scope.__wppconnectOutgoingAudio) {
         const context = new AudioContext({ sampleRate });
-        const source = context.createScriptProcessor(2048, 0, 1);
+        const source = context.createScriptProcessor(2048, 1, 1);
         const destination = context.createMediaStreamDestination();
+        const clock = context.createConstantSource();
+        clock.offset.value = 0;
         const queue: number[] = [];
         let offset = 0;
         source.onaudioprocess = (event) => {
@@ -300,11 +329,16 @@ export async function pushOutgoingPcm16(
             offset = 0;
           }
         };
+        clock.connect(source);
         source.connect(destination);
+        clock.start();
         await context.resume();
         scope.__wppconnectOutgoingAudio = {
+          kind: 'web-audio',
           context,
+          clock,
           destination,
+          sampleRate,
           get offset() {
             return offset;
           },
@@ -313,23 +347,70 @@ export async function pushOutgoingPcm16(
       }
 
       const bridge = scope.__wppconnectOutgoingAudio;
-      const binary = atob(base64Data);
-      for (let index = 0; index + 1 < binary.length; index += 2) {
-        const value =
-          binary.charCodeAt(index) | (binary.charCodeAt(index + 1) << 8);
-        bridge.queue.push((value > 32767 ? value - 65536 : value) / 32768);
+      if (bridge.sampleRate !== sampleRate) {
+        throw new Error(
+          `Cannot change sampleRate from ${bridge.sampleRate} to ${sampleRate} during a call`
+        );
       }
-      const bufferedSamples = bridge.queue.length - bridge.offset;
-      if (bufferedSamples > sampleRate * 5) {
-        bridge.queue.splice(bridge.offset, bufferedSamples - sampleRate * 5);
+      const binary = atob(base64Data);
+      let track: MediaStreamTrack;
+      if (bridge.kind === 'generator') {
+        const samples = new Int16Array(Math.floor(binary.length / 2));
+        let peak = 0;
+        for (let index = 0; index < samples.length; index++) {
+          const offset = index * 2;
+          const value =
+            binary.charCodeAt(offset) | (binary.charCodeAt(offset + 1) << 8);
+          samples[index] = value > 32767 ? value - 65536 : value;
+          peak = Math.max(peak, Math.abs(samples[index]));
+        }
+        bridge.lastPeak = peak;
+        track = bridge.track;
+        if (sender.track !== track) await sender.replaceTrack(track);
+
+        const frameSize = Math.max(1, Math.round(sampleRate / 50));
+        for (let offset = 0; offset < samples.length; offset += frameSize) {
+          const frame = samples.subarray(
+            offset,
+            Math.min(offset + frameSize, samples.length)
+          );
+          const audioData = new scope.AudioData({
+            data: frame,
+            format: 's16',
+            numberOfChannels: 1,
+            numberOfFrames: frame.length,
+            sampleRate,
+            timestamp: bridge.nextTimestamp,
+          });
+          bridge.nextTimestamp += Math.round(
+            (frame.length * 1_000_000) / sampleRate
+          );
+          try {
+            await bridge.writer.write(audioData);
+            bridge.framesWritten += frame.length;
+          } finally {
+            audioData.close();
+          }
+          if (offset + frameSize < samples.length) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, (frame.length * 1_000) / sampleRate)
+            );
+          }
+        }
+      } else {
+        for (let index = 0; index + 1 < binary.length; index += 2) {
+          const value =
+            binary.charCodeAt(index) | (binary.charCodeAt(index + 1) << 8);
+          bridge.queue.push((value > 32767 ? value - 65536 : value) / 32768);
+        }
+        const bufferedSamples = bridge.queue.length - bridge.offset;
+        if (bufferedSamples > sampleRate * 5) {
+          bridge.queue.splice(bridge.offset, bufferedSamples - sampleRate * 5);
+        }
+        track = bridge.destination.stream.getAudioTracks()[0];
       }
 
-      const track = bridge.destination.stream.getAudioTracks()[0];
-      const sender = connection
-        .getSenders()
-        .find((item) => item.track?.kind === 'audio');
-      if (!sender) return false;
-      await sender.replaceTrack(track);
+      if (sender.track !== track) await sender.replaceTrack(track);
       return true;
     },
     { base64Data, sampleRate }
