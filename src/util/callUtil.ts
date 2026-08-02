@@ -160,8 +160,37 @@ export async function acceptCall(
   callId?: string
 ): Promise<boolean> {
   return page.evaluate(
-    ({ callId }) =>
-      (globalThis as typeof globalThis & { WPP: any }).WPP.call.accept(callId),
+    async ({ callId }) => {
+      const scope = globalThis as typeof globalThis & { WPP: any };
+      const call = callId
+        ? scope.WPP.whatsapp.CallStore.get(callId)
+        : scope.WPP.whatsapp.CallStore.getModelsArray().find(
+            (item: any) => item.getState?.() === 3 && !item.outgoing
+          );
+      if (!call) return scope.WPP.call.accept(callId);
+
+      const state = call.getState?.();
+      const peerJid = call.peerJid;
+      const isLid = peerJid?.toString?.().endsWith('@lid');
+      if (state !== 3 && !isLid) return scope.WPP.call.accept(callId);
+
+      // WA-JS 4.4.3 still compares the current numeric incoming-ring state with
+      // the legacy string and its E2E preflight cannot process a LID. The call
+      // offer has already established the LID session, so adapt only for the
+      // duration of accept and restore both methods immediately afterwards.
+      const originalGetState = call.getState;
+      const originalIsGroupCall = peerJid?.isGroupCall;
+      if (state === 3) call.getState = () => 'INCOMING_RING';
+      if (isLid && originalIsGroupCall) peerJid.isGroupCall = () => true;
+      try {
+        return await scope.WPP.call.accept(callId || String(call.id));
+      } finally {
+        call.getState = originalGetState;
+        if (isLid && originalIsGroupCall) {
+          peerJid.isGroupCall = originalIsGroupCall;
+        }
+      }
+    },
     { callId }
   );
 }
