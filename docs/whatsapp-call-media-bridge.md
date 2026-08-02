@@ -26,6 +26,10 @@ minutes, and bind the socket to exactly one session and call room. A ticket for
 an inactive or different call is rejected. Never put the normal session bearer
 token in a Socket.IO handshake.
 
+Run the REST and Socket.IO endpoints behind TLS. A media ticket is a bearer
+credential during its short lifetime and must not appear in URLs, logs, or
+metrics.
+
 For outbound audio, emit `outgoing-audio` on the authenticated media socket:
 
 ```json
@@ -45,14 +49,18 @@ call and the exact pinned WhatsApp Web build before production use.
 
 ### Connection sequence
 
-1. Read `callId` from the existing incoming-call event.
-2. Call `start-incoming-call-audio` with `{ "callId": "..." }` before
+1. After the WPPConnect session becomes connected, call
+   `enable-call-interface` once. This installs the opt-in WebRTC instrumentation
+   before any peer connection is created; waiting for an incoming-call event
+   can be too late on some WhatsApp Web builds.
+2. Read `callId` from the existing incoming-call event.
+3. Call `start-incoming-call-audio` with `{ "callId": "..." }` before
    accepting the call.
-3. Call `call-media-ticket` with the same `callId` and the normal REST bearer
+4. Call `call-media-ticket` with the same `callId` and the normal REST bearer
    token.
-4. Connect Socket.IO to `/call-media` with the returned ticket in `auth`.
-5. Subscribe to `incoming-audio`; emit PCM16 chunks through `outgoing-audio`.
-6. Accept the call. End it through `end-call`, which also tears down the media
+5. Connect Socket.IO to `/call-media` with the returned ticket in `auth`.
+6. Subscribe to `incoming-audio`; emit PCM16 chunks through `outgoing-audio`.
+7. Accept the call. End it through `end-call`, which also tears down the media
    bridge and disconnects the call-scoped socket.
 
 ## Proposed architecture

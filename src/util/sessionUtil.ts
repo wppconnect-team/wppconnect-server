@@ -16,6 +16,8 @@
 import { Whatsapp } from '@wppconnect-team/wppconnect';
 import { EventEmitter } from 'events';
 
+import { deactivateCallMedia } from './callMediaUtil';
+
 export const chromiumArgs = [
   '--disable-web-security', // Disables web security
   '--no-sandbox', // Disables sandbox
@@ -44,6 +46,7 @@ export const sessions = [];
 export const eventEmitter = new EventEmitter();
 
 export function deleteSessionOnArray(session: string): void {
+  deactivateCallMedia(session);
   const newArray = clientsArray;
   delete clientsArray[session];
   clientsArray = newArray;

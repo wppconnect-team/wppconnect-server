@@ -2121,10 +2121,17 @@ export async function enableCallInterface(req: Request, res: Response) {
      #swagger.tags = ["Calls"]
      #swagger.description = "Enables the WhatsApp Web call interface for the current session."
      #swagger.security = [{ "bearerAuth": [] }]
-   */
+  */
   try {
+    await CallUtil.installIncomingAudioCapture(req.client.page, () => {
+      // The call-scoped handler is registered by startIncomingCallAudio.
+    });
     await CallUtil.enableCallInterface(req.client.page);
-    res.status(200).json({ status: 'success', response: true });
+    res.status(200).json({
+      status: 'success',
+      response: true,
+      mediaInstrumentationReady: true,
+    });
   } catch (e) {
     req.logger.error(e);
     res.status(500).json({
