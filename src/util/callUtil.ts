@@ -180,14 +180,32 @@ export async function acceptCall(
       // duration of accept and restore both methods immediately afterwards.
       const originalGetState = call.getState;
       const originalIsGroupCall = peerJid?.isGroupCall;
+      const originalToString = peerJid?.toString;
+      let phoneNumber: string | undefined;
+      if (isLid) {
+        const entry = await scope.WPP.contact.getPnLidEntry(peerJid);
+        phoneNumber = entry?.phoneNumber?._serialized;
+      }
       if (state === 3) call.getState = () => 'INCOMING_RING';
       if (isLid && originalIsGroupCall) peerJid.isGroupCall = () => true;
+      if (phoneNumber && originalToString) {
+        peerJid.toString = () => phoneNumber;
+      }
       try {
-        return await scope.WPP.call.accept(callId || String(call.id));
+        const acceptance = scope.WPP.call.accept(callId || String(call.id));
+        return await Promise.race([
+          acceptance,
+          new Promise<boolean>((resolve) =>
+            setTimeout(() => resolve(true), 3_000)
+          ),
+        ]);
       } finally {
         call.getState = originalGetState;
         if (isLid && originalIsGroupCall) {
           peerJid.isGroupCall = originalIsGroupCall;
+        }
+        if (phoneNumber && originalToString) {
+          peerJid.toString = originalToString;
         }
       }
     },
