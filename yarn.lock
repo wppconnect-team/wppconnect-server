@@ -5716,6 +5716,7 @@ __metadata:
     sharp: "npm:^0.34.5"
     shx: "npm:^0.4.0"
     socket.io: "npm:^4.8.3"
+    socket.io-client: "npm:^4.8.3"
     swagger-autogen: "npm:^2.23.7"
     swagger-ui-dist: "npm:^5.32.1"
     swagger-ui-express: "npm:^5.0.1"
@@ -5734,9 +5735,9 @@ __metadata:
   linkType: soft
 
 "@wppconnect/wa-js@npm:^4.4.3":
-  version: 4.4.3
-  resolution: "@wppconnect/wa-js@npm:4.4.3"
-  checksum: 10c0/5784d2ef045a0c663522a77d22c024bbd4ed1920f497b1100cd36457eb821ed783f09808bebd4ae64ab6b911547bd1819c527fb8161594c8c6bc0ccbfa500fc2
+  version: 4.5.0
+  resolution: "@wppconnect/wa-js@npm:4.5.0"
+  checksum: 10c0/024e54250aadd1abd11e1dff4116766959592c78f8c9ea4cb9c7a80b09fd097378d7c5a1b8611624234696e6ff030180aa9e668829905066a8621c6361fefc7f
   languageName: node
   linkType: hard
 
@@ -8258,6 +8259,19 @@ __metadata:
   dependencies:
     once: "npm:^1.4.0"
   checksum: 10c0/b0701c92a10b89afb1cb45bf54a5292c6f008d744eb4382fa559d54775ff31617d1d7bc3ef617575f552e24fad2c7c1a1835948c66b3f3a4be0a6c1f35c883d8
+  languageName: node
+  linkType: hard
+
+"engine.io-client@npm:~6.6.1":
+  version: 6.6.6
+  resolution: "engine.io-client@npm:6.6.6"
+  dependencies:
+    "@socket.io/component-emitter": "npm:~3.1.0"
+    debug: "npm:~4.4.1"
+    engine.io-parser: "npm:~5.2.1"
+    ws: "npm:~8.21.0"
+    xmlhttprequest-ssl: "npm:~2.1.1"
+  checksum: 10c0/805995b57b2656f52322004b4d767851b517618b1fcecabf5968c55ce6864c692e594fe3a6ae9284504aa087a5a872b0ea1b76b876dcf4cf866907bd61e9e1dd
   languageName: node
   linkType: hard
 
@@ -14809,6 +14823,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"socket.io-client@npm:^4.8.3":
+  version: 4.8.3
+  resolution: "socket.io-client@npm:4.8.3"
+  dependencies:
+    "@socket.io/component-emitter": "npm:~3.1.0"
+    debug: "npm:~4.4.1"
+    engine.io-client: "npm:~6.6.1"
+    socket.io-parser: "npm:~4.2.4"
+  checksum: 10c0/76c0d86de0b636d0bf5011cf3425212c900f43dac632db6eb493816920cd035af7ddd92fea9a106b45eb347405953c0414eb3a5d465b180215e46fc8b61420b3
+  languageName: node
+  linkType: hard
+
 "socket.io-parser@npm:~4.2.4":
   version: 4.2.4
   resolution: "socket.io-parser@npm:4.2.4"
@@ -16414,7 +16440,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.20.0, ws@npm:^8.21.0":
+"ws@npm:^8.20.0, ws@npm:^8.21.0, ws@npm:~8.21.0":
   version: 8.21.1
   resolution: "ws@npm:8.21.1"
   peerDependencies:
@@ -16450,6 +16476,13 @@ __metadata:
   dependencies:
     is-wsl: "npm:^3.1.0"
   checksum: 10c0/44318f3585eb97be994fc21a20ddab2649feaf1fbe893f1f866d936eea3d5f8c743bec6dc02e49fbdd3c0e69e9b36f449d90a0b165a4f47dd089747af4cf2377
+  languageName: node
+  linkType: hard
+
+"xmlhttprequest-ssl@npm:~2.1.1":
+  version: 2.1.2
+  resolution: "xmlhttprequest-ssl@npm:2.1.2"
+  checksum: 10c0/70d60869323e823f473a238f78fd108437edbc3690ecd5859c39c83217080090a18899b272e515769c0d1f518cc64cbed6b6995b23fdd7ba13b297d530b6e631
   languageName: node
   linkType: hard
 

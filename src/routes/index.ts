@@ -599,6 +599,48 @@ routes.post(
   statusConnection,
   DeviceController.rejectCall
 );
+routes.post(
+  '/api/:session/enable-call-interface',
+  verifyToken,
+  statusConnection,
+  DeviceController.enableCallInterface
+);
+routes.post(
+  '/api/:session/accept-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.acceptCall
+);
+routes.post(
+  '/api/:session/end-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.endCall
+);
+routes.post(
+  '/api/:session/offer-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.offerCall
+);
+routes.post(
+  '/api/:session/start-incoming-call-audio',
+  verifyToken,
+  statusConnection,
+  DeviceController.startIncomingCallAudio
+);
+routes.post(
+  '/api/:session/call-media-ticket',
+  verifyToken,
+  statusConnection,
+  DeviceController.createCallMediaTicket
+);
+routes.post(
+  '/api/:session/stop-call-media',
+  verifyToken,
+  statusConnection,
+  DeviceController.stopCallMedia
+);
 
 // Catalog
 routes.get(
