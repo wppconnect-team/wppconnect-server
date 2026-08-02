@@ -9,18 +9,22 @@ Consequently, the HTTP endpoints in this branch must not report that a usable
 voice call exists until a media bridge has been implemented.
 
 This branch also contains an experimental phase-two media bridge. Calling
-`POST /api/{session}/start-incoming-call-audio` before accepting a call
+`POST /api/{session}/start-incoming-call-audio` with the incoming `callId`
+before accepting a call
 instruments WebRTC and publishes signed little-endian PCM16 chunks through the
 authenticated Socket.IO `/call-media` namespace's `incoming-audio` event. Each
 payload contains `mimeType` (including the browser sample rate), Base64 `data`,
 `sequence`, and `timestamp`. Use
-`POST /api/{session}/stop-incoming-call-audio` to stop active recorders.
+`POST /api/{session}/stop-call-media` to tear down both media directions,
+invalidate unused tickets, and disconnect the call-scoped socket.
 
 Create a short-lived connection ticket with
-`POST /api/{session}/call-media-ticket`, authenticated with the normal bearer
-token. Connect to `/call-media` with `auth: { ticket }`. Tickets are random,
-single-use, valid for at most five minutes, and bind the socket to one session
-room. Never put the normal session bearer token in a Socket.IO handshake.
+`POST /api/{session}/call-media-ticket`, passing the same active `callId` and
+authenticating with the normal bearer token. Connect to `/call-media` with
+`auth: { ticket }`. Tickets are random, single-use, valid for at most five
+minutes, and bind the socket to exactly one session and call room. A ticket for
+an inactive or different call is rejected. Never put the normal session bearer
+token in a Socket.IO handshake.
 
 For outbound audio, emit `outgoing-audio` on the authenticated media socket:
 
@@ -31,13 +35,25 @@ For outbound audio, emit `outgoing-audio` on the authenticated media socket:
 }
 ```
 
-The acknowledgement contains `attached: true` after the Web Audio track has
+The acknowledgement contains the bound `callId` and `attached: true` after the Web Audio track has
 replaced an existing audio sender. An `attached: false` response means that no
 active WebRTC connection/audio sender was available yet. Clients should send
 small timestamped chunks at their original cadence and use bounded queues.
 
 The bridge remains experimental. It must be validated against a real WhatsApp
 call and the exact pinned WhatsApp Web build before production use.
+
+### Connection sequence
+
+1. Read `callId` from the existing incoming-call event.
+2. Call `start-incoming-call-audio` with `{ "callId": "..." }` before
+   accepting the call.
+3. Call `call-media-ticket` with the same `callId` and the normal REST bearer
+   token.
+4. Connect Socket.IO to `/call-media` with the returned ticket in `auth`.
+5. Subscribe to `incoming-audio`; emit PCM16 chunks through `outgoing-audio`.
+6. Accept the call. End it through `end-call`, which also tears down the media
+   bridge and disconnects the call-scoped socket.
 
 ## Proposed architecture
 

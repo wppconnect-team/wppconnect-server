@@ -30,8 +30,8 @@ import { convert } from './mapper/index';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
 import {
-  consumeMediaTicket,
-  setCallMediaNamespace,
+  configureCallMediaNamespace,
+  isCallMediaActive,
 } from './util/callMediaUtil';
 import { pushOutgoingPcm16 } from './util/callUtil';
 import {
@@ -123,22 +123,17 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   });
 
   const callMedia = io.of('/call-media');
-  setCallMediaNamespace(callMedia);
-  callMedia.use((socket, next) => {
-    const ticket = String(socket.handshake.auth?.ticket || '');
-    const authorization = consumeMediaTicket(ticket);
-    if (!authorization)
-      return next(new Error('Invalid or expired media ticket'));
-    socket.data.session = authorization.session;
-    next();
-  });
+  configureCallMediaNamespace(callMedia);
   callMedia.on('connection', (socket) => {
     const session = String(socket.data.session);
-    socket.join(session);
+    const callId = String(socket.data.callId);
     socket.on(
       'outgoing-audio',
       async (payload: { data?: string; sampleRate?: number }, acknowledge) => {
         try {
+          if (!isCallMediaActive(session, callId)) {
+            throw new Error('Call media is no longer active');
+          }
           const client = clientsArray[session];
           if (!client?.page) throw new Error('Session is not connected');
           const attached = await pushOutgoingPcm16(
@@ -146,12 +141,14 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
             String(payload?.data || ''),
             Number(payload?.sampleRate || 48_000)
           );
-          if (typeof acknowledge === 'function') acknowledge({ attached });
+          if (typeof acknowledge === 'function')
+            acknowledge({ attached, callId });
         } catch (error) {
           logger.error(error);
           if (typeof acknowledge === 'function') {
             acknowledge({
               attached: false,
+              callId,
               error: error instanceof Error ? error.message : String(error),
             });
           }

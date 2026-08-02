@@ -70,13 +70,16 @@ describe('Call utilities', () => {
     const onChunk = jest.fn();
 
     await installIncomingAudioCapture(page, onChunk, { timesliceMs: 500 });
-    await stopIncomingAudioCapture(page);
-    await stopOutgoingAudio(page);
-
     expect(page.exposeFunction).toHaveBeenCalledWith(
       '__wppconnectIncomingCallAudioChunk',
-      onChunk
+      expect.any(Function)
     );
+    const dispatch = (page.exposeFunction as jest.Mock).mock.calls[0][1];
+    await dispatch({ data: 'AA==', mimeType: 'audio/pcm', sequence: 0 });
+    expect(onChunk).toHaveBeenCalled();
+
+    await stopIncomingAudioCapture(page);
+    await stopOutgoingAudio(page);
     expect(page.evaluate).toHaveBeenCalledTimes(3);
     expect(page.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), {
       callbackName: '__wppconnectIncomingCallAudioChunk',

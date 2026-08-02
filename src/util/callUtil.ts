@@ -31,6 +31,10 @@ export interface IncomingAudioCaptureOptions {
 }
 
 const AUDIO_CHUNK_CALLBACK = '__wppconnectIncomingCallAudioChunk';
+const incomingAudioHandlers = new WeakMap<
+  Page,
+  Set<(chunk: IncomingCallAudioChunk) => void | Promise<void>>
+>();
 
 export function normalizeCallDestination(phone: string): string {
   const trimmed = phone.trim();
@@ -102,16 +106,29 @@ export async function installIncomingAudioCapture(
   onChunk: (chunk: IncomingCallAudioChunk) => void | Promise<void>,
   options: IncomingAudioCaptureOptions = {}
 ): Promise<void> {
-  try {
-    await page.exposeFunction(AUDIO_CHUNK_CALLBACK, onChunk);
-  } catch (error) {
-    if (
-      !(error instanceof Error) ||
-      !error.message.includes('already exists')
-    ) {
-      throw error;
+  let handlers = incomingAudioHandlers.get(page);
+  if (!handlers) {
+    handlers = new Set();
+    incomingAudioHandlers.set(page, handlers);
+    const dispatch = async (chunk: IncomingCallAudioChunk) => {
+      const activeHandlers = incomingAudioHandlers.get(page);
+      if (!activeHandlers) return;
+      await Promise.allSettled(
+        [...activeHandlers].map((handler) => handler(chunk))
+      );
+    };
+    try {
+      await page.exposeFunction(AUDIO_CHUNK_CALLBACK, dispatch);
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        !error.message.includes('already exists')
+      ) {
+        throw error;
+      }
     }
   }
+  handlers.add(onChunk);
 
   const timesliceMs = Math.max(100, options.timesliceMs ?? 250);
   await page.evaluate(
@@ -213,6 +230,7 @@ export async function installIncomingAudioCapture(
 }
 
 export async function stopIncomingAudioCapture(page: Page): Promise<void> {
+  incomingAudioHandlers.delete(page);
   await page.evaluate(() => {
     const scope = globalThis as any;
     const captures = scope.__wppconnectCallAudioCaptures as

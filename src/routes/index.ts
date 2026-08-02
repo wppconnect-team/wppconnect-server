@@ -636,10 +636,10 @@ routes.post(
   DeviceController.createCallMediaTicket
 );
 routes.post(
-  '/api/:session/stop-incoming-call-audio',
+  '/api/:session/stop-call-media',
   verifyToken,
   statusConnection,
-  DeviceController.stopIncomingCallAudio
+  DeviceController.stopCallMedia
 );
 
 // Catalog

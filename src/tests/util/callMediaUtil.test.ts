@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 import {
+  activateCallMedia,
+  callMediaRoom,
   consumeMediaTicket,
   createMediaTicket,
+  deactivateCallMedia,
   resetCallMediaForTests,
 } from '../../util/callMediaUtil';
 
@@ -23,19 +26,43 @@ describe('Call media authorization', () => {
   afterEach(resetCallMediaForTests);
 
   it('creates a session-bound, single-use ticket', () => {
-    const result = createMediaTicket('session-a');
+    activateCallMedia('session-a', 'call-1');
+    const result = createMediaTicket('session-a', 'call-1');
 
     expect(consumeMediaTicket(result.ticket)?.session).toBe('session-a');
     expect(consumeMediaTicket(result.ticket)).toBeUndefined();
+    expect(callMediaRoom('session-a', 'call-1')).toBe('session-a:call-1');
+  });
+
+  it('rejects tickets for an inactive call', () => {
+    expect(() => createMediaTicket('session-a', 'call-1')).toThrow(
+      'Call media is not active for this session and callId'
+    );
+    activateCallMedia('session-a', 'call-2');
+    expect(() => createMediaTicket('session-a', 'call-1')).toThrow(
+      'Call media is not active for this session and callId'
+    );
+  });
+
+  it('invalidates issued tickets when the active call changes or ends', () => {
+    activateCallMedia('session-a', 'call-1');
+    const replaced = createMediaTicket('session-a', 'call-1');
+    activateCallMedia('session-a', 'call-2');
+    expect(consumeMediaTicket(replaced.ticket)).toBeUndefined();
+
+    const ended = createMediaTicket('session-a', 'call-2');
+    deactivateCallMedia('session-a', 'call-2');
+    expect(consumeMediaTicket(ended.ticket)).toBeUndefined();
   });
 
   it('rejects expired and invalid ticket lifetimes', () => {
     const now = jest.spyOn(Date, 'now').mockReturnValue(1_000);
-    const result = createMediaTicket('session-a', 1_000);
+    activateCallMedia('session-a', 'call-1');
+    const result = createMediaTicket('session-a', 'call-1', 1_000);
     now.mockReturnValue(2_001);
 
     expect(consumeMediaTicket(result.ticket)).toBeUndefined();
-    expect(() => createMediaTicket('session-a', Number.NaN)).toThrow(
+    expect(() => createMediaTicket('session-a', 'call-1', Number.NaN)).toThrow(
       'ttlMs must be a number'
     );
     now.mockRestore();
