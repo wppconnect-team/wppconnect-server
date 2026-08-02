@@ -68,6 +68,34 @@ call and the exact pinned WhatsApp Web build before production use.
 7. Accept the call. End it through `end-call`, which also tears down the media
    bridge and disconnects the call-scoped socket.
 
+### Live smoke test
+
+Prepare instrumentation immediately after the session connects:
+
+```bash
+WPP_URL=http://localhost:21466 \
+WPP_SESSION=my-session \
+WPP_TOKEN='<token>' \
+CALL_MEDIA_ACTION=prepare \
+yarn call-media:smoke
+```
+
+After `incomingcall` supplies its `callId`, start the bridge:
+
+```bash
+WPP_URL=http://localhost:21466 \
+WPP_SESSION=my-session \
+WPP_TOKEN='<token>' \
+WPP_CALL_ID='<call-id>' \
+INCOMING_PCM16_FILE=/tmp/incoming-call.pcm \
+yarn call-media:smoke
+```
+
+Set `OUTGOING_PCM16_FILE` and `OUTGOING_SAMPLE_RATE` to inject a headerless,
+mono, signed little-endian PCM16 file. Stop with `Ctrl+C`; the script reports
+received chunks/bytes and calls `stop-call-media`. Do not commit tokens or PCM
+recordings.
+
 ## Proposed architecture
 
 Keep WhatsApp signalling and encryption inside the browser session. Add a
