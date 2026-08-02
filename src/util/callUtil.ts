@@ -852,17 +852,29 @@ export async function pushOutgoingPcm16(
       const connections = scope.__wppconnectCallPeerConnections as
         | Set<RTCPeerConnection>
         | undefined;
-      const connection = connections
-        ? [...connections].find(
-            (item) =>
-              item.connectionState !== 'closed' &&
-              item.getSenders().some((sender) => sender.track?.kind === 'audio')
-          )
-        : undefined;
+      const candidates = connections ? [...connections] : [];
+      const audioSenderFor = (item: RTCPeerConnection) =>
+        item.getSenders().find((sender) => sender.track?.kind === 'audio') ||
+        item
+          .getTransceivers()
+          .find(
+            (transceiver) =>
+              transceiver.receiver.track?.kind === 'audio' ||
+              transceiver.sender.track?.kind === 'audio'
+          )?.sender;
+      const connection =
+        candidates.find(
+          (item) =>
+            (item.connectionState === 'connected' ||
+              item.iceConnectionState === 'connected' ||
+              item.iceConnectionState === 'completed') &&
+            audioSenderFor(item)
+        ) ||
+        candidates.find(
+          (item) => item.connectionState !== 'closed' && audioSenderFor(item)
+        );
       if (!connection) return false;
-      const sender = connection
-        .getSenders()
-        .find((item) => item.track?.kind === 'audio');
+      const sender = audioSenderFor(connection);
       if (!sender) return false;
 
       if (
