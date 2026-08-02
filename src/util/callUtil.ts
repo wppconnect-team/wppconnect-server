@@ -267,6 +267,7 @@ export async function getCallInterfaceDiagnostics(
     const directModules: Record<string, unknown> = {};
     let recentOngoingCalls: unknown[] = [];
     let voipInitState: unknown;
+    let audioImplementationConfig: unknown;
     const functionKeys = (value: any) =>
       value
         ? Object.keys(value)
@@ -290,6 +291,16 @@ export async function getCallInterfaceDiagnostics(
         'WAWebCallNotificationBus',
         'WAWebVoipHandleNativeCallEvent',
         'WAWebNotificationsCallNotification',
+        'WAWebVoipAudioCaptureAndPlayback',
+        'WAWebVoipAudioCaptureBase',
+        'WAWebVoipAudioCaptureScriptProcessor',
+        'WAWebVoipAudioCaptureSharedBufferWorklet',
+        'WAWebVoipAudioPlaybackBase',
+        'WAWebVoipAudioPlaybackScriptProcessor',
+        'WAWebVoipAudioPlaybackSharedBufferWorklet',
+        'WAWebVoipBridgeMediaStreamHandlers',
+        'WAWebVoipBridgeMediaStreamHelpers',
+        'WAWebVoipABPropConfig',
       ]) {
         try {
           const module = scope.importNamespace?.(id) || scope.require?.(id);
@@ -306,6 +317,12 @@ export async function getCallInterfaceDiagnostics(
                         value && typeof value === 'object'
                           ? Object.keys(value).sort()
                           : [],
+                      classMethods:
+                        typeof value === 'function' && (value as any).prototype
+                          ? Object.getOwnPropertyNames((value as any).prototype)
+                              .filter((name) => name !== 'constructor')
+                              .sort()
+                          : [],
                       prototypeMethods:
                         value &&
                         (typeof value === 'object' ||
@@ -313,11 +330,7 @@ export async function getCallInterfaceDiagnostics(
                           ? Object.getOwnPropertyNames(
                               Object.getPrototypeOf(value) || {}
                             )
-                              .filter(
-                                (name) =>
-                                  name !== 'constructor' &&
-                                  typeof (value as any)[name] === 'function'
-                              )
+                              .filter((name) => name !== 'constructor')
                               .sort()
                           : [],
                     },
@@ -330,6 +343,29 @@ export async function getCallInterfaceDiagnostics(
             error: error instanceof Error ? error.message : String(error),
           };
         }
+      }
+      try {
+        const abProps =
+          scope.importNamespace?.('WAWebABProps') ||
+          scope.require?.('WAWebABProps');
+        const configuredGetter = abProps?.getABPropConfigValue;
+        const originalGetter = configuredGetter?.__wppconnectOriginal;
+        audioImplementationConfig = {
+          capture: configuredGetter?.('web_voip_audio_capture_impl'),
+          playback: configuredGetter?.('web_voip_audio_playback_impl'),
+          originalCapture: originalGetter?.call(
+            abProps,
+            'web_voip_audio_capture_impl'
+          ),
+          originalPlayback: originalGetter?.call(
+            abProps,
+            'web_voip_audio_playback_impl'
+          ),
+        };
+      } catch (error) {
+        audioImplementationConfig = {
+          error: error instanceof Error ? error.message : String(error),
+        };
       }
       try {
         const ongoingModule =
@@ -416,6 +452,21 @@ export async function getCallInterfaceDiagnostics(
         : [],
       recentOngoingCalls,
       voipInitState,
+      audioImplementationConfig,
+      voipScriptBridge: scope.__wppconnectVoipScriptBridge
+        ? {
+            captureProcessor: Boolean(
+              scope.__wppconnectVoipScriptBridge.captureProcessor
+            ),
+            captureSampleRate:
+              scope.__wppconnectVoipScriptBridge.captureSampleRate,
+            outgoingQueued:
+              scope.__wppconnectVoipScriptBridge.outgoingQueue?.length || 0,
+            playbackQueued:
+              scope.__wppconnectVoipScriptBridge.playbackSamples?.length || 0,
+          }
+        : null,
+      captureDiagnostics: scope.__wppconnectCallAudioCaptureDiagnostics || null,
       whatsappVoipKeys: whatsapp
         ? Object.keys(whatsapp)
             .filter((key) => /voip|call/i.test(key))
@@ -535,11 +586,24 @@ export async function acceptCall(
         }
         answerButton.click();
         if (!(await waitForPeerConnection())) {
-          throw new Error(
-            `Native WhatsApp answer button was clicked but WebRTC did not connect (control=${labelOf(
-              answerButton
-            )})`
+          const activeCallPattern =
+            /\b(desligar|encerrar|hang\s*up|end\s*call|mute|silenciar\s+microfone)\b/i;
+          const activeCallVisible = [
+            ...document.querySelectorAll<HTMLElement>(
+              'button, [role="button"]'
+            ),
+          ].some(
+            (element) =>
+              activeCallPattern.test(labelOf(element)) &&
+              element.getClientRects().length > 0
           );
+          if (!activeCallVisible) {
+            throw new Error(
+              `Native WhatsApp answer button was clicked but the call did not become active (control=${labelOf(
+                answerButton
+              )})`
+            );
+          }
         }
         return true;
       }
@@ -694,7 +758,165 @@ export async function installIncomingAudioCapture(
         callbackErrors: [],
         dataEvents: 0,
       };
+      scope.__wppconnectVoipScriptBridge = {
+        captureProcessor: null,
+        captureSampleRate: 48_000,
+        outgoingQueue: [],
+        outgoingStarted: false,
+        lastOutgoingSample: 0,
+        playbackSamples: [],
+      };
       let sequence = 0;
+
+      const emitPlaybackSamples = async (
+        input: Float32Array,
+        sampleRate: number
+      ) => {
+        const bridge = scope.__wppconnectVoipScriptBridge;
+        for (const sample of input) bridge.playbackSamples.push(sample);
+        const targetSamples = Math.round(sampleRate * (timesliceMs / 1000));
+        if (bridge.playbackSamples.length < targetSamples) return;
+        const chunk = bridge.playbackSamples.splice(0, targetSamples);
+        const pcm = new Int16Array(chunk.length);
+        for (let index = 0; index < pcm.length; index++) {
+          const sample = Math.max(-1, Math.min(1, chunk[index]));
+          pcm[index] = sample < 0 ? sample * 32768 : sample * 32767;
+        }
+        const bytes = new Uint8Array(pcm.buffer);
+        let binary = '';
+        for (const byte of bytes) binary += String.fromCharCode(byte);
+        try {
+          await scope[callbackName]({
+            mimeType: `audio/pcm;rate=${sampleRate};encoding=signed-integer;bits=16`,
+            data: btoa(binary),
+            sequence: sequence++,
+            timestamp: Date.now(),
+          });
+        } catch (error) {
+          scope.__wppconnectCallAudioCaptureDiagnostics.callbackErrors.push(
+            String(error)
+          );
+        }
+      };
+
+      const wrapScriptProcessor = (
+        instance: any,
+        property: string,
+        direction: 'capture' | 'playback'
+      ) => {
+        const processor = instance[property] as ScriptProcessorNode | null;
+        if (!processor || (processor as any).__wppconnectWrapped) return;
+        (processor as any).__wppconnectWrapped = true;
+        const original = processor.onaudioprocess;
+        if (direction === 'capture') {
+          const bridge = scope.__wppconnectVoipScriptBridge;
+          bridge.captureProcessor = processor;
+          bridge.captureSampleRate = processor.context.sampleRate;
+          processor.onaudioprocess = (event) => {
+            const input = event.inputBuffer.getChannelData(0);
+            const prebufferSamples = Math.round(
+              bridge.captureSampleRate * 0.12
+            );
+            if (
+              !bridge.outgoingStarted &&
+              bridge.outgoingQueue.length >= prebufferSamples
+            ) {
+              bridge.outgoingStarted = true;
+            }
+            for (let index = 0; index < input.length; index++) {
+              if (!bridge.outgoingStarted) {
+                input[index] = 0;
+                continue;
+              }
+              const queued = bridge.outgoingQueue.shift();
+              if (queued == null) {
+                const remaining = input.length - index;
+                for (let fade = index; fade < input.length; fade++) {
+                  input[fade] =
+                    bridge.lastOutgoingSample *
+                    ((input.length - fade - 1) / Math.max(1, remaining));
+                }
+                bridge.lastOutgoingSample = 0;
+                bridge.outgoingStarted = false;
+                break;
+              }
+              input[index] = queued;
+              bridge.lastOutgoingSample = queued;
+            }
+            original?.call(processor, event);
+          };
+        } else {
+          processor.onaudioprocess = (event) => {
+            original?.call(processor, event);
+            const output = event.outputBuffer.getChannelData(0);
+            scope.__wppconnectCallAudioCaptureDiagnostics.dataEvents++;
+            void emitPlaybackSamples(output, processor.context.sampleRate);
+          };
+        }
+      };
+
+      try {
+        const abProps =
+          scope.importNamespace?.('WAWebABProps') ||
+          scope.require?.('WAWebABProps');
+        if (
+          abProps?.getABPropConfigValue &&
+          !abProps.getABPropConfigValue.__wppconnectOriginal
+        ) {
+          const originalGetABProp = abProps.getABPropConfigValue;
+          const replacement = function (
+            this: any,
+            key: string,
+            ...args: unknown[]
+          ) {
+            if (
+              key === 'web_voip_audio_capture_impl' ||
+              key === 'web_voip_audio_playback_impl'
+            ) {
+              return 1;
+            }
+            return originalGetABProp.call(this, key, ...args);
+          };
+          replacement.__wppconnectOriginal = originalGetABProp;
+          abProps.getABPropConfigValue = replacement;
+        }
+
+        const captureModule =
+          scope.importNamespace?.('WAWebVoipAudioCaptureScriptProcessor') ||
+          scope.require?.('WAWebVoipAudioCaptureScriptProcessor');
+        const capturePrototype =
+          captureModule?.WAWebVoipAudioCaptureScriptProcessor?.prototype;
+        if (capturePrototype && !capturePrototype.__wppconnectWrapped) {
+          capturePrototype.__wppconnectWrapped = true;
+          const originalStart = capturePrototype.startAudioCapture;
+          capturePrototype.startAudioCapture = async function (...args: any[]) {
+            const result = await originalStart.apply(this, args);
+            wrapScriptProcessor(this, 'scriptProcessor', 'capture');
+            return result;
+          };
+        }
+
+        const playbackModule =
+          scope.importNamespace?.('WAWebVoipAudioPlaybackScriptProcessor') ||
+          scope.require?.('WAWebVoipAudioPlaybackScriptProcessor');
+        const playbackPrototype =
+          playbackModule?.WAWebVoipAudioPlaybackScriptProcessor?.prototype;
+        if (playbackPrototype && !playbackPrototype.__wppconnectWrapped) {
+          playbackPrototype.__wppconnectWrapped = true;
+          const originalStart = playbackPrototype.startAudioPlayback;
+          playbackPrototype.startAudioPlayback = async function (
+            ...args: any[]
+          ) {
+            const result = await originalStart.apply(this, args);
+            wrapScriptProcessor(this, 'playbackScriptProcessor', 'playback');
+            return result;
+          };
+        }
+      } catch (error) {
+        scope.__wppconnectCallAudioCaptureDiagnostics.callbackErrors.push(
+          `voip-script-bridge: ${String(error)}`
+        );
+      }
 
       const captureTrack = (track: MediaStreamTrack) => {
         if (track.kind !== 'audio') return;
@@ -849,6 +1071,37 @@ export async function pushOutgoingPcm16(
   return page.evaluate(
     async ({ base64Data, sampleRate }) => {
       const scope = globalThis as any;
+      const voipBridge = scope.__wppconnectVoipScriptBridge;
+      if (voipBridge?.captureProcessor) {
+        const binary = atob(base64Data);
+        const input = new Int16Array(Math.floor(binary.length / 2));
+        for (let index = 0; index < input.length; index++) {
+          const offset = index * 2;
+          const value =
+            binary.charCodeAt(offset) | (binary.charCodeAt(offset + 1) << 8);
+          input[index] = value > 32767 ? value - 65536 : value;
+        }
+        const outputRate = Number(voipBridge.captureSampleRate || 48_000);
+        const outputLength = Math.max(
+          1,
+          Math.round((input.length * outputRate) / sampleRate)
+        );
+        for (let index = 0; index < outputLength; index++) {
+          const sourcePosition = (index * sampleRate) / outputRate;
+          const left = Math.min(input.length - 1, Math.floor(sourcePosition));
+          const right = Math.min(input.length - 1, left + 1);
+          const fraction = sourcePosition - left;
+          const sample = input[left] * (1 - fraction) + input[right] * fraction;
+          voipBridge.outgoingQueue.push(sample / 32768);
+        }
+        if (voipBridge.outgoingQueue.length > outputRate * 5) {
+          voipBridge.outgoingQueue.splice(
+            0,
+            voipBridge.outgoingQueue.length - outputRate * 5
+          );
+        }
+        return true;
+      }
       const connections = scope.__wppconnectCallPeerConnections as
         | Set<RTCPeerConnection>
         | undefined;
