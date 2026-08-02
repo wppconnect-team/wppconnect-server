@@ -132,6 +132,14 @@ export function emitIncomingAudio(
     .emit('incoming-audio', { callId, ...chunk });
 }
 
+export function emitCallMediaEnded(session: string, callId: string): void {
+  if (activeCalls.get(session) !== callId) return;
+  mediaNamespace?.to(roomFor(session, callId)).emit('call-media-ended', {
+    callId,
+    timestamp: Date.now(),
+  });
+}
+
 export { roomFor as callMediaRoom };
 
 export function resetCallMediaForTests(

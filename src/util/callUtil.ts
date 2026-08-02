@@ -31,9 +31,14 @@ export interface IncomingAudioCaptureOptions {
 }
 
 const AUDIO_CHUNK_CALLBACK = '__wppconnectIncomingCallAudioChunk';
+const AUDIO_ENDED_CALLBACK = '__wppconnectIncomingCallAudioEnded';
 const incomingAudioHandlers = new WeakMap<
   Page,
   Set<(chunk: IncomingCallAudioChunk) => void | Promise<void>>
+>();
+const incomingAudioEndedHandlers = new WeakMap<
+  Page,
+  Set<() => void | Promise<void>>
 >();
 
 export function normalizeCallDestination(phone: string): string {
@@ -102,7 +107,8 @@ export async function offerCall(
 export async function installIncomingAudioCapture(
   page: Page,
   onChunk?: (chunk: IncomingCallAudioChunk) => void | Promise<void>,
-  options: IncomingAudioCaptureOptions = {}
+  options: IncomingAudioCaptureOptions = {},
+  onEnded?: () => void | Promise<void>
 ): Promise<void> {
   let handlers = incomingAudioHandlers.get(page);
   if (!handlers) {
@@ -125,12 +131,33 @@ export async function installIncomingAudioCapture(
         throw error;
       }
     }
+    const dispatchEnded = async () => {
+      const activeHandlers = incomingAudioEndedHandlers.get(page);
+      if (!activeHandlers) return;
+      await Promise.allSettled([...activeHandlers].map((handler) => handler()));
+    };
+    try {
+      await page.exposeFunction(AUDIO_ENDED_CALLBACK, dispatchEnded);
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        !error.message.includes('already exists')
+      ) {
+        throw error;
+      }
+    }
   }
   if (onChunk) handlers.add(onChunk);
+  let endedHandlers = incomingAudioEndedHandlers.get(page);
+  if (!endedHandlers) {
+    endedHandlers = new Set();
+    incomingAudioEndedHandlers.set(page, endedHandlers);
+  }
+  if (onEnded) endedHandlers.add(onEnded);
 
   const timesliceMs = Math.max(100, options.timesliceMs ?? 250);
   await page.evaluate(
-    ({ callbackName, timesliceMs }) => {
+    ({ callbackName, endedCallbackName, timesliceMs }) => {
       const scope = globalThis as any;
       if (scope.__wppconnectCallAudioCaptureInstalled) return;
 
@@ -157,6 +184,18 @@ export async function installIncomingAudioCapture(
           context.sampleRate * (timesliceMs / 1000)
         );
         scope.__wppconnectCallAudioCaptures.add(context);
+        let ended = false;
+        const notifyEnded = async () => {
+          if (ended) return;
+          ended = true;
+          try {
+            await scope[endedCallbackName]();
+          } catch (error) {
+            scope.__wppconnectCallAudioCaptureDiagnostics.callbackErrors.push(
+              String(error)
+            );
+          }
+        };
 
         processor.onaudioprocess = async (event) => {
           scope.__wppconnectCallAudioCaptureDiagnostics.dataEvents++;
@@ -196,6 +235,7 @@ export async function installIncomingAudioCapture(
             source.disconnect();
             void context.close();
             scope.__wppconnectCallAudioCaptures.delete(context);
+            void notifyEnded();
           },
           { once: true }
         );
@@ -223,12 +263,17 @@ export async function installIncomingAudioCapture(
         return originalSetRemoteDescription.apply(this, args as any);
       };
     },
-    { callbackName: AUDIO_CHUNK_CALLBACK, timesliceMs }
+    {
+      callbackName: AUDIO_CHUNK_CALLBACK,
+      endedCallbackName: AUDIO_ENDED_CALLBACK,
+      timesliceMs,
+    }
   );
 }
 
 export async function stopIncomingAudioCapture(page: Page): Promise<void> {
   incomingAudioHandlers.delete(page);
+  incomingAudioEndedHandlers.delete(page);
   await page.evaluate(() => {
     const scope = globalThis as any;
     const captures = scope.__wppconnectCallAudioCaptures as

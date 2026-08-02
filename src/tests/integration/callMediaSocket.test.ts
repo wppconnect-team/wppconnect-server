@@ -24,6 +24,7 @@ import {
   configureCallMediaNamespace,
   createMediaTicket,
   deactivateCallMedia,
+  emitCallMediaEnded,
   emitIncomingAudio,
   resetCallMediaForTests,
 } from '../../util/callMediaUtil';
@@ -105,6 +106,11 @@ describe('Call media Socket.IO authorization', () => {
       callId: 'call-1',
       data: 'AA==',
     });
+    const ended = new Promise<unknown>((resolve) =>
+      first.once('call-media-ended', resolve)
+    );
+    emitCallMediaEnded('session-a', 'call-1');
+    await expect(ended).resolves.toMatchObject({ callId: 'call-1' });
     expect(
       namespace.adapter.rooms.has(callMediaRoom('session-a', 'call-1'))
     ).toBe(true);

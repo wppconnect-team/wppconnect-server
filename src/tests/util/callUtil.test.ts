@@ -69,8 +69,14 @@ describe('Call utilities', () => {
     } as unknown as Page;
     const onChunk = jest.fn();
     const secondHandler = jest.fn();
+    const onEnded = jest.fn();
 
-    await installIncomingAudioCapture(page, onChunk, { timesliceMs: 500 });
+    await installIncomingAudioCapture(
+      page,
+      onChunk,
+      { timesliceMs: 500 },
+      onEnded
+    );
     await installIncomingAudioCapture(page, secondHandler, {
       timesliceMs: 500,
     });
@@ -83,13 +89,17 @@ describe('Call utilities', () => {
     await dispatch({ data: 'AA==', mimeType: 'audio/pcm', sequence: 0 });
     expect(onChunk).toHaveBeenCalled();
     expect(secondHandler).toHaveBeenCalled();
+    const dispatchEnded = (page.exposeFunction as jest.Mock).mock.calls[1][1];
+    await dispatchEnded();
+    expect(onEnded).toHaveBeenCalled();
 
     await stopIncomingAudioCapture(page);
     await stopOutgoingAudio(page);
-    expect(page.exposeFunction).toHaveBeenCalledTimes(1);
+    expect(page.exposeFunction).toHaveBeenCalledTimes(2);
     expect(page.evaluate).toHaveBeenCalledTimes(5);
     expect(page.evaluate).toHaveBeenNthCalledWith(1, expect.any(Function), {
       callbackName: '__wppconnectIncomingCallAudioChunk',
+      endedCallbackName: '__wppconnectIncomingCallAudioEnded',
       timesliceMs: 500,
     });
   });

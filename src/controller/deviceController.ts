@@ -20,6 +20,7 @@ import {
   activateCallMedia,
   createMediaTicket,
   deactivateCallMedia,
+  emitCallMediaEnded,
   emitIncomingAudio,
 } from '../util/callMediaUtil';
 import * as CallUtil from '../util/callUtil';
@@ -2283,13 +2284,17 @@ export async function startIncomingCallAudio(req: Request, res: Response) {
       (chunk) => {
         emitIncomingAudio(req.session, callId, chunk);
       },
-      { timesliceMs: parsedTimeslice }
+      { timesliceMs: parsedTimeslice },
+      () => {
+        emitCallMediaEnded(req.session, callId);
+      }
     );
     res.status(200).json({
       status: 'success',
       response: true,
       namespace: '/call-media',
       event: 'incoming-audio',
+      endedEvent: 'call-media-ended',
       mediaDirection: 'incoming',
       experimental: true,
       callId,
