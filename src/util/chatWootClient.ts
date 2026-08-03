@@ -53,7 +53,7 @@ export default class chatWootClient {
       },
     });
 
-    //assina o evento do qrcode
+    //Aciona o evento do qrcode
     eventEmitter.on(`qrcode-${session}`, (qrCode, urlCode, client) => {
       setTimeout(async () => {
         if (config?.chatwoot?.sendQrCode !== false) {
@@ -70,7 +70,7 @@ export default class chatWootClient {
       }, 1000);
     });
 
-    //assiona o evento do status
+    //Aciona o evento do status
     eventEmitter.on(`status-${session}`, (client, status) => {
       if (config?.chatwoot?.sendStatus !== false) {
         this.sendMessage(client, {
@@ -81,7 +81,7 @@ export default class chatWootClient {
       }
     });
 
-    //assina o evento de mensagem
+    //Aciona o evento de mensagem
     eventEmitter.on(`mensagem-${session}`, (client, message) => {
       this.sendMessage(client, message);
     });
@@ -175,7 +175,7 @@ export default class chatWootClient {
   async sendMessage(client: any, message: any) {
     if (message.isGroupMsg || message.chatId.indexOf('@broadcast') > 0) return;
 
-    const contact = await this.createContact(message);
+    const contact = await this.createContact(client, message);
     const conversation = await this.createConversation(
       contact,
       message.chatId.split('@')[0]
@@ -261,17 +261,44 @@ export default class chatWootClient {
     }
   }
 
-  async createContact(message: any) {
+  async createContact(client: any, message: any) {
+    //Get the phone number requesting pnLid from the message sender
+    const rawId =
+      typeof message.sender.id == 'object'
+        ? `${message.sender.id.user}@${message.sender.id.server}`
+        : message.sender.id;
+
+    //console.log('rawId:', rawId);
+    const isLid = rawId.endsWith('@lid');
+
+    let phoneNumber: string | undefined;
+    let identifier: string | undefined;
+
+    if (isLid) {
+      // If it's a LID, we need to get the corresponding phone number
+      // Better to look in contacts settings and find the "real number contact" insted of LID
+      // Also saves lid/phoneNumber in the contact identifier for future reference
+      try {
+        const pnLidData = await client.getPnLidEntry(rawId);
+        phoneNumber = pnLidData?.phoneNumber.id;
+        identifier = pnLidData?.lid._serialized;
+      } catch (e) {
+        console.error('Error fetching pnLid data:', e);
+      }
+    } else {
+      phoneNumber = rawId.split('@')[0];
+      identifier = rawId;
+    }
+
     const body = {
       inbox_id: this.inbox_id,
       name: message.sender.isMyContact
         ? message.sender.formattedName
         : message.sender.pushname || message.sender.formattedName,
-      phone_number:
-        typeof message.sender.id == 'object'
-          ? message.sender.id.user
-          : message.sender.id.split('@')[0],
+      phone_number: phoneNumber,
+      identifier: identifier,
     };
+
     body.phone_number = `+${body.phone_number}`;
     const contact = await this.findContact(body.phone_number.replace('+', ''));
     if (contact && contact.meta.count > 0) return contact.payload[0];
