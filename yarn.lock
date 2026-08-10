@@ -5187,6 +5187,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pidusage@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "@types/pidusage@npm:2.0.5"
+  checksum: 10c0/f4add16388280410604254c91499b873f95c98146c0a8016e09733d3d5c4362b7a5f56e2f1a5e9677772ab97ac37ffb1194d3ad43f872364d9d86856d4db414c
+  languageName: node
+  linkType: hard
+
 "@types/qrcode@npm:^1.5.6":
   version: 1.5.6
   resolution: "@types/qrcode@npm:1.5.6"
@@ -5779,6 +5786,7 @@ __metadata:
     "@types/mime-types": "npm:^3.0.1"
     "@types/multer": "npm:^1.4.13"
     "@types/node": "npm:^22.19.15"
+    "@types/pidusage": "npm:^2.0.5"
     "@types/qrcode": "npm:^1.5.6"
     "@types/swagger-ui-express": "npm:^4.1.8"
     "@types/unzipper": "npm:^0.10.11"
@@ -5815,6 +5823,7 @@ __metadata:
     mongoose: "npm:^8.23.0"
     multer: "npm:^1.4.5-lts.2"
     nodemon: "npm:^3.1.14"
+    pidusage: "npm:^3.0.2"
     prettier: "npm:^2.8.8"
     pretty-quick: "npm:^4.2.2"
     prom-client: "npm:^14.2.0"
@@ -13467,6 +13476,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pidusage@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "pidusage@npm:3.0.2"
+  dependencies:
+    safe-buffer: "npm:^5.2.1"
+  checksum: 10c0/605722ab95e146ebaeb224285023d5c95bd383d460769cb00be774d125d654193b5de806fe9d6e6c9e4994687524f7285fc35bd5c653081c28ee6bd24d11b854
+  languageName: node
+  linkType: hard
+
 "pify@npm:^4.0.1":
   version: 4.0.1
   resolution: "pify@npm:4.0.1"
@@ -14431,7 +14449,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"safe-buffer@npm:5.2.1, safe-buffer@npm:~5.2.0":
+"safe-buffer@npm:5.2.1, safe-buffer@npm:^5.2.1, safe-buffer@npm:~5.2.0":
   version: 5.2.1
   resolution: "safe-buffer@npm:5.2.1"
   checksum: 10c0/6501914237c0a86e9675d4e51d89ca3c21ffd6a31642efeba25ad65720bce6921c9e7e974e5be91a786b25aa058b5303285d3c15dbabf983a919f5f630d349f3
