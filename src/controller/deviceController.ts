@@ -16,7 +16,15 @@
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 
-import { contactToArray, unlinkAsync } from '../util/functions';
+import {
+  activateCallMedia,
+  createMediaTicket,
+  deactivateCallMedia,
+  emitCallMediaEnded,
+  emitIncomingAudio,
+} from '../util/callMediaUtil';
+import * as CallUtil from '../util/callUtil';
+import { callWebHook, contactToArray, unlinkAsync } from '../util/functions';
 import { clientsArray } from '../util/sessionUtil';
 
 function returnSucess(res: any, session: any, phone: any, data: any) {
@@ -2106,6 +2114,268 @@ export async function rejectCall(req: Request, res: Response) {
     res
       .status(500)
       .json({ status: 'error', message: 'Error on rejectCall', error: e });
+  }
+}
+
+export async function enableCallInterface(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Enables the WhatsApp Web call interface for the current session."
+     #swagger.security = [{ "bearerAuth": [] }]
+  */
+  try {
+    await CallUtil.installIncomingCallWatcher(req.client.page, (call) => {
+      req.io.emit('incomingcall', call);
+      void callWebHook(req.client, req, 'incomingcall', call);
+    });
+    await CallUtil.installIncomingAudioCapture(req.client.page);
+    await CallUtil.enableCallInterface(req.client.page);
+    const diagnostics = await CallUtil.getCallInterfaceDiagnostics(
+      req.client.page
+    );
+    res.status(200).json({
+      status: 'success',
+      response: true,
+      mediaInstrumentationReady: true,
+      diagnostics,
+    });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on enableCallInterface',
+    });
+  }
+}
+
+export async function acceptCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: false,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: { callId: { type: "string" } }
+           }
+         }
+       }
+     }
+   */
+  const { callId } = req.body || {};
+  try {
+    const response = await CallUtil.acceptCall(req.client.page, callId);
+    res.status(200).json({ status: 'success', response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on acceptCall' });
+  }
+}
+
+export async function endCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: false,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: { callId: { type: "string" } }
+           }
+         }
+       }
+     }
+   */
+  const { callId } = req.body || {};
+  try {
+    const response = await CallUtil.endCall(req.client.page);
+    await Promise.allSettled([
+      CallUtil.stopIncomingAudioCapture(req.client.page),
+      CallUtil.stopOutgoingAudio(req.client.page),
+    ]);
+    deactivateCallMedia(req.session, callId);
+    res.status(200).json({ status: 'success', response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on endCall' });
+  }
+}
+
+export async function offerCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Sends a WhatsApp call signalling offer. This endpoint does not transport audio or video media."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["phone"],
+             properties: {
+               phone: { type: "string" },
+               isVideo: { type: "boolean", default: false }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { phone, isVideo = false } = req.body || {};
+  if (typeof phone !== 'string' || !phone.trim()) {
+    res
+      .status(400)
+      .json({ status: 'error', message: 'Parameter phone is required!' });
+    return;
+  }
+
+  try {
+    const response = await CallUtil.offerCall(req.client.page, phone, {
+      isVideo: Boolean(isVideo),
+    });
+    res.status(200).json({
+      status: 'success',
+      response,
+      mediaTransport: false,
+      message: 'Call offer sent without audio/video media transport',
+    });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on offerCall' });
+  }
+}
+
+export async function startIncomingCallAudio(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Experimental: captures incoming WebRTC call audio and emits PCM16 chunks through the authenticated /call-media Socket.IO namespace. Start before accepting the call."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["callId"],
+             properties: {
+               callId: { type: "string" },
+               timesliceMs: { type: "number", minimum: 100, default: 250 }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { callId, timesliceMs = 250 } = req.body || {};
+  if (typeof callId !== 'string' || !callId.trim()) {
+    res.status(400).json({ status: 'error', message: 'callId is required' });
+    return;
+  }
+  const parsedTimeslice = Number(timesliceMs);
+  if (!Number.isFinite(parsedTimeslice) || parsedTimeslice < 100) {
+    res.status(400).json({
+      status: 'error',
+      message: 'timesliceMs must be a number greater than or equal to 100',
+    });
+    return;
+  }
+
+  try {
+    activateCallMedia(req.session, callId);
+    await CallUtil.installIncomingAudioCapture(
+      req.client.page,
+      (chunk) => {
+        emitIncomingAudio(req.session, callId, chunk);
+      },
+      { timesliceMs: parsedTimeslice },
+      () => {
+        emitCallMediaEnded(req.session, callId);
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      response: true,
+      namespace: '/call-media',
+      event: 'incoming-audio',
+      endedEvent: 'call-media-ended',
+      mediaDirection: 'incoming',
+      experimental: true,
+      callId,
+    });
+  } catch (e) {
+    deactivateCallMedia(req.session, callId);
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on startIncomingCallAudio',
+    });
+  }
+}
+
+export async function createCallMediaTicket(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Creates a short-lived, single-use ticket for the authenticated call media Socket.IO namespace."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["callId"],
+             properties: {
+               callId: { type: "string" },
+               ttlMs: { type: "number", minimum: 1000, maximum: 300000, default: 60000 }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { callId, ttlMs = 60_000 } = req.body || {};
+  if (typeof callId !== 'string' || !callId.trim()) {
+    res.status(400).json({ status: 'error', message: 'callId is required' });
+    return;
+  }
+  try {
+    const result = createMediaTicket(req.session, callId, Number(ttlMs));
+    res.status(200).json({
+      status: 'success',
+      response: { ...result, callId, namespace: '/call-media' },
+    });
+  } catch (error) {
+    res.status(409).json({
+      status: 'error',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
+export async function stopCallMedia(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Stops incoming and outgoing call audio, invalidates tickets, and disconnects the active media socket for the session."
+     #swagger.security = [{ "bearerAuth": [] }]
+   */
+  try {
+    await Promise.all([
+      CallUtil.stopIncomingAudioCapture(req.client.page),
+      CallUtil.stopOutgoingAudio(req.client.page),
+    ]);
+    deactivateCallMedia(req.session);
+    res.status(200).json({ status: 'success', response: true });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on stopCallMedia',
+    });
   }
 }
 

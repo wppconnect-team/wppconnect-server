@@ -18,6 +18,7 @@ import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
 import { WhatsAppServer } from '../types/WhatsAppServer';
+import { deactivateCallMedia } from './callMediaUtil';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
 import { clientsArray, eventEmitter } from './sessionUtil';
@@ -56,6 +57,7 @@ export default class CreateSessionUtil {
 
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
+          ...req.serverOptions.createOptions.puppeteerOptions,
           userDataDir: req.serverOptions.customUserDataDir + session,
         };
       }
@@ -117,6 +119,7 @@ export default class CreateSessionUtil {
                   client.status = 'CLOSED';
                   client.qrcode = null;
                   client.close();
+                  deactivateCallMedia(session);
                   clientsArray[session] = undefined;
                 }
                 callWebHook(client, req, 'status-find', {

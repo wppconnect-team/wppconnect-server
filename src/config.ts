@@ -44,6 +44,9 @@ export default {
     logger: ['console', 'file'],
   },
   createOptions: {
+    puppeteerOptions: {
+      ignoreDefaultArgs: ['--mute-audio'],
+    },
     browserArgs: [
       '--disable-web-security',
       '--no-sandbox',
@@ -62,7 +65,10 @@ export default {
       '--disable-translate',
       '--hide-scrollbars',
       '--metrics-recording-only',
-      '--mute-audio',
+      '--use-fake-ui-for-media-stream',
+      '--use-fake-device-for-media-stream',
+      '--use-file-for-fake-audio-capture=/usr/src/wpp-server/silence.wav',
+      '--enable-features=SharedArrayBuffer',
       '--no-first-run',
       '--safebrowsing-disable-auto-update',
       '--ignore-certificate-errors',

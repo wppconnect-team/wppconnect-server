@@ -42,8 +42,12 @@ WORKDIR /usr/src/wpp-server/
 # Install runtime dependencies (chromium and vips libraries)
 RUN apk add --no-cache \
     chromium \
+    ffmpeg \
     vips \
-    fftw
+    fftw && \
+    ffmpeg -hide_banner -loglevel error \
+      -f lavfi -i anullsrc=r=48000:cl=mono \
+      -t 1 -c:a pcm_s16le /usr/src/wpp-server/silence.wav
 
 EXPOSE 21465
 ENTRYPOINT ["node", "dist/server.js"]
