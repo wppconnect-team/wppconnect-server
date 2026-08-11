@@ -1,3 +1,14 @@
+## [2.10.2](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.1...v2.10.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* **ci:** release automatically from main ([d663e5f](https://github.com/wppconnect-team/wppconnect-server/commit/d663e5fd9ad199ac711d919076da93fee2ac9fb8))
+* **deps:** remove critical transitive vulnerabilities ([#2532](https://github.com/wppconnect-team/wppconnect-server/issues/2532)) ([df3b301](https://github.com/wppconnect-team/wppconnect-server/commit/df3b301bc769c8e6c4fa1717742a637e9f97c9ac))
+* **deps:** upgrade multer to patched v2 ([#2540](https://github.com/wppconnect-team/wppconnect-server/issues/2540)) ([0cdf1ab](https://github.com/wppconnect-team/wppconnect-server/commit/0cdf1ab146d6ffd20e1faf9994cfc14f13723238))
+* **security:** consume WPPConnect 2.2.7 ([#2542](https://github.com/wppconnect-team/wppconnect-server/issues/2542)) ([79cfb80](https://github.com/wppconnect-team/wppconnect-server/commit/79cfb8057c7a3d2fcf5694ad7fedc2076c1d72b8))
+* **security:** resolve current dependency advisories ([#2541](https://github.com/wppconnect-team/wppconnect-server/issues/2541)) ([fff8f68](https://github.com/wppconnect-team/wppconnect-server/commit/fff8f68ceed32ea40188e5d134fa180829baaab8))
+
 ## 2.10.1 (2026-07-30)
 
 
