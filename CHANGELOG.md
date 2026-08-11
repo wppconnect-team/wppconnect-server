@@ -1,3 +1,10 @@
+## [2.10.3](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.2...v2.10.3) (2026-08-11)
+
+
+### Features
+
+* **docker:** publish and document official image ([#2544](https://github.com/wppconnect-team/wppconnect-server/issues/2544)) ([f17f869](https://github.com/wppconnect-team/wppconnect-server/commit/f17f86992b6180053cae02f63f460e4590ef184b))
+
 ## [2.10.2](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.1...v2.10.2) (2026-08-11)
 
 
