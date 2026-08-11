@@ -1,3 +1,10 @@
+## [2.10.4](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.3...v2.10.4) (2026-08-11)
+
+
+### Bug Fixes
+
+* **docker:** cancel obsolete image builds ([#2545](https://github.com/wppconnect-team/wppconnect-server/issues/2545)) ([5f16b8e](https://github.com/wppconnect-team/wppconnect-server/commit/5f16b8eb5a01e21722be4ef3c63f4b41a1f9cd2d))
+
 ## [2.10.3](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.2...v2.10.3) (2026-08-11)
 
 
