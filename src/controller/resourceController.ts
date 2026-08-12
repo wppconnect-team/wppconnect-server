@@ -18,12 +18,21 @@ import { Request, Response } from 'express';
 
 import { SessionResourceMonitor } from '../util/SessionResourceMonitor';
 
-function getResourceMonitor(req: Request): SessionResourceMonitor {
+let monitorInstance: SessionResourceMonitor | null = null;
+
+export function getResourceMonitor(req: Request): SessionResourceMonitor {
   const customUserDataDir =
     req.serverOptions?.customUserDataDir || './userDataDir/';
   const cacheDuration =
     req.serverOptions?.resourceMonitor?.cacheDuration || 5000;
-  return new SessionResourceMonitor(customUserDataDir, cacheDuration);
+
+  if (!monitorInstance) {
+    monitorInstance = new SessionResourceMonitor(
+      customUserDataDir,
+      cacheDuration
+    );
+  }
+  return monitorInstance;
 }
 
 function isResourceMonitorEnabled(req: Request): boolean {
