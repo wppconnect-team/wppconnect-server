@@ -17,7 +17,7 @@
 import { Request, Response } from 'express';
 import Prometheus from 'prom-client';
 
-import { SessionResourceMonitor } from '../util/SessionResourceMonitor';
+import { getResourceMonitor } from '../controller/resourceController';
 
 const register = new Prometheus.Registry();
 register.setDefaultLabels({
@@ -57,10 +57,7 @@ export async function metrics(req: Request, res: Response) {
    */
   if (req.serverOptions?.resourceMonitor?.enable) {
     try {
-      const monitor = new SessionResourceMonitor(
-        req.serverOptions.customUserDataDir || './userDataDir/',
-        req.serverOptions.resourceMonitor.cacheDuration || 5000
-      );
+      const monitor = getResourceMonitor(req);
       const usage = await monitor.getAllSessionsUsage();
       for (const session of usage.sessions) {
         if (session.chromium) {
