@@ -2264,13 +2264,21 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
           .json({ status: 'success', message: 'Success on receive chatwoot' });
       }
 
+      // TypeError: Cannot read properties of undefined (reading 'meta') at chatWoot (*/wppconnect-server/src/controller/deviceController.ts:2267:41)
+      if (!req.body.conversation) {
+        //req.logger?.warn(`[chatWoot] Event '${event}' without conversation, ignored.`);
+        return res
+          .status(200)
+          .json({ status: 'success', message: 'Success on receive chatwoot' });
+      }
+
       const {
         message_type,
         phone = req.body.conversation.meta.sender.phone_number.replace('+', ''),
         message = req.body.conversation.messages[0],
       } = req.body;
 
-      if (event != 'message_created' && message_type != 'outgoing')
+      if (event != 'message_created' || message_type != 'outgoing')
         return res
           .status(200)
           .json({ status: 'success', message: 'Success on receive chatwoot' });
