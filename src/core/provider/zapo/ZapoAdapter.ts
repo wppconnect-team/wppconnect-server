@@ -27,12 +27,26 @@ import {
   ProviderId,
   SessionApi,
 } from '../ProviderAdapter';
+import { createWppCompat } from '../socket/WppCompatFacade';
 
 /**
- * EXPERIMENTAL provider backed by `zapo-js` (vinikjkkj). Unlike Baileys/whaileys,
- * zapo is an independent runtime with its OWN API — a `WaClient` class plus a
- * pluggable `createStore`, QR delivered via the `auth_qr` event — so it has a
- * dedicated adapter rather than sharing the socket base.
+ * Provider backed by `zapo-js` (vinikjkkj). Unlike Baileys/whaileys, zapo is
+ * an independent runtime with its OWN API — a `WaClient` class exposing
+ * feature COORDINATORS as getters (`client.message`, `client.group`,
+ * `client.chat`, `client.presence`, `client.profile`, ...), NOT a flat
+ * `sendMessage`/event-name surface like Baileys. It also requires a pluggable,
+ * fully-populated `createStore` (every domain must resolve to a backend), and
+ * delivers QR via `auth_qr` and connection changes via a single unified
+ * `connection` event (`{ status: 'open' | 'close', ... }`) — there is no
+ * `'connected'`/`'disconnected'` event pair.
+ *
+ * These shapes were verified directly against the installed
+ * `@wppconnect/zapo` (currently 0.3.1) type declarations
+ * (`WaClient.d.ts`, `types.d.ts`, `WaMessageCoordinator.d.ts`) — a previous
+ * version of this adapter assumed a Baileys-like flat API that never matched
+ * zapo's actual surface, so any send/connection-tracking call failed at
+ * runtime. See PUBLISHING.md / the zapo fork's own docs for the coordinator
+ * pattern.
  *
  * Loaded dynamically; prefers the controlled package name `@wppconnect/zapo`,
  * falling back to upstream `zapo-js`. The scoped package is currently installed
@@ -41,10 +55,13 @@ import {
  */
 export class ZapoAdapter implements ProviderAdapter {
   public readonly id: ProviderId = 'zapo';
+  // zapo has no message content type for a location share (its
+  // WaSendMessageContent union covers text/media/reaction/poll/revoke/pin/
+  // keep/event — no `location`), so that capability is honestly declared
+  // unsupported rather than silently no-op'd.
   public readonly capabilities: ProviderCapabilities = buildCapabilities({
     'messaging.text': true,
     'messaging.media': true,
-    'messaging.location': true,
     'messaging.react': true,
     groups: true,
     contacts: true,
@@ -56,6 +73,7 @@ export class ZapoAdapter implements ProviderAdapter {
   public readonly messaging: MessagingApi;
 
   private client: any = null;
+  private compat: any = null;
   private state: ConnectionState = 'INITIALIZING';
 
   constructor(
@@ -71,29 +89,29 @@ export class ZapoAdapter implements ProviderAdapter {
         this.state = 'CLOSED';
       },
       logout: async () => {
-        await this.client?.disconnect?.();
+        await this.client?.logout?.();
         this.state = 'CLOSED';
       },
       getConnectionState: () => this.state,
       isConnected: async () => this.state === 'CONNECTED',
     };
 
+    // Delegates to the WppCompatFacade (via raw()), which already knows how
+    // to translate these calls onto zapo's coordinator API
+    // (`client.message.send(...)`, etc.) — see WppCompatFacade's zapo branch.
+    // Keeping a single translation point avoids maintaining the same
+    // to-coordinator mapping twice.
     this.messaging = {
-      sendText: async (to, body) =>
-        this.requireClient().sendMessage({ to, text: body }),
+      sendText: async (to, body) => this.requireCompat().sendText(to, body),
       sendFile: async (to, file: any) =>
-        this.requireClient().sendMessage({
-          to,
-          document: file?.buffer ?? file,
-          fileName: file?.fileName,
-        }),
+        this.requireCompat().sendFile(to, file),
       sendImage: async (to, image: any) =>
-        this.requireClient().sendMessage({
-          to,
-          image: image?.buffer ?? image,
-          caption: image?.caption,
-        }),
-      markSeen: async () => undefined,
+        this.requireCompat().sendImage(to, image),
+      react: async (messageTarget: any, emoji) =>
+        this.requireCompat().sendReactionToMessage(messageTarget, emoji),
+      delete: async (to: any, messageTarget: any) =>
+        this.requireCompat().deleteMessage(to, messageTarget),
+      markSeen: async (chatId: any) => this.requireCompat().sendSeen(chatId),
     };
   }
 
@@ -115,8 +133,10 @@ export class ZapoAdapter implements ProviderAdapter {
       ['@wppconnect/zapo', 'zapo-js'],
       'the zapo runtime'
     );
-    // zapo requires a persistent backend for `auth` (no memory fallback), so a
-    // SQLite store is mandatory. Per-session db file under userDataDir.
+    // zapo's createStore validates that EVERY domain resolves to a backend
+    // when `backends` is non-empty (it does not fall back to 'memory' per
+    // missing field in that case) — a SQLite store is required for all of
+    // them, not just `auth`. Per-session db file under userDataDir.
     const sqlite: any = await this.loadModule(
       ['@zapo-js/store-sqlite'],
       'the SQLite store'
@@ -149,27 +169,42 @@ export class ZapoAdapter implements ProviderAdapter {
       { store, sessionId: this.sessionName },
       undefined
     );
+    this.compat = null;
 
-    this.client.on('auth_qr', ({ qr }: any) => {
+    this.client.on('auth_qr', ({ qr, ttlMs }: any) => {
       this.state = 'QRCODE';
-      this.emit('qr', { qrcode: qr, session: this.sessionName });
+      this.emit('qr', { qrcode: qr, ttlMs, session: this.sessionName });
     });
-    this.client.on('connected', () => {
-      this.state = 'CONNECTED';
-      this.emit('connection-state', {
-        status: 'CONNECTED',
-        session: this.sessionName,
-      });
+
+    // zapo has ONE unified `connection` event, not separate
+    // 'connected'/'disconnected' events. Shape:
+    //   { status: 'open', reason, code: null, isLogout, isNewLogin }
+    //   { status: 'close', reason, code, isLogout, isNewLogin: false }
+    this.client.on('connection', (event: any) => {
+      if (event?.status === 'open') {
+        this.state = 'CONNECTED';
+        this.emit('connection-state', {
+          status: 'CONNECTED',
+          session: this.sessionName,
+        });
+      } else if (event?.status === 'close') {
+        this.state = 'CLOSED';
+        this.emit('connection-state', {
+          status: 'CLOSED',
+          session: this.sessionName,
+          reason: event?.reason,
+        });
+      }
     });
-    this.client.on('disconnected', () => {
-      this.state = 'CLOSED';
-      this.emit('connection-state', {
-        status: 'CLOSED',
-        session: this.sessionName,
-      });
-    });
+
     this.client.on('message', (event: any) => {
       this.emit('message', { ...event, session: this.sessionName });
+    });
+
+    // Delivery/read receipts for outgoing messages — the closest zapo
+    // equivalent to Baileys' `messages.update` ack event.
+    this.client.on('receipt', (event: any) => {
+      this.emit('ack', { ...event, session: this.sessionName });
     });
 
     await this.client.connect();
@@ -180,6 +215,11 @@ export class ZapoAdapter implements ProviderAdapter {
       throw new Error(`Zapo session "${this.sessionName}" is not started.`);
     }
     return this.client;
+  }
+
+  private requireCompat(): any {
+    this.requireClient();
+    return this.raw();
   }
 
   on(event: ProviderEvent, handler: (data: unknown) => void): void {
@@ -194,7 +234,22 @@ export class ZapoAdapter implements ProviderAdapter {
     return { connected: this.state === 'CONNECTED', state: this.state };
   }
 
+  /**
+   * Returns the wppconnect-compatible facade (same as the socket providers),
+   * NOT the raw zapo `WaClient` — the facade translates the ~45 wppconnect
+   * client methods controllers call (`getClient(req).sendText`, `.getAllGroups`,
+   * etc.) onto zapo's coordinator API, and throws a clean 501
+   * (`MethodNotSupportedError`) for anything untranslated instead of a raw
+   * "not a function" crash. Returning the native `WaClient` here (as the
+   * previous version of this adapter did) bypassed that translation entirely
+   * for every zapo session.
+   */
   raw(): unknown {
-    return this.client;
+    if (!this.client) return undefined;
+    if (!this.compat) {
+      this.compat = createWppCompat(this.client, this.sessionName);
+    }
+    this.compat.status = this.state;
+    return this.compat;
   }
 }

@@ -71,6 +71,7 @@ export class SocketProviderAdapter implements ProviderAdapter {
   private sock: any = null;
   private compat: any = null;
   private lib: any = null;
+  private store: any = null;
   private state: ConnectionState = 'INITIALIZING';
   private qrCount = 0;
   private endSession = false;
@@ -205,6 +206,16 @@ export class SocketProviderAdapter implements ProviderAdapter {
       browser: ['WPPConnect-Server', 'Chrome', '120.0.0'],
       connectTimeoutMs: 30_000,
     });
+
+    // Baileys keeps no chat/contact state on the socket itself — an
+    // in-memory store must be bound to sock.ev, or WppCompatFacade's
+    // getAllChats()/listChats()/getAllContacts() (which read `sock.store`)
+    // always return empty. Optional: not every fork exports makeInMemoryStore.
+    if (typeof lib.makeInMemoryStore === 'function') {
+      this.store = lib.makeInMemoryStore({});
+      this.store.bind(this.sock.ev);
+      this.sock.store = this.store;
+    }
 
     this.sock.ev.on('creds.update', saveCreds);
     this.sock.ev.on('connection.update', (update: any) =>
