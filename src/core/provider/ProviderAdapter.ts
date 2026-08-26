@@ -18,8 +18,8 @@ import { ProviderCapabilities } from './capabilities';
 
 /**
  * Identifier of a WhatsApp provider implementation.
- * `wppconnect` is the default; the others are experimental and gated behind a
- * feature flag.
+ * `wppconnect` is the default; the others are selected per session via the
+ * `provider` field on `start-session` — there is no feature flag.
  */
 export type ProviderId = 'wppconnect' | 'baileys' | 'whaileys' | 'zapo';
 

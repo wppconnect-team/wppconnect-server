@@ -213,6 +213,11 @@ export async function startSession(req: Request, res: Response): Promise<any> {
             properties: {
               webhook: { type: "string" },
               waitQrCode: { type: "boolean" },
+              provider: {
+                type: "string",
+                enum: ["wppconnect", "baileys", "whaileys", "zapo"],
+                description: "WhatsApp backend to use for this session. Defaults to 'wppconnect'."
+              },
               proxy: {
                 type: "object",
                 properties: {
@@ -226,6 +231,7 @@ export async function startSession(req: Request, res: Response): Promise<any> {
           example: {
             webhook: "",
             waitQrCode: false,
+            provider: "wppconnect",
             proxy: {
               url: "http://myproxy.com:8080",
               username: "myuser",
