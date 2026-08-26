@@ -1,3 +1,12 @@
+## [2.10.5](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.4...v2.10.5) (2026-08-26)
+
+
+### Bug Fixes
+
+* getChatById when sending @ number. ([c2a2761](https://github.com/wppconnect-team/wppconnect-server/commit/c2a276186a307b7296e6e3b364f950ada983676e))
+* getChatById when sending @ number. ([5c28519](https://github.com/wppconnect-team/wppconnect-server/commit/5c285198e4555049ec56a5158d6b203a18c99d32))
+* use contactToArray in getChatById with isGroup, isNewsletter, and isLid support ([d961d0b](https://github.com/wppconnect-team/wppconnect-server/commit/d961d0bf0021bd4653a5611ebf00e32fe2281a6a))
+
 ## [2.10.4](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.3...v2.10.4) (2026-08-11)
 
 
