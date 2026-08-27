@@ -3979,7 +3979,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "5521999999999"
+              "example": "5521999999999@c.us"
             }
           },
           {
@@ -3989,6 +3989,20 @@
               "example": "false"
             },
             "in": "query"
+          },
+          {
+            "name": "isNewsletter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isLid",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
