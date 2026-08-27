@@ -1,3 +1,10 @@
+## [2.10.9](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.8...v2.10.9) (2026-08-27)
+
+
+### Bug Fixes
+
+* **messages:** forward to normalized contact list ([#2550](https://github.com/wppconnect-team/wppconnect-server/issues/2550)) ([27433d3](https://github.com/wppconnect-team/wppconnect-server/commit/27433d3c82da6a6d7936759fd2ec6dd5a3c090bb))
+
 ## [2.10.8](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.7...v2.10.8) (2026-08-27)
 
 ## [2.10.7](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.6...v2.10.7) (2026-08-27)
