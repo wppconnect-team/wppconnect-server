@@ -1,3 +1,10 @@
+## [2.10.7](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.6...v2.10.7) (2026-08-27)
+
+
+### Bug Fixes
+
+* avoid WAPI probes for optional listeners ([#2547](https://github.com/wppconnect-team/wppconnect-server/issues/2547)) ([f225078](https://github.com/wppconnect-team/wppconnect-server/commit/f2250781e9ea5166f1f1aa9b9169c1f6cad73b5e))
+
 ## [2.10.6](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.5...v2.10.6) (2026-08-27)
 
 ## [2.10.5](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.4...v2.10.5) (2026-08-26)
