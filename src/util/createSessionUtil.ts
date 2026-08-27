@@ -237,7 +237,6 @@ export default class CreateSessionUtil {
   }
 
   async onParticipantsChanged(req: any, client: any) {
-    await client.isConnected();
     await client.onParticipantsChanged((message: any) => {
       callWebHook(client, req, 'onparticipantschanged', message);
     });
@@ -330,7 +329,6 @@ export default class CreateSessionUtil {
   }
 
   async onReactionMessage(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onReactionMessage(async (reaction: any) => {
       req.io.emit('onreactionmessage', reaction);
       callWebHook(client, req, 'onreactionmessage', reaction);
@@ -338,21 +336,18 @@ export default class CreateSessionUtil {
   }
 
   async onRevokedMessage(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onRevokedMessage(async (response: any) => {
       req.io.emit('onrevokedmessage', response);
       callWebHook(client, req, 'onrevokedmessage', response);
     });
   }
   async onPollResponse(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onPollResponse(async (response: any) => {
       req.io.emit('onpollresponse', response);
       callWebHook(client, req, 'onpollresponse', response);
     });
   }
   async onLabelUpdated(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onUpdateLabel(async (response: any) => {
       req.io.emit('onupdatelabel', response);
       callWebHook(client, req, 'onupdatelabel', response);
