@@ -1006,15 +1006,14 @@ export async function forwardMessages(req: Request, res: Response) {
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
+    const contacts = contactToArray(phone, isGroup);
     let response;
 
-    if (!isGroup) {
-      response = await req.client.forwardMessagesV2(`${phone[0]}`, messageId);
-    } else {
-      response = await req.client.forwardMessagesV2(`${phone[0]}`, messageId);
+    for (const contact of contacts) {
+      response = await req.client.forwardMessagesV2(contact, messageId);
     }
 
-    res.status(201).json({ status: 'success', response: response });
+    res.status(201).json({ status: 'success', response });
   } catch (e) {
     req.logger.error(e);
     res
