@@ -1,3 +1,10 @@
+## [2.10.10](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.9...v2.10.10) (2026-08-27)
+
+
+### Bug Fixes
+
+* **middleware:** stop after connection errors ([#2551](https://github.com/wppconnect-team/wppconnect-server/issues/2551)) ([f17055c](https://github.com/wppconnect-team/wppconnect-server/commit/f17055c92c91b730b1daa319dc1637a67121e8c1))
+
 ## [2.10.9](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.8...v2.10.9) (2026-08-27)
 
 
