@@ -377,21 +377,24 @@ export async function getChatById(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
      #swagger.parameters["phone"] = {
-      schema: '5521999999999'
+      schema: '5521999999999@c.us'
      }
      #swagger.parameters["isGroup"] = {
       schema: 'false'
      }
    */
   const { phone } = req.params;
-  const { isGroup } = req.query;
+  const { isGroup = false, isNewsletter = false, isLid = false } = req.query;
 
   try {
     let result = {} as Chat;
-    if (isGroup) {
-      result = await req.client.getChatById(`${phone}@g.us`);
-    } else {
-      result = await req.client.getChatById(`${phone}@c.us`);
+    for (const contato of contactToArray(
+      phone as string,
+      isGroup as boolean,
+      isNewsletter as boolean,
+      isLid as boolean
+    )) {
+      result = await req.client.getChatById(contato);
     }
 
     res.status(200).json(result);
@@ -1003,15 +1006,14 @@ export async function forwardMessages(req: Request, res: Response) {
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
+    const contacts = contactToArray(phone, isGroup);
     let response;
 
-    if (!isGroup) {
-      response = await req.client.forwardMessagesV2(`${phone[0]}`, messageId);
-    } else {
-      response = await req.client.forwardMessagesV2(`${phone[0]}`, messageId);
+    for (const contact of contacts) {
+      response = await req.client.forwardMessagesV2(contact, messageId);
     }
 
-    res.status(201).json({ status: 'success', response: response });
+    res.status(201).json({ status: 'success', response });
   } catch (e) {
     req.logger.error(e);
     res

@@ -6,6 +6,8 @@
 
 [![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
 [![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
+[![Docker Pulls](https://img.shields.io/docker/pulls/wppconnect/wppconnect-server?logo=docker)](https://hub.docker.com/r/wppconnect/wppconnect-server)
+[![Docker Image Version](https://img.shields.io/docker/v/wppconnect/wppconnect-server?sort=semver&logo=docker)](https://hub.docker.com/r/wppconnect/wppconnect-server/tags)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/project/wppconnect-team/wppconnect-server 'Average time to resolve an issue')
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg 'Percentage of issues still open')
 [![Build Status](https://img.shields.io/github/actions/workflow/status/wppconnect-team/wppconnect-server/build.yml)](https://github.com/wppconnect-team/wppconnect-server/actions)
@@ -62,7 +64,56 @@ Detailed documentation and guides are available for your convenience:
 - SocketIO
 - S3
 
-## Installation
+## Docker (recommended)
+
+The official image is available on
+[Docker Hub](https://hub.docker.com/r/wppconnect/wppconnect-server). It includes
+Node.js, Chromium, and the native dependencies required by WPPConnect.
+
+```sh
+docker run -d \
+  --name wppconnect-server \
+  --restart unless-stopped \
+  -p 21465:21465 \
+  -e SECRET_KEY=change-me \
+  -v wppconnect_tokens:/usr/src/wpp-server/tokens \
+  -v wppconnect_user_data:/usr/src/wpp-server/userDataDir \
+  wppconnect/wppconnect-server:latest
+```
+
+For Docker Compose, clone the repository and run:
+
+```sh
+SECRET_KEY=change-me docker compose up -d
+docker compose ps
+curl http://localhost:21465/healthz
+```
+
+Set `WPP_SERVER_TAG` to pin a release instead of following `latest`:
+
+```sh
+WPP_SERVER_TAG=2.10 SECRET_KEY=change-me docker compose up -d
+```
+
+Release tags follow the GitHub and npm version: `vX.Y.Z`, `X.Y.Z`, `X.Y`,
+`X`, and `latest`. The `main`, `develop`, and immutable `sha-*` tags are also
+available. See all tags on
+[Docker Hub](https://hub.docker.com/r/wppconnect/wppconnect-server/tags).
+
+The container accepts `PORT`, `HOST`, `SECRET_KEY`, `WEBHOOK_URL`,
+`TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS`, and the Redis and
+MongoDB variables listed in the [Configuration](#configuration) section. The
+Compose setup persists tokens, Chromium session data, uploads, received images,
+and logs in named volumes. Change the default secret before exposing the API.
+
+To upgrade the Compose deployment:
+
+```sh
+docker compose pull
+docker compose up -d
+```
+
+## Installation from source
 
 Install the dependencies and start the server.
 

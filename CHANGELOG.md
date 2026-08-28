@@ -1,3 +1,62 @@
+## [2.10.10](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.9...v2.10.10) (2026-08-27)
+
+
+### Bug Fixes
+
+* **middleware:** stop after connection errors ([#2551](https://github.com/wppconnect-team/wppconnect-server/issues/2551)) ([f17055c](https://github.com/wppconnect-team/wppconnect-server/commit/f17055c92c91b730b1daa319dc1637a67121e8c1))
+
+## [2.10.9](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.8...v2.10.9) (2026-08-27)
+
+
+### Bug Fixes
+
+* **messages:** forward to normalized contact list ([#2550](https://github.com/wppconnect-team/wppconnect-server/issues/2550)) ([27433d3](https://github.com/wppconnect-team/wppconnect-server/commit/27433d3c82da6a6d7936759fd2ec6dd5a3c090bb))
+
+## [2.10.8](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.7...v2.10.8) (2026-08-27)
+
+## [2.10.7](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.6...v2.10.7) (2026-08-27)
+
+
+### Bug Fixes
+
+* avoid WAPI probes for optional listeners ([#2547](https://github.com/wppconnect-team/wppconnect-server/issues/2547)) ([f225078](https://github.com/wppconnect-team/wppconnect-server/commit/f2250781e9ea5166f1f1aa9b9169c1f6cad73b5e))
+
+## [2.10.6](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.5...v2.10.6) (2026-08-27)
+
+## [2.10.5](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.4...v2.10.5) (2026-08-26)
+
+
+### Bug Fixes
+
+* getChatById when sending @ number. ([c2a2761](https://github.com/wppconnect-team/wppconnect-server/commit/c2a276186a307b7296e6e3b364f950ada983676e))
+* getChatById when sending @ number. ([5c28519](https://github.com/wppconnect-team/wppconnect-server/commit/5c285198e4555049ec56a5158d6b203a18c99d32))
+* use contactToArray in getChatById with isGroup, isNewsletter, and isLid support ([d961d0b](https://github.com/wppconnect-team/wppconnect-server/commit/d961d0bf0021bd4653a5611ebf00e32fe2281a6a))
+
+## [2.10.4](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.3...v2.10.4) (2026-08-11)
+
+
+### Bug Fixes
+
+* **docker:** cancel obsolete image builds ([#2545](https://github.com/wppconnect-team/wppconnect-server/issues/2545)) ([5f16b8e](https://github.com/wppconnect-team/wppconnect-server/commit/5f16b8eb5a01e21722be4ef3c63f4b41a1f9cd2d))
+
+## [2.10.3](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.2...v2.10.3) (2026-08-11)
+
+
+### Features
+
+* **docker:** publish and document official image ([#2544](https://github.com/wppconnect-team/wppconnect-server/issues/2544)) ([f17f869](https://github.com/wppconnect-team/wppconnect-server/commit/f17f86992b6180053cae02f63f460e4590ef184b))
+
+## [2.10.2](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.1...v2.10.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* **ci:** release automatically from main ([d663e5f](https://github.com/wppconnect-team/wppconnect-server/commit/d663e5fd9ad199ac711d919076da93fee2ac9fb8))
+* **deps:** remove critical transitive vulnerabilities ([#2532](https://github.com/wppconnect-team/wppconnect-server/issues/2532)) ([df3b301](https://github.com/wppconnect-team/wppconnect-server/commit/df3b301bc769c8e6c4fa1717742a637e9f97c9ac))
+* **deps:** upgrade multer to patched v2 ([#2540](https://github.com/wppconnect-team/wppconnect-server/issues/2540)) ([0cdf1ab](https://github.com/wppconnect-team/wppconnect-server/commit/0cdf1ab146d6ffd20e1faf9994cfc14f13723238))
+* **security:** consume WPPConnect 2.2.7 ([#2542](https://github.com/wppconnect-team/wppconnect-server/issues/2542)) ([79cfb80](https://github.com/wppconnect-team/wppconnect-server/commit/79cfb8057c7a3d2fcf5694ad7fedc2076c1d72b8))
+* **security:** resolve current dependency advisories ([#2541](https://github.com/wppconnect-team/wppconnect-server/issues/2541)) ([fff8f68](https://github.com/wppconnect-team/wppconnect-server/commit/fff8f68ceed32ea40188e5d134fa180829baaab8))
+
 ## 2.10.1 (2026-07-30)
 
 

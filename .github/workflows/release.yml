@@ -1,36 +1,86 @@
 name: release
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       increment:
         description: 'Tipo de incremento: patch, minor, major ou pre*'
         required: true
         default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
 
 jobs:
   release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: main
+          fetch-depth: 0
           token: ${{ secrets.PERSONAL_TOKEN }}
 
+      - name: Determine release
+        id: release-check
+        shell: bash
+        env:
+          REQUESTED_INCREMENT: ${{ inputs.increment }}
+        run: |
+          increment="${REQUESTED_INCREMENT:-patch}"
+          should_release=true
+
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            increment=patch
+            latest_tag="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
+
+            if [[ -n "$latest_tag" ]] && git diff --quiet "$latest_tag..HEAD" -- .; then
+              should_release=false
+              echo "No changes since $latest_tag; skipping duplicate release"
+            fi
+          fi
+
+          echo "increment=$increment" >> "$GITHUB_OUTPUT"
+          echo "should_release=$should_release" >> "$GITHUB_OUTPUT"
+
       - name: Setup GIT
+        if: steps.release-check.outputs.should_release == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Setup Node
+        if: steps.release-check.outputs.should_release == 'true'
         uses: actions/setup-node@v4.4.0
         with:
           node-version: 22.22.2
 
       - name: Enable Corepack
+        if: steps.release-check.outputs.should_release == 'true'
         run: corepack enable
 
       - name: Setup yarn cache
+        if: steps.release-check.outputs.should_release == 'true'
         uses: actions/cache@v4
         with:
           path: |
@@ -41,12 +91,17 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
+        if: steps.release-check.outputs.should_release == 'true'
         run: yarn install
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
 
       - name: Generate Swagger docs
+        if: steps.release-check.outputs.should_release == 'true'
         run: yarn docs
 
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: steps.release-check.outputs.should_release == 'true'
         with:
           commit_message: 'docs: Improovment on docs'
           file_pattern: 'src/swagger.json'
@@ -54,4 +109,5 @@ jobs:
           commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
 
       - name: Release
-        run: 'npx release-it --increment ${{ github.event.inputs.increment }}'
+        if: steps.release-check.outputs.should_release == 'true'
+        run: 'npx release-it --increment ${{ steps.release-check.outputs.increment }}'
