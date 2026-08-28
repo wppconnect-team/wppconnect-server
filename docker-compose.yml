@@ -1,7 +1,10 @@
 services:
   wppconnect:
     container_name: wpp-server
-    image: wppconnect/wppconnect-server:${WPP_SERVER_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wppconnect/wppconnect-server:local
     restart: unless-stopped
     environment:
       PORT: "21465"
