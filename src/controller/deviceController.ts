@@ -303,7 +303,7 @@ export async function getAllMessagesInChat(req: Request, res: Response) {
       response = await req.client.getAllMessagesInChat(
         contato,
         includeMe as boolean,
-        includeNotifications as boolean
+        includeNotifications as boolean,
       );
     }
 
@@ -392,7 +392,7 @@ export async function getChatById(req: Request, res: Response) {
       phone as string,
       isGroup as boolean,
       isNewsletter as boolean,
-      isLid as boolean
+      isLid as boolean,
     )) {
       result = await req.client.getChatById(contato);
     }
@@ -848,7 +848,7 @@ export async function deleteMessage(req: Request, res: Response) {
       `${phone}`,
       messageId,
       onlyLocal,
-      deleteMediaInDevice
+      deleteMediaInDevice,
     );
     if (result) {
       res
@@ -1405,7 +1405,7 @@ export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
     const response = await req.client.loadAndGetAllMessagesInChat(
       `${phone}@c.us`,
       includeMe as boolean,
-      includeNotifications as boolean
+      includeNotifications as boolean,
     );
 
     res.status(200).json({ status: 'success', response: response });
@@ -1500,7 +1500,7 @@ export async function sendContactVcard(req: Request, res: Response) {
       response = await req.client.sendContactVcard(
         `${contato}`,
         contactsId,
-        name
+        name,
       );
     }
 
@@ -2268,7 +2268,9 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
 
       // TypeError: Cannot read properties of undefined (reading 'meta') at chatWoot (*/wppconnect-server/src/controller/deviceController.ts:2267:41)
       if (!req.body.conversation) {
-        //req.logger?.warn(`[chatWoot] Event '${event}' without conversation, ignored.`);
+        req.logger?.warn(
+          `[chatWoot] Event '${event}' without conversation, ignored.`,
+        );
         return res
           .status(200)
           .json({ status: 'success', message: 'Success on receive chatwoot' });
@@ -2290,7 +2292,7 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
             const base_url = `${
               client.config.chatWoot.baseURL
             }/${message.attachments[0].data_url.substring(
-              message.attachments[0].data_url.indexOf('/rails/') + 1
+              message.attachments[0].data_url.indexOf('/rails/') + 1,
             )}`;
 
             // Check if attachments is Push-to-talk and send this
@@ -2299,14 +2301,14 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
                 `${contato}`,
                 base_url,
                 'Voice Audio',
-                message.content
+                message.content,
               );
             } else {
               await client.sendFile(
                 `${contato}`,
                 base_url,
                 'file',
-                message.content
+                message.content,
               );
             }
           } else {
@@ -2343,7 +2345,7 @@ export async function getPlatformFromMessage(req: Request, res: Response) {
    */
   try {
     const result = await req.client.getPlatformFromMessage(
-      req.params.messageId
+      req.params.messageId,
     );
     res.status(200).json(result);
   } catch (e) {

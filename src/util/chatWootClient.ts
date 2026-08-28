@@ -178,7 +178,7 @@ export default class chatWootClient {
     const contact = await this.createContact(client, message);
     const conversation = await this.createConversation(
       contact,
-      message.chatId.split('@')[0]
+      message.chatId.split('@')[0],
     );
 
     try {
@@ -252,7 +252,7 @@ export default class chatWootClient {
   async findContact(query: string) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`
+        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`,
       );
       return data;
     } catch (e) {
@@ -268,7 +268,6 @@ export default class chatWootClient {
         ? `${message.sender.id.user}@${message.sender.id.server}`
         : message.sender.id;
 
-    //console.log('rawId:', rawId);
     const isLid = rawId.endsWith('@lid');
 
     let phoneNumber: string | undefined;
@@ -280,10 +279,18 @@ export default class chatWootClient {
       // Also saves lid/phoneNumber in the contact identifier for future reference
       try {
         const pnLidData = await client.getPnLidEntry(rawId);
-        phoneNumber = pnLidData?.phoneNumber.id;
-        identifier = pnLidData?.lid._serialized;
+        phoneNumber = pnLidData?.phoneNumber?.id;
+        identifier = pnLidData?.lid?._serialized;
+
+        // Uses LID insted PhoneNumber, if it doesnt exist
+        if (!phoneNumber) {
+          phoneNumber =
+            typeof message.sender.id == 'object'
+              ? message.sender.id.user
+              : message.sender.id.split('@')[0];
+        }
       } catch (e) {
-        console.error('Error fetching pnLid data:', e);
+        console.log('Error fetching pnLid data:', e);
       }
     } else {
       phoneNumber = rawId.split('@')[0];
@@ -306,7 +313,7 @@ export default class chatWootClient {
     try {
       const data = await this.api.post(
         `api/v1/accounts/${this.account_id}/contacts`,
-        body
+        body,
       );
       return data.data.payload.contact;
     } catch (e) {
@@ -318,10 +325,10 @@ export default class chatWootClient {
   async findConversation(contact: any) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/${contact.id}/conversations`
+        `api/v1/accounts/${this.account_id}/contacts/${contact.id}/conversations`,
       );
       return data.payload.find(
-        (e: any) => e.inbox_id == this.inbox_id && e.status != 'resolved'
+        (e: any) => e.inbox_id == this.inbox_id && e.status != 'resolved',
       );
     } catch (e) {
       console.log(e);
@@ -343,7 +350,7 @@ export default class chatWootClient {
     try {
       const { data } = await this.api.post(
         `api/v1/accounts/${this.account_id}/conversations`,
-        body
+        body,
       );
       return data;
     } catch (e) {
