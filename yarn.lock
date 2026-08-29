@@ -6313,7 +6313,7 @@ __metadata:
     shx: "npm:^0.4.0"
     socket.io: "npm:^4.8.3"
     swagger-autogen: "npm:^2.23.7"
-    swagger-ui-dist: "npm:^5.32.1"
+    swagger-ui-dist: "npm:^5.32.14"
     swagger-ui-express: "npm:^5.0.1"
     ts-jest: "npm:^29.4.6"
     ts-loader: "npm:^9.5.4"
@@ -15790,12 +15790,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.32.1":
-  version: 5.32.1
-  resolution: "swagger-ui-dist@npm:5.32.1"
+"swagger-ui-dist@npm:^5.32.14":
+  version: 5.32.14
+  resolution: "swagger-ui-dist@npm:5.32.14"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/b23c0bb6be3ae81927db7232723f7c13ba2807a77d9a1e3492a0e71cdc202b53b868bb2b46ebd66b642e612b1a7a54c1b403f8a6990bee620e88a964f218182b
+  checksum: 10c0/1457c4ee9d4e18411c6561b1df96c547c5f71334afb0f8c32bc787af05746b0d1f301f95d7483f6092e71eb40f96ea96f14444ee7cc9dfebeab7835c44c4bd31
   languageName: node
   linkType: hard
 
