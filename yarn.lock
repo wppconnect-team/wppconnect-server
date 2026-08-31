@@ -6292,7 +6292,7 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     express: "npm:4.22.2"
     express-query-boolean: "npm:^2.0.0"
-    form-data: "npm:^4.0.5"
+    form-data: "npm:^4.0.6"
     husky: "npm:^9.1.7"
     jest: "npm:^30.4.2"
     json-mapper-json: "npm:^1.3.3"
@@ -10071,7 +10071,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:^4.0.5, form-data@npm:^4.0.6":
+"form-data@npm:^4.0.6":
   version: 4.0.6
   resolution: "form-data@npm:4.0.6"
   dependencies:
