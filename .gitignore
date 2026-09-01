@@ -23,3 +23,4 @@ userDataDir
 backupFolder
 tokens/*
 wppconnect_tokens/*
+e2e/.runtime-qrs/

@@ -44,10 +44,10 @@ $env:MATRIX_PROVIDERS='wppconnect,baileys'; yarn test:runtime-matrix
 $env:MATRIX_INTERACTIVE='1'; $env:MATRIX_QR_TIMEOUT_MS='300000'; yarn test:runtime-matrix
 ```
 
-The scoped packages `@wppconnect/baileys`, `@wppconnect/whaileys` and
-`@wppconnect/zapo` are npm aliases to the currently published upstream packages.
-When native WPPConnect forks are published, replace those alias versions in
-`optionalDependencies`.
+The runtime prefers the WPPConnect packages `@wppconnect/baileys`,
+`@wppconnect/whaileys`, and `@wppconnect/zapo`. The upstream packages remain
+installed only as fallbacks. Keep the related package family aligned and rerun
+this matrix after every provider update.
 
 ### Real runtime tests
 
@@ -83,6 +83,9 @@ The real mode validates:
 6. real `send-location` for Node providers
 7. real `send-image` and `send-seen` for the Go server
 
+The QR payload can authorize a linked device. The PNG directory is gitignored;
+never publish its contents or attach a generated QR to an issue.
+
 ### Full route E2E
 
 In one terminal, start the server:
@@ -117,18 +120,17 @@ Example sending to a specific number:
 E2E_TARGET=5521999999999 yarn e2e
 ```
 
-### Testing the Baileys provider
+### Testing one provider
 
 ```bash
 # 1. start the server
 yarn dev
-# 2. run the E2E against the baileys provider
-E2E_PROVIDER=baileys yarn e2e
+# 2. choose wppconnect, baileys, whaileys, or zapo
+E2E_PROVIDER=zapo yarn e2e
 ```
 
-Routes for features Baileys does not support (catalog, labels, groups on some
-builds) are expected to return **HTTP 501** — the runner counts those as a pass
-when marked `allowNotSupported`.
+Routes for features a provider does not support are expected to return **HTTP
+501** — the runner counts those as a pass when marked `allowNotSupported`.
 
 ## Docker note
 

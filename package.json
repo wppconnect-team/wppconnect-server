@@ -41,7 +41,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1019.0",
     "@fastify/express": "^4.0.6",
-    "@wppconnect-team/wppconnect": "^2.1.0",
+    "@wppconnect-team/wppconnect": "^2.3.1",
     "archiver": "^7.0.1",
     "axios": "^1.14.0",
     "bcrypt": "^6.0.0",
@@ -130,14 +130,15 @@
     "redis": "^4.7.1"
   },
   "optionalDependencies": {
-    "@whiskeysockets/baileys": "7.0.0-rc13",
-    "@wppconnect/baileys": "7.0.0-rc13",
-    "@wppconnect/whaileys": "^6.4.14",
-    "@wppconnect/zapo": "^0.3.1",
-    "@zapo-js/store-sqlite": "0.3.0",
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "@wppconnect/baileys": "7.0.0-rc16",
+    "@wppconnect/whaileys": "^6.4.16",
+    "@wppconnect/zapo": "^1.8.4",
+    "@zapo-js/store-sqlite": "^1.2.0",
     "better-sqlite3": "^12.10.0",
-    "whaileys": "^6.4.14",
-    "zapo-js": "^0.3.0"
+    "whaileys": "^6.5.1",
+    "zapo-js": "^1.8.2"
   },
   "resolutions": {
     "basic-ftp": "^5.3.1"

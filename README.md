@@ -50,9 +50,82 @@ Detailed documentation and guides are available for your convenience:
 | Join Group by Invite Code            | ✔   |
 | Webhook                              | ✔   |
 
+## WhatsApp providers
+
+The provider is selected per session. Existing integrations remain compatible
+because `wppconnect` is the default when the request omits `provider`.
+Use a distinct session name while comparing providers; an existing live session
+keeps the provider with which it was created.
+
+| Provider     | Runtime              | Status       | QR flow |
+| ------------ | -------------------- | ------------ | ------- |
+| `wppconnect` | Chrome + WPPConnect  | Default      | `start-session` and `status-session` |
+| `baileys`    | Browserless socket   | Experimental | `status-session` |
+| `whaileys`   | Browserless socket   | Experimental | `status-session` |
+| `zapo`       | Browserless socket   | Experimental | `status-session` |
+
+Experimental providers expose the same REST surface when they support the
+underlying feature. A route that is not supported by the selected provider
+returns HTTP `501` instead of a generic server error.
+
+Start a session with an explicit provider:
+
+```sh
+curl -X POST "http://localhost:21465/api/mySession/start-session" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"provider":"baileys","waitQrCode":false}'
+```
+
+For every provider, poll the normalized status endpoint until it returns
+`QRCODE` or `CONNECTED`:
+
+```sh
+curl "http://localhost:21465/api/mySession/status-session" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+When the status is `QRCODE`, `qrcode` contains a PNG data URL and `urlcode`
+contains the raw QR payload. Treat both values as short-lived credentials: do
+not publish them, attach them to issues, or persist them in logs.
+
+### Validate QR generation for every provider
+
+The runtime matrix starts isolated sessions and verifies real QR emission from
+`wppconnect`, `baileys`, `whaileys`, and `zapo` without requiring a phone scan:
+
+```sh
+MATRIX_TEST_GO=0 yarn test:runtime-matrix
+```
+
+PowerShell:
+
+```powershell
+$env:MATRIX_TEST_GO='0'; yarn test:runtime-matrix
+```
+
+To display and scan each QR, use interactive mode. QR images are written to the
+gitignored `e2e/.runtime-qrs/` directory:
+
+```powershell
+$env:MATRIX_TEST_GO='0'; $env:MATRIX_INTERACTIVE='1'; yarn test:runtime-matrix
+```
+
+For connected-session and real message checks, see [the E2E guide](e2e/README.md).
+
+### WA-JS compatibility
+
+`wppconnect-server` consumes WA-JS through `@wppconnect-team/wppconnect`. Update
+WPPConnect rather than forcing an independent WA-JS version, so the browser
+layer and injected WA-JS bundle stay compatible. Renovate monitors both `main`
+and `develop`; WhatsApp runtime updates require a passing provider QR matrix and
+are not auto-merged.
+
 ## Libraries Used
 
 - WPPConnect
+- WA-JS (through WPPConnect)
+- Baileys, Whaileys and Zapo providers
 - Axios
 - Bcrypt
 - Cors
@@ -328,13 +401,12 @@ curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
 ```
 
 ```sh
-#Get QrCode
-# /api/:session/start-session
-# when the session is starting if the method is called again it will return the base64 qrCode
+# Get QR Code for any provider
+# /api/:session/status-session
+# Poll until status is QRCODE; qrcode is a data URL and urlcode is the raw payload.
 
-curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
+curl -X GET --location "http://localhost:21465/api/mySession/status-session" \
     -H "Accept: application/json" \
-    -H "Content-Type: application/json" \
     -H "Authorization: Bearer \$2b\$10\$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C"
 ```
 

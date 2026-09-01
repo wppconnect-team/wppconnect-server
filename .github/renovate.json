@@ -7,9 +7,10 @@
     ":semanticCommits"
   ],
   "prConcurrentLimit": 3,
+  "baseBranches": ["main", "develop"],
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true
+    "automerge": false
   },
   "packageRules": [
     {
@@ -43,6 +44,22 @@
       "automerge": true,
       "automergeStrategy": "squash",
       "automergeType": "pr"
+    },
+    {
+      "description": "Keep WhatsApp runtimes current, but require the QR matrix before merging",
+      "matchPackageNames": [
+        "@wppconnect-team/wppconnect",
+        "@wppconnect/wa-js",
+        "@wppconnect/baileys",
+        "@wppconnect/whaileys",
+        "@wppconnect/zapo",
+        "@zapo-js/store-sqlite",
+        "@whiskeysockets/baileys",
+        "whaileys",
+        "zapo-js"
+      ],
+      "groupName": "WhatsApp provider runtimes",
+      "automerge": false
     }
   ]
 }
