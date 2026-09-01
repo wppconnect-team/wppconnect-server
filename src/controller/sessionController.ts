@@ -17,6 +17,7 @@ import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import mime from 'mime-types';
+import path from 'path';
 import QRCode from 'qrcode';
 import { Logger } from 'winston';
 
@@ -300,7 +301,7 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
 
     setTimeout(async () => {
       const pathUserData = config.customUserDataDir + req.session;
-      const pathTokens = __dirname + `../../../tokens/${req.session}.data.json`;
+      const pathTokens = path.resolve(process.cwd(), 'tokens', `${req.session}.data.json`);
 
       if (fs.existsSync(pathUserData)) {
         await fs.promises.rm(pathUserData, {
