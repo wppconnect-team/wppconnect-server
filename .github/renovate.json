@@ -7,7 +7,7 @@
     ":semanticCommits"
   ],
   "prConcurrentLimit": 3,
-  "baseBranches": ["main", "develop"],
+  "baseBranches": ["develop"],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": false

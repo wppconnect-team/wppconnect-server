@@ -178,6 +178,7 @@ async function ensureNodeServer() {
   const child = spawnLogged('node-server', process.execPath, [tsxCli, 'e2e/runtime-server.ts'], ROOT, {
     PORT: String(NODE_PORT),
     MATRIX_NODE_DATA_DIR: dataDir,
+    MATRIX_SUPPRESS_PROVIDER_LOGS: '1',
   });
   await waitForPort(NODE_PORT, 60_000);
   return child;

@@ -19,6 +19,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   MethodNotSupportedError,
   NotSupportedError,
+  RouteNotSupportedError,
   SessionNotReadyError,
 } from '../core/provider/capabilities';
 
@@ -61,6 +62,18 @@ export function providerErrorHandler(
       status: 'not_supported',
       provider: err.providerId,
       method: err.method,
+      message: err.message,
+    });
+    return;
+  }
+
+  if (err instanceof RouteNotSupportedError) {
+    req.logger?.warn(err.message);
+    res.status(err.httpStatus).json({
+      status: 'not_supported',
+      provider: err.providerId,
+      route: err.route,
+      method: err.httpMethod.toUpperCase(),
       message: err.message,
     });
     return;

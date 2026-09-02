@@ -17,7 +17,23 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { sessionManager } from '../core/session/SessionManager';
-import { contactToArray } from '../util/functions';
+import { contactToArray } from '../util/contactToArray';
+
+export function normalizeSocketRecipients(body: any): void {
+  const phone = body?.phone;
+  const validPhone =
+    typeof phone === 'string' ||
+    (Array.isArray(phone) && phone.every((item) => typeof item === 'string'));
+
+  if (validPhone) {
+    body.phone = contactToArray(
+      phone,
+      body.isGroup,
+      body.isNewsletter,
+      body.isLid
+    );
+  }
+}
 
 export default async function statusConnection(
   req: Request,
@@ -32,6 +48,7 @@ export default async function statusConnection(
     const handle = sessionManager.get(req.session);
     if (handle && handle.providerId !== 'wppconnect') {
       if (handle.status === 'CONNECTED') {
+        normalizeSocketRecipients(req.body);
         next();
       } else {
         res.status(404).json({

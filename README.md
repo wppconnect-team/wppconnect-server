@@ -57,16 +57,35 @@ because `wppconnect` is the default when the request omits `provider`.
 Use a distinct session name while comparing providers; an existing live session
 keeps the provider with which it was created.
 
-| Provider     | Runtime              | Status       | QR flow |
-| ------------ | -------------------- | ------------ | ------- |
-| `wppconnect` | Chrome + WPPConnect  | Default      | `start-session` and `status-session` |
-| `baileys`    | Browserless socket   | Experimental | `status-session` |
-| `whaileys`   | Browserless socket   | Experimental | `status-session` |
-| `zapo`       | Browserless socket   | Experimental | `status-session` |
+| Provider     | Runtime             | Status       | QR flow                              |
+| ------------ | ------------------- | ------------ | ------------------------------------ |
+| `wppconnect` | Chrome + WPPConnect | Default      | `start-session` and `status-session` |
+| `baileys`    | Browserless socket  | Experimental | `status-session`                     |
+| `whaileys`   | Browserless socket  | Experimental | `status-session`                     |
+| `zapo`       | Browserless socket  | Experimental | `status-session`                     |
 
 Experimental providers expose the same REST surface when they support the
 underlying feature. A route that is not supported by the selected provider
 returns HTTP `501` instead of a generic server error.
+
+Provider routes are deny-by-default: a new or untranslated route remains
+unavailable until its adapter behavior and response contract are validated.
+The current compatibility contract lives in
+[`src/core/provider/routeSupport.ts`](src/core/provider/routeSupport.ts).
+
+| Route area                                                                      | `wppconnect` | `baileys` / `whaileys` | `zapo` |
+| ------------------------------------------------------------------------------- | ------------ | ---------------------- | ------ |
+| Session and QR lifecycle                                                        | Yes          | Yes                    | Yes    |
+| Text, file, image, voice, reply and delete                                      | Yes          | Yes                    | Yes    |
+| Reaction and chat-level seen                                                    | Yes          | `501`                  | `501`  |
+| Location, forwarding and contact vCard                                          | Yes          | Yes                    | `501`  |
+| Supported group reads and mutations                                             | Yes          | Yes                    | Yes    |
+| Contact/chat store listing                                                      | Yes          | Yes                    | `501`  |
+| History, stickers, polls, catalog, labels, stories, communities and newsletters | Yes          | `501`                  | `501`  |
+
+This table is a compatibility boundary, not a claim that a QR proves every
+operation. Connected-session tests are still required before promoting an
+experimental provider to stable.
 
 Start a session with an explicit provider:
 
@@ -117,9 +136,12 @@ For connected-session and real message checks, see [the E2E guide](e2e/README.md
 
 `wppconnect-server` consumes WA-JS through `@wppconnect-team/wppconnect`. Update
 WPPConnect rather than forcing an independent WA-JS version, so the browser
-layer and injected WA-JS bundle stay compatible. Renovate monitors both `main`
-and `develop`; WhatsApp runtime updates require a passing provider QR matrix and
-are not auto-merged.
+layer and injected WA-JS bundle stay compatible. This `develop` configuration
+is independent from `main`; Renovate targets only `develop`. WhatsApp runtime
+updates are not auto-merged and the CI requires the provider import/QR matrix.
+Temporary transitive security overrides and their required runtime checks are
+documented in
+[`docs/security-resolutions.md`](docs/security-resolutions.md).
 
 ## Libraries Used
 
@@ -167,8 +189,10 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
 ### Troubleshooting
- If you encounter installation issues, please try the procedures below
- . Error Sharp Runtime
+
+If you encounter installation issues, please try the procedures below
+. Error Sharp Runtime
+
 ```sh
     yarn add sharp
     npm install --include=optional sharp

@@ -33,6 +33,8 @@ import { convert } from '../mapper/index';
 import { ServerOptions } from '../types/ServerOptions';
 import { bucketAlreadyExists } from './bucketAlreadyExists';
 
+export { contactToArray } from './contactToArray';
+
 let mime: any, crypto: any; //, aws: any;
 if (config.webhook.uploadS3) {
   mime = config.webhook.uploadS3 ? mimetypes : null;
@@ -41,43 +43,6 @@ if (config.webhook.uploadS3) {
 if (config?.websocket?.uploadS3) {
   mime = config.websocket.uploadS3 ? mimetypes : null;
   crypto = config.websocket.uploadS3 ? Crypto : null;
-}
-
-export function contactToArray(
-  number: any,
-  isGroup?: boolean,
-  isNewsletter?: boolean,
-  isLid?: boolean
-) {
-  const localArr: any = [];
-  if (Array.isArray(number)) {
-    for (let contact of number) {
-      isGroup || isNewsletter
-        ? (contact = contact.split('@')[0])
-        : (contact = contact.split('@')[0]?.replace(/[^\w ]/g, ''));
-      if (contact !== '')
-        if (isGroup) (localArr as any).push(`${contact}@g.us`);
-        else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
-        else if (isLid || contact.length > 14)
-          (localArr as any).push(`${contact}@lid`);
-        else (localArr as any).push(`${contact}@c.us`);
-    }
-  } else {
-    const arrContacts = number.split(/\s*[,;]\s*/g);
-    for (let contact of arrContacts) {
-      isGroup || isNewsletter
-        ? (contact = contact.split('@')[0])
-        : (contact = contact.split('@')[0]?.replace(/[^\w ]/g, ''));
-      if (contact !== '')
-        if (isGroup) (localArr as any).push(`${contact}@g.us`);
-        else if (isNewsletter) (localArr as any).push(`${contact}@newsletter`);
-        else if (isLid || contact.length > 14)
-          (localArr as any).push(`${contact}@lid`);
-        else (localArr as any).push(`${contact}@c.us`);
-    }
-  }
-
-  return localArr;
 }
 
 export function groupToArray(group: any) {

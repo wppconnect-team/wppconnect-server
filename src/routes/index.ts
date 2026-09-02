@@ -126,11 +126,13 @@ routes.get(
 routes.get(
   '/api/:session/get-media-by-message/:messageId',
   verifyToken,
+  statusConnection,
   SessionController.getMediaByMessage
 );
 routes.get(
   '/api/:session/get-platform-from-message/:messageId',
   verifyToken,
+  statusConnection,
   DeviceController.getPlatformFromMessage
 );
 routes.get(
@@ -161,11 +163,13 @@ routes.post(
 routes.post(
   '/api/:session/subscribe-presence',
   verifyToken,
+  statusConnection,
   SessionController.subscribePresence
 );
 routes.post(
   '/api/:session/set-online-presence',
   verifyToken,
+  statusConnection,
   SessionController.setOnlinePresence
 );
 routes.post(
@@ -190,22 +194,22 @@ routes.post(
 );
 routes.post(
   '/api/:session/send-image',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
   '/api/:session/send-sticker',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendImageAsSticker
 );
 routes.post(
   '/api/:session/send-sticker-gif',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendImageAsStickerGif
 );
@@ -217,8 +221,8 @@ routes.post(
 );
 routes.post(
   '/api/:session/send-file',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendFile
 );
@@ -429,8 +433,8 @@ routes.post(
 );
 routes.post(
   '/api/:session/group-pic',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   GroupController.setGroupProfilePic
 );
@@ -768,15 +772,15 @@ routes.post(
 );
 routes.post(
   '/api/:session/send-image-storie',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   StatusController.sendImageStorie
 );
 routes.post(
   '/api/:session/send-video-storie',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   StatusController.sendVideoStorie
 );
@@ -900,8 +904,8 @@ routes.get(
 // Profile
 routes.post(
   '/api/:session/set-profile-pic',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   DeviceController.setProfilePic
 );
@@ -946,9 +950,15 @@ routes.post(
 routes.get(
   '/api/:session/take-screenshot',
   verifyToken,
+  statusConnection,
   MiscController.takeScreenshot
 );
-routes.post('/api/:session/set-limit', MiscController.setLimit);
+routes.post(
+  '/api/:session/set-limit',
+  verifyToken,
+  statusConnection,
+  MiscController.setLimit
+);
 
 //Communitys
 routes.post(
