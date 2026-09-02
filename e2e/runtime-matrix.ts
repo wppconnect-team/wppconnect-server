@@ -129,7 +129,7 @@ function spawnLogged(name: string, command: string, args: string[], cwd: string,
 }
 
 async function stopChild(child: ChildProcessWithoutNullStreams | null | undefined) {
-  if (!child?.pid || child.killed) return;
+  if (!child?.pid || child.exitCode !== null || child.signalCode !== null) return;
   stoppingPids.add(child.pid);
   if (process.platform === 'win32') {
     await new Promise<void>((resolve) => {
@@ -140,7 +140,31 @@ async function stopChild(child: ChildProcessWithoutNullStreams | null | undefine
       killer.once('error', () => resolve());
     });
   } else {
+    const waitForExit = (timeoutMs: number) =>
+      new Promise<boolean>((resolve) => {
+        if (child.exitCode !== null || child.signalCode !== null) {
+          resolve(true);
+          return;
+        }
+        const onExit = () => {
+          clearTimeout(timer);
+          resolve(true);
+        };
+        const timer = setTimeout(() => {
+          child.removeListener('exit', onExit);
+          resolve(false);
+        }, timeoutMs);
+        child.once('exit', onExit);
+      });
+
+    const gracefulExit = waitForExit(3_000);
     child.kill('SIGTERM');
+    const exited = await gracefulExit;
+    if (!exited && child.exitCode === null && child.signalCode === null) {
+      const forcedExit = waitForExit(2_000);
+      child.kill('SIGKILL');
+      await forcedExit;
+    }
   }
 }
 
