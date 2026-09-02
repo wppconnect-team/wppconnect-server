@@ -115,6 +115,7 @@ function spawnLogged(name: string, command: string, args: string[], cwd: string,
     cwd,
     env: { ...process.env, ...env },
     shell: false,
+    detached: process.platform !== 'win32',
   });
   children.push(child);
   child.stdout.on('data', (buf) => process.stdout.write(`[${name}] ${buf}`));
@@ -140,6 +141,13 @@ async function stopChild(child: ChildProcessWithoutNullStreams | null | undefine
       killer.once('error', () => resolve());
     });
   } else {
+    const killTree = (signal: NodeJS.Signals) => {
+      try {
+        process.kill(-child.pid!, signal);
+      } catch {
+        child.kill(signal);
+      }
+    };
     const waitForExit = (timeoutMs: number) =>
       new Promise<boolean>((resolve) => {
         if (child.exitCode !== null || child.signalCode !== null) {
@@ -158,13 +166,16 @@ async function stopChild(child: ChildProcessWithoutNullStreams | null | undefine
       });
 
     const gracefulExit = waitForExit(3_000);
-    child.kill('SIGTERM');
+    killTree('SIGTERM');
     const exited = await gracefulExit;
     if (!exited && child.exitCode === null && child.signalCode === null) {
       const forcedExit = waitForExit(2_000);
-      child.kill('SIGKILL');
+      killTree('SIGKILL');
       await forcedExit;
     }
+    child.stdin.destroy();
+    child.stdout.destroy();
+    child.stderr.destroy();
   }
 }
 
