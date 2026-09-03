@@ -22,14 +22,20 @@ jest.mock('../../core/provider/useProvider', () => ({ getClient: jest.fn() }));
 
 describe('catalog visibility controller', () => {
   const response = () => {
-    const res = { status: jest.fn(), json: jest.fn(), send: jest.fn() } as unknown as Response;
+    const res = {
+      status: jest.fn(),
+      json: jest.fn(),
+      send: jest.fn(),
+    } as unknown as Response;
     (res.status as jest.Mock).mockReturnValue(res);
     return res;
   };
 
   it('accepts false to make an archived product visible again', async () => {
     const setVisibility = jest.fn().mockResolvedValue({ id: 'product-1' });
-    (getClient as jest.Mock).mockReturnValue({ setProductVisibility: setVisibility });
+    (getClient as jest.Mock).mockReturnValue({
+      setProductVisibility: setVisibility,
+    });
     const req = { body: { id: 'product-1', value: false } } as Request;
     const res = response();
 
