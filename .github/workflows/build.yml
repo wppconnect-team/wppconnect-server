@@ -118,7 +118,7 @@ jobs:
         run: yarn jest
 
       - name: Audit security advisories
-        run: yarn audit:security
+        run: yarn test:audit-security-script && yarn audit:security
 
       - name: Validate provider cryptography
         run: yarn smoke:provider-crypto
