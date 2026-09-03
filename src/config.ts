@@ -98,6 +98,11 @@ export default {
     enable: false,
     prefix: 'tagone-',
   },
+  mediaApi: {
+    baseUrl: env.MEDIA_API_URL || null,
+    apiKey: env.MEDIA_API_KEY || null,
+    timeoutMs: envNumber('MEDIA_API_TIMEOUT_MS', 30000),
+  },
   db: {
     mongodbDatabase: env.MONGODB_DATABASE || 'tokens',
     mongodbCollection: env.MONGODB_COLLECTION || '',
