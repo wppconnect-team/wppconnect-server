@@ -667,10 +667,11 @@ export async function setProductVisibility(req: Request, res: Response) {
     }
    */
   const { id, value } = req.body;
-  if (!id || !value)
-    res.status(401).send({
+  if (!id || typeof value !== 'boolean') {
+    return res.status(400).send({
       message: 'product id or value (false, true) was not informed',
     });
+  }
 
   try {
     const result = await getClient(req).setProductVisibility(id, value);
