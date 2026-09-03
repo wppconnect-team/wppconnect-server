@@ -116,3 +116,51 @@ jobs:
 
       - name: Run tests
         run: yarn jest
+
+      - name: Audit security advisories
+        run: yarn test:audit-security-script && yarn audit:security
+
+      - name: Validate provider cryptography
+        run: yarn smoke:provider-crypto
+
+  runtime-matrix:
+    if: github.event_name == 'pull_request' && github.base_ref == 'develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.22.2
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Yarn
+        run: corepack prepare yarn@4.14.1 --activate
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Yarn cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Validate provider imports and QR generation
+        env:
+          MATRIX_TEST_GO: '0'
+          MATRIX_QR_TIMEOUT_MS: '120000'
+          MATRIX_NODE_LOG_LEVEL: warn
+        run: yarn test:runtime-matrix

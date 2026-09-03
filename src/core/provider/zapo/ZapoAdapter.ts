@@ -247,7 +247,7 @@ export class ZapoAdapter implements ProviderAdapter {
   raw(): unknown {
     if (!this.client) return undefined;
     if (!this.compat) {
-      this.compat = createWppCompat(this.client, this.sessionName);
+      this.compat = createWppCompat(this.client, this.sessionName, this.id);
     }
     this.compat.status = this.state;
     return this.compat;

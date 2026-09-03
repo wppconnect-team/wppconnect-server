@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+import fs from 'fs';
+
 import { MethodNotSupportedError } from '../capabilities';
+import { ProviderId } from '../ProviderAdapter';
 import { createJid } from './jid';
 
 /**
@@ -56,13 +59,17 @@ export class WppCompatFacade {
   // createSocketSession from the start-session body.
   public config: any = {};
 
-  constructor(private readonly sock: any, session: string) {
+  constructor(
+    private readonly sock: any,
+    session: string,
+    private readonly providerId: ProviderId | 'socket' = 'socket'
+  ) {
     this.session = session;
   }
 
   private s() {
     if (!this.sock) {
-      throw new MethodNotSupportedError('socket', 'session-not-started');
+      throw new MethodNotSupportedError(this.providerId, 'session-not-started');
     }
     return this.sock;
   }
@@ -73,15 +80,19 @@ export class WppCompatFacade {
 
   /* ----------------------------- session ------------------------------ */
   async isConnected() {
-    if (this.zapo) return this.sock?.auth?.isAuthenticated?.() ?? false;
+    if (this.zapo) return this.sock?.getState?.().connected ?? false;
     return Boolean(this.sock?.user);
   }
   async getWid() {
-    if (this.zapo) return this.sock?.auth?.getMe?.()?.id ?? null;
+    if (this.zapo)
+      return (
+        this.sock?.getCredentials?.()?.meJid?.split('@')[0]?.split(':')[0] ??
+        null
+      );
     return this.sock?.user?.id?.split(':')[0]?.split('@')[0] ?? null;
   }
   async getHostDevice() {
-    if (this.zapo) return this.sock?.auth?.getMe?.() ?? null;
+    if (this.zapo) return this.sock?.getCredentials?.() ?? null;
     return this.sock?.user ?? null;
   }
   async getBatteryLevel() {
@@ -117,33 +128,34 @@ export class WppCompatFacade {
     const r = await this.s().sendMessage(createJid(to), { text: content });
     return this.msgResult(r);
   }
-  async sendFile(to: string, opts: any) {
+  async sendFile(to: string, path: any, options: any = {}) {
+    const media = this.toBuffer(path);
     if (this.zapo) {
       return this.msgResult(
         await this.s().message.send(createJid(to), {
           type: 'document',
-          media: opts?.buffer ?? opts?.path ?? opts,
-          mimetype: opts?.mimetype ?? 'application/octet-stream',
-          fileName: opts?.filename ?? opts?.fileName,
-          caption: opts?.caption,
+          media,
+          mimetype: options?.mimetype ?? 'application/octet-stream',
+          fileName: options?.filename ?? options?.fileName,
+          caption: options?.caption,
         })
       );
     }
     const r = await this.s().sendMessage(createJid(to), {
-      document: opts?.buffer ?? opts?.path ?? opts,
-      fileName: opts?.filename ?? opts?.fileName,
-      mimetype: opts?.mimetype ?? 'application/octet-stream',
-      caption: opts?.caption,
+      document: media,
+      fileName: options?.filename ?? options?.fileName,
+      mimetype: options?.mimetype ?? 'application/octet-stream',
+      caption: options?.caption,
     });
     return this.msgResult(r);
   }
-  async sendImage(to: string, path: any, _name?: string, caption?: string) {
+  async sendImage(to: string, path: any, name?: string, caption?: string) {
     if (this.zapo) {
       return this.msgResult(
         await this.s().message.send(createJid(to), {
           type: 'image',
           media: this.toBuffer(path),
-          mimetype: 'image/jpeg',
+          mimetype: this.imageMimeType(path, name),
           caption: caption ?? path?.caption,
         })
       );
@@ -156,7 +168,7 @@ export class WppCompatFacade {
   }
   async sendVideoAsGif(to: string, path: any, _n?: string, caption?: string) {
     if (this.zapo) {
-      throw new MethodNotSupportedError('socket', 'sendVideoAsGif');
+      throw new MethodNotSupportedError(this.providerId, 'sendVideoAsGif');
     }
     const r = await this.s().sendMessage(createJid(to), {
       video: this.toBuffer(path),
@@ -185,7 +197,7 @@ export class WppCompatFacade {
   async sendLocation(to: string, opts: any) {
     if (this.zapo) {
       // zapo's WaSendMessageContent union has no 'location' type.
-      throw new MethodNotSupportedError('socket', 'sendLocation');
+      throw new MethodNotSupportedError(this.providerId, 'sendLocation');
     }
     const r = await this.s().sendMessage(createJid(to), {
       location: {
@@ -203,7 +215,13 @@ export class WppCompatFacade {
         await this.s().message.send(createJid(to), {
           type: 'text',
           text: content,
-          contextInfo: { quotedMessage: this.quotedStub(quotedMsgId) },
+          contextInfo: {
+            quotedMessageId:
+              typeof quotedMsgId === 'object'
+                ? quotedMsgId?.id ?? quotedMsgId?.key?.id
+                : String(quotedMsgId),
+            quotedRemoteJid: createJid(to),
+          },
         })
       );
     }
@@ -244,7 +262,7 @@ export class WppCompatFacade {
   }
   async forwardMessagesV2(to: string, messages: any) {
     if (this.zapo) {
-      throw new MethodNotSupportedError('socket', 'forwardMessagesV2');
+      throw new MethodNotSupportedError(this.providerId, 'forwardMessagesV2');
     }
     const list = Array.isArray(messages) ? messages : [messages];
     const out: any[] = [];
@@ -255,7 +273,7 @@ export class WppCompatFacade {
   }
   async sendContactVcard(to: string, contactId: string, name?: string) {
     if (this.zapo) {
-      throw new MethodNotSupportedError('socket', 'sendContactVcard');
+      throw new MethodNotSupportedError(this.providerId, 'sendContactVcard');
     }
     const number = String(contactId).split('@')[0];
     const vcard =
@@ -313,8 +331,10 @@ export class WppCompatFacade {
   async getProfilePicFromServer(id: string) {
     try {
       if (this.zapo) {
-        const url = await this.s().profile?.getPictureUrl?.(createJid(id));
-        return url ? { eurl: url, imgFull: url } : null;
+        const picture = await this.s().profile.getProfilePicture(createJid(id));
+        return picture?.url
+          ? { eurl: picture.url, imgFull: picture.url, raw: picture }
+          : null;
       }
       const url = await this.s().profilePictureUrl(createJid(id), 'image');
       return { eurl: url, imgFull: url };
@@ -324,7 +344,7 @@ export class WppCompatFacade {
   }
   async getStatus(id: string) {
     try {
-      if (this.zapo) return await this.s().status?.get?.(createJid(id));
+      if (this.zapo) return await this.s().profile.getStatus(createJid(id));
       return await this.s().fetchStatus(createJid(id));
     } catch {
       return null;
@@ -332,7 +352,7 @@ export class WppCompatFacade {
   }
   async blockContact(id: string) {
     if (this.zapo) {
-      await this.s().privacy?.block?.(createJid(id));
+      await this.s().privacy.blockUser(createJid(id));
       return true;
     }
     await this.s().updateBlockStatus(createJid(id), 'block');
@@ -340,7 +360,7 @@ export class WppCompatFacade {
   }
   async unblockContact(id: string) {
     if (this.zapo) {
-      await this.s().privacy?.unblock?.(createJid(id));
+      await this.s().privacy.unblockUser(createJid(id));
       return true;
     }
     await this.s().updateBlockStatus(createJid(id), 'unblock');
@@ -361,7 +381,7 @@ export class WppCompatFacade {
   }
   async archiveChat(chatId: string, value = true) {
     if (this.zapo) {
-      await this.s().chat?.archive?.(createJid(chatId), value);
+      await this.s().chat.setChatArchive(createJid(chatId), value);
       return true;
     }
     await this.s().chatModify(
@@ -375,7 +395,9 @@ export class WppCompatFacade {
   }
   async startTyping(to: string) {
     if (this.zapo) {
-      await this.s().presence?.setChatState?.(createJid(to), 'composing');
+      await this.s().presence.sendChatstate(createJid(to), {
+        state: 'composing',
+      });
       return true;
     }
     await this.s().sendPresenceUpdate('composing', createJid(to));
@@ -383,7 +405,9 @@ export class WppCompatFacade {
   }
   async stopTyping(to: string) {
     if (this.zapo) {
-      await this.s().presence?.setChatState?.(createJid(to), 'paused');
+      await this.s().presence.sendChatstate(createJid(to), {
+        state: 'paused',
+      });
       return true;
     }
     await this.s().sendPresenceUpdate('paused', createJid(to));
@@ -391,7 +415,10 @@ export class WppCompatFacade {
   }
   async startRecording(to: string) {
     if (this.zapo) {
-      await this.s().presence?.setChatState?.(createJid(to), 'recording');
+      await this.s().presence.sendChatstate(createJid(to), {
+        state: 'composing',
+        media: 'audio',
+      });
       return true;
     }
     await this.s().sendPresenceUpdate('recording', createJid(to));
@@ -402,9 +429,7 @@ export class WppCompatFacade {
   }
   async setOnlinePresence(value = true) {
     if (this.zapo) {
-      await this.s().presence?.setAvailability?.(
-        value ? 'available' : 'unavailable'
-      );
+      await this.s().presence.send(value ? 'available' : 'unavailable');
       return true;
     }
     await this.s().sendPresenceUpdate(value ? 'available' : 'unavailable');
@@ -412,7 +437,7 @@ export class WppCompatFacade {
   }
   async subscribePresence(id: string) {
     if (this.zapo) {
-      await this.s().presence?.subscribe?.(createJid(id));
+      await this.s().presence.subscribe(createJid(id));
       return true;
     }
     await this.s().presenceSubscribe(createJid(id));
@@ -422,9 +447,9 @@ export class WppCompatFacade {
   /* ------------------------------ groups ------------------------------ */
   async getAllGroups() {
     if (this.zapo) {
-      const groups = (await this.s().group?.list?.()) ?? [];
+      const groups = await this.s().group.queryAllGroups();
       return groups.map((g: any) => ({
-        id: { _serialized: g.id },
+        id: { _serialized: g.jid },
         name: g.subject,
         groupMetadata: g,
       }));
@@ -440,12 +465,21 @@ export class WppCompatFacade {
     const list = (
       Array.isArray(participants) ? participants : [participants]
     ).map((p) => createJid(p));
-    if (this.zapo) return this.s().group?.create?.(name, list);
-    return this.s().groupCreate(name, list);
+    const result = this.zapo
+      ? await this.s().group.createGroup(name, list)
+      : await this.s().groupCreate(name, list);
+    const id = result?.jid ?? result?.id;
+    return {
+      ...result,
+      gid: {
+        _serialized: id,
+        user: String(id ?? '').split('@')[0],
+      },
+    };
   }
   async leaveGroup(groupId: string) {
     if (this.zapo) {
-      await this.s().group?.leave?.(createJid(groupId));
+      await this.s().group.leaveGroup([createJid(groupId)]);
       return true;
     }
     await this.s().groupLeave(createJid(groupId));
@@ -453,7 +487,7 @@ export class WppCompatFacade {
   }
   async getGroupMembers(groupId: string) {
     if (this.zapo) {
-      const meta = await this.s().group?.metadata?.(createJid(groupId));
+      const meta = await this.s().group.queryGroupMetadata(createJid(groupId));
       return meta?.participants ?? [];
     }
     const meta = await this.s().groupMetadata(createJid(groupId));
@@ -462,14 +496,14 @@ export class WppCompatFacade {
   async getGroupMembersIds(groupId: string) {
     const members = await this.getGroupMembers(groupId);
     return (members ?? []).map((p: any) => ({
-      _serialized: p.id,
+      _serialized: p.id ?? p.jid,
     }));
   }
   async getGroupAdmins(groupId: string) {
     const members = await this.getGroupMembers(groupId);
     return (members ?? [])
-      .filter((p: any) => p.admin)
-      .map((p: any) => ({ _serialized: p.id }));
+      .filter((p: any) => p.admin || p.isAdmin || p.isSuperAdmin)
+      .map((p: any) => ({ _serialized: p.id ?? p.jid }));
   }
   async addParticipant(groupId: string, participants: any) {
     return this.groupUpdate(groupId, participants, 'add');
@@ -485,7 +519,7 @@ export class WppCompatFacade {
   }
   async getGroupInviteLink(groupId: string) {
     if (this.zapo) {
-      const code = await this.s().group?.inviteCode?.(createJid(groupId));
+      const code = await this.s().group.queryInviteCode(createJid(groupId));
       return `https://chat.whatsapp.com/${code}`;
     }
     const code = await this.s().groupInviteCode(createJid(groupId));
@@ -493,13 +527,13 @@ export class WppCompatFacade {
   }
   async revokeGroupInviteLink(groupId: string) {
     if (this.zapo) {
-      return this.s().group?.revokeInvite?.(createJid(groupId));
+      return this.s().group.revokeInvite(createJid(groupId));
     }
     return this.s().groupRevokeInvite(createJid(groupId));
   }
   async setGroupSubject(groupId: string, subject: string) {
     if (this.zapo) {
-      await this.s().group?.updateSubject?.(createJid(groupId), subject);
+      await this.s().group.setSubject(createJid(groupId), subject);
       return true;
     }
     await this.s().groupUpdateSubject(createJid(groupId), subject);
@@ -507,10 +541,7 @@ export class WppCompatFacade {
   }
   async setGroupDescription(groupId: string, description: string) {
     if (this.zapo) {
-      await this.s().group?.updateDescription?.(
-        createJid(groupId),
-        description
-      );
+      await this.s().group.setDescription(createJid(groupId), description);
       return true;
     }
     await this.s().groupUpdateDescription(createJid(groupId), description);
@@ -518,7 +549,7 @@ export class WppCompatFacade {
   }
   async joinGroup(inviteCode: string) {
     const code = String(inviteCode).split('/').pop() ?? inviteCode;
-    if (this.zapo) return this.s().group?.acceptInvite?.(code);
+    if (this.zapo) return this.s().group.joinGroupViaInvite(code);
     return this.s().groupAcceptInvite(code);
   }
 
@@ -532,10 +563,18 @@ export class WppCompatFacade {
       Array.isArray(participants) ? participants : [participants]
     ).map((p) => createJid(p));
     if (this.zapo) {
-      return this.s().group?.updateParticipants?.(
-        createJid(groupId),
-        list,
-        action
+      const group = this.s().group;
+      if (action === 'add')
+        return group.addParticipants(createJid(groupId), list);
+      if (action === 'remove')
+        return group.removeParticipants(createJid(groupId), list);
+      if (action === 'promote')
+        return group.promoteParticipants(createJid(groupId), list);
+      if (action === 'demote')
+        return group.demoteParticipants(createJid(groupId), list);
+      throw new MethodNotSupportedError(
+        this.providerId,
+        `groupParticipantsUpdate:${action}`
       );
     }
     return this.s().groupParticipantsUpdate(createJid(groupId), list, action);
@@ -547,13 +586,26 @@ export class WppCompatFacade {
       return Buffer.from(input.split(',')[1], 'base64');
     }
     if (typeof input === 'string') {
-      // could be a URL or base64; pass through (Baileys accepts {url}, zapo
-      // accepts a Buffer — base64-decode for both when it isn't a URL)
+      if (fs.existsSync(input)) return fs.readFileSync(input);
       return /^https?:\/\//.test(input)
         ? { url: input }
         : Buffer.from(input, 'base64');
     }
     return input;
+  }
+  private imageMimeType(input: any, name?: string) {
+    if (typeof input === 'string') {
+      const dataUriMime = /^data:(image\/[a-z0-9.+-]+);base64,/i.exec(
+        input
+      )?.[1];
+      if (dataUriMime) return dataUriMime.toLowerCase();
+    }
+
+    const source = `${name ?? ''} ${typeof input === 'string' ? input : ''}`;
+    if (/\.png(?:$|[?#\s])/i.test(source)) return 'image/png';
+    if (/\.gif(?:$|[?#\s])/i.test(source)) return 'image/gif';
+    if (/\.webp(?:$|[?#\s])/i.test(source)) return 'image/webp';
+    return 'image/jpeg';
   }
   private keyFrom(msgId: any, remoteJid?: string) {
     if (msgId && typeof msgId === 'object' && msgId.id) return msgId;
@@ -572,7 +624,7 @@ export class WppCompatFacade {
       return {
         id: r?.key?.id ?? r?.id ?? null,
         to: r?.key?.remoteJid ?? r?.remoteJid ?? null,
-        from: this.sock?.auth?.getMe?.()?.id ?? null,
+        from: this.sock?.getCredentials?.()?.meJid ?? null,
         ack: r?.status ?? 1,
         raw: r,
       };
@@ -592,14 +644,18 @@ export class WppCompatFacade {
  * did NOT implement throws a clear NotSupportedError (501) instead of
  * "is not a function".
  */
-export function createWppCompat(sock: any, session: string): any {
-  const facade = new WppCompatFacade(sock, session);
+export function createWppCompat(
+  sock: any,
+  session: string,
+  providerId: ProviderId | 'socket' = 'socket'
+): any {
+  const facade = new WppCompatFacade(sock, session, providerId);
   return new Proxy(facade, {
     get(target: any, prop: string) {
       if (prop in target) return target[prop];
       if (typeof prop === 'string' && !prop.startsWith('then')) {
         return () => {
-          throw new MethodNotSupportedError('socket', prop);
+          throw new MethodNotSupportedError(providerId, prop);
         };
       }
       return undefined;

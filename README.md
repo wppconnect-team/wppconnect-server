@@ -50,9 +50,104 @@ Detailed documentation and guides are available for your convenience:
 | Join Group by Invite Code            | ✔   |
 | Webhook                              | ✔   |
 
+## WhatsApp providers
+
+The provider is selected per session. Existing integrations remain compatible
+because `wppconnect` is the default when the request omits `provider`.
+Use a distinct session name while comparing providers; an existing live session
+keeps the provider with which it was created.
+
+| Provider     | Runtime             | Status       | QR flow                              |
+| ------------ | ------------------- | ------------ | ------------------------------------ |
+| `wppconnect` | Chrome + WPPConnect | Default      | `start-session` and `status-session` |
+| `baileys`    | Browserless socket  | Experimental | `status-session`                     |
+| `whaileys`   | Browserless socket  | Experimental | `status-session`                     |
+| `zapo`       | Browserless socket  | Experimental | `status-session`                     |
+
+Experimental providers expose the same REST surface when they support the
+underlying feature. A route that is not supported by the selected provider
+returns HTTP `501` instead of a generic server error.
+
+Provider routes are deny-by-default: a new or untranslated route remains
+unavailable until its adapter behavior and response contract are validated.
+The current compatibility contract lives in
+[`src/core/provider/routeSupport.ts`](src/core/provider/routeSupport.ts).
+
+| Route area                                                                      | `wppconnect` | `baileys` / `whaileys` | `zapo` |
+| ------------------------------------------------------------------------------- | ------------ | ---------------------- | ------ |
+| Session and QR lifecycle                                                        | Yes          | Yes                    | Yes    |
+| Text, file, image, voice, reply and delete                                      | Yes          | Yes                    | Yes    |
+| Reaction and chat-level seen                                                    | Yes          | `501`                  | `501`  |
+| Location, forwarding and contact vCard                                          | Yes          | Yes                    | `501`  |
+| Supported group reads and mutations                                             | Yes          | Yes                    | Yes    |
+| Contact/chat store listing                                                      | Yes          | Yes                    | `501`  |
+| History, stickers, polls, catalog, labels, stories, communities and newsletters | Yes          | `501`                  | `501`  |
+
+This table is a compatibility boundary, not a claim that a QR proves every
+operation. Connected-session tests are still required before promoting an
+experimental provider to stable.
+
+Start a session with an explicit provider:
+
+```sh
+curl -X POST "http://localhost:21465/api/mySession/start-session" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"provider":"baileys","waitQrCode":false}'
+```
+
+For every provider, poll the normalized status endpoint until it returns
+`QRCODE` or `CONNECTED`:
+
+```sh
+curl "http://localhost:21465/api/mySession/status-session" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+When the status is `QRCODE`, `qrcode` contains a PNG data URL and `urlcode`
+contains the raw QR payload. Treat both values as short-lived credentials: do
+not publish them, attach them to issues, or persist them in logs.
+
+### Validate QR generation for every provider
+
+The runtime matrix starts isolated sessions and verifies real QR emission from
+`wppconnect`, `baileys`, `whaileys`, and `zapo` without requiring a phone scan:
+
+```sh
+MATRIX_TEST_GO=0 yarn test:runtime-matrix
+```
+
+PowerShell:
+
+```powershell
+$env:MATRIX_TEST_GO='0'; yarn test:runtime-matrix
+```
+
+To display and scan each QR, use interactive mode. QR images are written to the
+gitignored `e2e/.runtime-qrs/` directory:
+
+```powershell
+$env:MATRIX_TEST_GO='0'; $env:MATRIX_INTERACTIVE='1'; yarn test:runtime-matrix
+```
+
+For connected-session and real message checks, see [the E2E guide](e2e/README.md).
+
+### WA-JS compatibility
+
+`wppconnect-server` consumes WA-JS through `@wppconnect-team/wppconnect`. Update
+WPPConnect rather than forcing an independent WA-JS version, so the browser
+layer and injected WA-JS bundle stay compatible. This `develop` configuration
+is independent from `main`; Renovate targets only `develop`. WhatsApp runtime
+updates are not auto-merged and the CI requires the provider import/QR matrix.
+Temporary transitive security overrides and their required runtime checks are
+documented in
+[`docs/security-resolutions.md`](docs/security-resolutions.md).
+
 ## Libraries Used
 
 - WPPConnect
+- WA-JS (through WPPConnect)
+- Baileys, Whaileys and Zapo providers
 - Axios
 - Bcrypt
 - Cors
@@ -94,8 +189,10 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
 ### Troubleshooting
- If you encounter installation issues, please try the procedures below
- . Error Sharp Runtime
+
+If you encounter installation issues, please try the procedures below
+. Error Sharp Runtime
+
 ```sh
     yarn add sharp
     npm install --include=optional sharp
@@ -337,13 +434,12 @@ curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
 ```
 
 ```sh
-#Get QrCode
-# /api/:session/start-session
-# when the session is starting if the method is called again it will return the base64 qrCode
+# Get QR Code for any provider
+# /api/:session/status-session
+# Poll until status is QRCODE; qrcode is a data URL and urlcode is the raw payload.
 
-curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
+curl -X GET --location "http://localhost:21465/api/mySession/status-session" \
     -H "Accept: application/json" \
-    -H "Content-Type: application/json" \
     -H "Authorization: Bearer \$2b\$10\$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C"
 ```
 

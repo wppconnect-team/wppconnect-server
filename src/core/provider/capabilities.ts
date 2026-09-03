@@ -108,6 +108,26 @@ export class MethodNotSupportedError extends Error {
 }
 
 /**
+ * Thrown before entering a legacy controller when its public route has not
+ * been implemented by the selected provider. This deny-by-default guard keeps
+ * controller-local catch blocks from converting provider gaps into a 500.
+ */
+export class RouteNotSupportedError extends Error {
+  public readonly httpStatus = 501;
+
+  constructor(
+    public readonly providerId: string,
+    public readonly httpMethod: string,
+    public readonly route: string
+  ) {
+    super(
+      `Route "${httpMethod.toUpperCase()} ${route}" is not supported by provider "${providerId}".`
+    );
+    this.name = 'RouteNotSupportedError';
+  }
+}
+
+/**
  * Thrown when an action is attempted on a session that has no live provider
  * yet (not started / not connected). The central error handler maps this to
  * HTTP 404, preserving the current "session not connected" semantics.

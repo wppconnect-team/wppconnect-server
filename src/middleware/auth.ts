@@ -16,6 +16,7 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 
+import { assertProviderRouteSupported } from '../core/provider/routeSupport';
 import { sessionManager } from '../core/session/SessionManager';
 import { clientsArray } from '../util/sessionUtil';
 
@@ -77,7 +78,16 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
           // truth until controllers migrate to `provider` (PR4-PR6).
           req.provider = sessionManager.get(req.session)?.adapter;
           req.client = clientsArray[req.session];
-          next();
+          try {
+            assertProviderRouteSupported(
+              req.provider,
+              req.method,
+              req.route?.path
+            );
+            next();
+          } catch (providerError) {
+            next(providerError);
+          }
         } else {
           return res
             .status(401)

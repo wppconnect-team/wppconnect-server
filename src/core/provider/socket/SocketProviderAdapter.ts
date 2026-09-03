@@ -30,6 +30,17 @@ import {
 import { createJid } from './jid';
 import { createWppCompat } from './WppCompatFacade';
 
+const silentProviderLogger: any = {
+  level: 'silent',
+  trace: () => undefined,
+  debug: () => undefined,
+  info: () => undefined,
+  warn: () => undefined,
+  error: () => undefined,
+  fatal: () => undefined,
+  child: () => silentProviderLogger,
+};
+
 /**
  * Capabilities shared by the socket-based providers (Baileys family): core
  * messaging + groups/contacts/chats/presence, but NOT the WhatsApp-Web-only
@@ -200,6 +211,9 @@ export class SocketProviderAdapter implements ProviderAdapter {
     this.sock = makeWASocket({
       version,
       auth: { creds: state.creds, keys },
+      ...(process.env.MATRIX_SUPPRESS_PROVIDER_LOGS === '1'
+        ? { logger: silentProviderLogger }
+        : {}),
       printQRInTerminal: false,
       markOnlineOnConnect: false,
       generateHighQualityLinkPreview: true,
@@ -318,7 +332,7 @@ export class SocketProviderAdapter implements ProviderAdapter {
     // `getClient(req).<wppconnectMethod>()` work unchanged across providers.
     if (!this.sock) return undefined;
     if (!this.compat) {
-      this.compat = createWppCompat(this.sock, this.sessionName);
+      this.compat = createWppCompat(this.sock, this.sessionName, this.id);
     }
     this.compat.status = this.state;
     return this.compat;

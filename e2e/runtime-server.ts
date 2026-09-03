@@ -21,4 +21,10 @@ initServer({
     ...config.log,
     level: process.env.MATRIX_NODE_LOG_LEVEL || 'info',
   },
+  createOptions: {
+    ...config.createOptions,
+    logQR: false,
+    disableWelcome: true,
+    updatesLog: false,
+  },
 } as any);

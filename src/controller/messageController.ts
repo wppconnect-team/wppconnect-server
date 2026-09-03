@@ -251,13 +251,26 @@ export async function sendFile(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const contact of phone) {
+      const client = getClient(req);
+      const isSocketImageRoute =
+        req.provider?.id !== undefined &&
+        req.provider.id !== 'wppconnect' &&
+        req.route?.path === '/api/:session/send-image';
       results.push(
-        await getClient(req).sendFile(contact, pathFile, {
-          filename: filename,
-          caption: msg,
-          quotedMsg: quotedMessageId,
-          ...options,
-        })
+        isSocketImageRoute
+          ? await client.sendImage(
+              contact,
+              pathFile,
+              filename,
+              msg,
+              quotedMessageId
+            )
+          : await client.sendFile(contact, pathFile, {
+              filename: filename,
+              caption: msg,
+              quotedMsg: quotedMessageId,
+              ...options,
+            })
       );
     }
 
