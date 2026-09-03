@@ -58,7 +58,50 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Smoke built image and Media API adapter
+        if: github.event_name == 'pull_request'
+        env:
+          IMAGE: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+        run: |
+          set -euo pipefail
+          container="wppconnect-media-smoke-${GITHUB_RUN_ID}"
+          response="$(mktemp)"
+          cleanup() {
+            status=$?
+            if [[ "${status}" -ne 0 ]]; then
+              docker logs "${container}" || true
+            fi
+            docker rm -f "${container}" >/dev/null 2>&1 || true
+            rm -f "${response}"
+            trap - EXIT
+            exit "${status}"
+          }
+          trap cleanup EXIT
+
+          docker run --detach --name "${container}" --publish 21465:21465 \
+            --env SECRET_KEY=media-smoke-secret "${IMAGE}" >/dev/null
+          for _ in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:21465/healthz \
+              | jq -e '.message == "OK"' >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:21465/healthz \
+            | jq -e '.message == "OK"' >/dev/null
+
+          token="$(curl --fail --silent --request POST \
+            http://127.0.0.1:21465/api/media-smoke/media-smoke-secret/generate-token \
+            | jq -er '.token')"
+          status="$(curl --silent --output "${response}" --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${token}" \
+            http://127.0.0.1:21465/api/media-smoke/media/jobs/job-1)"
+          test "${status}" = "503"
+          jq -e '.message == "Media API is not configured. Set MEDIA_API_URL and MEDIA_API_KEY."' \
+            "${response}" >/dev/null
