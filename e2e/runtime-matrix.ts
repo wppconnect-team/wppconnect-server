@@ -20,6 +20,12 @@ import path from 'path';
 import QRCode from 'qrcode';
 import qrcodeTerminal from 'qrcode-terminal';
 
+import type { ProviderId } from '../src/core/provider/ProviderAdapter';
+import {
+  PROVIDER_ROUTE_SUPPORT,
+  type ProviderRouteKey,
+} from '../src/core/provider/routeSupport';
+
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_GO_DIR = path.resolve(ROOT, '..', 'wppconnect-server-go');
 const SECRET = process.env.MATRIX_SECRET_KEY || 'THISISMYSECURETOKEN';
@@ -31,7 +37,7 @@ const GO_DIR = process.env.MATRIX_GO_DIR || DEFAULT_GO_DIR;
 const QR_TIMEOUT_MS = Number(process.env.MATRIX_QR_TIMEOUT_MS || 90_000);
 const INTERACTIVE = process.env.MATRIX_INTERACTIVE === '1';
 const REAL = process.env.MATRIX_REAL === '1';
-const TARGET = process.env.MATRIX_TARGET || '';
+const TARGET = (process.env.MATRIX_TARGET || '').replace(/\D/g, '');
 const START_NODE = process.env.MATRIX_START_NODE !== '0';
 const START_GO = process.env.MATRIX_START_GO !== '0';
 const TEST_NODE = process.env.MATRIX_TEST_NODE !== '0';
@@ -301,45 +307,97 @@ async function httpCheck(
   }
 }
 
+function supportsNodeRoute(provider: string, route: ProviderRouteKey) {
+  if (provider === 'wppconnect') return true;
+  if (!(provider in PROVIDER_ROUTE_SUPPORT)) return false;
+  return PROVIDER_ROUTE_SUPPORT[
+    provider as Exclude<ProviderId, 'wppconnect'>
+  ].has(route);
+}
+
+async function nodeRouteCheck(
+  provider: string,
+  route: ProviderRouteKey,
+  name: string,
+  fn: () => Promise<any>,
+) {
+  if (!supportsNodeRoute(provider, route)) {
+    console.log(`⏭️  ${name}: skipped (not in ${provider} route contract)`);
+    return;
+  }
+  await httpCheck(name, fn);
+}
+
 async function runNodeRealChecks(
   provider: string,
   api: AxiosInstance,
   session: string,
   auth: SessionAuth,
 ) {
+  const redDot =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=';
+
   await httpCheck(`node ${provider} status connected`, () =>
     api.get(`/api/${session}/status-session`, auth),
   );
   await httpCheck(`node ${provider} dashboard stats`, () =>
     api.get('/api/dashboard/stats'),
   );
-  await httpCheck(`node ${provider} check number`, () =>
-    api.get(`/api/${session}/check-number-status/${TARGET}`, auth),
+  await nodeRouteCheck(
+    provider,
+    'GET /api/:session/check-number-status/:phone',
+    `node ${provider} check number`,
+    () => api.get(`/api/${session}/check-number-status/${TARGET}`, auth),
   );
-  await httpCheck(`node ${provider} send text`, () =>
-    api.post(
-      `/api/${session}/send-message`,
-      {
-        phone: [TARGET],
-        isGroup: false,
-        message: `WPPConnect real test (${provider}) ${new Date().toISOString()}`,
-      },
-      auth,
-    ),
+  await nodeRouteCheck(
+    provider,
+    'POST /api/:session/send-message',
+    `node ${provider} send text`,
+    () =>
+      api.post(
+        `/api/${session}/send-message`,
+        {
+          phone: [TARGET],
+          isGroup: false,
+          message: `WPPConnect real test (${provider}) ${new Date().toISOString()}`,
+        },
+        auth,
+      ),
   );
-  await httpCheck(`node ${provider} send location`, () =>
-    api.post(
-      `/api/${session}/send-location`,
-      {
-        phone: [TARGET],
-        isGroup: false,
-        lat: '-23.5505',
-        lng: '-46.6333',
-        title: 'WPPConnect real test',
-        address: 'Sao Paulo, BR',
-      },
-      auth,
-    ),
+  await nodeRouteCheck(
+    provider,
+    'POST /api/:session/send-image',
+    `node ${provider} send image`,
+    () =>
+      api.post(
+        `/api/${session}/send-image`,
+        {
+          phone: [TARGET],
+          isGroup: false,
+          filename: 'wppconnect-runtime-smoke.png',
+          caption: `WPPConnect image test (${provider})`,
+          base64: redDot,
+        },
+        auth,
+      ),
+  );
+  await nodeRouteCheck(
+    provider,
+    'POST /api/:session/send-location',
+    `node ${provider} send location`,
+    () =>
+      api.post(
+        `/api/${session}/send-location`,
+        {
+          phone: [TARGET],
+          isGroup: false,
+          lat: '-23.5505',
+          lng: '-46.6333',
+          title: 'WPPConnect real test',
+          address: 'Sao Paulo, BR',
+        },
+        auth,
+      ),
   );
 }
 
@@ -389,7 +447,12 @@ async function waitForNodeProvider(provider: string) {
 
   await api.post(
     `/api/${session}/start-session`,
-    { provider, waitQrCode: false, webhook: '' },
+    {
+      provider,
+      waitQrCode: false,
+      webhook: '',
+      ...(INTERACTIVE ? { autoClose: QR_TIMEOUT_MS } : {}),
+    },
     auth,
   );
 

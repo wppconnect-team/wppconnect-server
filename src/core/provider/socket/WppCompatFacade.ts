@@ -149,13 +149,13 @@ export class WppCompatFacade {
     });
     return this.msgResult(r);
   }
-  async sendImage(to: string, path: any, _name?: string, caption?: string) {
+  async sendImage(to: string, path: any, name?: string, caption?: string) {
     if (this.zapo) {
       return this.msgResult(
         await this.s().message.send(createJid(to), {
           type: 'image',
           media: this.toBuffer(path),
-          mimetype: 'image/jpeg',
+          mimetype: this.imageMimeType(path, name),
           caption: caption ?? path?.caption,
         })
       );
@@ -592,6 +592,20 @@ export class WppCompatFacade {
         : Buffer.from(input, 'base64');
     }
     return input;
+  }
+  private imageMimeType(input: any, name?: string) {
+    if (typeof input === 'string') {
+      const dataUriMime = /^data:(image\/[a-z0-9.+-]+);base64,/i.exec(
+        input
+      )?.[1];
+      if (dataUriMime) return dataUriMime.toLowerCase();
+    }
+
+    const source = `${name ?? ''} ${typeof input === 'string' ? input : ''}`;
+    if (/\.png(?:$|[?#\s])/i.test(source)) return 'image/png';
+    if (/\.gif(?:$|[?#\s])/i.test(source)) return 'image/gif';
+    if (/\.webp(?:$|[?#\s])/i.test(source)) return 'image/webp';
+    return 'image/jpeg';
   }
   private keyFrom(msgId: any, remoteJid?: string) {
     if (msgId && typeof msgId === 'object' && msgId.id) return msgId;

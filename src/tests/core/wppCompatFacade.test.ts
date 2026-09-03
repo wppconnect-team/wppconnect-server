@@ -85,5 +85,19 @@ describe('WppCompatFacade', function () {
         quotedRemoteJid: '5511999999999@s.whatsapp.net',
       },
     });
+
+    const pngDataUri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB';
+    await facade.sendImage(
+      '5511999999999@c.us',
+      pngDataUri,
+      'runtime-smoke.png',
+      'image test'
+    );
+    expect(send).toHaveBeenLastCalledWith('5511999999999@s.whatsapp.net', {
+      type: 'image',
+      media: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB', 'base64'),
+      mimetype: 'image/png',
+      caption: 'image test',
+    });
   });
 });
