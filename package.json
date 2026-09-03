@@ -13,8 +13,6 @@
     "build:types": "tsc",
     "build:js": "rimraf dist && babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline --copy-files",
     "build": "npm run build:types && npm run build:js",
-    "audit:security": "node scripts/security-audit.mjs",
-    "test:audit-security-script": "node --test scripts/security-audit.test.mjs",
     "smoke:provider-crypto": "node scripts/provider-crypto-smoke.mjs",
     "changelog:last": "conventional-changelog -p angular -r 2",
     "changelog:preview": "conventional-changelog -p angular -u",

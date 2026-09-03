@@ -1,0 +1,27 @@
+name: OSV-Scanner PR Scan
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  merge_group:
+    branches:
+      - main
+      - develop
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  scan-pr:
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.5.0
+    with:
+      scan-args: |-
+        --lockfile=./yarn.lock
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
