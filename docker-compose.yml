@@ -10,6 +10,9 @@ services:
       WEBHOOK_URL: "${WEBHOOK_URL:-}"
       TOKEN_STORE_TYPE: "${TOKEN_STORE_TYPE:-file}"
       CUSTOM_USER_DATA_DIR: "/usr/src/wpp-server/userDataDir/"
+      MEDIA_API_URL: "${MEDIA_API_URL:-}"
+      MEDIA_API_KEY: "${MEDIA_API_KEY:-}"
+      MEDIA_API_TIMEOUT_MS: "${MEDIA_API_TIMEOUT_MS:-30000}"
     volumes:
       - wppconnect_tokens:/usr/src/wpp-server/tokens
       - wppconnect_user_data:/usr/src/wpp-server/userDataDir

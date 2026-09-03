@@ -44,6 +44,11 @@ export interface ServerOptions {
     enable: boolean;
     prefix: string;
   };
+  mediaApi: {
+    baseUrl: string | null;
+    apiKey: string | null;
+    timeoutMs: number;
+  };
   db: {
     mongodbDatabase: string;
     mongodbCollection: string;

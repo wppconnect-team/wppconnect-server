@@ -237,6 +237,15 @@ the same defaults as `src/config.ts`: `PORT`, `HOST`, `SECRET_KEY`,
 `MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`,
 `MONGODB_HOST`, `MONGODB_PORT`, and `MONGO_URL_REMOTE`.
 
+The optional managed Media API adapter uses `MEDIA_API_URL`, `MEDIA_API_KEY`,
+and `MEDIA_API_TIMEOUT_MS` (default `30000`). When configured, authenticated
+server clients can create conversion or transcription jobs through
+`POST /api/:session/media/conversions` and
+`POST /api/:session/media/transcriptions`, then poll
+`GET /api/:session/media/jobs/:jobId`. Creation accepts the same JSON URL or
+multipart `file` contract as the compatible Media API and forwards the required
+`Idempotency-Key` without exposing the upstream API key.
+
 Docker image publishing is handled by GitHub Actions:
 
 - pushes to `main` publish the moving `main` tag and a `sha-*` tag;

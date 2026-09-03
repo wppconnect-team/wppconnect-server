@@ -25,6 +25,7 @@ import * as DeviceController from '../controller/deviceController';
 import { encryptSession } from '../controller/encryptController';
 import * as GroupController from '../controller/groupController';
 import * as LabelsController from '../controller/labelsController';
+import * as MediaController from '../controller/mediaController';
 import * as MessageController from '../controller/messageController';
 import * as MiscController from '../controller/miscController';
 import * as NewsletterController from '../controller/newsletterController';
@@ -177,6 +178,26 @@ routes.post(
   verifyToken,
   statusConnection,
   SessionController.downloadMediaByMessage
+);
+
+// Optional managed Media API adapter. These routes use the WPPConnect Server
+// session token for ingress and a separately configured Media API key upstream.
+routes.post(
+  '/api/:session/media/conversions',
+  verifyToken,
+  upload.single('file'),
+  MediaController.createConversion
+);
+routes.post(
+  '/api/:session/media/transcriptions',
+  verifyToken,
+  upload.single('file'),
+  MediaController.createTranscription
+);
+routes.get(
+  '/api/:session/media/jobs/:jobId',
+  verifyToken,
+  MediaController.getJob
 );
 
 // Messages
