@@ -65,7 +65,6 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Smoke built image and Media API adapter
-        if: github.event_name == 'pull_request'
         env:
           IMAGE: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
         run: |
@@ -83,6 +82,12 @@ jobs:
             exit "${status}"
           }
           trap cleanup EXIT
+
+          if [[ "${GITHUB_EVENT_NAME}" != "pull_request" ]]; then
+            docker pull "${IMAGE}"
+            revision="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "${IMAGE}")"
+            test "${revision}" = "${GITHUB_SHA}"
+          fi
 
           docker run --detach --name "${container}" --publish 21465:21465 \
             --env SECRET_KEY=media-smoke-secret "${IMAGE}" >/dev/null
