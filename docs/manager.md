@@ -54,3 +54,9 @@ The original namespace retains compatibility behavior. Its legacy broadcasts are
 Manager browser tests use synthetic data. Real WhatsApp pairing and text/media send/receive require a separately authorized test account; passing unit/browser/image checks does not prove live operations.
 
 Record image tags/digests before upgrading. Roll back by restoring the previous server image and matching standalone Manager, if used. There is no database migration. The initial pre-integration source baseline was `7c73fd39ce56b6ffa52e22e951cfdcfc06ce96b8` (package 2.10.16); deployments must record their own previous image digest.
+
+## Windows pairing troubleshooting
+
+If WhatsApp Web repeatedly reloads or reports a browser database error before showing a QR, try a fresh, short `CUSTOM_USER_DATA_DIR` path. During validation, deeply nested Windows test profiles failed while a short isolated path generated and refreshed the QR. Preserve existing session profiles before changing this setting; do not erase a production profile to troubleshoot a test session.
+
+Client 2.3.3 also fixes premature QR termination when a page navigation temporarily invalidates an authentication check. This server release includes that client in the lockfile.
