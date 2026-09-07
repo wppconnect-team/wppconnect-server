@@ -7,3 +7,5 @@ log
 node_modules
 npm-debug.log
 tokens
+graphify-out
+manager
