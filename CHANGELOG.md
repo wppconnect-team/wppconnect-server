@@ -1,3 +1,10 @@
+## [2.10.17](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.16...v2.10.17) (2026-09-07)
+
+
+### Features
+
+* embed WPPConnect Manager with authenticated session APIs ([#2571](https://github.com/wppconnect-team/wppconnect-server/issues/2571)) ([0c16263](https://github.com/wppconnect-team/wppconnect-server/commit/0c1626388f60784e207ad17b679f797d7af8b334))
+
 ## [2.10.16](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.15...v2.10.16) (2026-08-31)
 
 ## [2.10.15](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.14...v2.10.15) (2026-08-31)
