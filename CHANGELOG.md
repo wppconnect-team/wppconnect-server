@@ -1,3 +1,10 @@
+## [2.10.19](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.18...v2.10.19) (2026-09-07)
+
+
+### Bug Fixes
+
+* load and document optional environment configuration ([#2573](https://github.com/wppconnect-team/wppconnect-server/issues/2573)) ([b66881b](https://github.com/wppconnect-team/wppconnect-server/commit/b66881b9d921e3a5083fa1c9f3239e7283de5cb8))
+
 ## [2.10.18](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.17...v2.10.18) (2026-09-07)
 
 
