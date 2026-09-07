@@ -1,3 +1,10 @@
+## [2.10.18](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.17...v2.10.18) (2026-09-07)
+
+
+### Bug Fixes
+
+* update WhatsApp runtime for reliable Manager pairing ([#2572](https://github.com/wppconnect-team/wppconnect-server/issues/2572)) ([e90ae4e](https://github.com/wppconnect-team/wppconnect-server/commit/e90ae4e955c0b2e2467fde07a9d1592ebd1d249b))
+
 ## [2.10.17](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.16...v2.10.17) (2026-09-07)
 
 
