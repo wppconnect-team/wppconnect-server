@@ -39,8 +39,6 @@ import {
 } from './util/functions';
 import { createLogger } from './util/logger';
 
-//require('dotenv').config();
-
 export const logger = createLogger(config.log);
 
 export function initServer(serverOptions: Partial<ServerOptions>): {

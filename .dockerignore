@@ -9,3 +9,7 @@ npm-debug.log
 tokens
 graphify-out
 manager
+
+.env
+.env.*
+!.env.example

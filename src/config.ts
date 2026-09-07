@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
+
 import { ServerOptions } from './types/ServerOptions';
 
+// Loading is optional; deployment environment variables keep precedence.
+dotenv.config({ override: false });
 const env = process.env;
 
 function envNumber(name: string, fallback: number): number {
