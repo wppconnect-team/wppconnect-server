@@ -15,6 +15,8 @@ Use HTTPS remotely. A reverse proxy must forward `/manager/`, `/api/` and `/sock
 
 ## HTTP protocol 1
 
+Manager API requests are limited to 60 per minute per source IP, and static UI requests to 300 per minute. Excess requests return 429. Behind a proxy, the existing server proxy/IP configuration determines which clients share a limit.
+
 Manager responses use `Cache-Control: no-store`. Administrative credentials go in `Authorization: Bearer <SECRET_KEY>`, never URL segments. Legacy routes remain available.
 
 | Method | Path | Authorization | Result |

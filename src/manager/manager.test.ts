@@ -214,4 +214,11 @@ describe('Manager HTTP and authenticated events', () => {
     await barrier;
     expect(received).toEqual([]);
   });
+  test('bounds repeated authorization attempts with HTTP 429', async () => {
+    let response: Response | undefined;
+    for (let n = 0; n < 61; n++)
+      response = await request('/sessions', 'invalid');
+    expect(response?.status).toBe(429);
+    expect(response?.headers.get('ratelimit')).toBeTruthy();
+  });
 });

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import express, { Express } from 'express';
+import rateLimit from 'express-rate-limit';
 import { existsSync } from 'fs';
 import path from 'path';
 
@@ -26,6 +27,15 @@ export function installManagerStatic(
     !existsSync(path.join(directory, 'index.html'))
   )
     return;
+  app.use(
+    '/manager',
+    rateLimit({
+      windowMs: 60_000,
+      limit: 300,
+      standardHeaders: 'draft-7',
+      legacyHeaders: false,
+    })
+  );
   app.get('/manager', (req, res, next) =>
     req.path.endsWith('/') ? next() : res.redirect('/manager/')
   );

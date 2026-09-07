@@ -15,6 +15,7 @@
  */
 import bcrypt from 'bcrypt';
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -24,6 +25,14 @@ import Factory from '../util/tokenStore/factory';
 import { isAdmin, sessionAuthorized, validSession } from './auth';
 
 export const managerRoutes = Router();
+managerRoutes.use(
+  rateLimit({
+    windowMs: 60_000,
+    limit: 60,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+  })
+);
 managerRoutes.use((_req, res, next) => {
   res.setHeader('Cache-Control', 'no-store');
   next();
@@ -96,7 +105,10 @@ managerRoutes.delete('/sessions/:session', async (req, res) => {
         .json({ message: 'Close the session before clearing its data' });
     }
     const root = path.resolve(req.serverOptions.customUserDataDir);
-    const target = path.resolve(root, session);
+    const leaf = path.basename(session);
+    if (leaf !== session || leaf === '.' || leaf === '..')
+      return res.status(400).json({ message: 'Invalid session path' });
+    const target = path.resolve(root, leaf);
     if (path.dirname(target) !== root)
       return res.status(400).json({ message: 'Invalid session path' });
     // Do not follow a user-data symlink outside the configured directory.
