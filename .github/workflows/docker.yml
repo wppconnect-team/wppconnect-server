@@ -55,14 +55,49 @@ jobs:
             type=sha,prefix=sha-
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: Build and push
+      - name: Build image for verification
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          load: true
+          tags: manager-integration-test:local
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Verify integrated Manager and disabled mode
+        shell: bash
+        run: |
+          docker run -d --name manager-enabled -p 21465:21465 -e SECRET_KEY=manager-ci-secret manager-integration-test:local
+          for n in $(seq 1 60); do curl -fsS http://localhost:21465/api/manager/info > /dev/null && break || sleep 1; done
+          curl -fsS http://localhost:21465/api/manager/info | grep '"protocol":1'
+          curl -fsS http://localhost:21465/manager/ | grep 'WPPConnect Manager'
+          curl -fsS http://localhost:21465/manager/sessions/test | grep 'WPPConnect Manager'
+          curl -fsS http://localhost:21465/manager/config.js | grep 'WPP_MANAGER_CONFIG'
+          curl -fsSL http://localhost:21465/api-docs/ > /dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21465/api/manager/sessions)" = 401
+          curl -fsS -H 'Authorization: Bearer manager-ci-secret' http://localhost:21465/api/manager/sessions | grep '"sessions":\[\]'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21465/manager/missing.js)" = 404
+          docker run -d --name manager-disabled -p 21466:21465 -e MANAGER_ENABLED=false manager-integration-test:local
+          for n in $(seq 1 60); do curl -fsS http://localhost:21466/api/manager/info > /dev/null && break || sleep 1; done
+          curl -fsS http://localhost:21466/api/manager/info | grep '"protocol":1'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21466/manager/)" = 404
+
+      - name: Publish verified image
+        if: github.event_name != 'pull_request'
+        env:
+          IMAGE_TAGS: ${{ steps.meta.outputs.tags }}
+        shell: bash
+        run: |
+          while IFS= read -r tag; do
+            docker tag manager-integration-test:local "$tag"
+            docker push "$tag"
+          done <<< "$IMAGE_TAGS"
+
+      - name: Container diagnostics
+        if: failure()
+        run: |
+          docker logs manager-enabled || true
+          docker logs manager-disabled || true

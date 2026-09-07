@@ -2,6 +2,14 @@
 
 ## _WPPConnect Server_
 
+### WPPConnect Manager
+
+The Docker image includes [WPPConnect Manager](https://github.com/wppconnect-team/wppconnect-manager) at **http://localhost:21465/manager/**: server profiles, session management and QR pairing, chat, contacts, groups and media, with Portuguese/English and light/dark themes.
+
+Use `SECRET_KEY` for administration, or a session name/token for restricted access. Credentials remain in browser memory. Set `MANAGER_ENABLED=false` to disable serving the UI. The image pins and verifies the Manager bundle during build.
+
+See [configuration, API, authenticated events and rollback](docs/manager.md). Existing APIs and legacy sockets remain compatible. Live WhatsApp send/receive requires separate validation with an authorized account.
+
 ![WPPConnect-SERVER](https://i.imgur.com/y1ts6RR.png)
 
 [![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
