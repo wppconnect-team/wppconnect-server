@@ -30,6 +30,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Check Compose environment contract
+        run: node scripts/check-compose-config.cjs
+
+      - name: Prepare private build-context fixtures
+        run: |
+          printf 'SECRET_KEY=build-context-test\nPORT=24552\nMAX_LISTENERS=27\n' > .env
+          printf 'SECRET_KEY=private-context-test\n' > .env.production
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
@@ -67,6 +75,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Verify optional env file and packaging
+        shell: bash
+        run: |
+          docker run --rm --entrypoint node manager-integration-test:local -e "const fs=require('fs'),a=require('assert/strict');a.equal(fs.existsSync('.env'),false);a.equal(fs.existsSync('.env.production'),false);a.equal(fs.existsSync('.env.example'),true)"
+          docker run --rm --entrypoint node -v "$PWD/.env:/usr/src/wpp-server/.env:ro" -e PORT=24553 manager-integration-test:local -e "const a=require('assert/strict'),c=require('./dist/config').default;a.equal(c.secretKey,'build-context-test');a.equal(c.port,'24553');a.equal(c.maxListeners,27)"
+
       - name: Verify integrated Manager and disabled mode
         shell: bash
         run: |
@@ -85,6 +99,18 @@ jobs:
           curl -fsS http://localhost:21466/api/manager/info | grep '"protocol":1'
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21466/manager/)" = 404
 
+      - name: Verify Compose runtime with env file
+        shell: bash
+        run: |
+          docker tag manager-integration-test:local wppconnect/wppconnect-server:ci-env
+          printf 'WPP_SERVER_TAG=ci-env\nPORT=21467\nSECRET_KEY=compose-ci-secret\nMANAGER_ENABLED=false\n' > .ci-env
+          docker compose -p manager-env-ci --env-file .ci-env up -d --no-build --pull never
+          for n in $(seq 1 60); do curl -fsS http://localhost:21467/api/manager/info > /dev/null && break || sleep 1; done
+          curl -fsS http://localhost:21467/healthz > /dev/null
+          curl -fsS -H 'Authorization: Bearer compose-ci-secret' http://localhost:21467/api/manager/sessions | grep '"sessions":\[\]'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21467/manager/)" = 404
+          docker compose -p manager-env-ci --env-file .ci-env down -v
+
       - name: Publish verified image
         if: github.event_name != 'pull_request'
         env:
@@ -101,3 +127,4 @@ jobs:
         run: |
           docker logs manager-enabled || true
           docker logs manager-disabled || true
+          docker logs wpp-server || true

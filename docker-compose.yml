@@ -4,12 +4,27 @@ services:
     image: wppconnect/wppconnect-server:${WPP_SERVER_TAG:-latest}
     restart: unless-stopped
     environment:
-      PORT: "21465"
-      HOST: "http://localhost"
-      SECRET_KEY: "${SECRET_KEY:-THISISMYSECURETOKEN}"
-      WEBHOOK_URL: "${WEBHOOK_URL:-}"
-      TOKEN_STORE_TYPE: "${TOKEN_STORE_TYPE:-file}"
-      CUSTOM_USER_DATA_DIR: "/usr/src/wpp-server/userDataDir/"
+      PORT: '${PORT:-21465}'
+      HOST: '${HOST:-http://localhost}'
+      SECRET_KEY: '${SECRET_KEY:-THISISMYSECURETOKEN}'
+      WEBHOOK_URL: '${WEBHOOK_URL:-}'
+      TOKEN_STORE_TYPE: '${TOKEN_STORE_TYPE:-file}'
+      CUSTOM_USER_DATA_DIR: '${CUSTOM_USER_DATA_DIR:-/usr/src/wpp-server/userDataDir/}'
+      MAX_LISTENERS: '${MAX_LISTENERS:-15}'
+      MANAGER_ENABLED: '${MANAGER_ENABLED:-true}'
+      MANAGER_DIST: '${MANAGER_DIST:-/usr/src/wpp-server/manager}'
+      MONGODB_DATABASE: '${MONGODB_DATABASE:-tokens}'
+      MONGODB_COLLECTION: '${MONGODB_COLLECTION:-}'
+      MONGODB_USER: '${MONGODB_USER:-}'
+      MONGODB_PASSWORD: '${MONGODB_PASSWORD:-}'
+      MONGODB_HOST: '${MONGODB_HOST:-}'
+      MONGO_URL_REMOTE: '${MONGO_URL_REMOTE:-}'
+      MONGODB_PORT: '${MONGODB_PORT:-27017}'
+      REDIS_HOST: '${REDIS_HOST:-localhost}'
+      REDIS_PORT: '${REDIS_PORT:-6379}'
+      REDIS_PASSWORD: '${REDIS_PASSWORD:-}'
+      REDIS_DB: '${REDIS_DB:-0}'
+      REDIS_PREFIX: '${REDIS_PREFIX:-docker}'
     volumes:
       - wppconnect_tokens:/usr/src/wpp-server/tokens
       - wppconnect_user_data:/usr/src/wpp-server/userDataDir
@@ -17,9 +32,13 @@ services:
       - wppconnect_images:/usr/src/wpp-server/WhatsAppImages
       - wppconnect_logs:/usr/src/wpp-server/log
     ports:
-      - "21465:21465"
+      - '${PORT:-21465}:${PORT:-21465}'
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:$${PORT:-21465}/healthz || exit 1"]
+      test:
+        [
+          'CMD-SHELL',
+          'wget -q --spider http://127.0.0.1:$${PORT:-21465}/healthz || exit 1',
+        ]
       interval: 30s
       timeout: 10s
       retries: 5

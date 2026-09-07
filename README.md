@@ -89,10 +89,12 @@ docker run -d \
   wppconnect/wppconnect-server:latest
 ```
 
-For Docker Compose, clone the repository and run:
+For Docker Compose, clone the repository, copy the example and edit `SECRET_KEY`:
 
 ```sh
-SECRET_KEY=change-me docker compose up -d
+cp .env.example .env
+# Edit .env and replace SECRET_KEY. In PowerShell, use Copy-Item .env.example .env.
+docker compose up -d
 docker compose ps
 curl http://localhost:21465/healthz
 ```
@@ -100,7 +102,7 @@ curl http://localhost:21465/healthz
 Set `WPP_SERVER_TAG` to pin a release instead of following `latest`:
 
 ```sh
-WPP_SERVER_TAG=2.10 SECRET_KEY=change-me docker compose up -d
+WPP_SERVER_TAG=2.10.18 docker compose up -d
 ```
 
 Release tags follow the GitHub and npm version: `vX.Y.Z`, `X.Y.Z`, `X.Y`,
@@ -123,12 +125,12 @@ docker compose up -d
 
 ## Installation from source
 
-Install the dependencies and start the server.
+Install the dependencies, copy `.env.example` to `.env`, and edit `SECRET_KEY`. Node loads `.env` from the directory where you start the server; existing environment variables take precedence. The file is optional.
 
 ```sh
-yarn install
-//or
-npm install
+yarn install --immutable
+cp .env.example .env
+# PowerShell: Copy-Item .env.example .env
 ```
 
 ## Install puppeteer dependencies:
@@ -178,137 +180,40 @@ yarn build
 
 # Configuration
 
-This server use config.ts file to define some options, default values are:
+Configuration defaults remain in [src/config.ts](src/config.ts). Supported environment variables are documented in [.env.example](.env.example); the file is also included in the npm package.
 
-```javascript
-{
-  /* secret key to generate access token */
-  secretKey: 'THISISMYSECURETOKEN',
-  host: 'http://localhost',
-  port: '21465',
-  // Device name for show on whatsapp device
-  deviceName: 'WppConnect',
-  poweredBy: 'WPPConnect-Server',
-  // starts all sessions when starting the server.
-  startAllSession: true,
-  tokenStoreType: 'file',
-  // sets the maximum global listeners. 0 = infinity.
-  maxListeners: 15,
-  // create userDataDir for each puppeteer instance for working with Multi Device
-  customUserDataDir: './userDataDir/',
-  webhook: {
-    // set default webhook
-    url: null,
-    // automatically downloads files to upload to the webhook
-    autoDownload: true,
-    // enable upload to s3
-    uploadS3: false,
-    // set default bucket name on aws s3
-    awsBucketName: null,
-    //marks messages as read when the webhook returns ok
-    readMessage: true,
-    //sends all unread messages to the webhook when the server starts
-    allUnreadOnStart: false,
-    // send all events of message status (read, sent, etc)
-    listenAcks: true,
-    // send all events of contacts online or offline for webook and socket
-    onPresenceChanged: true,
-    // send all events of groups participants changed for webook and socket
-    onParticipantsChanged: true,
-    // send all events of reacted messages for webook and socket
-    onReactionMessage: true,
-    // send all events of poll messages for webook and socket
-    onPollResponse: true,
-    // send all events of revoked messages for webook and socket
-    onRevokedMessage: true,
-    // send all events of labels for webook and socket
-    onLabelUpdated: true,
-    // 'event', 'from' or 'type' to ignore and not send to webhook
-    ignore: [],
-  },
-  websocket: {
-    // Just leave one active, here or on webhook.autoDownload
-    autoDownload: false,
-    // Just leave one active, here or on webhook.uploadS3, to avoid duplication in S3
-    uploadS3: false,
-  },
-  // send data to chatwoot
-  chatwoot: {
-    sendQrCode: true,
-    sendStatus: true,
-  },
-  //functionality that archives conversations, runs when the server starts
-  archive: {
-    enable: false,
-    //maximum interval between filings.
-    waitTime: 10,
-    daysToArchive: 45,
-  },
-  log: {
-    level: 'silly', // Before open a issue, change level to silly and retry an action
-    logger: ['console', 'file'],
-  },
-  // create options for using on wppconnect-lib
-  createOptions: {
-    browserArgs: [
-      '--disable-web-security',
-      '--no-sandbox',
-      '--disable-web-security',
-      '--aggressive-cache-discard',
-      '--disable-cache',
-      '--disable-application-cache',
-      '--disable-offline-load-stale-cache',
-      '--disk-cache-size=0',
-      '--disable-background-networking',
-      '--disable-default-apps',
-      '--disable-extensions',
-      '--disable-sync',
-      '--disable-translate',
-      '--hide-scrollbars',
-      '--metrics-recording-only',
-      '--mute-audio',
-      '--no-first-run',
-      '--safebrowsing-disable-auto-update',
-      '--ignore-certificate-errors',
-      '--ignore-ssl-errors',
-      '--ignore-certificate-errors-spki-list',
-      '--disable-features=LeakyPeeker' // Disable the browser's sleep mode when idle, preventing the browser from going into sleep mode, this is useful for WhatsApp not to be in economy mode in the background, avoiding possible crashes
-    ],
-  },
-  mapper: {
-    enable: false,
-    prefix: 'tagone-',
-  },
-  // Configurations for connect with database
-  db: {
-    mongodbDatabase: 'tokens',
-    mongodbCollection: '',
-    mongodbUser: '',
-    mongodbPassword: '',
-    mongodbHost: '',
-    mongoIsRemote: true,
-    mongoURLRemote: '',
-    mongodbPort: 27017,
-    redisHost: 'localhost',
-    redisPort: 6379,
-    redisPassword: '',
-    redisDb: 0,
-    redisPrefix: 'docker',
-  },
-  // Your configurations to upload on AWS
-  aws_s3: {
-    region: 'sa-east-1',
-    access_key_id: '',
-    secret_key: '',
-    // If you already have a bucket created that will be used. Will be stored: you-default-bucket/{session}/{filename}
-    defaultBucketName: ''
-  },
-}
+The default configuration resolves values in this order: existing process environment, optional `.env` in the working directory, then built-in defaults. Restart the process or recreate the container after changing a value. Variables are read at runtime, so changing them does not require rebuilding the image.
+
+| Area | Variables |
+| --- | --- |
+| Server | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL` |
+| Sessions | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS` |
+| Manager | `MANAGER_ENABLED`, `MANAGER_DIST` |
+| Redis | `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX` |
+| MongoDB | `MONGO_URL_REMOTE`, `MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_HOST`, `MONGODB_PORT` |
+| Compose image | `WPP_SERVER_TAG` (used by Compose, not the Node server) |
+
+For Node, both `yarn dev` and the compiled `yarn start` load the optional file automatically. For example, after setting `PORT=21470` in `.env`, the server listens on port 21470. `HOST` supplies the advertised URL; it does not restrict the listener address.
+
+Compose reads `.env` for interpolation and explicitly forwards the supported server variables. Setting `PORT=21470` changes both the container listener and the published host port; setting `MANAGER_ENABLED=false` disables `/manager/` while the API remains available. You can select another file with `docker compose --env-file ./server.env up -d`. Variables defined by the shell take precedence over values in the file.
+
+For plain Docker, pass variables with `-e` or `--env-file`:
+
+```sh
+docker run --rm --env-file .env -p 21465:21465 wppconnect/wppconnect-server:2.10.18
 ```
+
+If `PORT` differs from 21465, adjust both sides of `-p` accordingly. Use the persistent volumes shown in the Docker section for regular deployments. Private `.env` files are excluded from image builds and npm packages; `.env.example` remains available. Docker does not need a private file baked into the image.
+
+Paths in containers refer to the container filesystem. Keep `CUSTOM_USER_DATA_DIR` inside the mounted session-data directory (and retain its trailing slash), or change the volume mapping too. `MANAGER_DIST` points to an existing static bundle; leaving it empty uses the default location. The official Docker image supplies that bundle.
+
+Redis and MongoDB services must be provisioned separately; the included Compose file starts only WPPConnect. The default MongoDB remote mode uses `MONGO_URL_REMOTE`. Structured MongoDB host/user/port settings apply when `db.mongoIsRemote` is disabled in the advanced configuration.
+
+Advanced options without an environment mapping, such as browser arguments and webhook event toggles, remain in `src/config.ts` or can be supplied to `initServer(...)` when embedding the server. Changing TypeScript configuration requires rebuilding the compiled server; environment-only changes do not.
 
 # Secret Key
 
-Your `secretKey` is inside the `config.ts` file. You must change the default value to one that only you know.
+Set `SECRET_KEY` in `.env` or the deployment environment to a private, randomly generated value. The legacy default is retained for compatibility; replace it before exposing the API. Never commit your private `.env`.
 
 <!-- ![Peek 2021-03-25 09-33](https://user-images.githubusercontent.com/40338524/112473515-3b310a80-8d4d-11eb-94bb-ff409c91d9b8.gif) -->
 

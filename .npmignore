@@ -9,3 +9,4 @@
 nodemon.json
 requests.http
 yarn.lock
+!.env.example

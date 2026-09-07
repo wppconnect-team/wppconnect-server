@@ -23,3 +23,6 @@ userDataDir
 backupFolder
 tokens/*
 wppconnect_tokens/*
+.env
+.env.*
+!.env.example
