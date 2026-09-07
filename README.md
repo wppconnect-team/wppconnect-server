@@ -195,7 +195,7 @@ The default configuration resolves values in this order: existing process enviro
 
 For Node, both `yarn dev` and the compiled `yarn start` load the optional file automatically. For example, after setting `PORT=21470` in `.env`, the server listens on port 21470. `HOST` supplies the advertised URL; it does not restrict the listener address.
 
-Compose reads `.env` for interpolation and explicitly forwards the supported server variables. Setting `PORT=21470` changes both the container listener and the published host port; setting `MANAGER_ENABLED=false` disables `/manager/` while the API remains available. You can select another file with `docker compose --env-file ./server.env up -d`. Variables defined by the shell take precedence over values in the file.
+Compose reads `.env` for interpolation and explicitly forwards the supported server variables. Setting `PORT=21470` changes both the container listener and the published host port; setting `MANAGER_ENABLED=false` disables `/manager/` while the API remains available. You can select another file with `docker compose --env-file ./.env.production up -d`. Variables defined by the shell take precedence over values in the file.
 
 For plain Docker, pass variables with `-e` or `--env-file`:
 
