@@ -34,6 +34,10 @@ export function installManagerStatic(
       limit: 300,
       standardHeaders: 'draft-7',
       legacyHeaders: false,
+      handler: (_req, res) =>
+        res
+          .status(429)
+          .json({ message: 'Too many requests. Try again later.' }),
     })
   );
   app.get('/manager', (req, res, next) =>

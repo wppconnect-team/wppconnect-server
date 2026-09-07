@@ -220,5 +220,8 @@ describe('Manager HTTP and authenticated events', () => {
       response = await request('/sessions', 'invalid');
     expect(response?.status).toBe(429);
     expect(response?.headers.get('ratelimit')).toBeTruthy();
+    expect(await response?.json()).toEqual({
+      message: 'Too many requests. Try again later.',
+    });
   });
 });

@@ -31,6 +31,8 @@ managerRoutes.use(
     limit: 60,
     standardHeaders: 'draft-7',
     legacyHeaders: false,
+    handler: (_req, res) =>
+      res.status(429).json({ message: 'Too many requests. Try again later.' }),
   })
 );
 managerRoutes.use((_req, res, next) => {
