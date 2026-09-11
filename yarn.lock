@@ -6026,7 +6026,7 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     express: "npm:4.22.2"
     express-query-boolean: "npm:^2.0.0"
-    express-rate-limit: "npm:^8.2.0"
+    express-rate-limit: "npm:^8.7.0"
     form-data: "npm:^4.0.6"
     husky: "npm:^9.1.7"
     jest: "npm:^30.4.2"
@@ -9396,7 +9396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-rate-limit@npm:^8.2.0":
+"express-rate-limit@npm:^8.7.0":
   version: 8.7.0
   resolution: "express-rate-limit@npm:8.7.0"
   dependencies:
