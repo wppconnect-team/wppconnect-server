@@ -6051,7 +6051,7 @@ __metadata:
     swagger-autogen: "npm:^2.23.7"
     swagger-ui-dist: "npm:^5.32.15"
     swagger-ui-express: "npm:^5.0.1"
-    ts-jest: "npm:^29.4.12"
+    ts-jest: "npm:^29.4.14"
     ts-loader: "npm:^9.5.4"
     tsx: "npm:^4.21.0"
     typescript: "npm:^5.9.3"
@@ -15679,9 +15679,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.4.12":
-  version: 29.4.12
-  resolution: "ts-jest@npm:29.4.12"
+"ts-jest@npm:^29.4.14":
+  version: 29.4.14
+  resolution: "ts-jest@npm:29.4.14"
   dependencies:
     bs-logger: "npm:^0.2.6"
     fast-json-stable-stringify: "npm:^2.1.0"
@@ -15693,7 +15693,7 @@ __metadata:
     type-fest: "npm:^4.41.0"
     yargs-parser: "npm:^21.1.1"
   peerDependencies:
-    "@babel/core": ">=7.0.0-beta.0 <8"
+    "@babel/core": ">=7.0.0-beta.0 <9"
     "@jest/transform": ^29.0.0 || ^30.0.0
     "@jest/types": ^29.0.0 || ^30.0.0
     babel-jest: ^29.0.0 || ^30.0.0
@@ -15715,7 +15715,7 @@ __metadata:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 10c0/cf08cf4b417085578db038b525c8b22cf6af689601eab697fe84a46fa07bddcd506bd961c607c8f25c705e90ea8ac8ecf258fc200161f4e0882d0d7db4db9ec9
+  checksum: 10c0/58780804871e5752d7f42e69a38ea0716d0a6330272f3a253cf10dbf8c59390f64f2da6fff3d93dcb1bc514d8fa5d02963d8ef6d062fdfa96113b3aad0fd9331
   languageName: node
   linkType: hard
 
