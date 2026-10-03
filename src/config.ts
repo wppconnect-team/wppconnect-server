@@ -27,6 +27,8 @@ export default {
   webhook: {
     url: env.WEBHOOK_URL || null,
     autoDownload: true,
+    // Bytes; media larger than this is not inlined as base64 (0 = no limit).
+    autoDownloadMaxSize: envNumber('WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE', 0),
     uploadS3: false,
     readMessage: true,
     allUnreadOnStart: false,

@@ -14,6 +14,7 @@ export interface ServerOptions {
   webhook: {
     url: string;
     autoDownload: boolean;
+    autoDownloadMaxSize?: number;
     uploadS3: boolean;
     readMessage: boolean;
     allUnreadOnStart: boolean;
