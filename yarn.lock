@@ -6245,7 +6245,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.57.2"
     "@wppconnect-team/wppconnect": "npm:^2.3.3"
     archiver: "npm:^7.0.1"
-    axios: "npm:^1.14.0"
+    axios: "npm:^1.20.0"
     bcrypt: "npm:^6.0.0"
     buffer-to-stream: "npm:1.0.0"
     commitizen: "npm:^4.3.2"
@@ -6749,7 +6749,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.14.0, axios@npm:^1.20.0":
+"axios@npm:^1.20.0":
   version: 1.20.0
   resolution: "axios@npm:1.20.0"
   dependencies:
