@@ -111,7 +111,7 @@ available. See all tags on
 [Docker Hub](https://hub.docker.com/r/wppconnect/wppconnect-server/tags).
 
 The container accepts `PORT`, `HOST`, `SECRET_KEY`, `WEBHOOK_URL`,
-`TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS`, and the Redis and
+`WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE`, `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS`, and the Redis and
 MongoDB variables listed in the [Configuration](#configuration) section. The
 Compose setup persists tokens, Chromium session data, uploads, received images,
 and logs in named volumes. Change the default secret before exposing the API.
@@ -187,6 +187,7 @@ The default configuration resolves values in this order: existing process enviro
 | Area | Variables |
 | --- | --- |
 | Server | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL` |
+| Webhook | `WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE` (bytes; media larger than this is sent without inlined base64 and with `autoDownloadSkipped: true`, fetch it via `download-media`; `0` = no limit) |
 | Sessions | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS` |
 | Manager | `MANAGER_ENABLED`, `MANAGER_DIST` |
 | Redis | `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX` |
