@@ -1,3 +1,10 @@
+## [2.10.38](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.37...v2.10.38) (2026-10-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @wppconnect-team/wppconnect to ^2.3.4 ([#2606](https://github.com/wppconnect-team/wppconnect-server/issues/2606)) ([633d155](https://github.com/wppconnect-team/wppconnect-server/commit/633d15576cc0920b869147bc3341ba1351ec2c13))
+
 ## [2.10.37](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.36...v2.10.37) (2026-10-06)
 
 ## [2.10.36](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.35...v2.10.36) (2026-10-05)
