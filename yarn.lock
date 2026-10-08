@@ -5227,12 +5227,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/multer@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@types/multer@npm:2.2.0"
+"@types/multer@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@types/multer@npm:2.3.0"
   dependencies:
     "@types/express": "npm:*"
-  checksum: 10c0/72472c2da0a9afe86e2d64cfec53f4564727affcb691f78fcbdef495978857903f03326e4ecf58f6d1c3c4c89bb39e5d94fb97d4722a1f448f777c4fa690754b
+  checksum: 10c0/a66cfeede9efc71b75054a4c550c76f2886c862595dc3492dd759d02598baf3f0f3541177a64388f3a78c36b3a954c917ded5e182bbc6d4f6d04f7f9c75e26da
   languageName: node
   linkType: hard
 
@@ -6009,7 +6009,7 @@ __metadata:
     "@types/jest": "npm:^30.0.0"
     "@types/merge-deep": "npm:^3.0.3"
     "@types/mime-types": "npm:^3.0.1"
-    "@types/multer": "npm:^2.2.0"
+    "@types/multer": "npm:^2.3.0"
     "@types/node": "npm:^22.19.15"
     "@types/qrcode": "npm:^1.5.6"
     "@types/swagger-ui-express": "npm:^4.1.8"
