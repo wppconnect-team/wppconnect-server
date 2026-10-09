@@ -283,3 +283,23 @@ See the `routes` file for all the routes. [here](/src/routes/index.js) and HTTP 
 # Swagger UI
 
 Swagger ui can be found at `/api-docs`
+
+### Community announcement comments
+
+Requires the matching community-comments changes in WA-JS and WPPConnect.
+With older clients the endpoints return 501 and the optional listener is skipped.
+
+- `GET /api/:session/message-comments/:messageId`: safe comments, oldest first,
+  under `{status: "success", response: [...]}`. Only locally synchronized history
+  is returned; the operation does not mark comments read.
+- `POST /api/:session/message-comments/:messageId`, JSON `{text: "Your reply"}`:
+  sends a comment linked to the announcement. Requires the normal bearer token
+  and an active session. HTTP 201 is returned only for a native `OK` verdict.
+- HTTP 502 on sending carries `retrySafe: false`. Delivery may already have
+  happened; never automatically retry it or fall back to a quoted group message.
+- Enable `webhook.onCommentMessage` (default true) for the `oncommentmessage`
+  Socket.IO/webhook event: `{action: "add"|"update"|"remove", comment: {...}}`.
+  Adds may include hydrated history. Upsert by id, route by parentMsgId, and
+  handle `revoked`/`ciphertext` without retaining stale text.
+
+URL-encode the complete serialized announcement message id in the path.

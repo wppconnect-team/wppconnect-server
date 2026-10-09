@@ -34,6 +34,7 @@ export default {
     onPresenceChanged: true,
     onParticipantsChanged: true,
     onReactionMessage: true,
+    onCommentMessage: true,
     onPollResponse: true,
     onRevokedMessage: true,
     onLabelUpdated: true,
