@@ -19,6 +19,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import uploadConfig from '../config/upload';
 import * as CatalogController from '../controller/catalogController';
+import * as CommentsController from '../controller/commentsController';
 import * as CommunityController from '../controller/communityController';
 import ContactController from '../controller/contactController';
 import * as DeviceController from '../controller/deviceController';
@@ -882,6 +883,20 @@ routes.get(
   MiscController.takeScreenshot
 );
 routes.post('/api/:session/set-limit', MiscController.setLimit);
+
+// Community announcement replies
+routes.get(
+  '/api/:session/message-comments/:messageId',
+  verifyToken,
+  statusConnection,
+  CommentsController.getComments
+);
+routes.post(
+  '/api/:session/message-comments/:messageId',
+  verifyToken,
+  statusConnection,
+  CommentsController.sendCommentMessage
+);
 
 //Communitys
 routes.post(

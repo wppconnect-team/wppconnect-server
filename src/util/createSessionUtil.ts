@@ -18,6 +18,7 @@ import { Request } from 'express';
 
 import { download } from '../controller/sessionController';
 import { emitManager } from '../manager/socket';
+import { CommentClient } from '../types/CommentClient';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
@@ -138,6 +139,9 @@ export default class CreateSessionUtil {
         await this.onParticipantsChanged(req, client);
       }
 
+      if (req.serverOptions.webhook.onCommentMessage) {
+        await this.onCommentMessage(client, req);
+      }
       if (req.serverOptions.webhook.onReactionMessage) {
         await this.onReactionMessage(client, req);
       }
@@ -333,6 +337,15 @@ export default class CreateSessionUtil {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
       req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
+    });
+  }
+
+  async onCommentMessage(client: WhatsAppServer, req: Request) {
+    const commentClient = client as WhatsAppServer & CommentClient;
+    if (typeof commentClient.onCommentMessage !== 'function') return;
+    await commentClient.onCommentMessage((event: unknown) => {
+      req.io.emit('oncommentmessage', event);
+      callWebHook(client, req, 'oncommentmessage', event);
     });
   }
 

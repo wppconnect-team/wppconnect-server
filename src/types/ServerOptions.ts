@@ -21,6 +21,7 @@ export interface ServerOptions {
     onPresenceChanged: boolean;
     onParticipantsChanged: boolean;
     onReactionMessage: boolean;
+    onCommentMessage?: boolean;
     onPollResponse: boolean;
     onRevokedMessage: boolean;
     onSelfMessage: boolean;

@@ -36,6 +36,12 @@ jest.mock('../../util/tokenStore/factory', () => ({
 describe('CreateSessionUtil optional webhook listeners', function () {
   const cases = [
     {
+      method: 'onCommentMessage',
+      listener: 'onCommentMessage',
+      register: (util: CreateSessionUtil, client: any, req: any) =>
+        util.onCommentMessage(client, req),
+    },
+    {
       method: 'onParticipantsChanged',
       listener: 'onParticipantsChanged',
       register: (util: CreateSessionUtil, client: any, req: any) =>
@@ -84,4 +90,32 @@ describe('CreateSessionUtil optional webhook listeners', function () {
       expect(client[listener]).toHaveBeenCalledTimes(1);
     }
   );
+});
+
+describe('Community comment forwarding', () => {
+  it('forwards the same event to Socket.IO and webhook', async () => {
+    const util = new CreateSessionUtil();
+    let callback: (event: unknown) => void = () => {};
+    const client = {
+      onCommentMessage: jest.fn((cb) => {
+        callback = cb;
+      }),
+    };
+    const req = { io: { emit: jest.fn() } };
+    await util.onCommentMessage(client as any, req as any);
+    const event = {
+      action: 'update',
+      comment: { id: 'reply', parentMsgId: 'parent', type: 'revoked' },
+    };
+    callback(event);
+    expect(req.io.emit).toHaveBeenCalledWith('oncommentmessage', event);
+    expect(
+      jest.requireMock('../../util/functions').callWebHook
+    ).toHaveBeenCalledWith(client, req, 'oncommentmessage', event);
+  });
+  it('keeps older WPPConnect clients usable', async () => {
+    await expect(
+      new CreateSessionUtil().onCommentMessage({} as any, {} as any)
+    ).resolves.toBeUndefined();
+  });
 });
