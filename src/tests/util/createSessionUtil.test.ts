@@ -180,6 +180,17 @@ describe('CreateSessionUtil initialization ownership', () => {
     expect(create).not.toHaveBeenCalled();
   });
 
+  it.each(['../outside', '/outside', 'C:\\outside'])(
+    'rejects initialization session %s before creating a browser',
+    async (session) => {
+      const { create, req, util } = setup();
+      await util.createSessionUtil(req, clientsArray, session);
+      expect(create).not.toHaveBeenCalled();
+      expect(Object.hasOwn(clientsArray, session)).toBe(false);
+      expect(req.logger.error).toHaveBeenCalled();
+    }
+  );
+
   it('closes an initialized browser when listener setup fails before allowing a retry', async () => {
     const { create, req, util } = setup();
     const runtime = { close: jest.fn().mockResolvedValue(undefined) };

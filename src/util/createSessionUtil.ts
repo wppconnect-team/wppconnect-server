@@ -41,6 +41,10 @@ export default class CreateSessionUtil {
     session: string,
     res?: any
   ) {
+    if (!/^[A-Za-z0-9_-]+$/.test(session)) {
+      req.logger.error(new Error('Invalid session name'));
+      return;
+    }
     let client = this.getClient(session) as any;
     if (client.status != null && client.status !== 'CLOSED') return;
     // A retry gets a distinct owner so callbacks from a failed attempt cannot

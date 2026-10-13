@@ -163,14 +163,22 @@ export async function clearSessionData(req: Request, res: Response) {
         .json({ success: false, message: 'Invalid session name' });
     }
     await cleanupSession(session, async (client) => {
+      const leaf = path.basename(session);
+      if (leaf !== session || leaf === '.' || leaf === '..') {
+        throw new Error('Invalid session path');
+      }
       if (client?.page && typeof client.logout === 'function') {
         await client.logout();
       }
-      const pathUserData = path.resolve(config.customUserDataDir, session);
+      const root = path.resolve(config.customUserDataDir);
+      const pathUserData = path.resolve(root, leaf);
+      if (path.dirname(pathUserData) !== root) {
+        throw new Error('Invalid session path');
+      }
       const pathToken = path.resolve(
         process.cwd(),
         'tokens',
-        `${session}.data.json`
+        `${leaf}.data.json`
       );
       if (fs.existsSync(pathUserData)) {
         await fs.promises.rm(pathUserData, { recursive: true });
