@@ -1,3 +1,10 @@
+## 2.10.50 (2026-10-13)
+
+
+### Bug Fixes
+
+* **chat:** forward supported list filters ([#2621](https://github.com/wppconnect-team/wppconnect-server/issues/2621)) ([eed747d](https://github.com/wppconnect-team/wppconnect-server/commit/eed747d3a340ab27a71fee4a0b5d07f67ceca6cb))
+
 ## [2.10.49](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.48...v2.10.49) (2026-10-13)
 
 
