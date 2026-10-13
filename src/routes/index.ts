@@ -79,7 +79,6 @@ routes.post(
 routes.post(
   '/api/:session/logout-session',
   verifyToken,
-  statusConnection,
   SessionController.logOutSession
 );
 routes.post(

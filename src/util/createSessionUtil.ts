@@ -40,9 +40,16 @@ export default class CreateSessionUtil {
     session: string,
     res?: any
   ) {
+    let client = this.getClient(session) as any;
+    if (client.status != null && client.status !== 'CLOSED') return;
+    // A retry gets a distinct owner so callbacks from a failed attempt cannot
+    // close or publish pairing data for the replacement.
+    client = clientsArray[session] = { ...client };
+    let initializedClient: typeof client;
+    const ownsAttempt = () =>
+      clientsArray[session] === client &&
+      !['CLOSED', 'CLOSING', 'ERROR'].includes(client.status);
     try {
-      let client = this.getClient(session) as any;
-      if (client.status != null && client.status !== 'CLOSED') return;
       client.status = 'INITIALIZING';
       client.config = req.body;
 
@@ -91,6 +98,7 @@ export default class CreateSessionUtil {
                   'WPPConnect-Server'
                 : undefined,
             catchLinkCode: (code: string) => {
+              if (!ownsAttempt()) return;
               this.exportPhoneCode(req, client.config.phone, code, client, res);
             },
             catchQR: (
@@ -99,12 +107,15 @@ export default class CreateSessionUtil {
               attempt: any,
               urlCode: string
             ) => {
+              if (!ownsAttempt()) return;
               this.exportQR(req, base64Qr, urlCode, client, res);
             },
             onLoadingScreen: (percent: string, message: string) => {
               req.logger.info(`[${session}] ${percent}% - ${message}`);
             },
             statusFind: (statusFind: StatusFind) => {
+              // A cleanup or newer start owns this session now.
+              if (!ownsAttempt()) return;
               try {
                 eventEmitter.emit(
                   `status-${client.session}`,
@@ -131,6 +142,14 @@ export default class CreateSessionUtil {
         )
       );
 
+      initializedClient = wppClient;
+
+      // A late browser from a cancelled start must not resurrect the session
+      // or overwrite a newer initialization.
+      if (!ownsAttempt()) {
+        await wppClient.close();
+        return;
+      }
       client = clientsArray[session] = Object.assign(wppClient, client);
       await this.start(req, client);
 
@@ -154,9 +173,18 @@ export default class CreateSessionUtil {
       }
     } catch (e) {
       req.logger.error(e);
-      if (e instanceof Error && e.name == 'TimeoutError') {
-        const client = this.getClient(session) as any;
-        client.status = 'CLOSED';
+      if (clientsArray[session] === client) {
+        client.status = 'CLOSING';
+        try {
+          if (initializedClient) await initializedClient.close();
+          client.status = 'CLOSED';
+          client.qrcode = null;
+        } catch (closeError) {
+          // Keep the failed runtime available to explicit cleanup rather than
+          // starting a second browser against a profile still owned by it.
+          client.status = 'ERROR';
+          req.logger.error(closeError);
+        }
       }
     }
   }

@@ -20,7 +20,7 @@ import fs from 'fs';
 import { logger } from '..';
 import config from '../config';
 import { backupSessions, restoreSessions } from '../util/manageSession';
-import { clientsArray } from '../util/sessionUtil';
+import { cleanupSession } from '../util/sessionUtil';
 
 export async function backupAllSessions(req: Request, res: Response) {
   /**
@@ -151,25 +151,24 @@ export async function clearSessionData(req: Request, res: Response) {
     const { secretkey, session } = req.params;
 
     if (secretkey !== config.secretKey) {
-      res.status(400).json({
+      return res.status(400).json({
         response: 'error',
         message: 'The token is incorrect',
       });
     }
-    if (req?.client?.page) {
-      delete clientsArray[req.params.session];
-      await req.client.logout();
-    }
-    const path = config.customUserDataDir + session;
-    const pathToken = __dirname + `../../../tokens/${session}.data.json`;
-    if (fs.existsSync(path)) {
-      await fs.promises.rm(path, {
-        recursive: true,
-      });
-    }
-    if (fs.existsSync(pathToken)) {
-      await fs.promises.rm(pathToken);
-    }
+    await cleanupSession(session, async (client) => {
+      if (client?.page && typeof client.logout === 'function') {
+        await client.logout();
+      }
+      const path = config.customUserDataDir + session;
+      const pathToken = __dirname + `../../../tokens/${session}.data.json`;
+      if (fs.existsSync(path)) {
+        await fs.promises.rm(path, { recursive: true });
+      }
+      if (fs.existsSync(pathToken)) {
+        await fs.promises.rm(pathToken);
+      }
+    });
     res.status(200).json({ success: true });
   } catch (error: any) {
     logger.error(error);

@@ -43,6 +43,38 @@ export let clientsArray: Whatsapp[] = [];
 export const sessions = [];
 export const eventEmitter = new EventEmitter();
 
+/** Reserve a session while its runtime and persisted files are being cleaned. */
+export async function cleanupSession(
+  session: string,
+  cleanup: (client: Whatsapp | undefined) => Promise<void>
+): Promise<void> {
+  const client = clientsArray[session];
+  if ((client as any)?.status === 'CLOSING') {
+    throw new Error('Session cleanup is already in progress');
+  }
+  const reservation = { status: 'CLOSING', session } as any;
+  clientsArray[session] = reservation;
+  try {
+    await cleanup(client);
+  } catch (error) {
+    if (clientsArray[session] === reservation) {
+      // A rejected teardown may leave the browser owning its profile. Retain
+      // it for explicit cleanup instead of allowing an automatic restart.
+      if (client) {
+        (client as any).status = 'ERROR';
+        clientsArray[session] = client;
+      } else {
+        clientsArray[session] = { status: 'ERROR', session } as any;
+      }
+    }
+    throw error;
+  } finally {
+    if (clientsArray[session] === reservation) {
+      delete clientsArray[session];
+    }
+  }
+}
+
 export function deleteSessionOnArray(session: string): void {
   const newArray = clientsArray;
   delete clientsArray[session];

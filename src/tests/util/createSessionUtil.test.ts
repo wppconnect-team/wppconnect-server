@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import CreateSessionUtil from '../../util/createSessionUtil';
+import { clientsArray } from '../../util/sessionUtil';
 
 jest.mock('@wppconnect-team/wppconnect', () => ({
   create: jest.fn(),
   SocketState: { CONFLICT: 'CONFLICT' },
-  StatusFind: {},
+  StatusFind: { autocloseCalled: 'autocloseCalled' },
 }));
 jest.mock('../../controller/sessionController', () => ({
   download: jest.fn(),
@@ -84,4 +85,147 @@ describe('CreateSessionUtil optional webhook listeners', function () {
       expect(client[listener]).toHaveBeenCalledTimes(1);
     }
   );
+});
+
+describe('CreateSessionUtil initialization ownership', () => {
+  function setup() {
+    const create = jest.requireMock('@wppconnect-team/wppconnect').create;
+    const Factory = jest.requireMock('../../util/tokenStore/factory').default;
+    Factory.mockImplementation(() => ({
+      createTokenStory: () => ({
+        getToken: jest.fn().mockResolvedValue({}),
+        setToken: jest.fn(),
+      }),
+    }));
+    const req = {
+      body: {},
+      serverOptions: { createOptions: {}, webhook: {} },
+      logger: { info: jest.fn(), error: jest.fn() },
+    };
+    const util = new CreateSessionUtil();
+    util.start = jest.fn().mockResolvedValue(undefined);
+    return { create, req, util };
+  }
+
+  afterEach(() => {
+    delete (clientsArray as any).stale;
+    jest.clearAllMocks();
+  });
+
+  it('releases INITIALIZING after an ordinary create error so it can be retried', async () => {
+    const { create, req, util } = setup();
+    create.mockRejectedValue(new Error('Browser startup failed'));
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect((clientsArray as any).stale.status).toBe('CLOSED');
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+
+  it('closes a late client and preserves a replacement after cancellation', async () => {
+    const { create, req, util } = setup();
+    const replacement = { status: 'INITIALIZING', session: 'stale' };
+    const lateClient = { close: jest.fn().mockResolvedValue(undefined) };
+    create.mockImplementation(async () => {
+      (clientsArray as any).stale = replacement;
+      return lateClient;
+    });
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(lateClient.close).toHaveBeenCalledTimes(1);
+    expect((clientsArray as any).stale).toBe(replacement);
+    expect(util.start).not.toHaveBeenCalled();
+  });
+
+  it('does not reset a replacement when the cancelled creation rejects', async () => {
+    const { create, req, util } = setup();
+    const replacement = { status: 'INITIALIZING', session: 'stale' };
+    create.mockImplementation(async () => {
+      (clientsArray as any).stale = replacement;
+      throw new Error('Old browser failed');
+    });
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect((clientsArray as any).stale).toBe(replacement);
+    expect(replacement.status).toBe('INITIALIZING');
+  });
+
+  it('ignores pairing and status callbacks from a failed attempt after retry', async () => {
+    const { create, req, util } = setup();
+    util.exportQR = jest.fn();
+    util.exportPhoneCode = jest.fn();
+    let previous: any;
+    let retry: any;
+    create
+      .mockImplementationOnce(async (options: any) => {
+        previous = options;
+        throw new Error('First attempt failed');
+      })
+      .mockImplementationOnce(async () => {
+        retry = (clientsArray as any).stale;
+        previous.catchQR('qr', '', 1, 'code');
+        previous.catchLinkCode('phone-code');
+        previous.statusFind('autocloseCalled');
+        expect((clientsArray as any).stale).toBe(retry);
+        expect(retry.status).toBe('INITIALIZING');
+        throw new Error('Second attempt completed for the fixture');
+      });
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(util.exportQR).not.toHaveBeenCalled();
+    expect(util.exportPhoneCode).not.toHaveBeenCalled();
+  });
+
+  it('does not start while profile cleanup holds the session reservation', async () => {
+    const { create, req, util } = setup();
+    (clientsArray as any).stale = { status: 'CLOSING', session: 'stale' };
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('closes an initialized browser when listener setup fails before allowing a retry', async () => {
+    const { create, req, util } = setup();
+    const runtime = { close: jest.fn().mockResolvedValue(undefined) };
+    create.mockResolvedValue(runtime);
+    util.start = jest
+      .fn()
+      .mockRejectedValue(new Error('Listener setup failed'));
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(runtime.close).toHaveBeenCalledTimes(1);
+    expect((clientsArray as any).stale.status).toBe('CLOSED');
+  });
+
+  it('retains a runtime that failed to close for explicit cleanup', async () => {
+    const { create, req, util } = setup();
+    const runtime = {
+      close: jest.fn().mockRejectedValue(new Error('Browser close failed')),
+    };
+    create.mockResolvedValue(runtime);
+    util.start = jest
+      .fn()
+      .mockRejectedValue(new Error('Listener setup failed'));
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect((clientsArray as any).stale.status).toBe('ERROR');
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores old callbacks when failed cleanup retains an ERROR owner', async () => {
+    const { create, req, util } = setup();
+    util.exportQR = jest.fn();
+    util.exportPhoneCode = jest.fn();
+    const runtime = { close: jest.fn().mockResolvedValue(undefined) };
+    create.mockImplementation(async (options: any) => {
+      const owner = (clientsArray as any).stale;
+      owner.status = 'ERROR';
+      options.catchQR('qr', '', 1, 'code');
+      options.catchLinkCode('phone-code');
+      options.statusFind('autocloseCalled');
+      expect((clientsArray as any).stale).toBe(owner);
+      expect(owner.status).toBe('ERROR');
+      return runtime;
+    });
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(util.exportQR).not.toHaveBeenCalled();
+    expect(util.exportPhoneCode).not.toHaveBeenCalled();
+    expect(runtime.close).toHaveBeenCalledTimes(1);
+    expect(util.start).not.toHaveBeenCalled();
+  });
 });
