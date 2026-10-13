@@ -1,3 +1,10 @@
+## [2.10.52](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.51...v2.10.52) (2026-10-13)
+
+
+### Bug Fixes
+
+* **session:** recover stale initialization safely ([#2622](https://github.com/wppconnect-team/wppconnect-server/issues/2622)) ([4e61782](https://github.com/wppconnect-team/wppconnect-server/commit/4e61782624172568d5bf566d1785150b39a183b8))
+
 ## [2.10.51](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.50...v2.10.51) (2026-10-13)
 
 
