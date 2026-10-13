@@ -115,7 +115,7 @@
     "swagger-ui-dist": "^5.33.1",
     "ts-jest": "^29.4.14",
     "ts-loader": "^9.6.2",
-    "tsx": "^4.21.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "webpack-cli": "^6.0.1"
   },
