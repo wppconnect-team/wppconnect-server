@@ -120,8 +120,19 @@ export async function callWebHook(
   event: any,
   data: any
 ) {
-  const webhook =
-    client?.config.webhook || req.serverOptions.webhook.url || false;
+  const requestedWebhook = client?.config.webhook;
+  const configured = req.serverOptions.webhook;
+  // Session configuration can select only destinations explicitly configured
+  // by the server operator. Return the trusted configuration value itself.
+  const webhook = requestedWebhook
+    ? [configured.url, ...(configured.allowedUrls || [])].find(
+        (url) => url === requestedWebhook
+      )
+    : configured.url;
+  if (requestedWebhook && !webhook) {
+    req.logger.warn('Session webhook URL is not in the configured allowlist.');
+    return;
+  }
   if (webhook) {
     if (
       req.serverOptions.webhook?.ignore &&

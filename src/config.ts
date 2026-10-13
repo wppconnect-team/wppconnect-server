@@ -26,6 +26,10 @@ export default {
   customUserDataDir: env.CUSTOM_USER_DATA_DIR || './userDataDir/',
   webhook: {
     url: env.WEBHOOK_URL || null,
+    allowedUrls: (env.WEBHOOK_ALLOWED_URLS || '')
+      .split(',')
+      .map((url) => url.trim())
+      .filter(Boolean),
     autoDownload: true,
     retryAttempts: envNumber('WEBHOOK_RETRY_ATTEMPTS', 3),
     retryDelay: envNumber('WEBHOOK_RETRY_DELAY', 5000),

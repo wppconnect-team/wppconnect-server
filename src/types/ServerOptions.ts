@@ -13,6 +13,7 @@ export interface ServerOptions {
   customUserDataDir: string;
   webhook: {
     url: string;
+    allowedUrls?: string[];
     autoDownload: boolean;
     retryAttempts?: number;
     retryDelay?: number;
