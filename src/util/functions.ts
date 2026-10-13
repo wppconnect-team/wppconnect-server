@@ -161,11 +161,18 @@ export async function callWebHook(
 export async function autoDownload(client: any, req: any, message: any) {
   try {
     if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
-      const buffer = await client.decryptFile(message);
-      if (
+      const uploadS3 =
         req.serverOptions.webhook.uploadS3 ||
-        req.serverOptions?.websocket?.uploadS3
-      ) {
+        req.serverOptions?.websocket?.uploadS3;
+      // Inlined base64 grows the payload ~33% over the file size, so large
+      // media can exceed the receiver's body limit and the event is lost.
+      const maxSize = req.serverOptions?.webhook?.autoDownloadMaxSize;
+      if (!uploadS3 && maxSize > 0 && message.size > maxSize) {
+        message.autoDownloadSkipped = true;
+        return;
+      }
+      const buffer = await client.decryptFile(message);
+      if (uploadS3) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
         if (
