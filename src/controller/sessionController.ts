@@ -17,6 +17,7 @@ import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import mime from 'mime-types';
+import path from 'path';
 import QRCode from 'qrcode';
 import { Logger } from 'winston';
 
@@ -25,7 +26,7 @@ import config from '../config';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
-import { clientsArray, deleteSessionOnArray } from '../util/sessionUtil';
+import { cleanupSession, clientsArray } from '../util/sessionUtil';
 
 const SessionUtil = new CreateSessionUtil();
 
@@ -254,14 +255,16 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
    */
   const session = req.session;
   try {
-    if ((clientsArray as any)[session].status === null) {
+    if ((clientsArray as any)[session]?.status === null) {
       return await res
         .status(200)
         .json({ status: true, message: 'Session successfully closed' });
     } else {
-      (clientsArray as any)[session] = { status: null };
-
-      await req.client.close();
+      await cleanupSession(session, async (client) => {
+        if (typeof client?.close === 'function') {
+          await client.close();
+        }
+      });
       req.io.emit('whatsapp-status', false);
       callWebHook(req.client, req, 'closesession', {
         message: `Session: ${session} disconnected`,
@@ -295,12 +298,22 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
    */
   try {
     const session = req.session;
-    await req.client.logout();
-    deleteSessionOnArray(req.session);
-
-    setTimeout(async () => {
-      const pathUserData = config.customUserDataDir + req.session;
-      const pathTokens = __dirname + `../../../tokens/${req.session}.data.json`;
+    if (!/^[A-Za-z0-9_-]+$/.test(session)) {
+      return res
+        .status(400)
+        .json({ status: false, message: 'Invalid session name' });
+    }
+    await cleanupSession(session, async (client) => {
+      if (typeof client?.logout === 'function') {
+        await client.logout();
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const pathUserData = path.resolve(config.customUserDataDir, session);
+      const pathTokens = path.resolve(
+        process.cwd(),
+        'tokens',
+        `${session}.data.json`
+      );
 
       if (fs.existsSync(pathUserData)) {
         await fs.promises.rm(pathUserData, {
@@ -318,20 +331,15 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
           retryDelay: 1000,
         });
       }
-
-      req.io.emit('whatsapp-status', false);
-      callWebHook(req.client, req, 'logoutsession', {
-        message: `Session: ${session} logged out`,
-        connected: false,
-      });
-
-      return await res
-        .status(200)
-        .json({ status: true, message: 'Session successfully closed' });
-    }, 500);
-    /*try {
-      await req.client.close();
-    } catch (error) {}*/
+    });
+    req.io.emit('whatsapp-status', false);
+    callWebHook(req.client, req, 'logoutsession', {
+      message: `Session: ${session} logged out`,
+      connected: false,
+    });
+    return res
+      .status(200)
+      .json({ status: true, message: 'Session successfully closed' });
   } catch (error) {
     req.logger.error(error);
     res

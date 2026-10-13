@@ -16,11 +16,12 @@
 
 import { Request, Response } from 'express';
 import fs from 'fs';
+import path from 'path';
 
 import { logger } from '..';
 import config from '../config';
 import { backupSessions, restoreSessions } from '../util/manageSession';
-import { clientsArray } from '../util/sessionUtil';
+import { cleanupSession } from '../util/sessionUtil';
 
 export async function backupAllSessions(req: Request, res: Response) {
   /**
@@ -151,25 +152,41 @@ export async function clearSessionData(req: Request, res: Response) {
     const { secretkey, session } = req.params;
 
     if (secretkey !== config.secretKey) {
-      res.status(400).json({
+      return res.status(400).json({
         response: 'error',
         message: 'The token is incorrect',
       });
     }
-    if (req?.client?.page) {
-      delete clientsArray[req.params.session];
-      await req.client.logout();
+    if (!/^[A-Za-z0-9_-]+$/.test(session)) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid session name' });
     }
-    const path = config.customUserDataDir + session;
-    const pathToken = __dirname + `../../../tokens/${session}.data.json`;
-    if (fs.existsSync(path)) {
-      await fs.promises.rm(path, {
-        recursive: true,
-      });
-    }
-    if (fs.existsSync(pathToken)) {
-      await fs.promises.rm(pathToken);
-    }
+    await cleanupSession(session, async (client) => {
+      const leaf = path.basename(session);
+      if (leaf !== session || leaf === '.' || leaf === '..') {
+        throw new Error('Invalid session path');
+      }
+      if (client?.page && typeof client.logout === 'function') {
+        await client.logout();
+      }
+      const root = path.resolve(config.customUserDataDir);
+      const pathUserData = path.resolve(root, leaf);
+      if (path.dirname(pathUserData) !== root) {
+        throw new Error('Invalid session path');
+      }
+      const pathToken = path.resolve(
+        process.cwd(),
+        'tokens',
+        `${leaf}.data.json`
+      );
+      if (fs.existsSync(pathUserData)) {
+        await fs.promises.rm(pathUserData, { recursive: true });
+      }
+      if (fs.existsSync(pathToken)) {
+        await fs.promises.rm(pathToken);
+      }
+    });
     res.status(200).json({ success: true });
   } catch (error: any) {
     logger.error(error);
