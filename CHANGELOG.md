@@ -1,3 +1,10 @@
+## [2.10.51](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.50...v2.10.51) (2026-10-13)
+
+
+### Bug Fixes
+
+* **webhook:** validate and retry delivery ([#2623](https://github.com/wppconnect-team/wppconnect-server/issues/2623)) ([7a101cf](https://github.com/wppconnect-team/wppconnect-server/commit/7a101cf7d38388e099a6bd452200ea0e0f0b79c5))
+
 ## 2.10.50 (2026-10-13)
 
 
