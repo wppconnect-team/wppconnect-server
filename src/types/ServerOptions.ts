@@ -14,6 +14,9 @@ export interface ServerOptions {
   webhook: {
     url: string;
     autoDownload: boolean;
+    retryAttempts?: number;
+    retryDelay?: number;
+    requestTimeout?: number;
     autoDownloadMaxSize?: number;
     uploadS3: boolean;
     readMessage: boolean;

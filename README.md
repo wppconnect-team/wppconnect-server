@@ -186,6 +186,7 @@ The default configuration resolves values in this order: existing process enviro
 
 | Area | Variables |
 | --- | --- |
+| Webhook delivery | `WEBHOOK_RETRY_ATTEMPTS` (total attempts, default 3, range 1-10), `WEBHOOK_RETRY_DELAY` (initial backoff in ms, default 5000, capped at 60000), `WEBHOOK_REQUEST_TIMEOUT` (ms per request, default 30000, range 1-120000) |
 | Server | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL` |
 | Webhook | `WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE` (bytes; media larger than this is sent without inlined base64 and with `autoDownloadSkipped: true`, fetch it via `download-media`; `0` = no limit) |
 | Sessions | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS` |
@@ -193,6 +194,12 @@ The default configuration resolves values in this order: existing process enviro
 | Redis | `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX` |
 | MongoDB | `MONGO_URL_REMOTE`, `MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_HOST`, `MONGODB_PORT` |
 | Compose image | `WPP_SERVER_TAG` (used by Compose, not the Node server) |
+
+Webhook delivery retries transient connection failures with exponential backoff
+and the same event payload. HTTP error responses are not retried. The receiver
+should deduplicate message events by session, event and message ID, because a
+timeout or connection reset can happen after the receiver has processed a request.
+Retries are held in memory and do not survive a server restart.
 
 For Node, both `yarn dev` and the compiled `yarn start` load the optional file automatically. For example, after setting `PORT=21470` in `.env`, the server listens on port 21470. `HOST` supplies the advertised URL; it does not restrict the listener address.
 
