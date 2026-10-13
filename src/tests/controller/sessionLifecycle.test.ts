@@ -81,6 +81,29 @@ it('does not clear registry or files for an invalid secret', async () => {
   expect(res.status).toHaveBeenCalledTimes(1);
 });
 
+it.each(['../outside', 'nested/session', 'nested\\session', ''])(
+  'rejects invalid cleanup session %s before reserving it',
+  async (session) => {
+    const { req, res } = setup();
+    req.params.session = session;
+    await clearSessionData(req as any, res as any);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect((clientsArray as any).stale).toBe(req.client);
+  }
+);
+
+it('keeps session keys in a dictionary without an inherited prototype', () => {
+  expect(Object.getPrototypeOf(clientsArray)).toBeNull();
+});
+
+it('rejects an invalid logout session before scheduling cleanup', async () => {
+  const { req, res } = setup();
+  req.session = '../outside';
+  await logOutSession(req as any, res as any);
+  expect(res.status).toHaveBeenCalledWith(400);
+  expect((clientsArray as any).stale).toBe(req.client);
+});
+
 it('closes an INITIALIZING placeholder without calling a missing method', async () => {
   const { req, res } = setup();
   await closeSession(req as any, res as any);

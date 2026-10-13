@@ -16,6 +16,7 @@
 
 import { Request, Response } from 'express';
 import fs from 'fs';
+import path from 'path';
 
 import { logger } from '..';
 import config from '../config';
@@ -156,14 +157,23 @@ export async function clearSessionData(req: Request, res: Response) {
         message: 'The token is incorrect',
       });
     }
+    if (!/^[A-Za-z0-9_-]+$/.test(session)) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid session name' });
+    }
     await cleanupSession(session, async (client) => {
       if (client?.page && typeof client.logout === 'function') {
         await client.logout();
       }
-      const path = config.customUserDataDir + session;
-      const pathToken = __dirname + `../../../tokens/${session}.data.json`;
-      if (fs.existsSync(path)) {
-        await fs.promises.rm(path, { recursive: true });
+      const pathUserData = path.resolve(config.customUserDataDir, session);
+      const pathToken = path.resolve(
+        process.cwd(),
+        'tokens',
+        `${session}.data.json`
+      );
+      if (fs.existsSync(pathUserData)) {
+        await fs.promises.rm(pathUserData, { recursive: true });
       }
       if (fs.existsSync(pathToken)) {
         await fs.promises.rm(pathToken);

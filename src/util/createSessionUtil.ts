@@ -15,6 +15,7 @@
  */
 import { create, SocketState, StatusFind } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
+import path from 'path';
 
 import { download } from '../controller/sessionController';
 import { emitManager } from '../manager/socket';
@@ -64,7 +65,10 @@ export default class CreateSessionUtil {
 
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
-          userDataDir: req.serverOptions.customUserDataDir + session,
+          userDataDir: path.resolve(
+            req.serverOptions.customUserDataDir,
+            session
+          ),
         };
       }
 

@@ -17,6 +17,7 @@ import { Message, Whatsapp } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import mime from 'mime-types';
+import path from 'path';
 import QRCode from 'qrcode';
 import { Logger } from 'winston';
 
@@ -297,13 +298,22 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
    */
   try {
     const session = req.session;
+    if (!/^[A-Za-z0-9_-]+$/.test(session)) {
+      return res
+        .status(400)
+        .json({ status: false, message: 'Invalid session name' });
+    }
     await cleanupSession(session, async (client) => {
       if (typeof client?.logout === 'function') {
         await client.logout();
       }
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const pathUserData = config.customUserDataDir + req.session;
-      const pathTokens = __dirname + `../../../tokens/${req.session}.data.json`;
+      const pathUserData = path.resolve(config.customUserDataDir, session);
+      const pathTokens = path.resolve(
+        process.cwd(),
+        'tokens',
+        `${session}.data.json`
+      );
 
       if (fs.existsSync(pathUserData)) {
         await fs.promises.rm(pathUserData, {
