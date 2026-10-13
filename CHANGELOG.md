@@ -1,3 +1,10 @@
+## [2.10.49](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.48...v2.10.49) (2026-10-13)
+
+
+### Features
+
+* **webhook:** add autoDownloadMaxSize to skip inlining large media ([#2601](https://github.com/wppconnect-team/wppconnect-server/issues/2601)) ([21a9a48](https://github.com/wppconnect-team/wppconnect-server/commit/21a9a48ea5d74071db5871edd0d157aca655a855)), closes [#578](https://github.com/wppconnect-team/wppconnect-server/issues/578)
+
 ## [2.10.48](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.47...v2.10.48) (2026-10-12)
 
 ## [2.10.47](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.46...v2.10.47) (2026-10-12)
