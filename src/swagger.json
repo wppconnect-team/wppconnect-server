@@ -3683,6 +3683,18 @@
                   "onlyUsers": {
                     "type": "boolean"
                   },
+                  "onlyNewsletter": {
+                    "type": "boolean"
+                  },
+                  "onlyCommunities": {
+                    "type": "boolean"
+                  },
+                  "onlyArchived": {
+                    "type": "boolean"
+                  },
+                  "ignoreGroupMetadata": {
+                    "type": "boolean"
+                  },
                   "onlyWithUnreadMessage": {
                     "type": "boolean"
                   },
