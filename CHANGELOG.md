@@ -1,3 +1,11 @@
+## [2.10.54](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.53...v2.10.54) (2026-10-14)
+
+
+### Bug Fixes
+
+* **misc:** reject backup and restore when the secret key is wrong ([#2627](https://github.com/wppconnect-team/wppconnect-server/issues/2627)) ([90b61a4](https://github.com/wppconnect-team/wppconnect-server/commit/90b61a4da50613b0810b216b55cca2ca406ecdd7))
+* **redis:** assign the resolved key prefix in the redis token store ([#2629](https://github.com/wppconnect-team/wppconnect-server/issues/2629)) ([21c8ab0](https://github.com/wppconnect-team/wppconnect-server/commit/21c8ab0baae15224fea9bf3af4c4e88e4d5d08ae))
+
 ## [2.10.53](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.52...v2.10.53) (2026-10-14)
 
 
