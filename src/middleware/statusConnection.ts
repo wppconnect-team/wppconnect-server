@@ -39,10 +39,20 @@ export default async function statusConnection(
         if (req.body.isGroup || req.body.isNewsletter) {
           localArr[index] = contact;
         } else if (numbers.indexOf(contact) < 0) {
-          console.log(contact);
-          const profile: any = await req.client
-            .checkNumberStatus(contact)
-            .catch((error) => console.log(error));
+          let profile: any;
+          try {
+            profile = await req.client.checkNumberStatus(contact);
+          } catch (error) {
+            // A failed lookup is not proof that the number is missing: the
+            // browser context can be destroyed mid-call. Reporting "não
+            // existe" here sends callers looking for a typo that is not there.
+            req.logger.error(error);
+            return res.status(502).json({
+              response: null,
+              status: 'Connected',
+              message: 'Não foi possível consultar o número.',
+            });
+          }
           if (!profile?.numberExists) {
             const num = (contact as any).split('@')[0];
             return res.status(400).json({
