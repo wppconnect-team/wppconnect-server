@@ -57,7 +57,7 @@ export async function sendTextStorie(req: Request, res: Response) {
   const { text, options } = req.body;
 
   if (!text)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Text was not informed',
     });
 
@@ -66,7 +66,7 @@ export async function sendTextStorie(req: Request, res: Response) {
     results.push(await req.client.sendTextStatus(text, options));
 
     if (results.length === 0)
-      res.status(400).json('Error sending the text of stories');
+      return res.status(400).json('Error sending the text of stories');
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
@@ -108,7 +108,7 @@ export async function sendImageStorie(req: Request, res: Response) {
   const { path } = req.body;
 
   if (!path && !req.file)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Sending the image is mandatory',
     });
 
@@ -119,7 +119,7 @@ export async function sendImageStorie(req: Request, res: Response) {
     results.push(await req.client.sendImageStatus(pathFile));
 
     if (results.length === 0)
-      res.status(400).json('Error sending the image of stories');
+      return res.status(400).json('Error sending the image of stories');
     returnSucess(res, results);
   } catch (error) {
     returnError(req, res, error);
@@ -161,7 +161,7 @@ export async function sendVideoStorie(req: Request, res: Response) {
   const { path } = req.body;
 
   if (!path && !req.file)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Sending the Video is mandatory',
     });
 
