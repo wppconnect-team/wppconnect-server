@@ -61,6 +61,11 @@ export const defaultFileTokenStoreOptions: FileTokenStoreOptions = {
   path: './tokens',
 };
 
+// Monotonic within this process, so every save stages to its own file even
+// when two saves for the same session overlap inside one process. The pid
+// alone cannot separate them.
+let stagingCounter = 0;
+
 export class FileTokenStore implements TokenStore {
   protected options: FileTokenStoreOptions;
 
@@ -122,15 +127,31 @@ export class FileTokenStore implements TokenStore {
     }
 
     const filePath = this.resolverPath(sessionName);
+    // Write beside the target and rename, so a crash or a full disk leaves
+    // the previous token readable instead of a half-written file that
+    // getToken cannot decode. Every save gets its own staging file: a name
+    // shared with a concurrent save would let one operation rewrite the
+    // other's staging file and corrupt the committed token.
+    const tempPath = `${filePath}.${process.pid}.${stagingCounter++}.tmp`;
 
     try {
       const text = this.options.encodeFunction(tokenData);
 
-      await fs.promises.writeFile(filePath, text, {
+      // Create exclusively: if the path already exists it belongs to another
+      // save (or a stale file), so fail instead of clobbering it.
+      await fs.promises.writeFile(tempPath, text, {
         encoding: this.options.encoding,
+        flag: 'wx',
       });
+      await fs.promises.rename(tempPath, filePath);
       return true;
     } catch (error) {
+      // Only remove the staging file this save created. Exclusive creation
+      // reports EEXIST when the path belongs to another save, and that file
+      // must be left alone.
+      if ((error as NodeJS.ErrnoException)?.code !== 'EEXIST') {
+        await fs.promises.unlink(tempPath).catch(() => undefined);
+      }
       logger.debug(error);
       return false;
     }
