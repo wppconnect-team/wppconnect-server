@@ -13,8 +13,8 @@ if (config.tokenStoreType === 'redis') {
     socket: {
       port: config.db.redisPort,
       host: config.db.redisHost,
-      password: config.db.redisPassword || undefined,
     },
+    password: config.db.redisPassword || undefined,
     database: config.db.redisDb,
   });
   // Without an error listener node-redis emits "error" on every failed
