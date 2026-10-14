@@ -1,3 +1,10 @@
+## [2.10.53](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.52...v2.10.53) (2026-10-14)
+
+
+### Bug Fixes
+
+* **controller:** stop handling after an error response ([#2625](https://github.com/wppconnect-team/wppconnect-server/issues/2625)) ([9911e6e](https://github.com/wppconnect-team/wppconnect-server/commit/9911e6edc9422e790a698505bcfd823a84956190)), closes [#2469](https://github.com/wppconnect-team/wppconnect-server/issues/2469) [#2332](https://github.com/wppconnect-team/wppconnect-server/issues/2332)
+
 ## [2.10.52](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.51...v2.10.52) (2026-10-13)
 
 
