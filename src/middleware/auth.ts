@@ -50,7 +50,9 @@ function verifiedKey(
 ): string {
   return crypto
     .createHash('sha256')
-    .update(`${session}|${secureToken}|${token}`)
+    .update(
+      `${session.length}:${session}${secureToken.length}:${secureToken}${token.length}:${token}`
+    )
     .digest('base64');
 }
 
