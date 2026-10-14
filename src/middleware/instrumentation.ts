@@ -17,7 +17,23 @@
 import { Request, Response } from 'express';
 import Prometheus from 'prom-client';
 
+/**
+ * One registry for the process.
+ *
+ * Building a Registry and calling collectDefaultMetrics per scrape rebuilt
+ * every default collector on each request, and registered a fresh
+ * PerformanceObserver each time. It also meant the registry exported as
+ * prometheusRegister was never the one served: any metric registered against
+ * it was silently absent from /metrics.
+ *
+ * Collectors are cheap to keep and expensive to recreate, so they are
+ * registered once here and reused.
+ */
 const register = new Prometheus.Registry();
+register.setDefaultLabels({
+  app: 'wppconnect-server',
+});
+Prometheus.collectDefaultMetrics({ register });
 
 export async function metrics(req: Request, res: Response) {
   /**
@@ -26,12 +42,6 @@ export async function metrics(req: Request, res: Response) {
      #swagger.description = 'This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.'
      }
    */
-  const register = new Prometheus.Registry();
-  register.setDefaultLabels({
-    app: 'wppconnect-server',
-  });
-  Prometheus.collectDefaultMetrics({ register });
-
   res.setHeader('Content-Type', register.contentType);
   register.metrics().then((data) => res.status(200).send(data));
 }
