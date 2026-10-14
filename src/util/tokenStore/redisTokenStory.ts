@@ -12,6 +12,10 @@ class RedisTokenStore {
     if (prefix === 'docker') {
       prefix = getIPAddress();
     }
+    // Assign the resolved prefix. Reading this.prefix left it undefined, so
+    // every key became "undefined<session>" and listTokens crashed on
+    // prefix.length while stripping the prefix it had just failed to set.
+    this.prefix = prefix;
   }
   tokenStore = {
     getToken: (sessionName: string) =>
