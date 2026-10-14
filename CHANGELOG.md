@@ -1,3 +1,19 @@
+## [2.10.54](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.53...v2.10.54) (2026-10-14)
+
+
+### Bug Fixes
+
+* **contact:** keep explicit identifier domain in contactToArray ([#2624](https://github.com/wppconnect-team/wppconnect-server/issues/2624)) ([09b1bf7](https://github.com/wppconnect-team/wppconnect-server/commit/09b1bf7eee89a7e51fef4b8cd365b91a2a70611d)), closes [#2510](https://github.com/wppconnect-team/wppconnect-server/issues/2510)
+* **misc:** reject backup and restore when the secret key is wrong ([#2627](https://github.com/wppconnect-team/wppconnect-server/issues/2627)) ([90b61a4](https://github.com/wppconnect-team/wppconnect-server/commit/90b61a4da50613b0810b216b55cca2ca406ecdd7))
+* **redis:** assign the resolved key prefix in the redis token store ([#2629](https://github.com/wppconnect-team/wppconnect-server/issues/2629)) ([21c8ab0](https://github.com/wppconnect-team/wppconnect-server/commit/21c8ab0baae15224fea9bf3af4c4e88e4d5d08ae))
+
+
+### Performance Improvements
+
+* **manager-auth:** reuse verified sessions in the Manager auth path ([#2632](https://github.com/wppconnect-team/wppconnect-server/issues/2632)) ([dafb1cd](https://github.com/wppconnect-team/wppconnect-server/commit/dafb1cdeb34133c1e77ddfa65e2024292d1a1c6b))
+* **metrics:** reuse one prometheus registry instead of rebuilding per scrape ([#2633](https://github.com/wppconnect-team/wppconnect-server/issues/2633)) ([09ee158](https://github.com/wppconnect-team/wppconnect-server/commit/09ee158c1f251a8739f2d0ed461561538376b1d5))
+* **status-connection:** de-duplicate number lookups by requested contact ([#2634](https://github.com/wppconnect-team/wppconnect-server/issues/2634)) ([7f1986e](https://github.com/wppconnect-team/wppconnect-server/commit/7f1986ec89822b27d8e9f303e963db1b339d1ab0))
+
 ## [2.10.53](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.52...v2.10.53) (2026-10-14)
 
 
