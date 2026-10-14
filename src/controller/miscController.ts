@@ -46,7 +46,7 @@ export async function backupAllSessions(req: Request, res: Response) {
   const { secretkey } = req.params;
 
   if (secretkey !== config.secretKey) {
-    res.status(400).json({
+    return res.status(400).json({
       response: 'error',
       message: 'The token is incorrect',
     });
@@ -93,7 +93,7 @@ export async function restoreAllSessions(req: Request, res: Response) {
   const { secretkey } = req.params;
 
   if (secretkey !== config.secretKey) {
-    res.status(400).json({
+    return res.status(400).json({
       response: 'error',
       message: 'The token is incorrect',
     });
