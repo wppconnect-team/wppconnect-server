@@ -83,7 +83,7 @@ export async function joinGroupByCode(req: Request, res: Response) {
   const { inviteCode } = req.body;
 
   if (!inviteCode)
-    res.status(400).send({ message: 'Invitation Code is required' });
+    return res.status(400).send({ message: 'Invitation Code is required' });
 
   try {
     await req.client.joinGroup(inviteCode);
@@ -1001,7 +1001,7 @@ export async function setGroupProfilePic(req: Request, res: Response) {
   const { groupId, path } = req.body;
 
   if (!path && !req.file)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Sending the image is mandatory',
     });
 

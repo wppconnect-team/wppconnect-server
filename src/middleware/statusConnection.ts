@@ -24,7 +24,9 @@ export default async function statusConnection(
   next: NextFunction
 ) {
   try {
-    const numbers: any = [];
+    // Resolved ids keyed by the contact that was requested, so a repeated
+    // recipient in one bulk request costs a single browser round-trip.
+    const resolved = new Map<string, string>();
     if (req.client && req.client.isConnected) {
       await req.client.isConnected();
 
@@ -38,11 +40,24 @@ export default async function statusConnection(
       for (const contact of localArr) {
         if (req.body.isGroup || req.body.isNewsletter) {
           localArr[index] = contact;
-        } else if (numbers.indexOf(contact) < 0) {
-          console.log(contact);
-          const profile: any = await req.client
-            .checkNumberStatus(contact)
-            .catch((error) => console.log(error));
+        } else if (resolved.has(contact)) {
+          // Reuse the canonical id for another occurrence in this request.
+          (localArr as any)[index] = resolved.get(contact);
+        } else {
+          let profile: any;
+          try {
+            profile = await req.client.checkNumberStatus(contact);
+          } catch (error) {
+            // A failed lookup is not proof that the number is missing: the
+            // browser context can be destroyed mid-call. Reporting "não
+            // existe" here sends callers looking for a typo that is not there.
+            req.logger.error(error);
+            return res.status(502).json({
+              response: null,
+              status: 'Connected',
+              message: 'Não foi possível consultar o número.',
+            });
+          }
           if (!profile?.numberExists) {
             const num = (contact as any).split('@')[0];
             return res.status(400).json({
@@ -51,9 +66,11 @@ export default async function statusConnection(
               message: `O número ${num} não existe.`,
             });
           } else {
-            if ((numbers as any).indexOf(profile.id._serialized) < 0) {
-              (numbers as any).push(profile.id._serialized);
-            }
+            // Key the cache by the contact that was asked about. checkNumberStatus
+            // returns the canonical id, which can differ from the requested one,
+            // so comparing against the returned id never matched the next
+            // identical request.
+            resolved.set(contact, profile.id._serialized);
             (localArr as any)[index] = profile.id._serialized;
           }
         }
