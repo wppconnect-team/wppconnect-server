@@ -123,7 +123,7 @@ export async function startAllSessions(
   let tokenDecrypt = '';
 
   if (secretkey === undefined) {
-    tokenDecrypt = (token as any).split(' ')[0];
+    tokenDecrypt = token?.split(' ')[0] ?? '';
   } else {
     tokenDecrypt = secretkey;
   }
@@ -131,7 +131,7 @@ export async function startAllSessions(
   const allSessions = await getAllTokens(req);
 
   if (tokenDecrypt !== req.serverOptions.secretKey) {
-    res.status(400).json({
+    return res.status(400).json({
       response: 'error',
       message: 'The token is incorrect',
     });
@@ -178,7 +178,7 @@ export async function showAllSessions(
   const arr: any = [];
 
   if (tokenDecrypt !== req.serverOptions.secretKey) {
-    res.status(400).json({
+    return res.status(400).json({
       response: false,
       message: 'The token is incorrect',
     });
