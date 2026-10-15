@@ -58,166 +58,167 @@ export default class CreateSessionUtil {
       return;
     }
     try {
-      let client = this.getClient(session) as any;
-      if (client.status != null && client.status !== 'CLOSED') {
-        return;
-      }
-      // A retry gets a distinct owner so callbacks from a failed attempt cannot
-      // close or publish pairing data for the replacement.
-      client = clientsArray[session] = { ...client };
-      let initializedClient: typeof client;
-      const ownsAttempt = () =>
-        clientsArray[session] === client &&
-        !['CLOSED', 'CLOSING', 'ERROR'].includes(client.status);
-      try {
-        client.status = 'INITIALIZING';
-        client.config = req.body;
-
-        const tokenStore = new Factory();
-        const myTokenStore = tokenStore.createTokenStory(client);
-        const tokenData = await myTokenStore.getToken(session);
-
-        // we need this to update phone in config every time session starts, so we can ask for code for it again.
-        await myTokenStore.setToken(session, tokenData ?? {});
-
-        this.startChatWootClient(client);
-
-        if (req.serverOptions.customUserDataDir) {
-          req.serverOptions.createOptions.puppeteerOptions = {
-            userDataDir: path.resolve(
-              req.serverOptions.customUserDataDir,
-              session
-            ),
-          };
-        }
-
-        const wppClient = await create(
-          Object.assign(
-            {},
-            { tokenStore: myTokenStore },
-            client.config.proxy
-              ? {
-                  proxy: {
-                    url: client.config.proxy?.url,
-                    username: client.config.proxy?.username,
-                    password: client.config.proxy?.password,
-                  },
-                }
-              : {},
-            req.serverOptions.createOptions,
-            {
-              session: session,
-              phoneNumber: client.config.phone ?? null,
-              deviceName:
-                client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
-                  ? client.config?.deviceName ||
-                    req.serverOptions.deviceName ||
-                    'WppConnect'
-                  : undefined,
-              poweredBy:
-                client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
-                  ? client.config?.poweredBy ||
-                    req.serverOptions.poweredBy ||
-                    'WPPConnect-Server'
-                  : undefined,
-              catchLinkCode: (code: string) => {
-                if (!ownsAttempt()) return;
-                this.exportPhoneCode(
-                  req,
-                  client.config.phone,
-                  code,
-                  client,
-                  res
-                );
-              },
-              catchQR: (
-                base64Qr: any,
-                asciiQR: any,
-                attempt: any,
-                urlCode: string
-              ) => {
-                if (!ownsAttempt()) return;
-                this.exportQR(req, base64Qr, urlCode, client, res);
-              },
-              onLoadingScreen: (percent: string, message: string) => {
-                req.logger.info(`[${session}] ${percent}% - ${message}`);
-              },
-              statusFind: (statusFind: StatusFind) => {
-                // A cleanup or newer start owns this session now.
-                if (!ownsAttempt()) return;
-                try {
-                  eventEmitter.emit(
-                    `status-${client.session}`,
-                    client,
-                    statusFind
-                  );
-                  if (
-                    statusFind === StatusFind.autocloseCalled ||
-                    statusFind === StatusFind.disconnectedMobile
-                  ) {
-                    client.status = 'CLOSED';
-                    client.qrcode = null;
-                    client.close();
-                    clientsArray[session] = undefined;
-                  }
-                  callWebHook(client, req, 'status-find', {
-                    status: statusFind,
-                    session: client.session,
-                  });
-                  req.logger.info(statusFind + '\n\n');
-                } catch (error) {}
-              },
-            }
-          )
-        );
-
-        initializedClient = wppClient;
-
-        // A late browser from a cancelled start must not resurrect the session
-        // or overwrite a newer initialization.
-        if (!ownsAttempt()) {
-          await wppClient.close();
-          return;
-        }
-        client = clientsArray[session] = Object.assign(wppClient, client);
-        await this.start(req, client);
-
-        if (req.serverOptions.webhook.onParticipantsChanged) {
-          await this.onParticipantsChanged(req, client);
-        }
-
-        if (req.serverOptions.webhook.onReactionMessage) {
-          await this.onReactionMessage(client, req);
-        }
-
-        if (req.serverOptions.webhook.onRevokedMessage) {
-          await this.onRevokedMessage(client, req);
-        }
-
-        if (req.serverOptions.webhook.onPollResponse) {
-          await this.onPollResponse(client, req);
-        }
-        if (req.serverOptions.webhook.onLabelUpdated) {
-          await this.onLabelUpdated(client, req);
-        }
-      } catch (e) {
-        req.logger.error(e);
-        if (clientsArray[session] === client) {
-          client.status = 'CLOSING';
-          try {
-            if (initializedClient) await initializedClient.close();
-            client.status = 'CLOSED';
-            client.qrcode = null;
-          } catch (closeError) {
-            // Keep the failed runtime available to explicit cleanup rather than
-            // starting a second browser against a profile still owned by it.
-            client.status = 'ERROR';
-            req.logger.error(closeError);
-          }
-        }
-      }
+      await this.initializeSession(req, clientsArray, session, res);
     } finally {
       releaseStart();
+    }
+  }
+
+  private async initializeSession(
+    req: any,
+    clientsArray: any,
+    session: string,
+    res?: any
+  ) {
+    let client = this.getClient(session) as any;
+    if (client.status != null && client.status !== 'CLOSED') return;
+    // A retry gets a distinct owner so callbacks from a failed attempt cannot
+    // close or publish pairing data for the replacement.
+    client = clientsArray[session] = { ...client };
+    let initializedClient: typeof client;
+    const ownsAttempt = () =>
+      clientsArray[session] === client &&
+      !['CLOSED', 'CLOSING', 'ERROR'].includes(client.status);
+    try {
+      client.status = 'INITIALIZING';
+      client.config = req.body;
+
+      const tokenStore = new Factory();
+      const myTokenStore = tokenStore.createTokenStory(client);
+      const tokenData = await myTokenStore.getToken(session);
+
+      // we need this to update phone in config every time session starts, so we can ask for code for it again.
+      await myTokenStore.setToken(session, tokenData ?? {});
+
+      this.startChatWootClient(client);
+
+      if (req.serverOptions.customUserDataDir) {
+        req.serverOptions.createOptions.puppeteerOptions = {
+          userDataDir: path.resolve(
+            req.serverOptions.customUserDataDir,
+            session
+          ),
+        };
+      }
+
+      const wppClient = await create(
+        Object.assign(
+          {},
+          { tokenStore: myTokenStore },
+          client.config.proxy
+            ? {
+                proxy: {
+                  url: client.config.proxy?.url,
+                  username: client.config.proxy?.username,
+                  password: client.config.proxy?.password,
+                },
+              }
+            : {},
+          req.serverOptions.createOptions,
+          {
+            session: session,
+            phoneNumber: client.config.phone ?? null,
+            deviceName:
+              client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
+                ? client.config?.deviceName ||
+                  req.serverOptions.deviceName ||
+                  'WppConnect'
+                : undefined,
+            poweredBy:
+              client.config.phone == undefined // bug when using phone code this shouldn't be passed (https://github.com/wppconnect-team/wppconnect-server/issues/1687#issuecomment-2099357874)
+                ? client.config?.poweredBy ||
+                  req.serverOptions.poweredBy ||
+                  'WPPConnect-Server'
+                : undefined,
+            catchLinkCode: (code: string) => {
+              if (!ownsAttempt()) return;
+              this.exportPhoneCode(req, client.config.phone, code, client, res);
+            },
+            catchQR: (
+              base64Qr: any,
+              asciiQR: any,
+              attempt: any,
+              urlCode: string
+            ) => {
+              if (!ownsAttempt()) return;
+              this.exportQR(req, base64Qr, urlCode, client, res);
+            },
+            onLoadingScreen: (percent: string, message: string) => {
+              req.logger.info(`[${session}] ${percent}% - ${message}`);
+            },
+            statusFind: (statusFind: StatusFind) => {
+              // A cleanup or newer start owns this session now.
+              if (!ownsAttempt()) return;
+              try {
+                eventEmitter.emit(
+                  `status-${client.session}`,
+                  client,
+                  statusFind
+                );
+                if (
+                  statusFind === StatusFind.autocloseCalled ||
+                  statusFind === StatusFind.disconnectedMobile
+                ) {
+                  client.status = 'CLOSED';
+                  client.qrcode = null;
+                  client.close();
+                  clientsArray[session] = undefined;
+                }
+                callWebHook(client, req, 'status-find', {
+                  status: statusFind,
+                  session: client.session,
+                });
+                req.logger.info(statusFind + '\n\n');
+              } catch (error) {}
+            },
+          }
+        )
+      );
+
+      initializedClient = wppClient;
+
+      // A late browser from a cancelled start must not resurrect the session
+      // or overwrite a newer initialization.
+      if (!ownsAttempt()) {
+        await wppClient.close();
+        return;
+      }
+      client = clientsArray[session] = Object.assign(wppClient, client);
+      await this.start(req, client);
+
+      if (req.serverOptions.webhook.onParticipantsChanged) {
+        await this.onParticipantsChanged(req, client);
+      }
+
+      if (req.serverOptions.webhook.onReactionMessage) {
+        await this.onReactionMessage(client, req);
+      }
+
+      if (req.serverOptions.webhook.onRevokedMessage) {
+        await this.onRevokedMessage(client, req);
+      }
+
+      if (req.serverOptions.webhook.onPollResponse) {
+        await this.onPollResponse(client, req);
+      }
+      if (req.serverOptions.webhook.onLabelUpdated) {
+        await this.onLabelUpdated(client, req);
+      }
+    } catch (e) {
+      req.logger.error(e);
+      if (clientsArray[session] === client) {
+        client.status = 'CLOSING';
+        try {
+          if (initializedClient) await initializedClient.close();
+          client.status = 'CLOSED';
+          client.qrcode = null;
+        } catch (closeError) {
+          // Keep the failed runtime available to explicit cleanup rather than
+          // starting a second browser against a profile still owned by it.
+          client.status = 'ERROR';
+          req.logger.error(closeError);
+        }
+      }
     }
   }
 
