@@ -67,7 +67,7 @@ describe('redis client configuration', () => {
     expect(capturedOptions).toBeDefined();
     expect(capturedOptions.socket.port).toBe(6380);
     expect(capturedOptions.socket.host).toBe('redis.internal.example');
-    expect(capturedOptions.socket.password).toBe('s3cret');
+    expect(capturedOptions.password).toBe('s3cret');
     expect(capturedOptions.database).toBe(4);
   });
 
