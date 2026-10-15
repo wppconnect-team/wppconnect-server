@@ -14,12 +14,65 @@
  * limitations under the License.
  */
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 
 import { clientsArray } from '../util/sessionUtil';
 
 function formatSession(session: string) {
   return session.split(':')[0];
+}
+
+/**
+ * Successful token verifications, keyed by a digest of the exact credential
+ * that was checked.
+ *
+ * bcrypt at cost 10 costs ~47ms of CPU and runs on the libuv threadpool,
+ * which is also what serves every other async operation in the process. It
+ * was being paid on all 145 authenticated routes, so throughput was capped
+ * near 20 req/s on a single core and unrelated I/O queued behind it.
+ *
+ * A token is a bcrypt hash of session + secretKey, so it only ever matches
+ * one session, and comparing against the same hash is idempotent: the
+ * answer cannot change while SECRET_KEY is unchanged. Only successes are
+ * cached and only the digest is retained, so a memory dump does not hand
+ * over usable tokens. SECRET_KEY is part of the key, so rotating it
+ * invalidates every entry at once.
+ */
+const verifiedTokens = new Map<string, number>();
+const VERIFIED_TTL_MS = 60_000;
+const VERIFIED_MAX = 5000;
+
+function verifiedKey(
+  session: string,
+  token: string,
+  secureToken: string
+): string {
+  return crypto
+    .createHash('sha256')
+    .update(
+      `${session.length}:${session}${secureToken.length}:${secureToken}${token.length}:${token}`
+    )
+    .digest('base64');
+}
+
+function rememberVerified(key: string): void {
+  const now = Date.now();
+  // Drop expired entries on write so the map cannot grow without bound even
+  // on a server that only ever sees one token.
+  if (verifiedTokens.size >= VERIFIED_MAX) {
+    for (const [entry, expires] of verifiedTokens) {
+      if (expires <= now || verifiedTokens.size > VERIFIED_MAX) {
+        verifiedTokens.delete(entry);
+      }
+    }
+    if (verifiedTokens.size >= VERIFIED_MAX) verifiedTokens.clear();
+  }
+  verifiedTokens.set(key, now + VERIFIED_TTL_MS);
+}
+
+export function clearVerifiedTokens(): void {
+  verifiedTokens.clear();
 }
 
 const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
@@ -64,11 +117,21 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
       }
     }
 
+    const cacheKey = verifiedKey(sessionDecrypt, tokenDecrypt, secureToken);
+    const cached = verifiedTokens.get(cacheKey);
+    if (cached && cached > Date.now()) {
+      req.session = formatSession(req.params.session);
+      req.token = tokenDecrypt;
+      req.client = clientsArray[req.session];
+      return next();
+    }
+
     bcrypt.compare(
       sessionDecrypt + secureToken,
       tokenDecrypt,
       function (err, result) {
         if (result) {
+          rememberVerified(cacheKey);
           req.session = formatSession(req.params.session);
           req.token = tokenDecrypt;
           req.client = clientsArray[req.session];
