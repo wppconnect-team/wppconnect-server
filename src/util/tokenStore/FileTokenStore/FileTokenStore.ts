@@ -133,23 +133,28 @@ export class FileTokenStore implements TokenStore {
     // shared with a concurrent save would let one operation rewrite the
     // other's staging file and corrupt the committed token.
     const tempPath = `${filePath}.${process.pid}.${stagingCounter++}.tmp`;
+    let ownsTempFile = false;
 
     try {
       const text = this.options.encodeFunction(tokenData);
 
       // Create exclusively: if the path already exists it belongs to another
       // save (or a stale file), so fail instead of clobbering it.
-      await fs.promises.writeFile(tempPath, text, {
-        encoding: this.options.encoding,
-        flag: 'wx',
-      });
+      const handle = await fs.promises.open(tempPath, 'wx');
+      ownsTempFile = true;
+      try {
+        await fs.promises.writeFile(handle, text, {
+          encoding: this.options.encoding,
+        });
+      } finally {
+        await handle.close();
+      }
       await fs.promises.rename(tempPath, filePath);
       return true;
     } catch (error) {
-      // Only remove the staging file this save created. Exclusive creation
-      // reports EEXIST when the path belongs to another save, and that file
-      // must be left alone.
-      if ((error as NodeJS.ErrnoException)?.code !== 'EEXIST') {
+      // Encoding or opening may fail before this operation owns any file.
+      // Cleanup is allowed only after exclusive creation succeeds.
+      if (ownsTempFile) {
         await fs.promises.unlink(tempPath).catch(() => undefined);
       }
       logger.debug(error);

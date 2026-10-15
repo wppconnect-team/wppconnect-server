@@ -63,15 +63,15 @@ describe('FileTokenStore', () => {
   });
 
   it('never writes the token through the final path', async () => {
-    const writeFile = jest.spyOn(fsp, 'writeFile');
+    const open = jest.spyOn(fsp, 'open');
 
     await store.setToken('customer-1', { token: 'abc' } as any);
 
-    const targets = writeFile.mock.calls.map((call) => call[0] as string);
+    const targets = open.mock.calls.map((call) => call[0] as string);
     expect(targets).toHaveLength(1);
     expect(targets[0]).not.toBe(tokenFile('customer-1'));
     expect(targets[0]).toContain('customer-1.data.json');
-    writeFile.mockRestore();
+    open.mockRestore();
   });
 
   it('keeps the previous token readable when the save fails mid-write', async () => {
@@ -132,21 +132,21 @@ describe('FileTokenStore', () => {
   });
 
   it('stages every save to its own exclusively-created file', async () => {
-    const writeFile = jest.spyOn(fsp, 'writeFile');
+    const open = jest.spyOn(fsp, 'open');
 
     await store.setToken('customer-1', { token: 'first' } as any);
     await store.setToken('customer-1', { token: 'second' } as any);
 
-    const calls = writeFile.mock.calls as any[][];
+    const calls = open.mock.calls as any[][];
     expect(calls).toHaveLength(2);
     // A staging path shared with a concurrent save would let one operation
     // rewrite the other's file, so each save must stage elsewhere.
     expect(calls[0][0]).not.toBe(calls[1][0]);
     for (const call of calls) {
       expect(call[0]).toContain('customer-1.data.json');
-      expect(call[2]).toMatchObject({ flag: 'wx' });
+      expect(call[1]).toBe('wx');
     }
-    writeFile.mockRestore();
+    open.mockRestore();
   });
 
   it('leaves one complete token when two saves overlap', async () => {
@@ -168,12 +168,11 @@ describe('FileTokenStore', () => {
       // Hold the staging file open with only the first bytes landed,
       // modelling a slow write that a second save for the same session
       // overtakes.
-      const handle = await fsp.open(target, 'w');
+      const handle = target;
       await handle.write(String(data).slice(0, 8));
       aEntered();
       await gate;
       await handle.write(String(data).slice(8));
-      await handle.close();
     });
 
     const saveA = store.setToken('customer-1', payloadA);
@@ -212,12 +211,11 @@ describe('FileTokenStore', () => {
 
     const writeFile = jest.spyOn(fsp, 'writeFile');
     writeFile.mockImplementationOnce(async (target: any, data: any) => {
-      const handle = await fsp.open(target, 'w');
+      const handle = target;
       await handle.write(String(data).slice(0, 8));
       aEntered();
       await gate;
       await handle.write(String(data).slice(8));
-      await handle.close();
     });
     const rename = jest.spyOn(fsp, 'rename');
 
@@ -241,8 +239,8 @@ describe('FileTokenStore', () => {
   });
 
   it('does not remove a staging file owned by another save', async () => {
-    const writeFile = jest.spyOn(fsp, 'writeFile');
-    writeFile.mockRejectedValueOnce(
+    const open = jest.spyOn(fsp, 'open');
+    open.mockRejectedValueOnce(
       Object.assign(new Error('EEXIST: file already exists'), {
         code: 'EEXIST',
       })
@@ -256,8 +254,41 @@ describe('FileTokenStore', () => {
     // Exclusive creation reported that the path belongs to another save,
     // so cleanup must leave it alone.
     expect(unlink).not.toHaveBeenCalled();
-    writeFile.mockRestore();
+    open.mockRestore();
     unlink.mockRestore();
     expect(await fsp.readdir(dir)).toEqual([]);
+  });
+
+  it('does not clean up any path when encoding fails before creation', async () => {
+    // Discover the next staging name without depending on the module counter.
+    const open = jest.spyOn(fsp, 'open');
+    await store.setToken('customer-1', { token: 'previous' } as any);
+    const previous = String(open.mock.calls[0][0]);
+    open.mockRestore();
+    const next = previous.replace(
+      /\.(\d+)\.tmp$/,
+      (_, counter) => `.${Number(counter) + 1}.tmp`
+    );
+    await fsp.writeFile(next, 'owned by a previous process');
+    store = new FileTokenStore({
+      path: dir,
+      encodeFunction: () => {
+        throw new Error('encoder failed');
+      },
+    });
+    const unlink = jest.spyOn(fsp, 'unlink');
+
+    await expect(
+      store.setToken('customer-1', { token: 'next' } as any)
+    ).resolves.toBe(false);
+
+    expect(unlink).not.toHaveBeenCalled();
+    unlink.mockRestore();
+    await expect(fsp.readFile(next, 'utf8')).resolves.toBe(
+      'owned by a previous process'
+    );
+    await expect(store.getToken('customer-1')).resolves.toMatchObject({
+      token: 'previous',
+    });
   });
 });
