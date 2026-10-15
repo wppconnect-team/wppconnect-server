@@ -52,9 +52,21 @@ function build(tokenValue: string, session = SESSION) {
   return { req, res, next };
 }
 
-function settle(): Promise<void> {
-  // bcrypt.compare completes on the threadpool, so let the event loop drain.
-  return new Promise((resolve) => setTimeout(resolve, 80));
+function settle(next: jest.Mock, res: { statusCode: number }): Promise<void> {
+  // Observe completion instead of assuming bcrypt finishes within 80ms.
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      clearInterval(poll);
+      reject(new Error('Authentication did not complete within 5 seconds'));
+    }, 5000);
+    const poll = setInterval(() => {
+      if (next.mock.calls.length || res.statusCode) {
+        clearTimeout(timeout);
+        clearInterval(poll);
+        resolve();
+      }
+    }, 5);
+  });
 }
 
 beforeAll(async () => {
@@ -81,7 +93,7 @@ describe('verifyToken', () => {
     const { req, res, next } = build(token);
 
     verifyToken(req, res as any, next);
-    await settle();
+    await settle(next, res);
 
     expect(next).toHaveBeenCalledTimes(1);
     expect(req.session).toBe(SESSION);
@@ -92,7 +104,7 @@ describe('verifyToken', () => {
     const { req, res, next } = build(otherToken);
 
     verifyToken(req, res as any, next);
-    await settle();
+    await settle(next, res);
 
     expect(next).not.toHaveBeenCalled();
     expect(res.statusCode).toBe(401);
@@ -102,7 +114,7 @@ describe('verifyToken', () => {
     const { req, res, next } = build('not-a-real-token');
 
     verifyToken(req, res as any, next);
-    await settle();
+    await settle(next, res);
 
     expect(next).not.toHaveBeenCalled();
     expect(res.statusCode).toBe(401);
@@ -113,12 +125,12 @@ describe('verifyToken', () => {
 
     const first = build(token);
     verifyToken(first.req, first.res as any, first.next);
-    await settle();
+    await settle(first.next, first.res);
     expect(spy).toHaveBeenCalledTimes(1);
 
     const second = build(token);
     verifyToken(second.req, second.res as any, second.next);
-    await settle();
+    await settle(second.next, second.res);
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(second.next).toHaveBeenCalledTimes(1);
@@ -129,7 +141,7 @@ describe('verifyToken', () => {
   it('attaches the client on the cached path', async () => {
     const first = build(token);
     verifyToken(first.req, first.res as any, first.next);
-    await settle();
+    await settle(first.next, first.res);
 
     const second = build(token);
     verifyToken(second.req, second.res as any, second.next);
@@ -143,12 +155,12 @@ describe('verifyToken', () => {
 
     const first = build('wrong-token-value');
     verifyToken(first.req, first.res as any, first.next);
-    await settle();
+    await settle(first.next, first.res);
     expect(first.next).not.toHaveBeenCalled();
 
     const second = build('wrong-token-value');
     verifyToken(second.req, second.res as any, second.next);
-    await settle();
+    await settle(second.next, second.res);
 
     expect(spy).toHaveBeenCalledTimes(2);
     expect(second.next).not.toHaveBeenCalled();
@@ -160,12 +172,12 @@ describe('verifyToken', () => {
 
     const first = build(token, SESSION);
     verifyToken(first.req, first.res as any, first.next);
-    await settle();
+    await settle(first.next, first.res);
     expect(first.next).toHaveBeenCalledTimes(1);
 
     const second = build(token, OTHER_SESSION);
     verifyToken(second.req, second.res as any, second.next);
-    await settle();
+    await settle(second.next, second.res);
 
     expect(second.next).not.toHaveBeenCalled();
     expect(spy).toHaveBeenCalledTimes(2);
@@ -175,13 +187,13 @@ describe('verifyToken', () => {
   it('does not reuse a cached entry after SECRET_KEY changes', async () => {
     const first = build(token);
     verifyToken(first.req, first.res as any, first.next);
-    await settle();
+    await settle(first.next, first.res);
     expect(first.next).toHaveBeenCalledTimes(1);
 
     const second = build(token);
     second.req.serverOptions.secretKey = 'rotated-secret';
     verifyToken(second.req, second.res as any, second.next);
-    await settle();
+    await settle(second.next, second.res);
 
     expect(second.next).not.toHaveBeenCalled();
     expect(second.res.statusCode).toBe(401);
@@ -190,7 +202,7 @@ describe('verifyToken', () => {
   it('still reads the current client from the session map on a cache hit', async () => {
     const first = build(token);
     verifyToken(first.req, first.res as any, first.next);
-    await settle();
+    await settle(first.next, first.res);
 
     // The session was restarted and produced a new client object.
     const replacement = { id: 'client-1-replacement' };
@@ -200,6 +212,53 @@ describe('verifyToken', () => {
     verifyToken(second.req, second.res as any, second.next);
 
     expect(second.req.client).toBe(replacement);
+  });
+
+  it('does not reuse a cached tuple with ambiguous credential delimiters', async () => {
+    const collisionToken = bcrypt
+      .hashSync('a|bc', 10)
+      .replace(/\//g, '_')
+      .replace(/\+/g, '-');
+    const spy = jest.spyOn(bcrypt, 'compare');
+    try {
+      const first = build(collisionToken, 'a|b');
+      first.req.serverOptions.secretKey = 'c';
+      verifyToken(first.req, first.res as any, first.next);
+      await settle(first.next, first.res);
+      expect(first.next).toHaveBeenCalledTimes(1);
+
+      const second = build(collisionToken, 'a');
+      second.req.serverOptions.secretKey = 'b|c';
+      verifyToken(second.req, second.res as any, second.next);
+      await settle(second.next, second.res);
+      expect(second.next).not.toHaveBeenCalled();
+      expect(second.res.statusCode).toBe(401);
+      expect(spy).toHaveBeenCalledTimes(2);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('revalidates an accepted credential after the cache expires', async () => {
+    const now = Date.now();
+    const clock = jest.spyOn(Date, 'now').mockReturnValue(now);
+    const spy = jest.spyOn(bcrypt, 'compare');
+    try {
+      const first = build(token);
+      verifyToken(first.req, first.res as any, first.next);
+      await settle(first.next, first.res);
+      expect(first.next).toHaveBeenCalledTimes(1);
+
+      clock.mockReturnValue(now + 60_001);
+      const second = build(token);
+      verifyToken(second.req, second.res as any, second.next);
+      await settle(second.next, second.res);
+      expect(second.next).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(2);
+    } finally {
+      spy.mockRestore();
+      clock.mockRestore();
+    }
   });
 
   it('reports a missing session', () => {
