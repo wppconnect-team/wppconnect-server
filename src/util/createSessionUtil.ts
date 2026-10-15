@@ -22,6 +22,7 @@ import { emitManager } from '../manager/socket';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
+import { tryBeginSessionStart } from './sessionMaintenance';
 import { clientsArray, eventEmitter } from './sessionUtil';
 import Factory from './tokenStore/factory';
 
@@ -45,6 +46,30 @@ export default class CreateSessionUtil {
       req.logger.error(new Error('Invalid session name'));
       return;
     }
+    const releaseStart = tryBeginSessionStart();
+    if (!releaseStart) {
+      req.logger.info('Session start skipped: backup or restore in progress');
+      if (res && !res.headersSent && !res._headerSent) {
+        res.status(503).json({
+          status: false,
+          message: 'Session backup or restore is in progress. Try again later.',
+        });
+      }
+      return;
+    }
+    try {
+      await this.initializeSession(req, clientsArray, session, res);
+    } finally {
+      releaseStart();
+    }
+  }
+
+  private async initializeSession(
+    req: any,
+    clientsArray: any,
+    session: string,
+    res?: any
+  ) {
     let client = this.getClient(session) as any;
     if (client.status != null && client.status !== 'CLOSED') return;
     // A retry gets a distinct owner so callbacks from a failed attempt cannot
@@ -63,7 +88,7 @@ export default class CreateSessionUtil {
       const tokenData = await myTokenStore.getToken(session);
 
       // we need this to update phone in config every time session starts, so we can ask for code for it again.
-      myTokenStore.setToken(session, tokenData ?? {});
+      await myTokenStore.setToken(session, tokenData ?? {});
 
       this.startChatWootClient(client);
 

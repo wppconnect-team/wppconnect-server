@@ -21,7 +21,10 @@ import { clearSessionData } from '../../controller/miscController';
 import {
   closeSession,
   logOutSession,
+  startAllSessions,
+  startSession,
 } from '../../controller/sessionController';
+import { acquireSessionMaintenance } from '../../util/sessionMaintenance';
 import { clientsArray } from '../../util/sessionUtil';
 
 jest.mock('../..', () => ({ logger: { error: jest.fn() } }));
@@ -169,3 +172,76 @@ it.each(['close', 'logout'])(
     expect(client.status).toBe('ERROR');
   }
 );
+
+it.each([startSession, startAllSessions])(
+  'returns 503 for a session start during backup or restore',
+  async (start) => {
+    const { req, res } = setup();
+    Object.assign(req, {
+      body: {},
+      headers: {},
+      serverOptions: { secretKey: config.secretKey },
+    });
+    jest
+      .requireMock('../../util/getAllTokens')
+      .default.mockResolvedValue(['stale']);
+    const release = await acquireSessionMaintenance();
+    try {
+      await start(req as any, res as any);
+      expect(res.status).toHaveBeenCalledWith(503);
+      expect(res.status).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith({
+        status: false,
+        message: 'Session backup or restore is in progress. Try again later.',
+      });
+    } finally {
+      release();
+    }
+  }
+);
+
+it('keeps invalid bulk-start credentials at one 400 response during maintenance', async () => {
+  const { req, res } = setup();
+  Object.assign(req, {
+    headers: {},
+    serverOptions: { secretKey: config.secretKey },
+  });
+  req.params.secretkey = 'invalid';
+  const tokens = jest.requireMock('../../util/getAllTokens').default;
+  tokens.mockClear();
+  const release = await acquireSessionMaintenance();
+  try {
+    await startAllSessions(req as any, res as any);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(tokens).not.toHaveBeenCalled();
+  } finally {
+    release();
+  }
+});
+
+it('rejects bulk-start if maintenance begins while the token listing is pending', async () => {
+  const { req, res } = setup();
+  Object.assign(req, {
+    headers: {},
+    serverOptions: { secretKey: config.secretKey },
+  });
+  let listed!: (names: string[]) => void;
+  const tokens = jest.requireMock('../../util/getAllTokens').default;
+  tokens.mockReturnValueOnce(
+    new Promise((resolve) => {
+      listed = resolve;
+    })
+  );
+  const operation = startAllSessions(req as any, res as any);
+  const release = await acquireSessionMaintenance();
+  try {
+    listed(['late']);
+    await operation;
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(503);
+    expect(clientsArray.late).toBeUndefined();
+  } finally {
+    release();
+  }
+});

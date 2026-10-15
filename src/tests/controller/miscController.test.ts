@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import config from '../../config';
 import {
   backupAllSessions,
   restoreAllSessions,
@@ -93,4 +94,27 @@ describe('backup and restore secret key guards', () => {
     });
     expect(restoreSessions).not.toHaveBeenCalled();
   });
+});
+
+it('does not send a second response after the backup streamed the archive', async () => {
+  const req = createRequest(config.secretKey);
+  const res = createResponse();
+  backupSessions.mockImplementationOnce(async () => {
+    res.headersSent = true;
+  });
+  await backupAllSessions(req, res);
+  expect(res.sent).toEqual([]);
+});
+
+it('logs a failed streamed backup without writing already-sent headers', async () => {
+  const req = createRequest(config.secretKey);
+  const res = createResponse();
+  const error = new Error('connection closed');
+  backupSessions.mockImplementationOnce(async () => {
+    res.headersSent = true;
+    throw error;
+  });
+  await backupAllSessions(req, res);
+  expect(res.sent).toEqual([]);
+  expect(req.logger.error).toHaveBeenCalledWith(error);
 });

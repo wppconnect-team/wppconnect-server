@@ -54,8 +54,12 @@ export async function backupAllSessions(req: Request, res: Response) {
 
   try {
     res.setHeader('Content-Type', 'application/zip');
-    res.send(await backupSessions(req));
+    await backupSessions(req);
   } catch (error) {
+    if (res.headersSent) {
+      req.logger.error(error);
+      return;
+    }
     res.status(500).json({
       status: false,
       message: 'Error on backup session',
