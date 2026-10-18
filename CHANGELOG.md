@@ -1,3 +1,20 @@
+## [2.10.56](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.55...v2.10.56) (2026-10-18)
+
+
+### Bug Fixes
+
+* **file-token-store:** save session tokens atomically ([1bfe6a4](https://github.com/wppconnect-team/wppconnect-server/commit/1bfe6a45bfe9d5603e82ca19fc8a08d53da36ae6))
+* **manage-session:** await every browser before the caller continues ([1d2a54c](https://github.com/wppconnect-team/wppconnect-server/commit/1d2a54ca57cdcf13d88a4e6e33318e3d9f1a47cf))
+* **redis:** await token store promises instead of passing callbacks ([a6a6a84](https://github.com/wppconnect-team/wppconnect-server/commit/a6a6a8449d544d7dfbdc6570dc3b4208d3c9703d))
+* **redis:** pass the connection settings the client actually reads ([2394350](https://github.com/wppconnect-team/wppconnect-server/commit/2394350eee1fc522b5405aedd88adb54bd488f8c))
+* **session:** exclude new starts during backup and restore ([666dd32](https://github.com/wppconnect-team/wppconnect-server/commit/666dd32433ef9da8550140c80540e63c4458a7c1)), closes [#2628](https://github.com/wppconnect-team/wppconnect-server/issues/2628)
+* **session:** reject start-all and show-all when the secret key is wrong ([0af4668](https://github.com/wppconnect-team/wppconnect-server/commit/0af4668622004c7b9fc1cc0a1aebb64003d134ef))
+
+
+### Performance Improvements
+
+* **auth:** reuse verified tokens instead of hashing on every request ([1214d11](https://github.com/wppconnect-team/wppconnect-server/commit/1214d1154e78f2e8ea3ab0d2b5fa6ad1cfce8e71))
+
 ## [2.10.55](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.53...v2.10.55) (2026-10-14)
 
 
