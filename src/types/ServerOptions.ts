@@ -52,6 +52,7 @@ export interface ServerOptions {
   resourceMonitor: {
     enable: boolean;
     cacheDuration: number;
+    exposeSessionMetrics?: boolean;
   };
   db: {
     mongodbDatabase: string;

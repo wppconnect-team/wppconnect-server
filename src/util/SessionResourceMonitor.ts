@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import pidusage from 'pidusage';
 import { promisify } from 'util';
 
-const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 
-interface ProcessUsage {
+export interface ProcessEntry {
+  pid: number;
+  ppid: number;
+  command: string;
+}
+
+export type ProcessEnumerator = () => Promise<ProcessEntry[]>;
+
+export interface ProcessUsage {
   cpu: number;
   memory: number;
   count: number;
   processes: number[];
 }
 
-interface SessionUsageResult {
+export interface SessionUsageResult {
   sessionName: string;
   status: 'running' | 'not_running';
   message?: string;
@@ -49,7 +57,7 @@ interface SessionUsageResult {
   timestamp: string;
 }
 
-interface AllSessionsUsageResult {
+export interface AllSessionsUsageResult {
   sessions: SessionUsageResult[];
   summary: {
     totalSessions: number;
@@ -65,79 +73,308 @@ interface CacheEntry {
 }
 
 /**
- * SessionResourceMonitor - Monitors resource usage of Chromium processes for each session
+ * Validate that a session name is safe and does not contain hostile characters,
+ * path traversal sequences, or shell metacharacters.
+ */
+export function isValidSessionName(sessionName: string): boolean {
+  if (!sessionName || typeof sessionName !== 'string') {
+    return false;
+  }
+  const trimmed = sessionName.trim();
+  if (trimmed.length === 0 || trimmed.length > 255) {
+    return false;
+  }
+  // Disallow path traversal or directory separators
+  if (
+    trimmed === '.' ||
+    trimmed === '..' ||
+    trimmed.includes('..') ||
+    trimmed.includes('/') ||
+    trimmed.includes('\\')
+  ) {
+    return false;
+  }
+  // Disallow null bytes and shell metacharacters
+  if (trimmed.includes('\0') || /[\r\n;&|`$><"'\\]/.test(trimmed)) {
+    return false;
+  }
+  // Allow alphanumeric, underscores, hyphens, periods, colons
+  return /^[a-zA-Z0-9_\-.:]+$/.test(trimmed);
+}
+
+/**
+ * Extract --user-data-dir path value from a process command line.
+ */
+export function extractUserDataDir(command: string): string | null {
+  if (!command || !command.includes('--user-data-dir')) {
+    return null;
+  }
+  const match = command.match(/--user-data-dir=(?:"([^"]+)"|'([^']+)'|(\S+))/);
+  if (!match) return null;
+  return match[1] ?? match[2] ?? match[3] ?? null;
+}
+
+/**
+ * Verify whether an extracted user-data-dir matches the expected session path exactly,
+ * preventing prefix/substring collisions (e.g. session1 vs session10).
+ */
+export function isUserDataDirForSession(
+  extractedDir: string,
+  customUserDataDir: string,
+  sessionName: string
+): boolean {
+  if (!extractedDir || !sessionName) return false;
+  const resolvedTarget = path.resolve(customUserDataDir, sessionName);
+  const resolvedExtracted = path.resolve(extractedDir);
+
+  if (process.platform === 'win32') {
+    return resolvedExtracted.toLowerCase() === resolvedTarget.toLowerCase();
+  }
+  return resolvedExtracted === resolvedTarget;
+}
+
+/**
+ * Given root browser PIDs, transitively discover all child processes (renderers, GPU, utilities).
+ */
+export function buildProcessTree(
+  rootPids: number[],
+  allProcesses: ProcessEntry[]
+): number[] {
+  if (rootPids.length === 0) return [];
+
+  const childrenMap = new Map<number, number[]>();
+  for (const proc of allProcesses) {
+    if (!childrenMap.has(proc.ppid)) {
+      childrenMap.set(proc.ppid, []);
+    }
+    childrenMap.get(proc.ppid)!.push(proc.pid);
+  }
+
+  const collected = new Set<number>();
+  const queue = [...rootPids];
+
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    if (collected.has(current)) continue;
+    collected.add(current);
+
+    const children = childrenMap.get(current);
+    if (children) {
+      for (const child of children) {
+        if (!collected.has(child)) {
+          queue.push(child);
+        }
+      }
+    }
+  }
+
+  return Array.from(collected);
+}
+
+/**
+ * Parse standard POSIX `ps -ax -o pid=,ppid=,args=` output without invoking a shell.
+ */
+export function parsePsOutput(stdout: string): ProcessEntry[] {
+  const lines = stdout.split('\n');
+  const entries: ProcessEntry[] = [];
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    const match = line.match(/^(\d+)\s+(\d+)\s+(.*)$/);
+    if (!match) continue;
+
+    const pid = parseInt(match[1], 10);
+    const ppid = parseInt(match[2], 10);
+    const command = match[3] || '';
+
+    if (!isNaN(pid) && !isNaN(ppid)) {
+      entries.push({ pid, ppid, command });
+    }
+  }
+
+  return entries;
+}
+
+/**
+ * Parse Windows WMIC CSV output safely.
+ */
+export function parseWmicCsvOutput(stdout: string): ProcessEntry[] {
+  const lines = stdout.split(/\r?\n/);
+  const entries: ProcessEntry[] = [];
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('Node,')) continue;
+
+    const lastComma = line.lastIndexOf(',');
+    if (lastComma === -1) continue;
+    const pidStr = line.slice(lastComma + 1).trim();
+    const rest = line.slice(0, lastComma);
+
+    const secondLastComma = rest.lastIndexOf(',');
+    if (secondLastComma === -1) continue;
+    const ppidStr = rest.slice(secondLastComma + 1).trim();
+    const commandWithNode = rest.slice(0, secondLastComma);
+
+    const firstComma = commandWithNode.indexOf(',');
+    const command =
+      firstComma !== -1
+        ? commandWithNode.slice(firstComma + 1).trim()
+        : commandWithNode;
+
+    const pid = parseInt(pidStr, 10);
+    const ppid = parseInt(ppidStr, 10);
+    if (!isNaN(pid) && !isNaN(ppid)) {
+      entries.push({ pid, ppid, command });
+    }
+  }
+  return entries;
+}
+
+/**
+ * Parse Windows PowerShell output formatted as `PID|PPID|CommandLine`.
+ */
+export function parsePowershellOutput(stdout: string): ProcessEntry[] {
+  const lines = stdout.split(/\r?\n/);
+  const entries: ProcessEntry[] = [];
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    const parts = line.split('|');
+    if (parts.length >= 3) {
+      const pid = parseInt(parts[0].trim(), 10);
+      const ppid = parseInt(parts[1].trim(), 10);
+      const command = parts.slice(2).join('|').trim();
+      if (!isNaN(pid) && !isNaN(ppid)) {
+        entries.push({ pid, ppid, command });
+      }
+    }
+  }
+  return entries;
+}
+
+/**
+ * Default process enumerator using argument-based execFile (no shell interpolation).
+ */
+export async function defaultProcessEnumerator(): Promise<ProcessEntry[]> {
+  const isWindows = process.platform === 'win32';
+
+  if (isWindows) {
+    try {
+      const { stdout } = await execFilePromise(
+        'wmic',
+        [
+          'process',
+          'get',
+          'CommandLine,ParentProcessId,ProcessId',
+          '/format:csv',
+        ],
+        { maxBuffer: 20 * 1024 * 1024, windowsHide: true }
+      );
+      return parseWmicCsvOutput(stdout);
+    } catch {
+      try {
+        const { stdout } = await execFilePromise(
+          'powershell.exe',
+          [
+            '-NoProfile',
+            '-NonInteractive',
+            '-Command',
+            'Get-CimInstance Win32_Process | ForEach-Object { "$($_.ProcessId)|$($_.ParentProcessId)|$($_.CommandLine)" }',
+          ],
+          { maxBuffer: 20 * 1024 * 1024, windowsHide: true }
+        );
+        return parsePowershellOutput(stdout);
+      } catch {
+        return [];
+      }
+    }
+  } else {
+    try {
+      const { stdout } = await execFilePromise(
+        'ps',
+        ['-ax', '-o', 'pid=,ppid=,args='],
+        { maxBuffer: 20 * 1024 * 1024 }
+      );
+      return parsePsOutput(stdout);
+    } catch {
+      return [];
+    }
+  }
+}
+
+/**
+ * SessionResourceMonitor - Monitors resource usage of Chromium processes for each session.
  *
- * This class provides functionality to track CPU and memory usage of individual
- * WhatsApp sessions by monitoring their associated Chromium browser processes.
+ * Tracks CPU and memory usage of individual WhatsApp sessions by discovering their
+ * root browser processes via exact user-data-dir matching and recursively aggregating
+ * all child processes (renderers, GPU, utilities).
  */
 export class SessionResourceMonitor {
   private cache: Map<string, CacheEntry>;
   private cacheDuration: number;
   private customUserDataDir: string;
+  private processEnumerator: ProcessEnumerator;
 
   constructor(
     customUserDataDir: string = './userDataDir/',
-    cacheDuration: number = 5000
+    cacheDuration: number = 5000,
+    processEnumerator: ProcessEnumerator = defaultProcessEnumerator
   ) {
     this.cache = new Map();
-    this.cacheDuration = cacheDuration; // 5 seconds default
+    this.cacheDuration = cacheDuration;
     this.customUserDataDir = customUserDataDir;
+    this.processEnumerator = processEnumerator;
   }
 
   /**
-   * Find all Chromium process PIDs associated with a session
+   * Find all Chromium process PIDs associated with a session, including renderer and GPU descendants.
    * @param sessionName - The name of the session
    * @returns Array of process IDs
    */
   private async findSessionProcesses(sessionName: string): Promise<number[]> {
+    if (!isValidSessionName(sessionName)) {
+      return [];
+    }
+
     try {
-      // Determine platform
-      const isWindows = process.platform === 'win32';
-
-      if (isWindows) {
-        // Windows command to find Chrome processes by userDataDir
-        const { stdout } = await execPromise(
-          `wmic process where "commandline like '%${sessionName}%' and name='chrome.exe'" get processid`
-        );
-
-        const pids = stdout
-          .split('\n')
-          .slice(1) // Skip header
-          .map((line) => parseInt(line.trim()))
-          .filter((pid) => !isNaN(pid));
-
-        return pids;
-      } else {
-        // Linux/Mac command
-        const { stdout } = await execPromise(
-          `ps aux | grep "user-data-dir.*${sessionName}" | grep -v grep || true`
-        );
-
-        if (!stdout.trim()) {
-          return [];
-        }
-
-        const lines = stdout
-          .trim()
-          .split('\n')
-          .filter((l) => l);
-        const pids = lines
-          .map((line) => {
-            const parts = line.trim().split(/\s+/);
-            return parseInt(parts[1]); // PID is second column
-          })
-          .filter((pid) => !isNaN(pid));
-
-        return pids;
+      const allProcesses = await this.processEnumerator();
+      if (!allProcesses || allProcesses.length === 0) {
+        return [];
       }
-    } catch (error) {
-      // Session not running or error occurred
+
+      // 1. Locate root Chromium processes matching the exact userDataDir
+      const rootPids: number[] = [];
+      for (const proc of allProcesses) {
+        const extracted = extractUserDataDir(proc.command);
+        if (
+          extracted &&
+          isUserDataDirForSession(
+            extracted,
+            this.customUserDataDir,
+            sessionName
+          )
+        ) {
+          rootPids.push(proc.pid);
+        }
+      }
+
+      if (rootPids.length === 0) {
+        return [];
+      }
+
+      // 2. Discover all descendant processes (renderers, GPU, utility)
+      return buildProcessTree(rootPids, allProcesses);
+    } catch {
       return [];
     }
   }
 
   /**
-   * Find session processes with caching to reduce system calls
+   * Find session processes with caching to reduce system calls.
    * @param sessionName - The name of the session
    * @returns Array of process IDs
    */
@@ -147,12 +384,10 @@ export class SessionResourceMonitor {
     const cached = this.cache.get(sessionName);
     const now = Date.now();
 
-    // Use cache if still valid
     if (cached && now - cached.timestamp < this.cacheDuration) {
       return cached.pids;
     }
 
-    // Cache expired or doesn't exist, fetch new data
     const pids = await this.findSessionProcesses(sessionName);
     this.cache.set(sessionName, { pids, timestamp: now });
 
@@ -160,7 +395,7 @@ export class SessionResourceMonitor {
   }
 
   /**
-   * Get resource usage for multiple PIDs
+   * Get resource usage for multiple PIDs.
    * @param pids - Array of process IDs
    * @returns Aggregated CPU and memory usage
    */
@@ -219,13 +454,22 @@ export class SessionResourceMonitor {
   }
 
   /**
-   * Get resource usage for a specific session
+   * Get resource usage for a specific session.
    * @param sessionName - The name of the session
    * @returns Session usage information
    */
   public async getSessionUsage(
     sessionName: string
   ): Promise<SessionUsageResult> {
+    if (!isValidSessionName(sessionName)) {
+      return {
+        sessionName,
+        status: 'not_running',
+        message: 'Invalid session name',
+        timestamp: new Date().toISOString(),
+      };
+    }
+
     const pids = await this.findSessionProcessesCached(sessionName);
 
     if (pids.length === 0) {
@@ -269,11 +513,10 @@ export class SessionResourceMonitor {
   }
 
   /**
-   * Get resource usage for all sessions
+   * Get resource usage for all sessions.
    * @returns Usage information for all sessions with summary
    */
   public async getAllSessionsUsage(): Promise<AllSessionsUsageResult> {
-    // Get all session directories
     const sessionNames = await this.getSessionNames();
 
     const results: SessionUsageResult[] = [];
@@ -301,7 +544,7 @@ export class SessionResourceMonitor {
   }
 
   /**
-   * Get all session names from userDataDir
+   * Get all session names from userDataDir.
    * @returns Array of session names
    */
   private async getSessionNames(): Promise<string[]> {
@@ -312,8 +555,8 @@ export class SessionResourceMonitor {
 
       const files = fs.readdirSync(this.customUserDataDir);
 
-      // Filter only directories (sessions)
       return files.filter((file) => {
+        if (!isValidSessionName(file)) return false;
         const fullPath = path.join(this.customUserDataDir, file);
         return fs.statSync(fullPath).isDirectory();
       });
@@ -324,14 +567,14 @@ export class SessionResourceMonitor {
   }
 
   /**
-   * Clear the PIDs cache
+   * Clear the PIDs cache.
    */
   public clearCache(): void {
     this.cache.clear();
   }
 
   /**
-   * Clear cache for a specific session
+   * Clear cache for a specific session.
    * @param sessionName - The name of the session
    */
   public clearSessionCache(sessionName: string): void {

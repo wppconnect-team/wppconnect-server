@@ -16,7 +16,10 @@
 
 import { Request, Response } from 'express';
 
-import { SessionResourceMonitor } from '../util/SessionResourceMonitor';
+import {
+  isValidSessionName,
+  SessionResourceMonitor,
+} from '../util/SessionResourceMonitor';
 
 let monitorInstance: SessionResourceMonitor | null = null;
 
@@ -35,6 +38,10 @@ export function getResourceMonitor(req: Request): SessionResourceMonitor {
   return monitorInstance;
 }
 
+export function resetResourceMonitorInstance(): void {
+  monitorInstance = null;
+}
+
 function isResourceMonitorEnabled(req: Request): boolean {
   return Boolean(req.serverOptions?.resourceMonitor?.enable);
 }
@@ -46,14 +53,14 @@ function isResourceMonitorEnabled(req: Request): boolean {
 export async function getSessionResourceUsage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
-   #swagger.operationId = 'SessionResourceUsage'
-   #swagger.autoBody=false
-   #swagger.security = [{
-   "bearerAuth": []
-   }]
-   #swagger.parameters["session"] = {
-   schema: 'NERDWHATS_AMERICA'
-   }
+     #swagger.operationId = 'SessionResourceUsage'
+     #swagger.autoBody=false
+     #swagger.security = [{
+       "bearerAuth": []
+     }]
+     #swagger.parameters["session"] = {
+       schema: 'NERDWHATS_AMERICA'
+     }
    */
   if (!isResourceMonitorEnabled(req)) {
     return res.status(403).json({
@@ -65,10 +72,10 @@ export async function getSessionResourceUsage(req: Request, res: Response) {
   try {
     const { session } = req.params;
 
-    if (!session) {
+    if (!session || !isValidSessionName(session)) {
       return res.status(400).json({
         success: false,
-        error: 'Session name is required',
+        error: 'Invalid session name',
       });
     }
 
@@ -90,21 +97,21 @@ export async function getSessionResourceUsage(req: Request, res: Response) {
 
 /**
  * Get resource usage for all sessions
- * GET /api/sessions/resource-usage
+ * GET /api/:secretkey/all-sessions-resource-usage
  */
 export async function getAllSessionsResourceUsage(req: Request, res: Response) {
   /**
    * #swagger.tags = ["Auth"]
-   #swagger.autoBody=false
-   #swagger.operationId = 'AllSessionsResourceUsage'
-   #swagger.autoQuery=false
-   #swagger.autoHeaders=false
-   #swagger.security = [{
-   "bearerAuth": []
-   }]
-   #swagger.parameters["secretkey"] = {
-   schema: 'THISISMYSECURETOKEN'
-   }
+     #swagger.autoBody=false
+     #swagger.operationId = 'AllSessionsResourceUsage'
+     #swagger.autoQuery=false
+     #swagger.autoHeaders=false
+     #swagger.security = [{
+       "bearerAuth": []
+     }]
+     #swagger.parameters["secretkey"] = {
+       schema: 'THISISMYSECURETOKEN'
+     }
    */
   if (!isResourceMonitorEnabled(req)) {
     return res.status(403).json({
@@ -150,9 +157,21 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
 
 /**
  * Clear resource monitor cache
+ * POST /api/:secretkey/resource-usage/clear-cache
  * POST /api/resource-usage/clear-cache
  */
 export async function clearResourceCache(req: Request, res: Response) {
+  /**
+   * #swagger.tags = ["Auth"]
+     #swagger.operationId = 'ClearResourceCache'
+     #swagger.autoBody=false
+     #swagger.security = [{
+       "bearerAuth": []
+     }]
+     #swagger.parameters["secretkey"] = {
+       schema: 'THISISMYSECURETOKEN'
+     }
+   */
   if (!isResourceMonitorEnabled(req)) {
     return res.status(403).json({
       success: false,
@@ -160,8 +179,34 @@ export async function clearResourceCache(req: Request, res: Response) {
     });
   }
 
+  const { secretkey } = req.params;
+  const { authorization: token } = req.headers;
+
+  let tokenDecrypt: any = '';
+
+  if (secretkey === undefined) {
+    tokenDecrypt = token?.split(' ')[0];
+  } else {
+    tokenDecrypt = secretkey;
+  }
+
+  if (tokenDecrypt !== req.serverOptions.secretKey) {
+    return res.status(400).json({
+      response: false,
+      message: 'The token is incorrect',
+    });
+  }
+
   try {
-    const { session } = req.body;
+    const { session } = req.body || {};
+
+    if (session && !isValidSessionName(session)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid session name',
+      });
+    }
+
     const monitor = getResourceMonitor(req);
 
     if (session) {

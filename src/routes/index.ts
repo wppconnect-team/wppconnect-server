@@ -53,6 +53,14 @@ routes.get(
   '/api/:secretkey/all-sessions-resource-usage',
   ResourceController.getAllSessionsResourceUsage
 );
+routes.post(
+  '/api/:secretkey/resource-usage/clear-cache',
+  ResourceController.clearResourceCache
+);
+routes.post(
+  '/api/resource-usage/clear-cache',
+  ResourceController.clearResourceCache
+);
 routes.post('/api/:secretkey/start-all', SessionController.startAllSessions);
 
 // Sessions

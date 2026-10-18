@@ -114,6 +114,7 @@ export default {
   resourceMonitor: {
     enable: false,
     cacheDuration: 5000,
+    exposeSessionMetrics: true,
   },
   db: {
     mongodbDatabase: env.MONGODB_DATABASE || 'tokens',

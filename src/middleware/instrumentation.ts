@@ -67,7 +67,10 @@ export async function metrics(req: Request, res: Response) {
      #swagger.autoBody=false
      #swagger.description = 'This endpoint can be used to check the status of API metrics. It returns a response with the collected metrics.'
    */
-  if (req.serverOptions?.resourceMonitor?.enable) {
+  if (
+    req.serverOptions?.resourceMonitor?.enable &&
+    req.serverOptions?.resourceMonitor?.exposeSessionMetrics !== false
+  ) {
     try {
       const monitor = getResourceMonitor(req);
       const usage = await monitor.getAllSessionsUsage();
