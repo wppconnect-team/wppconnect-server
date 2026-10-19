@@ -19,7 +19,10 @@ import { clientsArray } from '../../util/sessionUtil';
 jest.mock('@wppconnect-team/wppconnect', () => ({
   create: jest.fn(),
   SocketState: { CONFLICT: 'CONFLICT' },
-  StatusFind: { autocloseCalled: 'autocloseCalled' },
+  StatusFind: {
+    autocloseCalled: 'autocloseCalled',
+    disconnectedMobile: 'disconnectedMobile',
+  },
 }));
 jest.mock('../../controller/sessionController', () => ({
   download: jest.fn(),
@@ -171,6 +174,53 @@ describe('CreateSessionUtil initialization ownership', () => {
     await util.createSessionUtil(req, clientsArray, 'stale');
     expect(util.exportQR).not.toHaveBeenCalled();
     expect(util.exportPhoneCode).not.toHaveBeenCalled();
+  });
+
+  it('still publishes the QR after the unpaired disconnectedMobile of a fresh page', async () => {
+    const { create, req, util } = setup();
+    util.exportQR = jest.fn();
+    const { callWebHook } = jest.requireMock('../../util/functions');
+    create.mockImplementationOnce(async (options: any) => {
+      const attempt = (clientsArray as any).stale;
+      // wppconnect emits this ~1s after "Session Unpaired" on a page that has
+      // never been paired, before the first QR code is generated.
+      options.statusFind('disconnectedMobile');
+      expect((clientsArray as any).stale).toBe(attempt);
+      expect(attempt.status).toBe('INITIALIZING');
+      options.statusFind('notLogged');
+      options.catchQR('qr', '', 1, 'code');
+      throw new Error('Pairing not completed in the fixture');
+    });
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(util.exportQR).toHaveBeenCalledTimes(1);
+    expect(callWebHook).toHaveBeenCalledWith(
+      expect.anything(),
+      req,
+      'status-find',
+      expect.objectContaining({ status: 'notLogged' })
+    );
+    expect(callWebHook).not.toHaveBeenCalledWith(
+      expect.anything(),
+      req,
+      'status-find',
+      expect.objectContaining({ status: 'disconnectedMobile' })
+    );
+  });
+
+  it('reports autocloseCalled during initialization instead of throwing on close', async () => {
+    const { create, req, util } = setup();
+    const { callWebHook } = jest.requireMock('../../util/functions');
+    create.mockImplementationOnce(async (options: any) => {
+      options.statusFind('autocloseCalled');
+      throw new Error('Auto Close Called');
+    });
+    await util.createSessionUtil(req, clientsArray, 'stale');
+    expect(callWebHook).toHaveBeenCalledWith(
+      expect.anything(),
+      req,
+      'status-find',
+      expect.objectContaining({ status: 'autocloseCalled' })
+    );
   });
 
   it('does not start while profile cleanup holds the session reservation', async () => {

@@ -149,6 +149,19 @@ export default class CreateSessionUtil {
             statusFind: (statusFind: StatusFind) => {
               // A cleanup or newer start owns this session now.
               if (!ownsAttempt()) return;
+              // wppconnect emits disconnectedMobile ~1s after "Session Unpaired"
+              // on a fresh, never-paired page. Before the runtime is attached
+              // there is nothing to disconnect; treating it as terminal marks
+              // this attempt CLOSED and silently drops every later QR callback.
+              if (
+                statusFind === StatusFind.disconnectedMobile &&
+                typeof client.close !== 'function'
+              ) {
+                req.logger.info(
+                  `[${session}] Ignoring disconnectedMobile before the session is ready`
+                );
+                return;
+              }
               try {
                 eventEmitter.emit(
                   `status-${client.session}`,
@@ -161,7 +174,9 @@ export default class CreateSessionUtil {
                 ) {
                   client.status = 'CLOSED';
                   client.qrcode = null;
-                  client.close();
+                  // During initialization `client` is a plain state object with
+                  // no close(); calling it threw and skipped the webhook below.
+                  if (typeof client.close === 'function') client.close();
                   clientsArray[session] = undefined;
                 }
                 callWebHook(client, req, 'status-find', {
