@@ -413,6 +413,9 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -3681,6 +3684,18 @@
                     "type": "boolean"
                   },
                   "onlyUsers": {
+                    "type": "boolean"
+                  },
+                  "onlyNewsletter": {
+                    "type": "boolean"
+                  },
+                  "onlyCommunities": {
+                    "type": "boolean"
+                  },
+                  "onlyArchived": {
+                    "type": "boolean"
+                  },
+                  "ignoreGroupMetadata": {
                     "type": "boolean"
                   },
                   "onlyWithUnreadMessage": {

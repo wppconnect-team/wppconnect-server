@@ -167,6 +167,10 @@ export async function listChats(req: Request, res: Response) {
               direction: { type: "string" },
               onlyGroups: { type: "boolean" },
               onlyUsers: { type: "boolean" },
+              onlyNewsletter: { type: "boolean" },
+              onlyCommunities: { type: "boolean" },
+              onlyArchived: { type: "boolean" },
+              ignoreGroupMetadata: { type: "boolean" },
               onlyWithUnreadMessage: { type: "boolean" },
               withLabels: { type: "array" },
             }
@@ -216,6 +220,10 @@ export async function listChats(req: Request, res: Response) {
       direction,
       onlyGroups,
       onlyUsers,
+      onlyNewsletter,
+      onlyCommunities,
+      onlyArchived,
+      ignoreGroupMetadata,
       onlyWithUnreadMessage,
       withLabels,
     } = req.body;
@@ -226,6 +234,10 @@ export async function listChats(req: Request, res: Response) {
       direction: direction,
       onlyGroups: onlyGroups,
       onlyUsers: onlyUsers,
+      onlyNewsletter: onlyNewsletter,
+      onlyCommunities: onlyCommunities,
+      onlyArchived: onlyArchived,
+      ignoreGroupMetadata: ignoreGroupMetadata,
       onlyWithUnreadMessage: onlyWithUnreadMessage,
       withLabels: withLabels,
     });

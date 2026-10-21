@@ -211,7 +211,7 @@ export async function sendFile(req: Request, res: Response) {
   const options = req.body.options || {};
 
   if (!path && !req.file && !base64)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Sending the file is mandatory',
     });
 
@@ -687,7 +687,7 @@ export async function sendOrderMessage(req: Request, res: Response) {
     }
 
     if (results.length === 0)
-      res.status(400).json('Error sending order message');
+      return res.status(400).json('Error sending order message');
     req.io.emit('mensagem-enviada', results);
     returnSucess(res, results);
   } catch (error) {
@@ -959,7 +959,7 @@ export async function sendImageAsSticker(req: Request, res: Response) {
   const { phone, path } = req.body;
 
   if (!path && !req.file)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Sending the file is mandatory',
     });
 
@@ -1017,7 +1017,7 @@ export async function sendImageAsStickerGif(req: Request, res: Response) {
   const { phone, path } = req.body;
 
   if (!path && !req.file)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Sending the file is mandatory',
     });
 

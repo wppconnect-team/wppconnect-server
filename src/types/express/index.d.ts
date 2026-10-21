@@ -1,5 +1,5 @@
 import { Whatsapp } from '@wppconnect-team/wppconnect';
-import { Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { Logger } from 'winston';
 
 import { ServerOptions } from '../ServerOptions';
@@ -14,7 +14,7 @@ declare global {
       logger: Logger;
       session: string;
       token?: string;
-      io: Socket;
+      io: Server;
       serverOptions: ServerOptions;
     }
   }

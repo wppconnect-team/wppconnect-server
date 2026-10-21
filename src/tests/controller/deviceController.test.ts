@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { forwardMessages } from '../../controller/deviceController';
+import { forwardMessages, listChats } from '../../controller/deviceController';
 
 jest.mock('../../util/functions', () => ({
   contactToArray: jest.fn(),
@@ -102,5 +102,33 @@ describe('forwardMessages', () => {
       '120363000000000000@g.us',
       'message-id'
     );
+  });
+});
+
+describe('listChats', () => {
+  it('forwards newsletter and other supported filters to the client', async () => {
+    const options = {
+      onlyNewsletter: true,
+      onlyCommunities: false,
+      onlyArchived: false,
+      ignoreGroupMetadata: true,
+      count: 20,
+    };
+    const newsletters = [{ id: '123@newsletter' }];
+    const req = {
+      body: options,
+      client: { listChats: jest.fn().mockResolvedValue(newsletters) },
+      logger: { error: jest.fn() },
+    };
+    const res = { status: jest.fn(), json: jest.fn() };
+    res.status.mockReturnValue(res);
+
+    await listChats(req as any, res as any);
+
+    expect(req.client.listChats).toHaveBeenCalledWith(
+      expect.objectContaining(options)
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(newsletters);
   });
 });
