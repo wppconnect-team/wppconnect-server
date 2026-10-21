@@ -271,24 +271,16 @@ export default class chatWootClient {
     const isLid = rawId.endsWith('@lid');
 
     let phoneNumber: string | undefined;
-    let identifier: string | undefined;
+    let identifier: string = rawId;
 
     if (isLid) {
       // If it's a LID, we need to get the corresponding phone number
-      // Better to look in contacts settings and find the "real number contact" insted of LID
+      // Better to look in contacts settings and find the "real number contact" instead of LID
       // Also saves lid/phoneNumber in the contact identifier for future reference
       try {
         const pnLidData = await client.getPnLidEntry(rawId);
         phoneNumber = pnLidData?.phoneNumber?.id;
-        identifier = pnLidData?.lid?._serialized;
-
-        // Uses LID insted PhoneNumber, if it doesnt exist
-        if (!phoneNumber) {
-          phoneNumber =
-            typeof message.sender.id == 'object'
-              ? message.sender.id.user
-              : message.sender.id.split('@')[0];
-        }
+        identifier = pnLidData?.lid?._serialized ?? rawId;
       } catch (e) {
         console.log('Error fetching pnLid data:', e);
       }
@@ -302,12 +294,11 @@ export default class chatWootClient {
       name: message.sender.isMyContact
         ? message.sender.formattedName
         : message.sender.pushname || message.sender.formattedName,
-      phone_number: phoneNumber,
       identifier: identifier,
+      ...(phoneNumber ? { phone_number: `+${phoneNumber}` } : {}),
     };
 
-    body.phone_number = `+${body.phone_number}`;
-    const contact = await this.findContact(body.phone_number.replace('+', ''));
+    const contact = await this.findContact(phoneNumber ?? identifier);
     if (contact && contact.meta.count > 0) return contact.payload[0];
 
     try {
