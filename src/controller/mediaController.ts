@@ -15,8 +15,11 @@
  */
 
 import { Request, Response } from 'express';
-import { readFile } from 'fs/promises';
+import { constants } from 'fs';
+import { lstat, open, unlink } from 'fs/promises';
+import path from 'path';
 
+import { UPLOAD_DIRECTORY } from '../config/upload';
 import {
   MediaApiAdapterError,
   MediaApiClient,
@@ -24,7 +27,6 @@ import {
   MediaJobInput,
   MediaUpload,
 } from '../core/media/MediaApiClient';
-import { unlinkAsync } from '../util/functions';
 
 function idempotencyKey(req: Request): string {
   const value = req.headers['idempotency-key'];
@@ -52,13 +54,84 @@ function input(req: Request): MediaJobInput {
   };
 }
 
-async function upload(req: Request): Promise<MediaUpload | undefined> {
+type TemporaryUpload = { media: MediaUpload; cleanup: () => Promise<void> };
+
+function invalidUpload(): MediaApiAdapterError {
+  return new MediaApiAdapterError('Invalid temporary media upload', 400);
+}
+
+async function upload(req: Request): Promise<TemporaryUpload | undefined> {
   if (!req.file) return undefined;
-  return {
-    bytes: new Uint8Array(await readFile(req.file.path)),
-    filename: req.file.originalname,
-    mimeType: req.file.mimetype,
+  const file = req.file;
+  if (typeof file.filename !== 'string' || typeof file.path !== 'string') {
+    throw invalidUpload();
+  }
+  const basename = path.basename(file.filename);
+  if (
+    basename !== file.filename ||
+    !/^wppConnect-[a-f0-9]{32}(?:\.[A-Za-z0-9]{1,10})?$/.test(basename)
+  ) {
+    throw invalidUpload();
+  }
+  // Reconstruct from trusted configuration and a basename, rather than using
+  // request-derived paths for either the read or the later deletion.
+  const temporaryPath = path.join(UPLOAD_DIRECTORY, path.basename(basename));
+  if (path.resolve(file.path) !== temporaryPath) throw invalidUpload();
+  const directory = await lstat(UPLOAD_DIRECTORY);
+  const original = await lstat(temporaryPath);
+  if (
+    !directory.isDirectory() ||
+    directory.isSymbolicLink() ||
+    !original.isFile() ||
+    original.isSymbolicLink() ||
+    original.nlink !== 1
+  ) {
+    throw invalidUpload();
+  }
+  const cleanup = async () => {
+    const currentDirectory = await lstat(UPLOAD_DIRECTORY);
+    const current = await lstat(temporaryPath);
+    if (
+      currentDirectory.isDirectory() &&
+      !currentDirectory.isSymbolicLink() &&
+      currentDirectory.dev === directory.dev &&
+      currentDirectory.ino === directory.ino &&
+      current.isFile() &&
+      !current.isSymbolicLink() &&
+      current.dev === original.dev &&
+      current.ino === original.ino
+    ) {
+      await unlink(temporaryPath);
+    }
   };
+  const handle = await open(
+    temporaryPath,
+    constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0)
+  );
+  try {
+    const opened = await handle.stat();
+    if (
+      !opened.isFile() ||
+      opened.dev !== original.dev ||
+      opened.ino !== original.ino
+    ) {
+      throw invalidUpload();
+    }
+    return {
+      media: {
+        bytes: new Uint8Array(await handle.readFile()),
+        filename: file.originalname,
+        mimeType: file.mimetype,
+      },
+      cleanup,
+    };
+  } catch (error) {
+    await handle.close();
+    await cleanup().catch(() => undefined);
+    throw error;
+  } finally {
+    await handle.close();
+  }
 }
 
 function client(req: Request): MediaApiClient {
@@ -88,9 +161,11 @@ async function createJob(
   res: Response,
   kind: 'conversion' | 'transcription'
 ) {
+  let temporaryUpload: TemporaryUpload | undefined;
   try {
+    temporaryUpload = await upload(req);
     const mediaClient = client(req);
-    const mediaUpload = await upload(req);
+    const mediaUpload = temporaryUpload?.media;
     const result =
       kind === 'conversion'
         ? await mediaClient.createConversion(
@@ -107,7 +182,7 @@ async function createJob(
   } catch (error) {
     return replyError(req, res, error);
   } finally {
-    if (req.file?.path) await unlinkAsync(req.file.path).catch(() => undefined);
+    await temporaryUpload?.cleanup().catch(() => undefined);
   }
 }
 

@@ -95,6 +95,12 @@ performed by the PR workflow and must pass before promotion.
 
 ## Release gates and migration
 
+The main-promotion CodeQL scan additionally identified an upload-file path,
+an ambiguous whitespace regex in contact splitting, and an administrator secret
+read from a GET path. The follow-up uses a trusted upload directory, linear
+delimiter splitting, and a header-only aggregate resource endpoint:
+`GET /api/sessions/resource-usage` with an administrator bearer token.
+
 1. Require all release PR CI checks, including container verification and the
    four-provider QR matrix, to pass on the current head.
 2. Treat the embedding API change as a major release: `initServer` now returns

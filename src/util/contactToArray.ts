@@ -18,12 +18,10 @@ export function contactToArray(
   isLid?: boolean
 ) {
   const localArr: any = [];
-  const arrContacts = Array.isArray(number)
-    ? number
-    : number.split(/\s*[,;]\s*/g);
+  const arrContacts = Array.isArray(number) ? number : number.split(/[,;]/g);
 
   for (const contact of arrContacts) {
-    const { local, domain } = splitContact(contact);
+    const { local, domain } = splitContact(contact.trim());
     // Group and newsletter identifiers are numeric-only; other contacts also
     // accept formatted numbers such as "+55 (11) 99999-9999".
     const normalized =

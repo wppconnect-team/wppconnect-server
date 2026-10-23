@@ -103,6 +103,20 @@ describe('ResourceController endpoints', () => {
   });
 
   describe('getAllSessionsResourceUsage', () => {
+    it('does not accept the administrator secret from GET parameters or query values', async () => {
+      const req: any = {
+        params: { secretkey: defaultSecret },
+        query: { secretkey: defaultSecret },
+        headers: {},
+        serverOptions: {
+          secretKey: defaultSecret,
+          resourceMonitor: { enable: true, cacheDuration: 5000 },
+        },
+      };
+      const res = createResponse();
+      await getAllSessionsResourceUsage(req, res);
+      expect(res.statusCode).toBe(401);
+    });
     it('returns 403 when disabled in config', async () => {
       const req: any = {
         params: { secretkey: defaultSecret },
@@ -118,7 +132,7 @@ describe('ResourceController endpoints', () => {
       expect(res.statusCode).toBe(403);
     });
 
-    it('returns 400 when secret key is incorrect', async () => {
+    it('returns 401 when an administrator bearer token is absent', async () => {
       const req: any = {
         params: { secretkey: 'WRONG_SECRET' },
         headers: {},
@@ -130,14 +144,14 @@ describe('ResourceController endpoints', () => {
       const res = createResponse();
 
       await getAllSessionsResourceUsage(req, res);
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(401);
       expect(res.body.message).toBe('The token is incorrect');
     });
 
-    it('returns 200 with all sessions when secret key is valid', async () => {
+    it('returns 200 with all sessions when an administrator bearer token is valid', async () => {
       const req: any = {
         params: { secretkey: defaultSecret },
-        headers: {},
+        headers: { authorization: `Bearer ${defaultSecret}` },
         serverOptions: {
           secretKey: defaultSecret,
           customUserDataDir: '/tmp/nonexistentUserDataDir',

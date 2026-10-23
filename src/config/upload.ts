@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { randomBytes } from 'crypto';
 import multer from 'multer';
 import path from 'path';
 
+export const UPLOAD_DIRECTORY = path.resolve(process.cwd(), 'uploads');
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const __dirname = path.resolve(path.dirname(''));
-    cb(null, path.resolve(__dirname, 'uploads'));
+    cb(null, UPLOAD_DIRECTORY);
   },
   filename: function (req, file, cb) {
-    const filename = `wppConnect-${Date.now()}-${file.originalname}`;
+    // Original names are display metadata, never part of a filesystem path.
+    const originalExtension = path.extname(path.basename(file.originalname));
+    const extension = /^\.[A-Za-z0-9]{1,10}$/.test(originalExtension)
+      ? originalExtension
+      : '';
+    const filename = `wppConnect-${randomBytes(16).toString(
+      'hex'
+    )}${extension}`;
     cb(null, filename);
   },
 });
