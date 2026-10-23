@@ -31,6 +31,7 @@
     "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url",
     "test": "jest",
     "smoke:provider-crypto": "node scripts/provider-crypto-smoke.mjs",
+    "smoke:browser-protocol": "node scripts/browser-protocol-smoke.mjs",
     "e2e": "tsx e2e/test-runner.ts",
     "test:runtime-real": "cross-env MATRIX_REAL=1 MATRIX_INTERACTIVE=1 tsx e2e/runtime-matrix.ts",
     "test:runtime-matrix": "tsx e2e/runtime-matrix.ts"
@@ -179,7 +180,7 @@
     "@whiskeysockets/baileys@npm:7.0.0-rc14/protobufjs": "7.6.6",
     "libsignal@npm:6.0.0/protobufjs": "7.6.6",
     "whaileys@npm:6.5.1/protobufjs": "7.6.6",
-    "puppeteer": "25.9.0",
+    "puppeteer": "25.13.0",
     "qs@npm:~6.14.0": "6.16.0",
     "qs@npm:~6.15.1": "6.16.0",
     "sharp@npm:0.34.5": "0.35.5",

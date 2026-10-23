@@ -11,7 +11,7 @@ They must be removed when the owning runtime publishes a compatible upgrade.
 | `music-metadata` -> `11.16.0` | Baileys family | Fixes malformed MP4 and EBML parser advisories | Provider imports, audio metadata and audio send |
 | `protobufjs-cli` → `2.7.0` | Whaileys | Removes the legacy ProtobufJS toolchain | Provider import and generated protocol loading |
 | `protobufjs` → `7.6.6` | Baileys family and libsignal | Fixes parser, recursion and prototype advisories while staying on major 7 | Provider import, Signal and QR |
-| `puppeteer` → `25.9.0` | WPPConnect | Removes the vulnerable `extract-zip` chain in Puppeteer 24 | Chromium launch, QR and WA-JS injection |
+| `puppeteer` -> `25.13.0` | WPPConnect | Removes the vulnerable `extract-zip` chain in Puppeteer 24 and uses an upstream Chromium BiDi mapper compatible with patched Zod 4 | Chromium launch, CDP and BiDi navigation, QR and WA-JS injection |
 | `body-parser` / `qs` | Fastify Express bridge | Fixes request parsing denial-of-service advisories | HTTP route and payload tests |
 
 The integration also patches `brace-expansion` within each consumer's major
@@ -30,3 +30,14 @@ Yarn also reports deprecations as non-zero audit results; a deprecation notice
 is different from a vulnerability advisory. The snapshot checked on 2026-10-23
 contained zero vulnerability advisories and 22 deprecation notices after these
 updates. OSV-Scanner workflows independently scan the committed lockfile.
+
+The full OSV scan subsequently identified [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)
+in Zod 3.25.76 after the advisory was updated on 2026-10-23. The npm audit had
+not reported it. Puppeteer 25.13.0 is the first published Puppeteer 25 release
+whose Chromium BiDi mapper declares Zod 4, allowing the lockfile to select
+patched Zod 4.6.7. Replacing Zod 3 with Zod 4 underneath the older mapper would
+cross an incompatible API boundary and is intentionally avoided.
+
+`yarn smoke:browser-protocol` checks the mapper's actual Zod dependency, bounded
+collection validation, and real Chromium navigation through both CDP and BiDi.
+The full OSV scan must also pass before promotion; npm audit alone is insufficient.

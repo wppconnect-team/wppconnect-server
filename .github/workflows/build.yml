@@ -126,6 +126,9 @@ jobs:
       - name: Validate provider cryptography
         run: yarn smoke:provider-crypto
 
+      - name: Validate Chromium protocols and schema bounds
+        run: yarn smoke:browser-protocol
+
   runtime-matrix:
     if: github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'main')
     runs-on: ubuntu-latest
