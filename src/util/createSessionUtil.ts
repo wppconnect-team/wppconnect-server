@@ -23,6 +23,7 @@ import { ProviderId } from '../core/provider/ProviderAdapter';
 import { providerFactory } from '../core/provider/ProviderFactory';
 import { sessionManager } from '../core/session/SessionManager';
 import { emitManager } from '../manager/socket';
+import { CommentClient } from '../types/CommentClient';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import { deactivateCallMedia } from './callMediaUtil';
 import chatWootClient from './chatWootClient';
@@ -237,6 +238,9 @@ export default class CreateSessionUtil {
         await this.onParticipantsChanged(req, client);
       }
 
+      if (req.serverOptions.webhook.onCommentMessage) {
+        await this.onCommentMessage(client, req);
+      }
       if (req.serverOptions.webhook.onReactionMessage) {
         await this.onReactionMessage(client, req);
       }
@@ -511,6 +515,15 @@ export default class CreateSessionUtil {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
       req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
+    });
+  }
+
+  async onCommentMessage(client: WhatsAppServer, req: Request) {
+    const commentClient = client as WhatsAppServer & CommentClient;
+    if (typeof commentClient.onCommentMessage !== 'function') return;
+    await commentClient.onCommentMessage((event: unknown) => {
+      req.io.emit('oncommentmessage', event);
+      callWebHook(client, req, 'oncommentmessage', event);
     });
   }
 
