@@ -244,11 +244,21 @@ describe('media controller', () => {
       const media = upstream.get('file') as File;
       expect(await media.text()).toBe('actual audio bytes');
       expect(media.name).toBe('voice.mp3');
-      await expect(readFile(uploaded!.path)).rejects.toMatchObject({
+      const savedPath = path.join(
+        UPLOAD_DIRECTORY,
+        path.basename(uploaded!.filename)
+      );
+      await expect(readFile(savedPath)).rejects.toMatchObject({
         code: 'ENOENT',
       });
     } finally {
-      if (uploaded) await unlink(uploaded.path).catch(() => undefined);
+      if (uploaded) {
+        const savedPath = path.join(
+          UPLOAD_DIRECTORY,
+          path.basename(uploaded.filename)
+        );
+        await unlink(savedPath).catch(() => undefined);
+      }
       await new Promise<void>((resolve, reject) =>
         server.close((error) => (error ? reject(error) : resolve()))
       );
