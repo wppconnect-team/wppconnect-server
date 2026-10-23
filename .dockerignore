@@ -16,3 +16,9 @@ uploads
 userDataDir
 WhatsAppImages
 wppconnect_tokens
+graphify-out
+manager
+
+.env
+.env.*
+!.env.example

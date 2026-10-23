@@ -27,6 +27,9 @@ import { Logger } from 'winston';
 
 import { version } from '../package.json';
 import config from './config';
+import { managerRoutes } from './manager/routes';
+import { installManagerSocket } from './manager/socket';
+import { installManagerStatic } from './manager/static';
 import { convert } from './mapper/index';
 import { providerErrorHandler } from './middleware/errorHandler';
 import routes from './routes';
@@ -37,8 +40,6 @@ import {
   startAllSessions,
 } from './util/functions';
 import { createLogger } from './util/logger';
-
-//require('dotenv').config();
 
 export const logger = createLogger(config.log);
 
@@ -124,6 +125,8 @@ export async function initServer(
     next();
   });
 
+  app.use('/api/manager', managerRoutes);
+  installManagerStatic(app);
   app.use(routes);
 
   // Central handler for provider-layer errors (NotSupported -> 501,
@@ -133,6 +136,7 @@ export async function initServer(
 
   createFolders();
 
+  installManagerSocket(io, serverOptions.secretKey!);
   io.on('connection', (sock) => {
     logger.info(`ID: ${sock.id} entrou`);
 

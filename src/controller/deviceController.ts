@@ -168,6 +168,10 @@ export async function listChats(req: Request, res: Response) {
               direction: { type: "string" },
               onlyGroups: { type: "boolean" },
               onlyUsers: { type: "boolean" },
+              onlyNewsletter: { type: "boolean" },
+              onlyCommunities: { type: "boolean" },
+              onlyArchived: { type: "boolean" },
+              ignoreGroupMetadata: { type: "boolean" },
               onlyWithUnreadMessage: { type: "boolean" },
               withLabels: { type: "array" },
             }
@@ -217,6 +221,10 @@ export async function listChats(req: Request, res: Response) {
       direction,
       onlyGroups,
       onlyUsers,
+      onlyNewsletter,
+      onlyCommunities,
+      onlyArchived,
+      ignoreGroupMetadata,
       onlyWithUnreadMessage,
       withLabels,
     } = req.body;
@@ -227,6 +235,10 @@ export async function listChats(req: Request, res: Response) {
       direction: direction,
       onlyGroups: onlyGroups,
       onlyUsers: onlyUsers,
+      onlyNewsletter: onlyNewsletter,
+      onlyCommunities: onlyCommunities,
+      onlyArchived: onlyArchived,
+      ignoreGroupMetadata: ignoreGroupMetadata,
       onlyWithUnreadMessage: onlyWithUnreadMessage,
       withLabels: withLabels,
     });
@@ -378,21 +390,24 @@ export async function getChatById(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
      #swagger.parameters["phone"] = {
-      schema: '5521999999999'
+      schema: '5521999999999@c.us'
      }
      #swagger.parameters["isGroup"] = {
       schema: 'false'
      }
    */
   const { phone } = req.params;
-  const { isGroup } = req.query;
+  const { isGroup = false, isNewsletter = false, isLid = false } = req.query;
 
   try {
     let result = {} as Chat;
-    if (isGroup) {
-      result = await getClient(req).getChatById(`${phone}@g.us`);
-    } else {
-      result = await getClient(req).getChatById(`${phone}@c.us`);
+    for (const contato of contactToArray(
+      phone as string,
+      isGroup as boolean,
+      isNewsletter as boolean,
+      isLid as boolean
+    )) {
+      result = await getClient(req).getChatById(contato);
     }
 
     res.status(200).json(result);
@@ -1008,21 +1023,14 @@ export async function forwardMessages(req: Request, res: Response) {
   const { phone, messageId, isGroup = false } = req.body;
 
   try {
+    const contacts = contactToArray(phone, isGroup);
     let response;
 
-    if (!isGroup) {
-      response = await getClient(req).forwardMessagesV2(
-        `${phone[0]}`,
-        messageId
-      );
-    } else {
-      response = await getClient(req).forwardMessagesV2(
-        `${phone[0]}`,
-        messageId
-      );
+    for (const contact of contacts) {
+      response = await getClient(req).forwardMessagesV2(contact, messageId);
     }
 
-    res.status(201).json({ status: 'success', response: response });
+    res.status(201).json({ status: 'success', response });
   } catch (e) {
     req.logger.error(e);
     res

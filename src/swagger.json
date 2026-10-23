@@ -413,6 +413,9 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -3683,6 +3686,18 @@
                   "onlyUsers": {
                     "type": "boolean"
                   },
+                  "onlyNewsletter": {
+                    "type": "boolean"
+                  },
+                  "onlyCommunities": {
+                    "type": "boolean"
+                  },
+                  "onlyArchived": {
+                    "type": "boolean"
+                  },
+                  "ignoreGroupMetadata": {
+                    "type": "boolean"
+                  },
                   "onlyWithUnreadMessage": {
                     "type": "boolean"
                   },
@@ -3979,7 +3994,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "5521999999999"
+              "example": "5521999999999@c.us"
             }
           },
           {
@@ -3989,6 +4004,20 @@
               "example": "false"
             },
             "in": "query"
+          },
+          {
+            "name": "isNewsletter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isLid",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

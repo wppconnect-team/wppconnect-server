@@ -8,6 +8,9 @@ on:
     branches:
       - '*'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -44,6 +47,9 @@ jobs:
 
       - name: Build source
         run: yarn build
+
+      - name: Test server and Manager contracts
+        run: yarn test --runInBand
 
   lint:
     runs-on: ubuntu-latest

@@ -59,7 +59,7 @@ export async function addNewLabel(req: Request, res: Response) {
    */
   const { name, options } = req.body;
   if (!name)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'Name was not informed',
     });
 
@@ -128,7 +128,7 @@ export async function addOrRemoveLabels(req: Request, res: Response) {
    */
   const { chatIds, options } = req.body;
   if (!chatIds || !options)
-    res.status(401).send({
+    return res.status(401).send({
       message: 'chatIds or options was not informed',
     });
 

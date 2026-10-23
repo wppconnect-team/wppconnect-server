@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
+
 import { ServerOptions } from './types/ServerOptions';
 
+// Loading is optional; deployment environment variables keep precedence.
+dotenv.config({ override: false });
 const env = process.env;
 
 function envNumber(name: string, fallback: number): number {
@@ -22,7 +26,16 @@ export default {
   customUserDataDir: env.CUSTOM_USER_DATA_DIR || './userDataDir/',
   webhook: {
     url: env.WEBHOOK_URL || null,
+    allowedUrls: (env.WEBHOOK_ALLOWED_URLS || '')
+      .split(',')
+      .map((url) => url.trim())
+      .filter(Boolean),
     autoDownload: true,
+    retryAttempts: envNumber('WEBHOOK_RETRY_ATTEMPTS', 3),
+    retryDelay: envNumber('WEBHOOK_RETRY_DELAY', 5000),
+    requestTimeout: envNumber('WEBHOOK_REQUEST_TIMEOUT', 30000),
+    // Bytes; media larger than this is not inlined as base64 (0 = no limit).
+    autoDownloadMaxSize: envNumber('WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE', 0),
     uploadS3: false,
     readMessage: true,
     allUnreadOnStart: false,
