@@ -143,6 +143,13 @@ entries and 22 deprecation notices. Require CI, including Docker verification,
 on the final `develop` head; earlier successful checks do not replace validation
 of that head.
 
+The full OSV scan subsequently identified GHSA-mrhx-c7xc-m3w5 in Zod 3.25.76
+after the advisory was updated during preparation. The security follow-up uses
+Puppeteer 25.13.0 and its upstream Zod-4-compatible mapper, selecting Zod 4.6.7.
+It adds bounded-collection regression checks and real CDP/BiDi browser smoke
+validation. The full OSV scan must confirm this lockfile; npm audit alone is
+not a substitute. See [security dependency resolutions](security-resolutions.md).
+
 The remaining promotion requirements are:
 
 1. Successful CI on the final promotion head, including Docker and the runtime
