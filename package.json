@@ -65,7 +65,9 @@
     "swagger-ui-express": "^5.0.1",
     "unzipper": "^0.12.5",
     "winston": "^3.19.0",
-    "express-rate-limit": "^8.7.1"
+    "express-rate-limit": "^8.7.1",
+    "pidusage": "^3.0.2",
+    "prom-client": "^14.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.29.7",
@@ -113,7 +115,6 @@
     "nodemon": "^3.1.14",
     "prettier": "^2.8.8",
     "pretty-quick": "^4.2.2",
-    "prom-client": "^14.2.0",
     "qrcode-terminal": "^0.12.0",
     "redis": "^4.7.1",
     "release-it": "^19.2.4",
@@ -125,7 +126,8 @@
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "webpack-cli": "^6.0.1",
-    "socket.io-client": "4.8.4"
+    "socket.io-client": "4.8.4",
+    "@types/pidusage": "^2.0.5"
   },
   "resolutions": {
     "@babel/core": "7.29.7",

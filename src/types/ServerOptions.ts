@@ -54,6 +54,11 @@ export interface ServerOptions {
     apiKey: string | null;
     timeoutMs: number;
   };
+  resourceMonitor: {
+    enable: boolean;
+    cacheDuration: number;
+    exposeSessionMetrics?: boolean;
+  };
   db: {
     mongodbDatabase: string;
     mongodbCollection: string;

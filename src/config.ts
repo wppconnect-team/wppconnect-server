@@ -116,6 +116,11 @@ export default {
     apiKey: env.MEDIA_API_KEY || null,
     timeoutMs: envNumber('MEDIA_API_TIMEOUT_MS', 30000),
   },
+  resourceMonitor: {
+    enable: false,
+    cacheDuration: 5000,
+    exposeSessionMetrics: true,
+  },
   db: {
     mongodbDatabase: env.MONGODB_DATABASE || 'tokens',
     mongodbCollection: env.MONGODB_COLLECTION || '',
