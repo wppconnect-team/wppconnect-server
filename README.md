@@ -297,6 +297,10 @@ Configure `aws_s3` for S3-compatible uploads. The external Media API adapter sup
 - **Community announcement comments:** guarded endpoints/events require released upstream comment APIs. Older clients return HTTP `501`; only locally synchronized history is returned. Track [WA-JS #3713](https://github.com/wppconnect-team/wa-js/pull/3713) and [WPPConnect #2912](https://github.com/wppconnect-team/wppconnect/pull/2912).
 - **Resource monitoring:** enable `resourceMonitor.enable` in advanced configuration. Chromium measurements do not attribute browserless CPU/memory per session. Session metric exposure requires administrator authorization.
 
+Read aggregate resource usage at `GET /api/sessions/resource-usage` with
+`Authorization: Bearer <SECRET_KEY>`. Administrator secrets are not accepted in
+GET parameters or query strings for this endpoint.
+
 ## Architecture
 
 ```text

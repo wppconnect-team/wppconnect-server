@@ -128,7 +128,7 @@ routes.get(
   SessionController.showAllSessions
 );
 routes.get(
-  '/api/:secretkey/all-sessions-resource-usage',
+  '/api/sessions/resource-usage',
   ResourceController.getAllSessionsResourceUsage
 );
 routes.post(

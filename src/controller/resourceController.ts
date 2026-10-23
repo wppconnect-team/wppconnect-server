@@ -16,6 +16,7 @@
 
 import { Request, Response } from 'express';
 
+import { isAdmin } from '../manager/auth';
 import {
   isValidSessionName,
   SessionResourceMonitor,
@@ -97,7 +98,7 @@ export async function getSessionResourceUsage(req: Request, res: Response) {
 
 /**
  * Get resource usage for all sessions
- * GET /api/:secretkey/all-sessions-resource-usage
+ * GET /api/sessions/resource-usage with an administrator bearer token
  */
 export async function getAllSessionsResourceUsage(req: Request, res: Response) {
   /**
@@ -109,9 +110,6 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
      #swagger.security = [{
        "bearerAuth": []
      }]
-     #swagger.parameters["secretkey"] = {
-       schema: 'THISISMYSECURETOKEN'
-     }
    */
   if (!isResourceMonitorEnabled(req)) {
     return res.status(403).json({
@@ -120,19 +118,9 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
     });
   }
 
-  const { secretkey } = req.params;
-  const { authorization: token } = req.headers;
-
-  let tokenDecrypt: any = '';
-
-  if (secretkey === undefined) {
-    tokenDecrypt = token?.replace(/^Bearer\s+/i, '');
-  } else {
-    tokenDecrypt = secretkey;
-  }
-
-  if (tokenDecrypt !== req.serverOptions.secretKey) {
-    return res.status(400).json({
+  const token = req.headers.authorization?.replace(/^Bearer\s+/i, '');
+  if (!isAdmin(token, req.serverOptions.secretKey)) {
+    return res.status(401).json({
       response: false,
       message: 'The token is incorrect',
     });
