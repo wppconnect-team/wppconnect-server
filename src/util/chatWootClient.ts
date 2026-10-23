@@ -178,7 +178,7 @@ export default class chatWootClient {
     const contact = await this.createContact(client, message);
     const conversation = await this.createConversation(
       contact,
-      message.chatId.split('@')[0],
+      message.chatId.split('@')[0]
     );
 
     try {
@@ -252,7 +252,7 @@ export default class chatWootClient {
   async findContact(query: string) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`,
+        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`
       );
       return data;
     } catch (e) {
@@ -304,7 +304,7 @@ export default class chatWootClient {
     try {
       const data = await this.api.post(
         `api/v1/accounts/${this.account_id}/contacts`,
-        body,
+        body
       );
       return data.data.payload.contact;
     } catch (e) {
@@ -316,10 +316,10 @@ export default class chatWootClient {
   async findConversation(contact: any) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/${contact.id}/conversations`,
+        `api/v1/accounts/${this.account_id}/contacts/${contact.id}/conversations`
       );
       return data.payload.find(
-        (e: any) => e.inbox_id == this.inbox_id && e.status != 'resolved',
+        (e: any) => e.inbox_id == this.inbox_id && e.status != 'resolved'
       );
     } catch (e) {
       console.log(e);
@@ -341,7 +341,7 @@ export default class chatWootClient {
     try {
       const { data } = await this.api.post(
         `api/v1/accounts/${this.account_id}/conversations`,
-        body,
+        body
       );
       return data;
     } catch (e) {

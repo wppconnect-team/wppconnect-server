@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
-import puppeteer from 'puppeteer';
+import { constants, runInThisContext } from 'vm';
 
 import {
   IncomingCallAudioChunk,
@@ -22,13 +23,43 @@ import {
   pushOutgoingPcm16,
 } from '../../util/callUtil';
 
-const chromePath = puppeteer.executablePath();
-const browserTest = existsSync(chromePath) ? it : it.skip;
+const configuredChromePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+// Resolve the asynchronous default path before registering the optional test.
+// The native Node loader supports Puppeteer's ESM package in this CJS Jest suite.
+const defaultChromePath = configuredChromePath
+  ? undefined
+  : execFileSync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '--eval',
+        'import puppeteer from "puppeteer"; process.stdout.write(await puppeteer.executablePath());',
+      ],
+      { encoding: 'utf8', cwd: process.cwd() }
+    ).trim();
+const browserTest =
+  configuredChromePath || (defaultChromePath && existsSync(defaultChromePath))
+    ? it
+    : it.skip;
 
 describe('Call media browser bridge', () => {
   browserTest(
     'captures a remote track and replaces an outgoing audio sender',
     async () => {
+      const { default: puppeteer } = (await runInThisContext(
+        'import("puppeteer")',
+        {
+          filename: __filename,
+          importModuleDynamically: constants.USE_MAIN_CONTEXT_DEFAULT_LOADER,
+        }
+      )) as typeof import('puppeteer');
+      const chromePath =
+        configuredChromePath || (await puppeteer.executablePath());
+      if (!existsSync(chromePath)) {
+        throw new Error(
+          `Puppeteer browser executable does not exist: ${chromePath}`
+        );
+      }
       const browser = await puppeteer.launch({
         executablePath: chromePath,
         headless: true,

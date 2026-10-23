@@ -127,7 +127,7 @@ jobs:
         run: yarn smoke:provider-crypto
 
   runtime-matrix:
-    if: github.event_name == 'pull_request' && github.base_ref == 'develop'
+    if: github.event_name == 'pull_request' && (github.base_ref == 'develop' || github.base_ref == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

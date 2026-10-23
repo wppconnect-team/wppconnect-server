@@ -134,10 +134,14 @@ export function emitIncomingAudio(
 
 export function emitCallMediaEnded(session: string, callId: string): void {
   if (activeCalls.get(session) !== callId) return;
-  mediaNamespace?.to(roomFor(session, callId)).emit('call-media-ended', {
-    callId,
-    timestamp: Date.now(),
-  });
+  try {
+    mediaNamespace?.to(roomFor(session, callId)).emit('call-media-ended', {
+      callId,
+      timestamp: Date.now(),
+    });
+  } finally {
+    deactivateCallMedia(session, callId);
+  }
 }
 
 export { roomFor as callMediaRoom };

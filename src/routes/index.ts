@@ -35,6 +35,7 @@ import * as ResourceController from '../controller/resourceController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
 import { sessionManager } from '../core/session/SessionManager';
+import { isAdmin } from '../manager/auth';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
@@ -45,7 +46,15 @@ import { clientsArray } from '../util/sessionUtil';
 const upload = multer(uploadConfig as any) as any;
 const routes: Router = Router();
 
-routes.get('/api/dashboard/stats', async (_req, res) => {
+routes.get('/api/dashboard/stats', async (req, res) => {
+  if (
+    !isAdmin(
+      req.headers.authorization?.replace(/^Bearer\s+/i, ''),
+      req.serverOptions.secretKey
+    )
+  ) {
+    return res.status(401).json({ message: 'Administrator token required' });
+  }
   const sessions = await Promise.all(
     sessionManager.list().map(async (handle) => {
       const health = handle.adapter

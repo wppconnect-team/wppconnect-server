@@ -132,7 +132,9 @@ export async function initServer(
   });
 
   app.use('/api/manager', managerRoutes);
-  installManagerStatic(app);
+  const managerApp = express();
+  installManagerStatic(managerApp);
+  app.use(managerApp);
   app.use(routes);
 
   // Central handler for provider-layer errors (NotSupported -> 501,

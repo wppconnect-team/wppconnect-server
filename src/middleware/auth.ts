@@ -124,8 +124,14 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): any => {
     if (cached && cached > Date.now()) {
       req.session = formatSession(req.params.session);
       req.token = tokenDecrypt;
+      req.provider = sessionManager.get(req.session)?.adapter;
       req.client = clientsArray[req.session];
-      return next();
+      try {
+        assertProviderRouteSupported(req.provider, req.method, req.route?.path);
+        return next();
+      } catch (providerError) {
+        return next(providerError);
+      }
     }
 
     bcrypt.compare(

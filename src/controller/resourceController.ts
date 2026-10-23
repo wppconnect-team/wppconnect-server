@@ -126,7 +126,7 @@ export async function getAllSessionsResourceUsage(req: Request, res: Response) {
   let tokenDecrypt: any = '';
 
   if (secretkey === undefined) {
-    tokenDecrypt = token?.split(' ')[0];
+    tokenDecrypt = token?.replace(/^Bearer\s+/i, '');
   } else {
     tokenDecrypt = secretkey;
   }
@@ -185,7 +185,7 @@ export async function clearResourceCache(req: Request, res: Response) {
   let tokenDecrypt: any = '';
 
   if (secretkey === undefined) {
-    tokenDecrypt = token?.split(' ')[0];
+    tokenDecrypt = token?.replace(/^Bearer\s+/i, '');
   } else {
     tokenDecrypt = secretkey;
   }

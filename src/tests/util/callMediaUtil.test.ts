@@ -19,6 +19,8 @@ import {
   consumeMediaTicket,
   createMediaTicket,
   deactivateCallMedia,
+  emitCallMediaEnded,
+  isCallMediaActive,
   resetCallMediaForTests,
 } from '../../util/callMediaUtil';
 
@@ -66,5 +68,29 @@ describe('Call media authorization', () => {
       'ttlMs must be a number'
     );
     now.mockRestore();
+  });
+
+  it('revokes unused tickets and prevents new tickets after remote hangup', () => {
+    activateCallMedia('session-a', 'call-1');
+    const pending = createMediaTicket('session-a', 'call-1');
+
+    emitCallMediaEnded('session-a', 'call-1');
+
+    expect(isCallMediaActive('session-a', 'call-1')).toBe(false);
+    expect(consumeMediaTicket(pending.ticket)).toBeUndefined();
+    expect(() => createMediaTicket('session-a', 'call-1')).toThrow(
+      'Call media is not active for this session and callId'
+    );
+  });
+
+  it('ignores a late hangup from the replaced call', () => {
+    activateCallMedia('session-a', 'call-1');
+    activateCallMedia('session-a', 'call-2');
+    const current = createMediaTicket('session-a', 'call-2');
+
+    emitCallMediaEnded('session-a', 'call-1');
+
+    expect(isCallMediaActive('session-a', 'call-2')).toBe(true);
+    expect(consumeMediaTicket(current.ticket)?.callId).toBe('call-2');
   });
 });

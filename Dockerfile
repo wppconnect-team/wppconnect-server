@@ -8,6 +8,7 @@ RUN wget -q -O /tmp/manager.tar.gz "https://github.com/wppconnect-team/wppconnec
 FROM node:22.22.2-alpine AS base
 WORKDIR /usr/src/wpp-server
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 # Install build dependencies and runtime libraries for sharp
 RUN apk update && \
@@ -62,5 +63,6 @@ RUN apk add --no-cache \
 EXPOSE 21465
 COPY --from=manager /manager ./manager
 ENV MANAGER_ENABLED=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 ENTRYPOINT ["/entrypoint.sh"]

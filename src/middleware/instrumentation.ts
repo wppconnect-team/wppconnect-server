@@ -18,6 +18,7 @@ import { Request, Response } from 'express';
 import Prometheus from 'prom-client';
 
 import { getResourceMonitor } from '../controller/resourceController';
+import { isAdmin } from '../manager/auth';
 
 /**
  * One registry for the process.
@@ -71,6 +72,17 @@ export async function metrics(req: Request, res: Response) {
     req.serverOptions?.resourceMonitor?.enable &&
     req.serverOptions?.resourceMonitor?.exposeSessionMetrics !== false
   ) {
+    if (
+      !isAdmin(
+        req.headers?.authorization?.replace(/^Bearer\s+/i, ''),
+        req.serverOptions.secretKey
+      )
+    ) {
+      return res.status(401).json({ message: 'Administrator token required' });
+    }
+    sessionCpuGauge.reset();
+    sessionMemoryGauge.reset();
+    sessionProcessCountGauge.reset();
     try {
       const monitor = getResourceMonitor(req);
       const usage = await monitor.getAllSessionsUsage();
@@ -93,6 +105,10 @@ export async function metrics(req: Request, res: Response) {
     } catch (error) {
       req.logger?.error(error);
     }
+  } else {
+    sessionCpuGauge.reset();
+    sessionMemoryGauge.reset();
+    sessionProcessCountGauge.reset();
   }
 
   res.setHeader('Content-Type', prometheusRegister.contentType);

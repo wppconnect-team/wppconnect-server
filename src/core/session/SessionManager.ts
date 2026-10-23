@@ -61,6 +61,12 @@ export class SessionManager {
   }
 
   delete(name: string): void {
+    const handle = this.sessions.get(name);
+    if (handle) {
+      handle.status = 'CLOSED';
+      handle.qrcode = undefined;
+      handle.bus.removeAllListeners();
+    }
     this.sessions.delete(name);
   }
 }

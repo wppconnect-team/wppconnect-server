@@ -29,9 +29,9 @@ services:
       REDIS_PASSWORD: '${REDIS_PASSWORD:-}'
       REDIS_DB: '${REDIS_DB:-0}'
       REDIS_PREFIX: '${REDIS_PREFIX:-docker}'
-      MEDIA_API_URL: "${MEDIA_API_URL:-}"
-      MEDIA_API_KEY: "${MEDIA_API_KEY:-}"
-      MEDIA_API_TIMEOUT_MS: "${MEDIA_API_TIMEOUT_MS:-30000}"
+      MEDIA_API_URL: '${MEDIA_API_URL:-}'
+      MEDIA_API_KEY: '${MEDIA_API_KEY:-}'
+      MEDIA_API_TIMEOUT_MS: '${MEDIA_API_TIMEOUT_MS:-30000}'
     volumes:
       - wppconnect_tokens:/usr/src/wpp-server/tokens
       - wppconnect_user_data:/usr/src/wpp-server/userDataDir

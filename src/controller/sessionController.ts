@@ -295,9 +295,9 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
   try {
     const handle = sessionManager.get(session);
     if (handle && handle.providerId !== 'wppconnect') {
-      await handle.adapter?.session.close();
-      sessionManager.delete(session);
-      deleteSessionOnArray(session);
+      await cleanupSession(session, async () => {
+        await handle.adapter?.session.close();
+      });
       req.io.emit('whatsapp-status', false);
       return await res
         .status(200)
@@ -350,9 +350,9 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
     const session = req.session;
     const handle = sessionManager.get(session);
     if (handle && handle.providerId !== 'wppconnect') {
-      await handle.adapter?.session.logout();
-      sessionManager.delete(session);
-      deleteSessionOnArray(session);
+      await cleanupSession(session, async () => {
+        await handle.adapter?.session.logout();
+      });
       req.io.emit('whatsapp-status', false);
       return await res
         .status(200)

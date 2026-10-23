@@ -23,7 +23,6 @@ import {
   callMediaRoom,
   configureCallMediaNamespace,
   createMediaTicket,
-  deactivateCallMedia,
   emitCallMediaEnded,
   emitIncomingAudio,
   resetCallMediaForTests,
@@ -109,21 +108,28 @@ describe('Call media Socket.IO authorization', () => {
     const ended = new Promise<unknown>((resolve) =>
       first.once('call-media-ended', resolve)
     );
+    const disconnected = new Promise<void>((resolve) =>
+      first.once('disconnect', () => resolve())
+    );
+    const unusedTicket = createMediaTicket('session-a', 'call-1').ticket;
     emitCallMediaEnded('session-a', 'call-1');
     await expect(ended).resolves.toMatchObject({ callId: 'call-1' });
+    await disconnected;
     expect(
       namespace.adapter.rooms.has(callMediaRoom('session-a', 'call-1'))
-    ).toBe(true);
+    ).toBe(false);
     expect(
       namespace.adapter.rooms.has(callMediaRoom('session-b', 'call-2'))
     ).toBe(true);
 
-    const disconnected = new Promise<void>((resolve) =>
-      first.once('disconnect', () => resolve())
-    );
-    deactivateCallMedia('session-a', 'call-1');
-    await disconnected;
     expect(first.connected).toBe(false);
     expect(second.connected).toBe(true);
+
+    const rejected = open(unusedTicket);
+    const error = await new Promise<Error>((resolve) =>
+      rejected.once('connect_error', resolve)
+    );
+    expect(error.message).toBe('Invalid or expired media ticket');
+    expect(rejected.connected).toBe(false);
   });
 });

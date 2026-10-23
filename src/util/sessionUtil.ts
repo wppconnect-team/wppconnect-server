@@ -15,6 +15,7 @@
  */
 import { EventEmitter } from 'events';
 
+import { sessionManager } from '../core/session/SessionManager';
 import { WhatsAppServer } from '../types/WhatsAppServer';
 import { deactivateCallMedia } from './callMediaUtil';
 
@@ -57,8 +58,13 @@ export async function cleanupSession(
   if ((client as any)?.status === 'CLOSING') {
     throw new Error('Session cleanup is already in progress');
   }
+  const handle = sessionManager.get(session);
   const reservation = { status: 'CLOSING', session } as any;
   clientsArray[session] = reservation;
+  deactivateCallMedia(session);
+  // Invalidate provider callbacks before teardown can yield to socket/browser
+  // events. A failed cleanup still retains the legacy runtime for retry.
+  sessionManager.delete(session);
   try {
     await cleanup(client);
   } catch (error) {
@@ -71,6 +77,14 @@ export async function cleanupSession(
       } else {
         clientsArray[session] = { status: 'ERROR', session } as any;
       }
+      if (handle?.adapter && !sessionManager.has(session)) {
+        // Keep the failed adapter reachable for explicit close/logout retry,
+        // using a fresh handle so callbacks from the old owner stay invalid.
+        const retained = sessionManager.getOrCreate(session, handle.providerId);
+        retained.adapter = handle.adapter;
+        retained.config = handle.config;
+        retained.status = 'CLOSED';
+      }
     }
     throw error;
   } finally {
@@ -81,6 +95,7 @@ export async function cleanupSession(
 }
 
 export function deleteSessionOnArray(session: string): void {
+  sessionManager.delete(session);
   deactivateCallMedia(session);
   const newArray = clientsArray;
   delete clientsArray[session];

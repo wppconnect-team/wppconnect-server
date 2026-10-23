@@ -7,7 +7,10 @@ jest.mock('../../util/functions', () => ({
 
 function fakeReq() {
   return {
-    io: { emit: jest.fn() },
+    io: {
+      emit: jest.fn(),
+      of: jest.fn(() => ({ to: jest.fn(() => ({ emit: jest.fn() })) })),
+    },
     logger: { error: jest.fn() },
   } as any;
 }
@@ -48,7 +51,7 @@ describe('EventDispatcher', function () {
     });
 
     expect(req.io.emit).toHaveBeenCalledWith('received-message', {
-      body: 'x',
+      response: { body: 'x' },
     });
     expect(callWebHookMock).not.toHaveBeenCalled();
   });

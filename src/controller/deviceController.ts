@@ -17,7 +17,6 @@ import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 
 import { getClient } from '../core/provider/useProvider';
-
 import {
   activateCallMedia,
   createMediaTicket,
@@ -325,7 +324,7 @@ export async function getAllMessagesInChat(req: Request, res: Response) {
       response = await getClient(req).getAllMessagesInChat(
         contato,
         includeMe as boolean,
-        includeNotifications as boolean,
+        includeNotifications as boolean
       );
     }
 
@@ -414,7 +413,7 @@ export async function getChatById(req: Request, res: Response) {
       phone as string,
       isGroup as boolean,
       isNewsletter as boolean,
-      isLid as boolean,
+      isLid as boolean
     )) {
       result = await getClient(req).getChatById(contato);
     }
@@ -870,7 +869,7 @@ export async function deleteMessage(req: Request, res: Response) {
       `${phone}`,
       messageId,
       onlyLocal,
-      deleteMediaInDevice,
+      deleteMediaInDevice
     );
     if (result) {
       res
@@ -1431,7 +1430,7 @@ export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
     const response = await getClient(req).loadAndGetAllMessagesInChat(
       `${phone}@c.us`,
       includeMe as boolean,
-      includeNotifications as boolean,
+      includeNotifications as boolean
     );
 
     res.status(200).json({ status: 'success', response: response });
@@ -1526,7 +1525,7 @@ export async function sendContactVcard(req: Request, res: Response) {
       response = await getClient(req).sendContactVcard(
         `${contato}`,
         contactsId,
-        name,
+        name
       );
     }
 
@@ -2211,14 +2210,14 @@ export async function endCall(req: Request, res: Response) {
        }
      }
    */
-  const { callId } = req.body || {};
+  // Revoke the active room even if the browser has already disappeared.
+  deactivateCallMedia(req.session);
   try {
     const response = await CallUtil.endCall(req.client.page);
     await Promise.allSettled([
       CallUtil.stopIncomingAudioCapture(req.client.page),
       CallUtil.stopOutgoingAudio(req.client.page),
     ]);
-    deactivateCallMedia(req.session, callId);
     res.status(200).json({ status: 'success', response });
   } catch (e) {
     req.logger.error(e);
@@ -2384,6 +2383,7 @@ export async function stopCallMedia(req: Request, res: Response) {
      #swagger.description = "Stops incoming and outgoing call audio, invalidates tickets, and disconnects the active media socket for the session."
      #swagger.security = [{ "bearerAuth": [] }]
    */
+  deactivateCallMedia(req.session);
   try {
     await Promise.all([
       CallUtil.stopIncomingAudioCapture(req.client.page),
@@ -2539,7 +2539,10 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
    */
   const { session } = req.params;
   const client: any = clientsArray[session];
-  if (client == null || client.status !== 'CONNECTED') return;
+  if (client == null || client.status !== 'CONNECTED')
+    return res
+      .status(409)
+      .json({ status: 'error', message: 'Session is not connected' });
   try {
     if (await client.isConnected()) {
       const event = req.body.event;
@@ -2555,33 +2558,33 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
           .json({ status: 'success', message: 'Success on receive chatwoot' });
       }
 
-      // TypeError: Cannot read properties of undefined (reading 'meta') at chatWoot (*/wppconnect-server/src/controller/deviceController.ts:2267:41)
-      if (!req.body.conversation) {
-        req.logger?.warn(
-          `[chatWoot] Event '${event}' without conversation, ignored.`,
-        );
+      const { message_type, conversation } = req.body;
+      if (
+        event !== 'message_created' ||
+        message_type !== 'outgoing' ||
+        !conversation
+      ) {
         return res
           .status(200)
           .json({ status: 'success', message: 'Success on receive chatwoot' });
       }
-
-      const {
-        message_type,
-        phone = req.body.conversation.meta.sender.phone_number.replace('+', ''),
-        message = req.body.conversation.messages[0],
-      } = req.body;
-
-      if (event != 'message_created' || message_type != 'outgoing')
-        return res
-          .status(200)
-          .json({ status: 'success', message: 'Success on receive chatwoot' });
+      const sender = conversation.meta?.sender;
+      const phone =
+        req.body.phone || sender?.phone_number || sender?.identifier;
+      const message = req.body.message || conversation.messages?.[0];
+      if (typeof phone !== 'string' || !phone || !message) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Chatwoot recipient and message are required',
+        });
+      }
       for (const contato of contactToArray(phone, false)) {
         if (message_type == 'outgoing') {
-          if (message.attachments) {
+          if (message.attachments?.length) {
             const base_url = `${
               client.config.chatWoot.baseURL
             }/${message.attachments[0].data_url.substring(
-              message.attachments[0].data_url.indexOf('/rails/') + 1,
+              message.attachments[0].data_url.indexOf('/rails/') + 1
             )}`;
 
             // Check if attachments is Push-to-talk and send this
@@ -2590,14 +2593,14 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
                 `${contato}`,
                 base_url,
                 'Voice Audio',
-                message.content,
+                message.content
               );
             } else {
               await client.sendFile(
                 `${contato}`,
                 base_url,
                 'file',
-                message.content,
+                message.content
               );
             }
           } else {
