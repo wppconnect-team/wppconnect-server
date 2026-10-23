@@ -1,3 +1,10 @@
+## [2.10.62](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.61...v2.10.62) (2026-10-23)
+
+
+### Bug Fixes
+
+* **session:** keep QR flowing after the unpaired disconnectedMobile ([2505151](https://github.com/wppconnect-team/wppconnect-server/commit/25051513168c8b2d94f9a013be8473872b649af1))
+
 ## [2.10.61](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.60...v2.10.61) (2026-10-21)
 
 ## [2.10.60](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.59...v2.10.60) (2026-10-20)
