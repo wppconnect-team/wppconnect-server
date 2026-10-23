@@ -50,14 +50,12 @@ import { clientsArray } from './util/sessionUtil';
 export const logger = createLogger(config.log);
 
 /**
- * Boots the HTTP server on Fastify, running the existing Express middleware
- * stack and routes through `@fastify/express`. This preserves the full public
- * contract — same routes, payloads, auth, swagger and socket.io channels —
- * while moving the underlying engine to Fastify (faster, schema-ready).
+ * Starts the Fastify HTTP server with the existing Express middleware and
+ * routes through `@fastify/express`.
  *
- * `initServer` is now async (Fastify registers plugins asynchronously). The
- * single caller (`server.ts`) does not await the result, so behavior is
- * unchanged — startup continues in the background exactly as before.
+ * Embedding callers must await initialization. The returned `app` is a
+ * FastifyInstance, replacing the previous synchronous Express application.
+ * The listener is active when this Promise resolves; use app.close() to stop it.
  */
 export async function initServer(
   serverOptions: Partial<ServerOptions>

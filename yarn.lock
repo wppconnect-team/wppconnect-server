@@ -5320,12 +5320,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wppconnect-team/wppconnect@npm:^2.3.5":
-  version: 2.3.5
-  resolution: "@wppconnect-team/wppconnect@npm:2.3.5"
+"@wppconnect-team/wppconnect@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "@wppconnect-team/wppconnect@npm:2.3.6"
   dependencies:
     "@img/sharp-win32-x64": "npm:^0.35.5"
-    "@wppconnect/wa-js": "npm:^4.7.1"
+    "@wppconnect/wa-js": "npm:^4.7.2"
     "@wppconnect/wa-version": "npm:^1.5.4472"
     atob: "npm:^2.1.2"
     axios: "npm:^1.20.0"
@@ -5358,7 +5358,7 @@ __metadata:
       optional: true
     fsevents:
       optional: true
-  checksum: 10c0/b8c0707d47fe146ea8fb13ac042a5a6da58eb4732143e261fdd178dfe8d7be255c6e9d76f40bbd0e63d152d64776b04daa53265ea9fd218677ef4f25e8142aeb
+  checksum: 10c0/f3b3c3df5238c4d120893eb5ca068659b7c084beb5b6475000b3f5adf588558ef0aac3b2c2788e80468172674c6f9eefa43a08445a01b6d8ed045efa5e97028d
   languageName: node
   linkType: hard
 
@@ -5429,7 +5429,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
     "@typescript-eslint/parser": "npm:^8.72.0"
     "@whiskeysockets/baileys": "npm:7.0.0-rc14"
-    "@wppconnect-team/wppconnect": "npm:^2.3.5"
+    "@wppconnect-team/wppconnect": "npm:^2.3.6"
     "@wppconnect/baileys": "npm:7.0.0-rc16"
     "@wppconnect/whaileys": "npm:whaileys@6.5.1"
     "@wppconnect/zapo": "npm:^1.8.4"
@@ -5518,7 +5518,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wppconnect/wa-js@npm:^4.7.1":
+"@wppconnect/wa-js@npm:^4.7.2":
   version: 4.7.2
   resolution: "@wppconnect/wa-js@npm:4.7.2"
   checksum: 10c0/66052428e761658f1dc744e30a19360c0f9e0e3524fbec0b04f4ac6b4de4de96827e97eb178d0f768a391284d3b33b5ea42b3694401d1c50778dbcdc2fef87bd

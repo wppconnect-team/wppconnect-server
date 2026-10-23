@@ -126,3 +126,40 @@ All ordinary contribution PRs target `develop`. Maintainers promote validated
 changes through a `develop` -> `main` release PR, then synchronize release commits
 back into `develop`. The experimental limitations above must remain in release
 notes until their separate validation is complete.
+
+## Dependency refresh and promotion follow-up
+
+The unread-action fix from [WA-JS #3748](https://github.com/wppconnect-team/wa-js/pull/3748)
+was released in WA-JS 4.7.2. [Server #2663](https://github.com/wppconnect-team/wppconnect-server/pull/2663)
+consumed that release through its lockfile and added four controller regression
+cases. [WPPConnect #2938](https://github.com/wppconnect-team/wppconnect/pull/2938)
+raised the minimum WA-JS dependency and added four wrapper regression cases.
+The server dependency update targets WPPConnect 2.3.6 with WA-JS 4.7.2.
+
+Local validation with WPPConnect 2.3.6 and WA-JS 4.7.2 passed 344 Jest tests in
+45 suites, build, lint, immutable installation, provider crypto, and 11/11 import
+and QR runtime checks. The registry audit returned zero vulnerability advisory
+entries and 22 deprecation notices. Require CI, including Docker verification,
+on the final `develop` head; earlier successful checks do not replace validation
+of that head.
+
+The remaining promotion requirements are:
+
+1. Successful CI on the final promotion head, including Docker and the runtime
+   matrix, after consuming the published WPPConnect release.
+2. An authorized connected-session smoke test of the default WPPConnect provider:
+   send/receive, acknowledgments, media, reconnect, and marking a chat unread.
+   Confirm the unread state in WhatsApp itself; an HTTP success response alone
+   does not prove that the action succeeded.
+3. Maintainer review of the incompatible embedding API migration and the major
+   release. From version 2.10.63, the existing `feat!:` / `BREAKING CHANGE` history
+   selects version 3.0.0. Preserve that history when promoting to `main`.
+
+The README now exposes the `await initServer(...)` migration and Fastify return
+type. No connected account or live WhatsApp call has been validated by this task.
+
+Browserless provider connected checks and a live call remain requirements for
+declaring those experimental features stable. WA-JS #3713 and WPPConnect #2912
+are still open; this blocks announcing community comments as available. Their
+guarded HTTP 501 behavior is intentional. These experimental limits do not
+independently prevent a release that keeps the limitations explicit.
