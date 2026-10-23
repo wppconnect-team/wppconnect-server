@@ -46,6 +46,9 @@ RUN yarn build
 FROM build AS runtime
 WORKDIR /usr/src/wpp-server/
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Install runtime dependencies (chromium and vips libraries)
 RUN apk add --no-cache \
     chromium \
@@ -55,4 +58,5 @@ RUN apk add --no-cache \
 EXPOSE 21465
 COPY --from=manager /manager ./manager
 ENV MANAGER_ENABLED=true
-ENTRYPOINT ["node", "dist/server.js"]
+
+ENTRYPOINT ["/entrypoint.sh"]
