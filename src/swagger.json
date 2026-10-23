@@ -413,6 +413,9 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -3683,6 +3686,18 @@
                   "onlyUsers": {
                     "type": "boolean"
                   },
+                  "onlyNewsletter": {
+                    "type": "boolean"
+                  },
+                  "onlyCommunities": {
+                    "type": "boolean"
+                  },
+                  "onlyArchived": {
+                    "type": "boolean"
+                  },
+                  "ignoreGroupMetadata": {
+                    "type": "boolean"
+                  },
                   "onlyWithUnreadMessage": {
                     "type": "boolean"
                   },
@@ -3979,7 +3994,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "5521999999999"
+              "example": "5521999999999@c.us"
             }
           },
           {
@@ -3989,6 +4004,20 @@
               "example": "false"
             },
             "in": "query"
+          },
+          {
+            "name": "isNewsletter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isLid",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -8750,6 +8779,115 @@
         "responses": {
           "default": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/{session}/message-comments/{messageId}": {
+      "get": {
+        "tags": [
+          "Community"
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "description": "Complete serialized announcement message id; URL-encode it.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Read locally synchronized community announcement comments without marking them read.",
+        "responses": {
+          "200": {
+            "description": "Comments, oldest first; includes revoked/encrypted records."
+          },
+          "400": {
+            "description": "Invalid message id."
+          },
+          "501": {
+            "description": "Comment support is unavailable."
+          },
+          "500": {
+            "description": "Unable to read comments."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Community"
+        ],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "description": "Complete serialized announcement message id; URL-encode it.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Send a text reply inside the announcement. Never automatically retry a 502: delivery may have happened.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Native messageSendResult is OK."
+          },
+          "400": {
+            "description": "Invalid id or empty text."
+          },
+          "501": {
+            "description": "Comment support is unavailable."
+          },
+          "502": {
+            "description": "Send not confirmed. retrySafe is false. Check the announcement before retrying."
           }
         }
       }

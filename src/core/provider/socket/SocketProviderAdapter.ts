@@ -28,6 +28,7 @@ import {
   SessionApi,
 } from '../ProviderAdapter';
 import { createJid } from './jid';
+import { normalizeAck, normalizeMessage } from './normalizeMessage';
 import { createWppCompat } from './WppCompatFacade';
 
 const silentProviderLogger: any = {
@@ -86,6 +87,7 @@ export class SocketProviderAdapter implements ProviderAdapter {
   private state: ConnectionState = 'INITIALIZING';
   private qrCount = 0;
   private endSession = false;
+  private generation = 0;
   private readonly authDir: string;
 
   constructor(
@@ -98,10 +100,12 @@ export class SocketProviderAdapter implements ProviderAdapter {
 
     this.session = {
       start: async () => {
+        this.endSession = false;
         await this.connect();
       },
       close: async () => {
         this.endSession = true;
+        this.generation++;
         try {
           this.sock?.ws?.close?.();
           this.sock?.end?.(undefined);
@@ -112,6 +116,7 @@ export class SocketProviderAdapter implements ProviderAdapter {
       },
       logout: async () => {
         this.endSession = true;
+        this.generation++;
         try {
           await this.sock?.logout?.();
         } catch {
@@ -182,12 +187,16 @@ export class SocketProviderAdapter implements ProviderAdapter {
 
   /** Establishes the socket and wires the normalized events. */
   private async connect(): Promise<void> {
-    this.endSession = false;
+    if (this.endSession) return;
+    const generation = ++this.generation;
+    const active = () => !this.endSession && generation === this.generation;
     const lib: any = await this.loadLib();
+    if (!active()) return;
     const makeWASocket = lib.default ?? lib.makeWASocket;
 
     fs.mkdirSync(this.authDir, { recursive: true });
     const { state, saveCreds } = await lib.useMultiFileAuthState(this.authDir);
+    if (!active()) return;
 
     // Pin to the latest WA Web version when the lib can fetch it (Evolution
     // does this — stale versions cause QR/login failures).
@@ -201,6 +210,7 @@ export class SocketProviderAdapter implements ProviderAdapter {
     } catch {
       /* fall back to the lib default version */
     }
+    if (!active()) return;
 
     const keys =
       typeof lib.makeCacheableSignalKeyStore === 'function'
@@ -231,23 +241,37 @@ export class SocketProviderAdapter implements ProviderAdapter {
       this.sock.store = this.store;
     }
 
-    this.sock.ev.on('creds.update', saveCreds);
-    this.sock.ev.on('connection.update', (update: any) =>
-      this.handleConnectionUpdate(update)
-    );
+    this.sock.ev.on('creds.update', () => {
+      if (active()) void Promise.resolve(saveCreds()).catch(() => undefined);
+    });
+    this.sock.ev.on('connection.update', (update: any) => {
+      if (active())
+        void this.handleConnectionUpdate(update, active).catch(() => undefined);
+    });
     this.sock.ev.on('messages.upsert', (m: any) => {
+      if (!active()) return;
       for (const msg of m.messages ?? []) {
-        this.emit('message', { ...msg, session: this.sessionName });
+        const normalized = normalizeMessage(msg, this.sessionName);
+        // History synchronization must not replay old messages as fresh events.
+        if (m.type && m.type !== 'notify') continue;
+        this.emit('message', normalized);
+        this.emit('any-message', normalized);
       }
     });
     this.sock.ev.on('messages.update', (updates: any[]) => {
+      if (!active()) return;
       for (const u of updates ?? []) {
-        this.emit('ack', { ...u, session: this.sessionName });
+        if (u.update?.status != null)
+          this.emit('ack', normalizeAck(u, this.sessionName));
       }
     });
   }
 
-  private async handleConnectionUpdate(update: any): Promise<void> {
+  private async handleConnectionUpdate(
+    update: any,
+    active: () => boolean = () => !this.endSession
+  ): Promise<void> {
+    if (!active()) return;
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
@@ -260,6 +284,7 @@ export class SocketProviderAdapter implements ProviderAdapter {
       } catch {
         /* base64 optional */
       }
+      if (!active()) return;
       this.emit('qr', {
         urlcode: qr, // raw code (scannable as text-encoded QR)
         qrcode: qr,

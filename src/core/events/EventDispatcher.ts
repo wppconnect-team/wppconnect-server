@@ -16,6 +16,7 @@
 
 import { Request } from 'express';
 
+import { emitManager } from '../../manager/socket';
 import { callWebHook } from '../../util/functions';
 import { ProviderEvent } from '../provider/ProviderAdapter';
 
@@ -70,10 +71,18 @@ export class EventDispatcher {
 
     try {
       if (mapping.socket && this.req.io) {
-        this.req.io.emit(mapping.socket, data);
+        this.req.io.emit(
+          mapping.socket,
+          event === 'any-message' ? { response: data } : data
+        );
+        if (event === 'any-message') {
+          emitManager(this.req.io, this.client.session, 'message', data);
+        }
       }
       if (mapping.webhook) {
-        callWebHook(this.client, this.req, mapping.webhook, data);
+        void Promise.resolve(
+          callWebHook(this.client, this.req, mapping.webhook, data)
+        ).catch((error) => this.req.logger?.error(error));
       }
     } catch (e) {
       this.req.logger?.error(e);

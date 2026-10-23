@@ -27,6 +27,7 @@ import {
   ProviderId,
   SessionApi,
 } from '../ProviderAdapter';
+import { normalizeAck, normalizeMessage } from '../socket/normalizeMessage';
 import { createWppCompat } from '../socket/WppCompatFacade';
 
 /**
@@ -75,6 +76,7 @@ export class ZapoAdapter implements ProviderAdapter {
   private client: any = null;
   private compat: any = null;
   private state: ConnectionState = 'INITIALIZING';
+  private generation = 0;
 
   constructor(
     private readonly sessionName: string,
@@ -85,10 +87,12 @@ export class ZapoAdapter implements ProviderAdapter {
         await this.connect();
       },
       close: async () => {
+        this.generation++;
         await this.client?.disconnect?.();
         this.state = 'CLOSED';
       },
       logout: async () => {
+        this.generation++;
         await this.client?.logout?.();
         this.state = 'CLOSED';
       },
@@ -129,10 +133,13 @@ export class ZapoAdapter implements ProviderAdapter {
   }
 
   private async connect(): Promise<void> {
+    const generation = ++this.generation;
+    const active = () => generation === this.generation;
     const zapo: any = await this.loadModule(
       ['@wppconnect/zapo', 'zapo-js'],
       'the zapo runtime'
     );
+    if (!active()) return;
     // zapo's createStore validates that EVERY domain resolves to a backend
     // when `backends` is non-empty (it does not fall back to 'memory' per
     // missing field in that case) — a SQLite store is required for all of
@@ -141,6 +148,7 @@ export class ZapoAdapter implements ProviderAdapter {
       ['@zapo-js/store-sqlite'],
       'the SQLite store'
     );
+    if (!active()) return;
 
     fs.mkdirSync('./userDataDir/zapo', { recursive: true });
     const store = zapo.createStore({
@@ -172,6 +180,7 @@ export class ZapoAdapter implements ProviderAdapter {
     this.compat = null;
 
     this.client.on('auth_qr', ({ qr, ttlMs }: any) => {
+      if (!active()) return;
       this.state = 'QRCODE';
       this.emit('qr', { qrcode: qr, ttlMs, session: this.sessionName });
     });
@@ -181,6 +190,7 @@ export class ZapoAdapter implements ProviderAdapter {
     //   { status: 'open', reason, code: null, isLogout, isNewLogin }
     //   { status: 'close', reason, code, isLogout, isNewLogin: false }
     this.client.on('connection', (event: any) => {
+      if (!active()) return;
       if (event?.status === 'open') {
         this.state = 'CONNECTED';
         this.emit('connection-state', {
@@ -198,13 +208,34 @@ export class ZapoAdapter implements ProviderAdapter {
     });
 
     this.client.on('message', (event: any) => {
-      this.emit('message', { ...event, session: this.sessionName });
+      if (!active()) return;
+      const message = normalizeMessage(event, this.sessionName);
+      this.emit('message', message);
+      this.emit('any-message', message);
+    });
+
+    this.client.on('message_send', (event: any) => {
+      if (!active()) return;
+      const message = normalizeMessage(
+        {
+          ...event,
+          key: { id: event.id, remoteJid: event.to, fromMe: true },
+          timestampSeconds: Math.floor(Date.now() / 1000),
+        },
+        this.sessionName
+      );
+      this.emit('message', message);
+      this.emit('any-message', message);
     });
 
     // Delivery/read receipts for outgoing messages — the closest zapo
     // equivalent to Baileys' `messages.update` ack event.
     this.client.on('receipt', (event: any) => {
-      this.emit('ack', { ...event, session: this.sessionName });
+      if (!active()) return;
+      for (const id of event.messageIds ?? [event.stanzaId]) {
+        if (id)
+          this.emit('ack', normalizeAck({ ...event, id }, this.sessionName));
+      }
     });
 
     await this.client.connect();

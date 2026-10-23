@@ -19,6 +19,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import uploadConfig from '../config/upload';
 import * as CatalogController from '../controller/catalogController';
+import * as CommentsController from '../controller/commentsController';
 import * as CommunityController from '../controller/communityController';
 import ContactController from '../controller/contactController';
 import * as DeviceController from '../controller/deviceController';
@@ -30,9 +31,11 @@ import * as MessageController from '../controller/messageController';
 import * as MiscController from '../controller/miscController';
 import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
+import * as ResourceController from '../controller/resourceController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
 import { sessionManager } from '../core/session/SessionManager';
+import { isAdmin } from '../manager/auth';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
@@ -43,7 +46,15 @@ import { clientsArray } from '../util/sessionUtil';
 const upload = multer(uploadConfig as any) as any;
 const routes: Router = Router();
 
-routes.get('/api/dashboard/stats', async (_req, res) => {
+routes.get('/api/dashboard/stats', async (req, res) => {
+  if (
+    !isAdmin(
+      req.headers.authorization?.replace(/^Bearer\s+/i, ''),
+      req.serverOptions.secretKey
+    )
+  ) {
+    return res.status(401).json({ message: 'Administrator token required' });
+  }
   const sessions = await Promise.all(
     sessionManager.list().map(async (handle) => {
       const health = handle.adapter
@@ -116,9 +127,26 @@ routes.get(
   '/api/:secretkey/show-all-sessions',
   SessionController.showAllSessions
 );
+routes.get(
+  '/api/:secretkey/all-sessions-resource-usage',
+  ResourceController.getAllSessionsResourceUsage
+);
+routes.post(
+  '/api/:secretkey/resource-usage/clear-cache',
+  ResourceController.clearResourceCache
+);
+routes.post(
+  '/api/resource-usage/clear-cache',
+  ResourceController.clearResourceCache
+);
 routes.post('/api/:secretkey/start-all', SessionController.startAllSessions);
 
 // Sessions
+routes.get(
+  '/api/:session/resource-usage',
+  verifyToken,
+  ResourceController.getSessionResourceUsage
+);
 routes.get(
   '/api/:session/check-connection-session',
   verifyToken,
@@ -149,7 +177,6 @@ routes.post(
 routes.post(
   '/api/:session/logout-session',
   verifyToken,
-  statusConnection,
   SessionController.logOutSession
 );
 routes.post(
@@ -691,6 +718,48 @@ routes.post(
   statusConnection,
   DeviceController.rejectCall
 );
+routes.post(
+  '/api/:session/enable-call-interface',
+  verifyToken,
+  statusConnection,
+  DeviceController.enableCallInterface
+);
+routes.post(
+  '/api/:session/accept-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.acceptCall
+);
+routes.post(
+  '/api/:session/end-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.endCall
+);
+routes.post(
+  '/api/:session/offer-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.offerCall
+);
+routes.post(
+  '/api/:session/start-incoming-call-audio',
+  verifyToken,
+  statusConnection,
+  DeviceController.startIncomingCallAudio
+);
+routes.post(
+  '/api/:session/call-media-ticket',
+  verifyToken,
+  statusConnection,
+  DeviceController.createCallMediaTicket
+);
+routes.post(
+  '/api/:session/stop-call-media',
+  verifyToken,
+  statusConnection,
+  DeviceController.stopCallMedia
+);
 
 // Catalog
 routes.get(
@@ -979,6 +1048,20 @@ routes.post(
   verifyToken,
   statusConnection,
   MiscController.setLimit
+);
+
+// Community announcement replies
+routes.get(
+  '/api/:session/message-comments/:messageId',
+  verifyToken,
+  statusConnection,
+  CommentsController.getComments
+);
+routes.post(
+  '/api/:session/message-comments/:messageId',
+  verifyToken,
+  statusConnection,
+  CommentsController.sendCommentMessage
 );
 
 //Communitys

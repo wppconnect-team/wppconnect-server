@@ -27,18 +27,25 @@ import { Logger } from 'winston';
 
 import { version } from '../package.json';
 import config from './config';
+import { managerRoutes } from './manager/routes';
+import { installManagerSocket } from './manager/socket';
+import { installManagerStatic } from './manager/static';
 import { convert } from './mapper/index';
 import { providerErrorHandler } from './middleware/errorHandler';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
+import {
+  configureCallMediaNamespace,
+  isCallMediaActive,
+} from './util/callMediaUtil';
+import { pushOutgoingPcm16 } from './util/callUtil';
 import {
   createFolders,
   setMaxListners,
   startAllSessions,
 } from './util/functions';
 import { createLogger } from './util/logger';
-
-//require('dotenv').config();
+import { clientsArray } from './util/sessionUtil';
 
 export const logger = createLogger(config.log);
 
@@ -124,6 +131,10 @@ export async function initServer(
     next();
   });
 
+  app.use('/api/manager', managerRoutes);
+  const managerApp = express();
+  installManagerStatic(managerApp);
+  app.use(managerApp);
   app.use(routes);
 
   // Central handler for provider-layer errors (NotSupported -> 501,
@@ -133,12 +144,48 @@ export async function initServer(
 
   createFolders();
 
+  installManagerSocket(io, serverOptions.secretKey!);
   io.on('connection', (sock) => {
     logger.info(`ID: ${sock.id} entrou`);
 
     sock.on('disconnect', () => {
       logger.info(`ID: ${sock.id} saiu`);
     });
+  });
+
+  const callMedia = io.of('/call-media');
+  configureCallMediaNamespace(callMedia);
+  callMedia.on('connection', (socket) => {
+    const session = String(socket.data.session);
+    const callId = String(socket.data.callId);
+    socket.on(
+      'outgoing-audio',
+      async (payload: { data?: string; sampleRate?: number }, acknowledge) => {
+        try {
+          if (!isCallMediaActive(session, callId)) {
+            throw new Error('Call media is no longer active');
+          }
+          const client = clientsArray[session];
+          if (!client?.page) throw new Error('Session is not connected');
+          const attached = await pushOutgoingPcm16(
+            client.page,
+            String(payload?.data || ''),
+            Number(payload?.sampleRate || 48_000)
+          );
+          if (typeof acknowledge === 'function')
+            acknowledge({ attached, callId });
+        } catch (error) {
+          logger.error(error);
+          if (typeof acknowledge === 'function') {
+            acknowledge({
+              attached: false,
+              callId,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+        }
+      }
+    );
   });
 
   await app.ready();

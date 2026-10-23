@@ -13,7 +13,12 @@ export interface ServerOptions {
   customUserDataDir: string;
   webhook: {
     url: string;
+    allowedUrls?: string[];
     autoDownload: boolean;
+    retryAttempts?: number;
+    retryDelay?: number;
+    requestTimeout?: number;
+    autoDownloadMaxSize?: number;
     uploadS3: boolean;
     readMessage: boolean;
     allUnreadOnStart: boolean;
@@ -21,6 +26,7 @@ export interface ServerOptions {
     onPresenceChanged: boolean;
     onParticipantsChanged: boolean;
     onReactionMessage: boolean;
+    onCommentMessage?: boolean;
     onPollResponse: boolean;
     onRevokedMessage: boolean;
     onSelfMessage: boolean;
@@ -48,6 +54,11 @@ export interface ServerOptions {
     baseUrl: string | null;
     apiKey: string | null;
     timeoutMs: number;
+  };
+  resourceMonitor: {
+    enable: boolean;
+    cacheDuration: number;
+    exposeSessionMetrics?: boolean;
   };
   db: {
     mongodbDatabase: string;

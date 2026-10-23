@@ -1,39 +1,46 @@
-/*
- * Copyright 2021 WPPConnect Team
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Identifier suffixes the server is able to produce. A suffix supplied by the
+// caller is authoritative: WhatsApp already resolves LID identifiers, so
+// dropping it and re-deriving the domain rewrites them as phone numbers.
+const CONTACT_DOMAINS = ['c.us', 'g.us', 'lid', 'newsletter'];
 
-/** Normalizes one or more recipients to the legacy WPPConnect JID format. */
+/**
+ * Splits an identifier into its local part and, when recognized, its domain.
+ */
+function splitContact(contact: string) {
+  const [local, domain] = contact.split('@');
+  return { local, domain: CONTACT_DOMAINS.includes(domain) ? domain : '' };
+}
+
 export function contactToArray(
-  number: string | string[],
+  number: any,
   isGroup?: boolean,
   isNewsletter?: boolean,
   isLid?: boolean
-): string[] {
-  const contacts = Array.isArray(number) ? number : number.split(/\s*[,;]\s*/g);
+) {
+  const localArr: any = [];
+  const arrContacts = Array.isArray(number)
+    ? number
+    : number.split(/\s*[,;]\s*/g);
 
-  return contacts.flatMap((value) => {
-    let contact = value;
-    contact =
-      isGroup || isNewsletter
-        ? contact.split('@')[0]
-        : contact.split('@')[0]?.replace(/[^\w ]/g, '');
+  for (const contact of arrContacts) {
+    const { local, domain } = splitContact(contact);
+    // Group and newsletter identifiers are numeric-only; other contacts also
+    // accept formatted numbers such as "+55 (11) 99999-9999".
+    const normalized =
+      isGroup || isNewsletter ? local : local?.replace(/[^\w ]/g, '');
+    if (normalized !== '') {
+      // An explicit flag wins, then a suffix the caller already provided, and
+      // only then the length heuristic that guesses LID from a bare number.
+      const suffix = isGroup
+        ? 'g.us'
+        : isNewsletter
+        ? 'newsletter'
+        : isLid
+        ? 'lid'
+        : domain || (normalized.length > 14 ? 'lid' : 'c.us');
+      localArr.push(`${normalized}@${suffix}`);
+    }
+  }
 
-    if (!contact) return [];
-    if (isGroup) return [`${contact}@g.us`];
-    if (isNewsletter) return [`${contact}@newsletter`];
-    if (isLid || contact.length > 14) return [`${contact}@lid`];
-    return [`${contact}@c.us`];
-  });
+  return localArr;
 }

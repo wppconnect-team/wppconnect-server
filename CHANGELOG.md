@@ -1,3 +1,274 @@
+## [2.10.63](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.62...v2.10.63) (2026-10-23)
+
+## [2.10.62](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.61...v2.10.62) (2026-10-23)
+
+
+### Bug Fixes
+
+* **session:** keep QR flowing after the unpaired disconnectedMobile ([2505151](https://github.com/wppconnect-team/wppconnect-server/commit/25051513168c8b2d94f9a013be8473872b649af1))
+
+## [2.10.61](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.60...v2.10.61) (2026-10-21)
+
+## [2.10.60](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.59...v2.10.60) (2026-10-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @wppconnect-team/wppconnect to ^2.3.5 ([#2647](https://github.com/wppconnect-team/wppconnect-server/issues/2647)) ([fdd3cc9](https://github.com/wppconnect-team/wppconnect-server/commit/fdd3cc9d49a77b974f30f1a53ad9f794483973f0))
+
+## [2.10.59](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.58...v2.10.59) (2026-10-20)
+
+## [2.10.58](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.57...v2.10.58) (2026-10-18)
+
+## [2.10.57](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.56...v2.10.57) (2026-10-18)
+
+## [2.10.56](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.55...v2.10.56) (2026-10-18)
+
+
+### Bug Fixes
+
+* **file-token-store:** save session tokens atomically ([1bfe6a4](https://github.com/wppconnect-team/wppconnect-server/commit/1bfe6a45bfe9d5603e82ca19fc8a08d53da36ae6))
+* **manage-session:** await every browser before the caller continues ([1d2a54c](https://github.com/wppconnect-team/wppconnect-server/commit/1d2a54ca57cdcf13d88a4e6e33318e3d9f1a47cf))
+* **redis:** await token store promises instead of passing callbacks ([a6a6a84](https://github.com/wppconnect-team/wppconnect-server/commit/a6a6a8449d544d7dfbdc6570dc3b4208d3c9703d))
+* **redis:** pass the connection settings the client actually reads ([2394350](https://github.com/wppconnect-team/wppconnect-server/commit/2394350eee1fc522b5405aedd88adb54bd488f8c))
+* **session:** exclude new starts during backup and restore ([666dd32](https://github.com/wppconnect-team/wppconnect-server/commit/666dd32433ef9da8550140c80540e63c4458a7c1)), closes [#2628](https://github.com/wppconnect-team/wppconnect-server/issues/2628)
+* **session:** reject start-all and show-all when the secret key is wrong ([0af4668](https://github.com/wppconnect-team/wppconnect-server/commit/0af4668622004c7b9fc1cc0a1aebb64003d134ef))
+
+
+### Performance Improvements
+
+* **auth:** reuse verified tokens instead of hashing on every request ([1214d11](https://github.com/wppconnect-team/wppconnect-server/commit/1214d1154e78f2e8ea3ab0d2b5fa6ad1cfce8e71))
+
+## [2.10.55](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.53...v2.10.55) (2026-10-14)
+
+
+### Bug Fixes
+
+* **contact:** keep explicit identifier domain in contactToArray ([#2624](https://github.com/wppconnect-team/wppconnect-server/issues/2624)) ([09b1bf7](https://github.com/wppconnect-team/wppconnect-server/commit/09b1bf7eee89a7e51fef4b8cd365b91a2a70611d)), closes [#2510](https://github.com/wppconnect-team/wppconnect-server/issues/2510)
+* **middleware:** stop reporting a failed lookup as a missing number ([#2626](https://github.com/wppconnect-team/wppconnect-server/issues/2626)) ([b80b579](https://github.com/wppconnect-team/wppconnect-server/commit/b80b579486df97c87e36ab374d36323c568b01a8)), closes [#2516](https://github.com/wppconnect-team/wppconnect-server/issues/2516) [#2516](https://github.com/wppconnect-team/wppconnect-server/issues/2516)
+* **misc:** reject backup and restore when the secret key is wrong ([#2627](https://github.com/wppconnect-team/wppconnect-server/issues/2627)) ([90b61a4](https://github.com/wppconnect-team/wppconnect-server/commit/90b61a4da50613b0810b216b55cca2ca406ecdd7))
+* **redis:** assign the resolved key prefix in the redis token store ([#2629](https://github.com/wppconnect-team/wppconnect-server/issues/2629)) ([21c8ab0](https://github.com/wppconnect-team/wppconnect-server/commit/21c8ab0baae15224fea9bf3af4c4e88e4d5d08ae))
+
+
+### Performance Improvements
+
+* **manager-auth:** reuse verified sessions in the Manager auth path ([#2632](https://github.com/wppconnect-team/wppconnect-server/issues/2632)) ([dafb1cd](https://github.com/wppconnect-team/wppconnect-server/commit/dafb1cdeb34133c1e77ddfa65e2024292d1a1c6b))
+* **metrics:** reuse one prometheus registry instead of rebuilding per scrape ([#2633](https://github.com/wppconnect-team/wppconnect-server/issues/2633)) ([09ee158](https://github.com/wppconnect-team/wppconnect-server/commit/09ee158c1f251a8739f2d0ed461561538376b1d5))
+* **status-connection:** de-duplicate number lookups by requested contact ([#2634](https://github.com/wppconnect-team/wppconnect-server/issues/2634)) ([7f1986e](https://github.com/wppconnect-team/wppconnect-server/commit/7f1986ec89822b27d8e9f303e963db1b339d1ab0))
+
+## [2.10.54](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.53...v2.10.54) (2026-10-14)
+
+
+### Bug Fixes
+
+* **contact:** keep explicit identifier domain in contactToArray ([#2624](https://github.com/wppconnect-team/wppconnect-server/issues/2624)) ([09b1bf7](https://github.com/wppconnect-team/wppconnect-server/commit/09b1bf7eee89a7e51fef4b8cd365b91a2a70611d)), closes [#2510](https://github.com/wppconnect-team/wppconnect-server/issues/2510)
+* **misc:** reject backup and restore when the secret key is wrong ([#2627](https://github.com/wppconnect-team/wppconnect-server/issues/2627)) ([90b61a4](https://github.com/wppconnect-team/wppconnect-server/commit/90b61a4da50613b0810b216b55cca2ca406ecdd7))
+* **redis:** assign the resolved key prefix in the redis token store ([#2629](https://github.com/wppconnect-team/wppconnect-server/issues/2629)) ([21c8ab0](https://github.com/wppconnect-team/wppconnect-server/commit/21c8ab0baae15224fea9bf3af4c4e88e4d5d08ae))
+
+
+### Performance Improvements
+
+* **manager-auth:** reuse verified sessions in the Manager auth path ([#2632](https://github.com/wppconnect-team/wppconnect-server/issues/2632)) ([dafb1cd](https://github.com/wppconnect-team/wppconnect-server/commit/dafb1cdeb34133c1e77ddfa65e2024292d1a1c6b))
+* **metrics:** reuse one prometheus registry instead of rebuilding per scrape ([#2633](https://github.com/wppconnect-team/wppconnect-server/issues/2633)) ([09ee158](https://github.com/wppconnect-team/wppconnect-server/commit/09ee158c1f251a8739f2d0ed461561538376b1d5))
+* **status-connection:** de-duplicate number lookups by requested contact ([#2634](https://github.com/wppconnect-team/wppconnect-server/issues/2634)) ([7f1986e](https://github.com/wppconnect-team/wppconnect-server/commit/7f1986ec89822b27d8e9f303e963db1b339d1ab0))
+
+## [2.10.53](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.52...v2.10.53) (2026-10-14)
+
+
+### Bug Fixes
+
+* **controller:** stop handling after an error response ([#2625](https://github.com/wppconnect-team/wppconnect-server/issues/2625)) ([9911e6e](https://github.com/wppconnect-team/wppconnect-server/commit/9911e6edc9422e790a698505bcfd823a84956190)), closes [#2469](https://github.com/wppconnect-team/wppconnect-server/issues/2469) [#2332](https://github.com/wppconnect-team/wppconnect-server/issues/2332)
+
+## [2.10.52](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.51...v2.10.52) (2026-10-13)
+
+
+### Bug Fixes
+
+* **session:** recover stale initialization safely ([#2622](https://github.com/wppconnect-team/wppconnect-server/issues/2622)) ([4e61782](https://github.com/wppconnect-team/wppconnect-server/commit/4e61782624172568d5bf566d1785150b39a183b8))
+
+## [2.10.51](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.50...v2.10.51) (2026-10-13)
+
+
+### Bug Fixes
+
+* **webhook:** validate and retry delivery ([#2623](https://github.com/wppconnect-team/wppconnect-server/issues/2623)) ([7a101cf](https://github.com/wppconnect-team/wppconnect-server/commit/7a101cf7d38388e099a6bd452200ea0e0f0b79c5))
+
+## 2.10.50 (2026-10-13)
+
+
+### Bug Fixes
+
+* **chat:** forward supported list filters ([#2621](https://github.com/wppconnect-team/wppconnect-server/issues/2621)) ([eed747d](https://github.com/wppconnect-team/wppconnect-server/commit/eed747d3a340ab27a71fee4a0b5d07f67ceca6cb))
+
+## [2.10.49](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.48...v2.10.49) (2026-10-13)
+
+
+### Features
+
+* **webhook:** add autoDownloadMaxSize to skip inlining large media ([#2601](https://github.com/wppconnect-team/wppconnect-server/issues/2601)) ([21a9a48](https://github.com/wppconnect-team/wppconnect-server/commit/21a9a48ea5d74071db5871edd0d157aca655a855)), closes [#578](https://github.com/wppconnect-team/wppconnect-server/issues/578)
+
+## [2.10.48](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.47...v2.10.48) (2026-10-12)
+
+## [2.10.47](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.46...v2.10.47) (2026-10-12)
+
+## [2.10.46](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.45...v2.10.46) (2026-10-12)
+
+## [2.10.45](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.44...v2.10.45) (2026-10-10)
+
+## [2.10.44](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.43...v2.10.44) (2026-10-10)
+
+## [2.10.43](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.42...v2.10.43) (2026-10-10)
+
+## [2.10.42](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.41...v2.10.42) (2026-10-08)
+
+## [2.10.41](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.40...v2.10.41) (2026-10-08)
+
+## [2.10.40](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.39...v2.10.40) (2026-10-08)
+
+## [2.10.39](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.38...v2.10.39) (2026-10-07)
+
+## [2.10.38](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.37...v2.10.38) (2026-10-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @wppconnect-team/wppconnect to ^2.3.4 ([#2606](https://github.com/wppconnect-team/wppconnect-server/issues/2606)) ([633d155](https://github.com/wppconnect-team/wppconnect-server/commit/633d15576cc0920b869147bc3341ba1351ec2c13))
+
+## [2.10.37](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.36...v2.10.37) (2026-10-06)
+
+## [2.10.36](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.35...v2.10.36) (2026-10-05)
+
+## [2.10.35](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.34...v2.10.35) (2026-10-05)
+
+## [2.10.34](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.33...v2.10.34) (2026-10-05)
+
+## [2.10.33](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.32...v2.10.33) (2026-10-03)
+
+## [2.10.32](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.31...v2.10.32) (2026-10-03)
+
+## [2.10.31](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.30...v2.10.31) (2026-10-03)
+
+## [2.10.30](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.29...v2.10.30) (2026-10-02)
+
+## [2.10.29](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.28...v2.10.29) (2026-10-01)
+
+## [2.10.28](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.27...v2.10.28) (2026-10-01)
+
+## [2.10.27](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.26...v2.10.27) (2026-09-17)
+
+## [2.10.26](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.25...v2.10.26) (2026-09-16)
+
+## [2.10.25](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.24...v2.10.25) (2026-09-16)
+
+## [2.10.24](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.23...v2.10.24) (2026-09-14)
+
+## [2.10.23](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.22...v2.10.23) (2026-09-11)
+
+## [2.10.22](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.21...v2.10.22) (2026-09-11)
+
+## [2.10.21](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.20...v2.10.21) (2026-09-09)
+
+## [2.10.20](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.19...v2.10.20) (2026-09-09)
+
+## [2.10.19](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.18...v2.10.19) (2026-09-07)
+
+
+### Bug Fixes
+
+* load and document optional environment configuration ([#2573](https://github.com/wppconnect-team/wppconnect-server/issues/2573)) ([b66881b](https://github.com/wppconnect-team/wppconnect-server/commit/b66881b9d921e3a5083fa1c9f3239e7283de5cb8))
+
+## [2.10.18](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.17...v2.10.18) (2026-09-07)
+
+
+### Bug Fixes
+
+* update WhatsApp runtime for reliable Manager pairing ([#2572](https://github.com/wppconnect-team/wppconnect-server/issues/2572)) ([e90ae4e](https://github.com/wppconnect-team/wppconnect-server/commit/e90ae4e955c0b2e2467fde07a9d1592ebd1d249b))
+
+## [2.10.17](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.16...v2.10.17) (2026-09-07)
+
+
+### Features
+
+* embed WPPConnect Manager with authenticated session APIs ([#2571](https://github.com/wppconnect-team/wppconnect-server/issues/2571)) ([0c16263](https://github.com/wppconnect-team/wppconnect-server/commit/0c1626388f60784e207ad17b679f797d7af8b334))
+
+## [2.10.16](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.15...v2.10.16) (2026-08-31)
+
+## [2.10.15](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.14...v2.10.15) (2026-08-31)
+
+## [2.10.14](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.13...v2.10.14) (2026-08-30)
+
+## [2.10.13](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.12...v2.10.13) (2026-08-29)
+
+## [2.10.12](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.11...v2.10.12) (2026-08-29)
+
+## [2.10.11](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.10...v2.10.11) (2026-08-29)
+
+## [2.10.10](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.9...v2.10.10) (2026-08-27)
+
+
+### Bug Fixes
+
+* **middleware:** stop after connection errors ([#2551](https://github.com/wppconnect-team/wppconnect-server/issues/2551)) ([f17055c](https://github.com/wppconnect-team/wppconnect-server/commit/f17055c92c91b730b1daa319dc1637a67121e8c1))
+
+## [2.10.9](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.8...v2.10.9) (2026-08-27)
+
+
+### Bug Fixes
+
+* **messages:** forward to normalized contact list ([#2550](https://github.com/wppconnect-team/wppconnect-server/issues/2550)) ([27433d3](https://github.com/wppconnect-team/wppconnect-server/commit/27433d3c82da6a6d7936759fd2ec6dd5a3c090bb))
+
+## [2.10.8](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.7...v2.10.8) (2026-08-27)
+
+## [2.10.7](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.6...v2.10.7) (2026-08-27)
+
+
+### Bug Fixes
+
+* avoid WAPI probes for optional listeners ([#2547](https://github.com/wppconnect-team/wppconnect-server/issues/2547)) ([f225078](https://github.com/wppconnect-team/wppconnect-server/commit/f2250781e9ea5166f1f1aa9b9169c1f6cad73b5e))
+
+## [2.10.6](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.5...v2.10.6) (2026-08-27)
+
+## [2.10.5](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.4...v2.10.5) (2026-08-26)
+
+
+### Bug Fixes
+
+* getChatById when sending @ number. ([c2a2761](https://github.com/wppconnect-team/wppconnect-server/commit/c2a276186a307b7296e6e3b364f950ada983676e))
+* getChatById when sending @ number. ([5c28519](https://github.com/wppconnect-team/wppconnect-server/commit/5c285198e4555049ec56a5158d6b203a18c99d32))
+* use contactToArray in getChatById with isGroup, isNewsletter, and isLid support ([d961d0b](https://github.com/wppconnect-team/wppconnect-server/commit/d961d0bf0021bd4653a5611ebf00e32fe2281a6a))
+
+## [2.10.4](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.3...v2.10.4) (2026-08-11)
+
+
+### Bug Fixes
+
+* **docker:** cancel obsolete image builds ([#2545](https://github.com/wppconnect-team/wppconnect-server/issues/2545)) ([5f16b8e](https://github.com/wppconnect-team/wppconnect-server/commit/5f16b8eb5a01e21722be4ef3c63f4b41a1f9cd2d))
+
+## [2.10.3](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.2...v2.10.3) (2026-08-11)
+
+
+### Features
+
+* **docker:** publish and document official image ([#2544](https://github.com/wppconnect-team/wppconnect-server/issues/2544)) ([f17f869](https://github.com/wppconnect-team/wppconnect-server/commit/f17f86992b6180053cae02f63f460e4590ef184b))
+
+## [2.10.2](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.1...v2.10.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* **ci:** release automatically from main ([d663e5f](https://github.com/wppconnect-team/wppconnect-server/commit/d663e5fd9ad199ac711d919076da93fee2ac9fb8))
+* **deps:** remove critical transitive vulnerabilities ([#2532](https://github.com/wppconnect-team/wppconnect-server/issues/2532)) ([df3b301](https://github.com/wppconnect-team/wppconnect-server/commit/df3b301bc769c8e6c4fa1717742a637e9f97c9ac))
+* **deps:** upgrade multer to patched v2 ([#2540](https://github.com/wppconnect-team/wppconnect-server/issues/2540)) ([0cdf1ab](https://github.com/wppconnect-team/wppconnect-server/commit/0cdf1ab146d6ffd20e1faf9994cfc14f13723238))
+* **security:** consume WPPConnect 2.2.7 ([#2542](https://github.com/wppconnect-team/wppconnect-server/issues/2542)) ([79cfb80](https://github.com/wppconnect-team/wppconnect-server/commit/79cfb8057c7a3d2fcf5694ad7fedc2076c1d72b8))
+* **security:** resolve current dependency advisories ([#2541](https://github.com/wppconnect-team/wppconnect-server/issues/2541)) ([fff8f68](https://github.com/wppconnect-team/wppconnect-server/commit/fff8f68ceed32ea40188e5d134fa180829baaab8))
+
+## 2.10.1 (2026-07-30)
+
+
+### Bug Fixes
+
+* bump wppconnect version to 2.2.6 ([#2520](https://github.com/wppconnect-team/wppconnect-server/issues/2520)) ([2755e64](https://github.com/wppconnect-team/wppconnect-server/commit/2755e64f5741320627f65df334eef80d12b4e0a9))
+
 # 2.10.0 (2026-05-16)
 
 ### Bug Fixes

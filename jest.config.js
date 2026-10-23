@@ -5,4 +5,5 @@ module.exports = {
   // Only run the TypeScript sources under src/. Ignore the compiled output in
   // dist/ (produced by `build:js`) so duplicated *.test.js are never picked up.
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testMatch: ['**/src/**/*.test.ts'],
 };

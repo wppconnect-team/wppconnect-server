@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Whatsapp } from '@wppconnect-team/wppconnect';
 import { EventEmitter } from 'events';
+
+import { sessionManager } from '../core/session/SessionManager';
+import { WhatsAppServer } from '../types/WhatsAppServer';
+import { deactivateCallMedia } from './callMediaUtil';
 
 export const chromiumArgs = [
   '--disable-web-security', // Disables web security
@@ -31,7 +34,10 @@ export const chromiumArgs = [
   '--disable-translate', // Disables translation
   '--hide-scrollbars', // Hides scrollbars
   '--metrics-recording-only', // Records metrics only
-  '--mute-audio', // Mutes audio
+  '--use-fake-ui-for-media-stream',
+  '--use-fake-device-for-media-stream',
+  '--enable-features=SharedArrayBuffer', // Required by the WhatsApp VoIP backend
+  '--use-file-for-fake-audio-capture=/usr/src/wpp-server/silence.wav',
   '--no-first-run', // Skips first run
   '--safebrowsing-disable-auto-update', // Disables Safe Browsing auto-update
   '--ignore-certificate-errors', // Ignores certificate errors
@@ -39,11 +45,58 @@ export const chromiumArgs = [
   '--ignore-certificate-errors-spki-list', // Ignores certificate errors in SPKI list
 ];
 // eslint-disable-next-line prefer-const
-export let clientsArray: Whatsapp[] = [];
+export let clientsArray: Record<string, WhatsAppServer> = Object.create(null);
 export const sessions = [];
 export const eventEmitter = new EventEmitter();
 
+/** Reserve a session while its runtime and persisted files are being cleaned. */
+export async function cleanupSession(
+  session: string,
+  cleanup: (client: WhatsAppServer | undefined) => Promise<void>
+): Promise<void> {
+  const client = clientsArray[session];
+  if ((client as any)?.status === 'CLOSING') {
+    throw new Error('Session cleanup is already in progress');
+  }
+  const handle = sessionManager.get(session);
+  const reservation = { status: 'CLOSING', session } as any;
+  clientsArray[session] = reservation;
+  deactivateCallMedia(session);
+  // Invalidate provider callbacks before teardown can yield to socket/browser
+  // events. A failed cleanup still retains the legacy runtime for retry.
+  sessionManager.delete(session);
+  try {
+    await cleanup(client);
+  } catch (error) {
+    if (clientsArray[session] === reservation) {
+      // A rejected teardown may leave the browser owning its profile. Retain
+      // it for explicit cleanup instead of allowing an automatic restart.
+      if (client) {
+        (client as any).status = 'ERROR';
+        clientsArray[session] = client;
+      } else {
+        clientsArray[session] = { status: 'ERROR', session } as any;
+      }
+      if (handle?.adapter && !sessionManager.has(session)) {
+        // Keep the failed adapter reachable for explicit close/logout retry,
+        // using a fresh handle so callbacks from the old owner stay invalid.
+        const retained = sessionManager.getOrCreate(session, handle.providerId);
+        retained.adapter = handle.adapter;
+        retained.config = handle.config;
+        retained.status = 'CLOSED';
+      }
+    }
+    throw error;
+  } finally {
+    if (clientsArray[session] === reservation) {
+      delete clientsArray[session];
+    }
+  }
+}
+
 export function deleteSessionOnArray(session: string): void {
+  sessionManager.delete(session);
+  deactivateCallMedia(session);
   const newArray = clientsArray;
   delete clientsArray[session];
   clientsArray = newArray;

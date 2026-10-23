@@ -15,15 +15,21 @@
  */
 import { create, SocketState, StatusFind } from '@wppconnect-team/wppconnect';
 import { Request } from 'express';
+import path from 'path';
+import QRCode from 'qrcode';
 
 import { download } from '../controller/sessionController';
 import { EventDispatcher } from '../core/events/EventDispatcher';
 import { ProviderId } from '../core/provider/ProviderAdapter';
 import { providerFactory } from '../core/provider/ProviderFactory';
 import { sessionManager } from '../core/session/SessionManager';
+import { emitManager } from '../manager/socket';
+import { CommentClient } from '../types/CommentClient';
 import { WhatsAppServer } from '../types/WhatsAppServer';
+import { deactivateCallMedia } from './callMediaUtil';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
+import { tryBeginSessionStart } from './sessionMaintenance';
 import { clientsArray, eventEmitter } from './sessionUtil';
 import Factory from './tokenStore/factory';
 
@@ -43,9 +49,44 @@ export default class CreateSessionUtil {
     session: string,
     res?: any
   ) {
+    if (!/^[A-Za-z0-9_-]+$/.test(session)) {
+      req.logger.error(new Error('Invalid session name'));
+      return;
+    }
+    const releaseStart = tryBeginSessionStart();
+    if (!releaseStart) {
+      req.logger.info('Session start skipped: backup or restore in progress');
+      if (res && !res.headersSent && !res._headerSent) {
+        res.status(503).json({
+          status: false,
+          message: 'Session backup or restore is in progress. Try again later.',
+        });
+      }
+      return;
+    }
     try {
-      let client = this.getClient(session) as any;
-      if (client.status != null && client.status !== 'CLOSED') return;
+      await this.initializeSession(req, clientsArray, session, res);
+    } finally {
+      releaseStart();
+    }
+  }
+
+  private async initializeSession(
+    req: any,
+    clientsArray: any,
+    session: string,
+    res?: any
+  ) {
+    let client = this.getClient(session) as any;
+    if (client.status != null && client.status !== 'CLOSED') return;
+    // A retry gets a distinct owner so callbacks from a failed attempt cannot
+    // close or publish pairing data for the replacement.
+    client = clientsArray[session] = { ...client };
+    let initializedClient: typeof client;
+    const ownsAttempt = () =>
+      clientsArray[session] === client &&
+      !['CLOSED', 'CLOSING', 'ERROR'].includes(client.status);
+    try {
       client.status = 'INITIALIZING';
       client.config = req.body;
 
@@ -55,7 +96,7 @@ export default class CreateSessionUtil {
       const requestedProvider = (client.config?.provider ??
         'wppconnect') as ProviderId;
       if (providerFactory.isSocketProvider(requestedProvider)) {
-        await this.createSocketSession(req, session, requestedProvider);
+        await this.createSocketSession(req, session, requestedProvider, client);
         return;
       }
 
@@ -64,13 +105,17 @@ export default class CreateSessionUtil {
       const tokenData = await myTokenStore.getToken(session);
 
       // we need this to update phone in config every time session starts, so we can ask for code for it again.
-      myTokenStore.setToken(session, tokenData ?? {});
+      await myTokenStore.setToken(session, tokenData ?? {});
 
       this.startChatWootClient(client);
 
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
-          userDataDir: req.serverOptions.customUserDataDir + session,
+          ...req.serverOptions.createOptions.puppeteerOptions,
+          userDataDir: path.resolve(
+            req.serverOptions.customUserDataDir,
+            session
+          ),
         };
       }
 
@@ -107,6 +152,7 @@ export default class CreateSessionUtil {
                   'WPPConnect-Server'
                 : undefined,
             catchLinkCode: (code: string) => {
+              if (!ownsAttempt()) return;
               this.exportPhoneCode(req, client.config.phone, code, client, res);
             },
             catchQR: (
@@ -115,12 +161,28 @@ export default class CreateSessionUtil {
               attempt: any,
               urlCode: string
             ) => {
+              if (!ownsAttempt()) return;
               this.exportQR(req, base64Qr, urlCode, client, res);
             },
             onLoadingScreen: (percent: string, message: string) => {
               req.logger.info(`[${session}] ${percent}% - ${message}`);
             },
             statusFind: (statusFind: StatusFind) => {
+              // A cleanup or newer start owns this session now.
+              if (!ownsAttempt()) return;
+              // wppconnect emits disconnectedMobile ~1s after "Session Unpaired"
+              // on a fresh, never-paired page. Before the runtime is attached
+              // there is nothing to disconnect; treating it as terminal marks
+              // this attempt CLOSED and silently drops every later QR callback.
+              if (
+                statusFind === StatusFind.disconnectedMobile &&
+                typeof client.close !== 'function'
+              ) {
+                req.logger.info(
+                  `[${session}] Ignoring disconnectedMobile before the session is ready`
+                );
+                return;
+              }
               try {
                 eventEmitter.emit(
                   `status-${client.session}`,
@@ -133,7 +195,10 @@ export default class CreateSessionUtil {
                 ) {
                   client.status = 'CLOSED';
                   client.qrcode = null;
-                  client.close();
+                  // During initialization `client` is a plain state object with
+                  // no close(); calling it threw and skipped the webhook below.
+                  if (typeof client.close === 'function') client.close();
+                  deactivateCallMedia(session);
                   clientsArray[session] = undefined;
                   sessionManager.delete(session);
                 }
@@ -148,6 +213,14 @@ export default class CreateSessionUtil {
         )
       );
 
+      initializedClient = wppClient;
+
+      // A late browser from a cancelled start must not resurrect the session
+      // or overwrite a newer initialization.
+      if (!ownsAttempt()) {
+        await wppClient.close();
+        return;
+      }
       client = clientsArray[session] = Object.assign(wppClient, client);
 
       // Register the session in the SessionManager and wrap the live client in
@@ -166,6 +239,9 @@ export default class CreateSessionUtil {
         await this.onParticipantsChanged(req, client);
       }
 
+      if (req.serverOptions.webhook.onCommentMessage) {
+        await this.onCommentMessage(client, req);
+      }
       if (req.serverOptions.webhook.onReactionMessage) {
         await this.onReactionMessage(client, req);
       }
@@ -182,9 +258,19 @@ export default class CreateSessionUtil {
       }
     } catch (e) {
       req.logger.error(e);
-      if (e instanceof Error && e.name == 'TimeoutError') {
-        const client = this.getClient(session) as any;
-        client.status = 'CLOSED';
+      if (clientsArray[session] === client) {
+        sessionManager.delete(session);
+        client.status = 'CLOSING';
+        try {
+          if (initializedClient) await initializedClient.close();
+          client.status = 'CLOSED';
+          client.qrcode = null;
+        } catch (closeError) {
+          // Keep the failed runtime available to explicit cleanup rather than
+          // starting a second browser against a profile still owned by it.
+          client.status = 'ERROR';
+          req.logger.error(closeError);
+        }
       }
     }
   }
@@ -199,14 +285,27 @@ export default class CreateSessionUtil {
    * wires its normalized event bus to the EventDispatcher so webhooks and
    * socket.io fire exactly like the wppconnect path.
    */
-  async createSocketSession(req: any, session: string, providerId: ProviderId) {
+  async createSocketSession(
+    req: any,
+    session: string,
+    providerId: ProviderId,
+    owner: any = this.getClient(session)
+  ) {
+    // A new attempt gets its own handle and bus. Old listeners cannot receive
+    // events from the replacement even if its runtime finishes late.
+    sessionManager.delete(session);
+    const handle = sessionManager.getOrCreate(session, providerId);
+    const adapter = providerFactory.createSocketProvider(
+      providerId,
+      session,
+      handle.bus
+    );
+    const ownsAttempt = () =>
+      clientsArray[session] === owner &&
+      sessionManager.get(session) === handle &&
+      handle.adapter === adapter &&
+      !['CLOSED', 'CLOSING', 'ERROR'].includes(owner.status);
     try {
-      const handle = sessionManager.getOrCreate(session, providerId);
-      const adapter = providerFactory.createSocketProvider(
-        providerId,
-        session,
-        handle.bus
-      );
       handle.adapter = adapter;
       handle.config = req.body;
       handle.status = 'INITIALIZING';
@@ -215,7 +314,8 @@ export default class CreateSessionUtil {
       // (adapter.raw()) is resolved per-event because the socket only exists
       // after start(); we set client.config (webhook URL) on it so callWebHook
       // fires for socket providers just like for wppconnect.
-      const forward = (event: any) => (data: any) => {
+      const forward = (event: any) => async (data: any) => {
+        if (!ownsAttempt()) return;
         const client = adapter.raw() as any;
         if (client) {
           client.config = req.body;
@@ -223,36 +323,76 @@ export default class CreateSessionUtil {
         }
         const dispatcher = new EventDispatcher(client, req);
         if (event === 'qr') {
-          const handleRef = sessionManager.get(session);
-          if (handleRef) {
-            handleRef.status = 'QRCODE';
-            handleRef.qrcode = (data as any)?.qrcode;
-          }
-          req.io.emit('qrCode', { data: (data as any)?.qrcode, session });
+          const raw = data.urlcode ?? data.qrcode;
+          const image = data.base64 ?? (await QRCode.toDataURL(raw));
+          if (!ownsAttempt() || handle.status === 'CONNECTED') return;
+          handle.status = 'QRCODE';
+          handle.qrcode = raw;
+          owner.status = 'QRCODE';
+          this.exportQR(req, image, raw, client);
+          return;
         }
         if (event === 'connection-state') {
-          const handleRef = sessionManager.get(session);
-          if (handleRef)
-            handleRef.status = (data as any)?.status ?? handleRef.status;
+          handle.status = data.status ?? handle.status;
+          owner.status = handle.status;
+          handle.metadata.lastStateChangeAt = Date.now();
+          if (handle.status === 'CONNECTED' || handle.status === 'CLOSED') {
+            handle.qrcode = undefined;
+            owner.qrcode = undefined;
+          }
+          emitManager(req.io, session, 'status', { status: handle.status });
           if ((data as any)?.status === 'CONNECTED')
             req.io.emit('session-logged', { status: true, session });
+        }
+        if (event === 'ack' && !req.serverOptions.webhook.listenAcks) return;
+        if (event === 'message' && data.fromMe) {
+          if (req.serverOptions.webhook.onSelfMessage)
+            callWebHook(client, req, 'onselfmessage', data);
+          return;
         }
         dispatcher.dispatch(event, data);
       };
 
-      adapter.on('qr', forward('qr'));
-      adapter.on('connection-state', forward('connection-state'));
-      adapter.on('message', forward('message'));
-      adapter.on('ack', forward('ack'));
+      for (const event of [
+        'qr',
+        'connection-state',
+        'message',
+        'any-message',
+        'ack',
+      ] as const) {
+        const handler = forward(event);
+        adapter.on(event, (data) => {
+          void handler(data).catch((error) => req.logger.error(error));
+        });
+      }
 
       await adapter.session.start();
+      if (!ownsAttempt()) {
+        await adapter.session.close();
+        return;
+      }
       req.logger.info(
         `[${session}] experimental provider ${providerId} started`
       );
     } catch (e) {
       req.logger.error(e);
-      const handleRef = sessionManager.get(session);
-      if (handleRef) handleRef.status = 'CLOSED';
+      if (ownsAttempt()) {
+        owner.status = 'CLOSING';
+        handle.status = 'CLOSED';
+        handle.qrcode = undefined;
+        handle.bus.removeAllListeners();
+        try {
+          await adapter.session.close();
+          if (clientsArray[session] === owner) {
+            owner.status = 'CLOSED';
+            if (sessionManager.get(session) === handle)
+              sessionManager.delete(session);
+          }
+        } catch (closeError) {
+          if (clientsArray[session] === owner) owner.status = 'ERROR';
+          req.logger.error(closeError);
+        }
+      }
     }
   }
 
@@ -313,6 +453,9 @@ export default class CreateSessionUtil {
       data: 'data:image/png;base64,' + imageBuffer.toString('base64'),
       session: client.session,
     });
+    emitManager(req.io, client.session, 'qrCode', {
+      qrcode: 'data:image/png;base64,' + imageBuffer.toString('base64'),
+    });
 
     callWebHook(client, req, 'qrcode', {
       qrcode: qrCode,
@@ -329,8 +472,8 @@ export default class CreateSessionUtil {
   }
 
   async onParticipantsChanged(req: any, client: any) {
-    await client.isConnected();
     await client.onParticipantsChanged((message: any) => {
+      if (!this.isCurrentClient(client)) return;
       callWebHook(client, req, 'onparticipantschanged', message);
     });
   }
@@ -338,6 +481,7 @@ export default class CreateSessionUtil {
   async start(req: Request, client: WhatsAppServer) {
     try {
       await client.isConnected();
+      if (!this.isCurrentClient(client)) return;
       Object.assign(client, { status: 'CONNECTED', qrcode: null });
 
       const handle = sessionManager.get(client.session);
@@ -350,12 +494,16 @@ export default class CreateSessionUtil {
       req.logger.info(`Started Session: ${client.session}`);
       //callWebHook(client, req, 'session-logged', { status: 'CONNECTED'});
       req.io.emit('session-logged', { status: true, session: client.session });
+      emitManager(req.io, client.session, 'status', { status: 'CONNECTED' });
       startHelper(client, req);
     } catch (error) {
+      if (!this.isCurrentClient(client)) return;
       req.logger.error(error);
       req.io.emit('session-error', client.session);
+      emitManager(req.io, client.session, 'status', { status: 'ERROR' });
     }
 
+    if (!this.isCurrentClient(client)) return;
     await this.checkStateSession(client, req);
     await this.listenMessages(client, req);
 
@@ -370,6 +518,8 @@ export default class CreateSessionUtil {
 
   async checkStateSession(client: WhatsAppServer, req: Request) {
     await client.onStateChange((state) => {
+      if (!this.isCurrentClient(client)) return;
+      emitManager(req.io, client.session, 'status', { status: state });
       req.logger.info(`State Change ${state}: ${client.session}`);
       const conflits = [SocketState.CONFLICT];
 
@@ -381,15 +531,18 @@ export default class CreateSessionUtil {
 
   async listenMessages(client: WhatsAppServer, req: Request) {
     await client.onMessage(async (message: any) => {
+      if (!this.isCurrentClient(client)) return;
       eventEmitter.emit(`mensagem-${client.session}`, client, message);
       callWebHook(client, req, 'onmessage', message);
       if (message.type === 'location')
         client.onLiveLocation(message.sender.id, (location) => {
+          if (!this.isCurrentClient(client)) return;
           callWebHook(client, req, 'location', location);
         });
     });
 
     await client.onAnyMessage(async (message: any) => {
+      if (!this.isCurrentClient(client)) return;
       message.session = client.session;
 
       if (message.type === 'sticker') {
@@ -403,12 +556,15 @@ export default class CreateSessionUtil {
         await autoDownload(client, req, message);
       }
 
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('received-message', { response: message });
+      emitManager(req.io, client.session, 'message', message);
       if (req.serverOptions.webhook.onSelfMessage && message.fromMe)
         callWebHook(client, req, 'onselfmessage', message);
     });
 
     await client.onIncomingCall(async (call) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('incomingcall', call);
       callWebHook(client, req, 'incomingcall', call);
     });
@@ -416,6 +572,7 @@ export default class CreateSessionUtil {
 
   async listenAcks(client: WhatsAppServer, req: Request) {
     await client.onAck(async (ack) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('onack', ack);
       callWebHook(client, req, 'onack', ack);
     });
@@ -423,36 +580,46 @@ export default class CreateSessionUtil {
 
   async onPresenceChanged(client: WhatsAppServer, req: Request) {
     await client.onPresenceChanged(async (presenceChangedEvent) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('onpresencechanged', presenceChangedEvent);
       callWebHook(client, req, 'onpresencechanged', presenceChangedEvent);
     });
   }
 
+  async onCommentMessage(client: WhatsAppServer, req: Request) {
+    const commentClient = client as WhatsAppServer & CommentClient;
+    if (typeof commentClient.onCommentMessage !== 'function') return;
+    await commentClient.onCommentMessage((event: unknown) => {
+      req.io.emit('oncommentmessage', event);
+      callWebHook(client, req, 'oncommentmessage', event);
+    });
+  }
+
   async onReactionMessage(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onReactionMessage(async (reaction: any) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('onreactionmessage', reaction);
       callWebHook(client, req, 'onreactionmessage', reaction);
     });
   }
 
   async onRevokedMessage(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onRevokedMessage(async (response: any) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('onrevokedmessage', response);
       callWebHook(client, req, 'onrevokedmessage', response);
     });
   }
   async onPollResponse(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onPollResponse(async (response: any) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('onpollresponse', response);
       callWebHook(client, req, 'onpollresponse', response);
     });
   }
   async onLabelUpdated(client: WhatsAppServer, req: Request) {
-    await client.isConnected();
     await client.onUpdateLabel(async (response: any) => {
+      if (!this.isCurrentClient(client)) return;
       req.io.emit('onupdatelabel', response);
       callWebHook(client, req, 'onupdatelabel', response);
     });
@@ -468,6 +635,13 @@ export default class CreateSessionUtil {
     if (object.webhook && !client.webhook) client.webhook = object.webhook;
     delete object.webhook;
     return object;
+  }
+
+  private isCurrentClient(client: WhatsAppServer): boolean {
+    return (
+      clientsArray[client.session] === client &&
+      !['CLOSED', 'CLOSING', 'ERROR'].includes(client.status)
+    );
   }
 
   getClient(session: any) {

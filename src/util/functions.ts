@@ -85,8 +85,19 @@ export async function callWebHook(
   event: any,
   data: any
 ) {
-  const webhook =
-    client?.config.webhook || req.serverOptions.webhook.url || false;
+  const requestedWebhook = client?.config.webhook;
+  const configured = req.serverOptions.webhook;
+  // Session configuration can select only destinations explicitly configured
+  // by the server operator. Return the trusted configuration value itself.
+  const webhook = requestedWebhook
+    ? [configured.url, ...(configured.allowedUrls || [])].find(
+        (url) => url === requestedWebhook
+      )
+    : configured.url;
+  if (requestedWebhook && !webhook) {
+    req.logger.warn('Session webhook URL is not in the configured allowlist.');
+    return;
+  }
   if (webhook) {
     if (
       req.serverOptions.webhook?.ignore &&
@@ -105,32 +116,84 @@ export async function callWebHook(
       data = Object.assign({ event: event, session: client.session }, data);
       if (req.serverOptions.mapper.enable)
         data = await convert(req.serverOptions.mapper.prefix, data);
-      api
-        .post(webhook, data)
-        .then(() => {
-          try {
-            const events = ['unreadmessages', 'onmessage'];
-            if (events.includes(event) && req.serverOptions.webhook.readMessage)
-              client.sendSeen(chatId);
-          } catch (e) {}
-        })
-        .catch((e) => {
-          req.logger.warn('Error calling Webhook.', e);
-        });
+      const options = req.serverOptions.webhook;
+      const attempts = webhookNumber(options.retryAttempts, 3, 1, 10);
+      const delay = webhookNumber(options.retryDelay, 5000, 0, 60000);
+      const timeout = webhookNumber(options.requestTimeout, 30000, 1, 120000);
+      for (let attempt = 0; attempt < attempts; attempt++) {
+        try {
+          await api.post(webhook, data, { timeout });
+        } catch (error) {
+          const code =
+            error && typeof error === 'object' && 'code' in error
+              ? error.code
+              : undefined;
+          const transient =
+            !(
+              error &&
+              typeof error === 'object' &&
+              'response' in error &&
+              error.response
+            ) &&
+            typeof code === 'string' &&
+            [
+              'ECONNREFUSED',
+              'ETIMEDOUT',
+              'ECONNABORTED',
+              'ECONNRESET',
+              'EAI_AGAIN',
+            ].includes(code);
+          if (!transient || attempt + 1 === attempts) {
+            req.logger.warn('Error calling Webhook.', error);
+            return;
+          }
+          await new Promise((resolve) =>
+            setTimeout(resolve, Math.min(delay * 2 ** attempt, 60000))
+          );
+          continue;
+        }
+        try {
+          const events = ['unreadmessages', 'onmessage'];
+          if (events.includes(event) && options.readMessage) {
+            await client.sendSeen(chatId);
+          }
+        } catch (error) {
+          req.logger.warn('Error marking webhook message as read.', error);
+        }
+        return;
+      }
     } catch (e) {
       req.logger.error(e);
     }
   }
 }
 
+function webhookNumber(
+  value: number | undefined,
+  fallback: number,
+  min: number,
+  max: number
+) {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.min(max, Math.max(min, Math.floor(value)))
+    : fallback;
+}
+
 export async function autoDownload(client: any, req: any, message: any) {
   try {
     if (message && (message['mimetype'] || message.isMedia || message.isMMS)) {
-      const buffer = await client.decryptFile(message);
-      if (
+      const uploadS3 =
         req.serverOptions.webhook.uploadS3 ||
-        req.serverOptions?.websocket?.uploadS3
-      ) {
+        req.serverOptions?.websocket?.uploadS3;
+      // Inlined base64 grows the payload ~33% over the file size, so large
+      // media can exceed the receiver's body limit and the event is lost.
+      const maxSize = req.serverOptions?.webhook?.autoDownloadMaxSize;
+      if (!uploadS3 && maxSize > 0 && message.size > maxSize) {
+        message.autoDownloadSkipped = true;
+        return;
+      }
+      const buffer = await client.decryptFile(message);
+      if (uploadS3) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
         if (
