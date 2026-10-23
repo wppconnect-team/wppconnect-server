@@ -33,6 +33,7 @@ This independent community project connects through WhatsApp Web. It is not the 
 - [WhatsApp providers](#whatsapp-providers)
 - [Quick start](#quick-start)
 - [Configuration](#configuration)
+- [Embedding and migration](#embedding-and-migration)
 - [Authentication and first message](#authentication-and-first-message)
 - [WPPConnect Manager](#wppconnect-manager)
 - [API documentation](#api-documentation)
@@ -197,6 +198,20 @@ Compose explicitly forwards supported variables. Select another file with `docke
 Container paths refer to the container filesystem. Keep profiles inside their mounted directory. Private `.env` files are excluded from images and npm packages; `.env.example` is distributed for reference.
 
 Browser arguments, event toggles, resource monitoring, and S3 settings live in `src/config.ts` or can be passed to `initServer(...)`. TypeScript configuration changes require rebuilding; environment-only changes do not.
+
+## Embedding and migration
+
+The next major release changes the Node.js embedding API. `initServer(options)` is asynchronous and returns `{ app, routes, logger }`, with `app` now a Fastify instance. Update integrations that expect a synchronous return or an Express application before upgrading.
+
+```typescript
+const { app } = await initServer(options);
+// The HTTP listener has already started. app is a FastifyInstance.
+
+// For controlled shutdown:
+await app.close();
+```
+
+Use Fastify lifecycle APIs for the returned application. The returned `routes` value remains an Express router. See [release readiness and migration](docs/develop-release-readiness.md#release-gates-and-migration) for the major-release requirements and validation limits.
 
 ## Authentication and first message
 
