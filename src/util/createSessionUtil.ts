@@ -24,6 +24,7 @@ import { providerFactory } from '../core/provider/ProviderFactory';
 import { sessionManager } from '../core/session/SessionManager';
 import { emitManager } from '../manager/socket';
 import { WhatsAppServer } from '../types/WhatsAppServer';
+import { deactivateCallMedia } from './callMediaUtil';
 import chatWootClient from './chatWootClient';
 import { autoDownload, callWebHook, startHelper } from './functions';
 import { tryBeginSessionStart } from './sessionMaintenance';
@@ -108,6 +109,7 @@ export default class CreateSessionUtil {
 
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
+          ...req.serverOptions.createOptions.puppeteerOptions,
           userDataDir: path.resolve(
             req.serverOptions.customUserDataDir,
             session
@@ -194,6 +196,7 @@ export default class CreateSessionUtil {
                   // During initialization `client` is a plain state object with
                   // no close(); calling it threw and skipped the webhook below.
                   if (typeof client.close === 'function') client.close();
+                  deactivateCallMedia(session);
                   clientsArray[session] = undefined;
                   sessionManager.delete(session);
                 }
