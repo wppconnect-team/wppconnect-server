@@ -102,7 +102,7 @@
     "husky": "^9.1.7",
     "jest": "^30.5.2",
     "license-check-and-add": "^4.0.5",
-    "mongoose": "^8.24.6",
+    "mongoose": "^8.24.7",
     "nodemon": "^3.1.14",
     "prettier": "^2.8.8",
     "pretty-quick": "^4.2.2",
@@ -164,7 +164,7 @@
   },
   "peerDependencies": {
     "crypto-js": "^4.2.0",
-    "mongoose": "^8.24.6",
+    "mongoose": "^8.24.7",
     "redis": "^4.7.1"
   }
 }
