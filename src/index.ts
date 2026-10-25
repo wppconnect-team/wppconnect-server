@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import expressPlugin from '@fastify/express';
 import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';
-import express, { Express, NextFunction, Router } from 'express';
+import express, { NextFunction, Router } from 'express';
 import boolParser from 'express-query-boolean';
-import { createServer } from 'http';
+import Fastify, { FastifyInstance } from 'fastify';
 import mergeDeep from 'merge-deep';
 import process from 'process';
 import { Server as Socket } from 'socket.io';
@@ -30,22 +31,39 @@ import { managerRoutes } from './manager/routes';
 import { installManagerSocket } from './manager/socket';
 import { installManagerStatic } from './manager/static';
 import { convert } from './mapper/index';
+import { providerErrorHandler } from './middleware/errorHandler';
 import routes from './routes';
 import { ServerOptions } from './types/ServerOptions';
+import {
+  configureCallMediaNamespace,
+  isCallMediaActive,
+} from './util/callMediaUtil';
+import { pushOutgoingPcm16 } from './util/callUtil';
 import {
   createFolders,
   setMaxListners,
   startAllSessions,
 } from './util/functions';
 import { createLogger } from './util/logger';
+import { clientsArray } from './util/sessionUtil';
 
 export const logger = createLogger(config.log);
 
-export function initServer(serverOptions: Partial<ServerOptions>): {
-  app: Express;
+/**
+ * Starts the Fastify HTTP server with the existing Express middleware and
+ * routes through `@fastify/express`.
+ *
+ * Embedding callers must await initialization. The returned `app` is a
+ * FastifyInstance, replacing the previous synchronous Express application.
+ * The listener is active when this Promise resolves; use app.close() to stop it.
+ */
+export async function initServer(
+  serverOptions: Partial<ServerOptions>
+): Promise<{
+  app: FastifyInstance;
   routes: Router;
   logger: Logger;
-} {
+}> {
   if (typeof serverOptions !== 'object') {
     serverOptions = {};
   }
@@ -57,8 +75,25 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
 
   setMaxListners(serverOptions as ServerOptions);
 
-  const app = express();
-  const PORT = process.env.PORT || serverOptions.port;
+  // 50mb body limit matches the previous Express config (base64 media uploads).
+  const app = Fastify({ logger: false, bodyLimit: 50 * 1024 * 1024 });
+  // Run the Express-style middleware/routes on top of Fastify. Importing the
+  // plugin also augments FastifyInstance with `.use()`.
+  await app.register(expressPlugin);
+
+  const PORT = Number(process.env.PORT || serverOptions.port);
+
+  // Socket.io is attached to Fastify's underlying HTTP server.
+  const io = new Socket(app.server, {
+    cors: {
+      origin: '*',
+    },
+  });
+
+  // Upgraded connections must close before Fastify waits for the HTTP server.
+  app.addHook('preClose', (done) => {
+    io.close(() => done());
+  });
 
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
@@ -100,16 +135,17 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   });
 
   app.use('/api/manager', managerRoutes);
-  installManagerStatic(app);
+  const managerApp = express();
+  installManagerStatic(managerApp);
+  app.use(managerApp);
   app.use(routes);
 
+  // Central handler for provider-layer errors (NotSupported -> 501,
+  // SessionNotReady -> 404). Other errors pass through, preserving the
+  // existing per-controller 500 responses.
+  app.use(providerErrorHandler);
+
   createFolders();
-  const http = createServer(app);
-  const io = new Socket(http, {
-    cors: {
-      origin: '*',
-    },
-  });
 
   installManagerSocket(io, serverOptions.secretKey!);
   io.on('connection', (sock) => {
@@ -120,20 +156,56 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     });
   });
 
-  http.listen(PORT, () => {
-    logger.info(`Server is running on port: ${PORT}`);
-    logger.info(
-      `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
+  const callMedia = io.of('/call-media');
+  configureCallMediaNamespace(callMedia);
+  callMedia.on('connection', (socket) => {
+    const session = String(socket.data.session);
+    const callId = String(socket.data.callId);
+    socket.on(
+      'outgoing-audio',
+      async (payload: { data?: string; sampleRate?: number }, acknowledge) => {
+        try {
+          if (!isCallMediaActive(session, callId)) {
+            throw new Error('Call media is no longer active');
+          }
+          const client = clientsArray[session];
+          if (!client?.page) throw new Error('Session is not connected');
+          const attached = await pushOutgoingPcm16(
+            client.page,
+            String(payload?.data || ''),
+            Number(payload?.sampleRate || 48_000)
+          );
+          if (typeof acknowledge === 'function')
+            acknowledge({ attached, callId });
+        } catch (error) {
+          logger.error(error);
+          if (typeof acknowledge === 'function') {
+            acknowledge({
+              attached: false,
+              callId,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+        }
+      }
     );
-    logger.info(`WPPConnect-Server version: ${version}`);
-
-    if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
   });
+
+  await app.ready();
+  await app.listen({ port: PORT, host: '0.0.0.0' });
+
+  logger.info(`Server is running on port: ${PORT}`);
+  logger.info(
+    `\x1b[31m Visit ${serverOptions.host}:${PORT}/api-docs for Swagger docs`
+  );
+  logger.info(`WPPConnect-Server version: ${version}`);
+
+  if (serverOptions.startAllSession) startAllSessions(serverOptions, logger);
 
   if (config.log.level === 'error' || config.log.level === 'warn') {
     console.log(`\x1b[33m ======================================================
 Attention:
-Your configuration is configured to show only a few logs, before opening an issue, 
+Your configuration is configured to show only a few logs, before opening an issue,
 please set the log to 'silly', copy the log that shows the error and open your issue.
 ======================================================
 `);
