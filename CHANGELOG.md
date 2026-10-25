@@ -1,3 +1,5 @@
+## [2.10.68](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.67...v2.10.68) (2026-10-25)
+
 ## [2.10.67](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.66...v2.10.67) (2026-10-25)
 
 ## [2.10.66](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.65...v2.10.66) (2026-10-25)
