@@ -90,6 +90,11 @@ export async function initServer(
     },
   });
 
+  // Upgraded connections must close before Fastify waits for the HTTP server.
+  app.addHook('preClose', (done) => {
+    io.close(() => done());
+  });
+
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
