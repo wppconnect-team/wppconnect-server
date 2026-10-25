@@ -33,6 +33,9 @@ jobs:
       - name: Check Compose environment contract
         run: node scripts/check-compose-config.cjs
 
+      - name: Verify Chromium profile lock cleanup
+        run: sh scripts/test-entrypoint.sh
+
       - name: Prepare private build-context fixtures
         run: |
           printf 'SECRET_KEY=build-context-test\nPORT=24552\nMAX_LISTENERS=27\n' > .env
@@ -94,6 +97,18 @@ jobs:
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21465/api/manager/sessions)" = 401
           curl -fsS -H 'Authorization: Bearer manager-ci-secret' http://localhost:21465/api/manager/sessions | grep '"sessions":\[\]'
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:21465/manager/missing.js)" = 404
+
+      - name: Verify Media API adapter
+        shell: bash
+        run: |
+          token="$(curl -fsS -X POST http://localhost:21465/api/media-smoke/manager-ci-secret/generate-token | jq -er '.token')"
+          status="$(curl -s -o media-response.json -w '%{http_code}' -H "Authorization: Bearer ${token}" http://localhost:21465/api/media-smoke/media/jobs/job-1)"
+          test "${status}" = 503
+          jq -e '.message == "Media API is not configured. Set MEDIA_API_URL and MEDIA_API_KEY."' media-response.json
+
+      - name: Verify Manager disabled mode
+        shell: bash
+        run: |
           docker run -d --name manager-disabled -p 21466:21465 -e MANAGER_ENABLED=false manager-integration-test:local
           for n in $(seq 1 60); do curl -fsS http://localhost:21466/api/manager/info > /dev/null && break || sleep 1; done
           curl -fsS http://localhost:21466/api/manager/info | grep '"protocol":1'
@@ -121,6 +136,16 @@ jobs:
             docker tag manager-integration-test:local "$tag"
             docker push "$tag"
           done <<< "$IMAGE_TAGS"
+
+      - name: Verify published image revision
+        if: github.event_name != 'pull_request'
+        env:
+          IMAGE: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+        shell: bash
+        run: |
+          docker pull "${IMAGE}"
+          revision="$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "${IMAGE}")"
+          test "${revision}" = "${GITHUB_SHA}"
 
       - name: Container diagnostics
         if: failure()

@@ -26,6 +26,7 @@ export interface ServerOptions {
     onPresenceChanged: boolean;
     onParticipantsChanged: boolean;
     onReactionMessage: boolean;
+    onCommentMessage?: boolean;
     onPollResponse: boolean;
     onRevokedMessage: boolean;
     onSelfMessage: boolean;
@@ -48,6 +49,16 @@ export interface ServerOptions {
   mapper: {
     enable: boolean;
     prefix: string;
+  };
+  mediaApi: {
+    baseUrl: string | null;
+    apiKey: string | null;
+    timeoutMs: number;
+  };
+  resourceMonitor: {
+    enable: boolean;
+    cacheDuration: number;
+    exposeSessionMetrics?: boolean;
   };
   db: {
     mongodbDatabase: string;
