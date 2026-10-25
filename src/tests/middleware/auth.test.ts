@@ -15,6 +15,7 @@
  */
 import bcrypt from 'bcrypt';
 
+import { sessionManager } from '../../core/session/SessionManager';
 import verifyToken, { clearVerifiedTokens } from '../../middleware/auth';
 import { clientsArray } from '../../util/sessionUtil';
 
@@ -89,6 +90,28 @@ beforeEach(() => {
 });
 
 describe('verifyToken', () => {
+  it('rechecks provider route support and attaches the current adapter on cached authentication', async () => {
+    const first = build(token);
+    verifyToken(first.req, first.res as any, first.next);
+    await settle(first.next, first.res);
+    const adapter = { id: 'baileys', raw: jest.fn() } as any;
+    sessionManager.getOrCreate(SESSION, 'baileys').adapter = adapter;
+    try {
+      const second = build(token);
+      second.req.method = 'POST';
+      second.req.route = { path: '/api/:session/create-label' };
+      verifyToken(second.req, second.res as any, second.next);
+      await settle(second.next, second.res);
+      expect(second.req.provider).toBe(adapter);
+      expect(second.next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          providerId: 'baileys',
+        })
+      );
+    } finally {
+      sessionManager.delete(SESSION);
+    }
+  });
   it('accepts a valid token and attaches the session client', async () => {
     const { req, res, next } = build(token);
 

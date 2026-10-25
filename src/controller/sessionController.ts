@@ -23,6 +23,9 @@ import { Logger } from 'winston';
 
 import { version } from '../../package.json';
 import config from '../config';
+import { providerFactory } from '../core/provider/ProviderFactory';
+import { getClient } from '../core/provider/useProvider';
+import { sessionManager } from '../core/session/SessionManager';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
@@ -223,6 +226,11 @@ export async function startSession(req: Request, res: Response): Promise<any> {
             properties: {
               webhook: { type: "string" },
               waitQrCode: { type: "boolean" },
+              provider: {
+                type: "string",
+                enum: ["wppconnect", "baileys", "whaileys", "zapo"],
+                description: "WhatsApp backend to use for this session. Defaults to 'wppconnect'."
+              },
               proxy: {
                 type: "object",
                 properties: {
@@ -236,6 +244,7 @@ export async function startSession(req: Request, res: Response): Promise<any> {
           example: {
             webhook: "",
             waitQrCode: false,
+            provider: "wppconnect",
             proxy: {
               url: "http://myproxy.com:8080",
               username: "myuser",
@@ -250,6 +259,22 @@ export async function startSession(req: Request, res: Response): Promise<any> {
   const { waitQrCode = false } = req.body;
 
   if (rejectStartDuringMaintenance(res)) return;
+  // Socket-based providers (baileys, whaileys, zapo) don't deliver the QR
+  // through the response like wppconnect's `exportQR`; they expose it via the
+  // SessionManager handle (polled by /status-session). So we start the session
+  // and respond immediately with the current status — never holding `res`.
+  const requestedProvider = req.body?.provider ?? 'wppconnect';
+  if (providerFactory.isSocketProvider(requestedProvider)) {
+    SessionUtil.opendata(req, session); // fire-and-forget (async)
+    res.status(200).json({
+      status: 'INITIALIZING',
+      session,
+      provider: requestedProvider,
+      message: 'Session starting. Poll /status-session for the QR code.',
+    });
+    return;
+  }
+
   await getSessionState(req, res);
   await SessionUtil.opendata(req, session, waitQrCode ? res : null);
 }
@@ -268,7 +293,19 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
    */
   const session = req.session;
   try {
-    if ((clientsArray as any)[session]?.status === null) {
+    const handle = sessionManager.get(session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      await cleanupSession(session, async () => {
+        await handle.adapter?.session.close();
+      });
+      req.io.emit('whatsapp-status', false);
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
+    }
+
+    const client = getClient(req) as any;
+    if (!client || client.status === null) {
       return await res
         .status(200)
         .json({ status: true, message: 'Session successfully closed' });
@@ -279,7 +316,7 @@ export async function closeSession(req: Request, res: Response): Promise<any> {
         }
       });
       req.io.emit('whatsapp-status', false);
-      callWebHook(req.client, req, 'closesession', {
+      callWebHook(client, req, 'closesession', {
         message: `Session: ${session} disconnected`,
         connected: false,
       });
@@ -308,9 +345,20 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
      #swagger.parameters["session"] = {
       schema: 'NERDWHATS_AMERICA'
      }
-   */
+  */
   try {
     const session = req.session;
+    const handle = sessionManager.get(session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      await cleanupSession(session, async () => {
+        await handle.adapter?.session.logout();
+      });
+      req.io.emit('whatsapp-status', false);
+      return await res
+        .status(200)
+        .json({ status: true, message: 'Session successfully closed' });
+    }
+
     if (!/^[A-Za-z0-9_-]+$/.test(session)) {
       return res
         .status(400)
@@ -377,7 +425,7 @@ export async function checkConnectionSession(
      }
    */
   try {
-    await req.client.isConnected();
+    await getClient(req).isConnected();
 
     res.status(200).json({ status: true, message: 'Connected' });
   } catch (error) {
@@ -413,7 +461,7 @@ export async function downloadMediaByMessage(req: Request, res: Response) {
       }
      }
    */
-  const client = req.client;
+  const client = getClient(req);
   const { messageId } = req.body;
 
   let message;
@@ -467,7 +515,7 @@ export async function getMediaByMessage(req: Request, res: Response) {
       schema: 'messageId'
      }
    */
-  const client = req.client;
+  const client = getClient(req);
   const { messageId } = req.params;
 
   try {
@@ -515,7 +563,24 @@ export async function getSessionState(req: Request, res: Response) {
    */
   try {
     const { waitQrCode = false } = req.body;
-    const client = req.client;
+
+    // Experimental (socket-based) providers keep their state on the
+    // SessionManager handle, not on a wppconnect `client`. Prefer the handle
+    // when it carries a non-wppconnect provider so status/QR work for them.
+    const handle = sessionManager.get(req.session);
+    if (handle && handle.providerId !== 'wppconnect') {
+      const urlcode = handle.qrcode ?? null;
+      const qr = urlcode ? await QRCode.toDataURL(urlcode) : null;
+      res.status(200).json({
+        status: handle.status,
+        qrcode: qr,
+        urlcode,
+        version: version,
+      });
+      return;
+    }
+
+    const client = getClient(req);
     const qr =
       client?.urlcode != null && client?.urlcode != ''
         ? await QRCode.toDataURL(client.urlcode)
@@ -553,7 +618,14 @@ export async function getQrCode(req: Request, res: Response) {
      }
    */
   try {
-    if (req?.client?.urlcode) {
+    // Socket-based providers keep the QR on the SessionManager handle.
+    const handle = sessionManager.get(req.session);
+    const urlcode =
+      handle && handle.providerId !== 'wppconnect'
+        ? handle.qrcode
+        : req?.client?.urlcode;
+
+    if (urlcode) {
       // We add options to generate the QR code in higher resolution
       // The /qrcode-session request will now return a readable qrcode.
       const qrOptions = {
@@ -562,9 +634,7 @@ export async function getQrCode(req: Request, res: Response) {
         scale: 5,
         width: 500,
       };
-      const qr = req.client.urlcode
-        ? await QRCode.toDataURL(req.client.urlcode, qrOptions)
-        : null;
+      const qr = await QRCode.toDataURL(urlcode, qrOptions);
       const img = Buffer.from(
         (qr as any).replace(/^data:image\/(png|jpeg|jpg);base64,/, ''),
         'base64'
@@ -574,7 +644,7 @@ export async function getQrCode(req: Request, res: Response) {
         'Content-Length': img.length,
       });
       res.end(img);
-    } else if (typeof req.client === 'undefined') {
+    } else if (typeof getClient(req) === 'undefined') {
       res.status(200).json({
         status: null,
         message:
@@ -582,7 +652,7 @@ export async function getQrCode(req: Request, res: Response) {
       });
     } else {
       res.status(200).json({
-        status: req.client.status,
+        status: getClient(req).status,
         message: 'QRCode is not available...',
       });
     }
@@ -681,16 +751,16 @@ export async function subscribePresence(req: Request, res: Response) {
     if (all) {
       let contacts;
       if (isGroup) {
-        const groups = await req.client.getAllGroups(false);
+        const groups = await getClient(req).getAllGroups(false);
         contacts = groups.map((p: any) => p.id._serialized);
       } else {
-        const chats = await req.client.getAllContacts();
+        const chats = await getClient(req).getAllContacts();
         contacts = chats.map((c: any) => c.id._serialized);
       }
-      await req.client.subscribePresence(contacts);
+      await getClient(req).subscribePresence(contacts);
     } else
       for (const contato of contactToArray(phone, isGroup)) {
-        await req.client.subscribePresence(contato);
+        await getClient(req).subscribePresence(contato);
       }
 
     res.status(200).json({
@@ -737,7 +807,7 @@ export async function setOnlinePresence(req: Request, res: Response) {
   try {
     const { isOnline = true } = req.body;
 
-    await req.client.setOnlinePresence(isOnline);
+    await getClient(req).setOnlinePresence(isOnline);
 
     res.status(200).json({
       status: 'success',
@@ -812,7 +882,7 @@ export async function editBusinessProfile(req: Request, res: Response) {
      }
    */
   try {
-    res.status(200).json(await req.client.editBusinessProfile(req.body));
+    res.status(200).json(await getClient(req).editBusinessProfile(req.body));
   } catch (error) {
     res.status(500).json({
       status: 'error',

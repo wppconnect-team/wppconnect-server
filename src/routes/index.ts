@@ -19,26 +19,105 @@ import swaggerUi from 'swagger-ui-express';
 
 import uploadConfig from '../config/upload';
 import * as CatalogController from '../controller/catalogController';
+import * as CommentsController from '../controller/commentsController';
 import * as CommunityController from '../controller/communityController';
 import ContactController from '../controller/contactController';
 import * as DeviceController from '../controller/deviceController';
 import { encryptSession } from '../controller/encryptController';
 import * as GroupController from '../controller/groupController';
 import * as LabelsController from '../controller/labelsController';
+import * as MediaController from '../controller/mediaController';
 import * as MessageController from '../controller/messageController';
 import * as MiscController from '../controller/miscController';
 import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
+import * as ResourceController from '../controller/resourceController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
+import { sessionManager } from '../core/session/SessionManager';
+import { isAdmin } from '../manager/auth';
 import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
 import statusConnection from '../middleware/statusConnection';
 import swaggerDocument from '../swagger.json';
+import { clientsArray } from '../util/sessionUtil';
 
 const upload = multer(uploadConfig as any) as any;
 const routes: Router = Router();
+
+routes.get('/api/dashboard/stats', async (req, res) => {
+  if (
+    !isAdmin(
+      req.headers.authorization?.replace(/^Bearer\s+/i, ''),
+      req.serverOptions.secretKey
+    )
+  ) {
+    return res.status(401).json({ message: 'Administrator token required' });
+  }
+  const sessions = await Promise.all(
+    sessionManager.list().map(async (handle) => {
+      const health = handle.adapter
+        ? await handle.adapter.health().catch((error: Error) => ({
+            connected: false,
+            state: handle.status,
+            error: error.message,
+          }))
+        : { connected: false, state: handle.status };
+
+      return {
+        session: handle.name,
+        origin: handle.config?.origin ?? 'unknown',
+        runtime: 'wppconnect-server',
+        provider: handle.providerId,
+        status: handle.status,
+        health,
+        createdAt: new Date(handle.metadata.createdAt).toISOString(),
+        updatedAt: new Date(handle.metadata.lastStateChangeAt).toISOString(),
+      };
+    })
+  );
+
+  const registered = new Set(sessions.map((item) => item.session));
+  Object.entries(clientsArray as Record<string, any>).forEach(
+    ([session, client]) => {
+      if (!client || registered.has(session) || client.status == null) return;
+      const provider = client.config?.provider ?? 'wppconnect';
+      sessions.push({
+        session,
+        origin: client.config?.origin ?? 'unknown',
+        runtime: 'wppconnect-server',
+        provider,
+        status: client.status,
+        health: {
+          connected: client.status === 'CONNECTED',
+          state: client.status,
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    }
+  );
+
+  const byProvider = sessions.reduce<Record<string, number>>((acc, item) => {
+    acc[item.provider] = (acc[item.provider] || 0) + 1;
+    return acc;
+  }, {});
+  const connected = sessions.filter((item) => item.health?.connected).length;
+
+  res.status(200).json({
+    updatedAt: new Date().toISOString(),
+    overview: {
+      runtime: 'wppconnect-server',
+      sessions: sessions.length,
+      totalSessions: sessions.length,
+      connected,
+      disconnected: sessions.length - connected,
+      byProvider,
+    },
+    sessions,
+  });
+});
 
 // Generate Token
 routes.post('/api/:session/:secretkey/generate-token', encryptSession);
@@ -48,9 +127,26 @@ routes.get(
   '/api/:secretkey/show-all-sessions',
   SessionController.showAllSessions
 );
+routes.get(
+  '/api/sessions/resource-usage',
+  ResourceController.getAllSessionsResourceUsage
+);
+routes.post(
+  '/api/:secretkey/resource-usage/clear-cache',
+  ResourceController.clearResourceCache
+);
+routes.post(
+  '/api/resource-usage/clear-cache',
+  ResourceController.clearResourceCache
+);
 routes.post('/api/:secretkey/start-all', SessionController.startAllSessions);
 
 // Sessions
+routes.get(
+  '/api/:session/resource-usage',
+  verifyToken,
+  ResourceController.getSessionResourceUsage
+);
 routes.get(
   '/api/:session/check-connection-session',
   verifyToken,
@@ -59,11 +155,13 @@ routes.get(
 routes.get(
   '/api/:session/get-media-by-message/:messageId',
   verifyToken,
+  statusConnection,
   SessionController.getMediaByMessage
 );
 routes.get(
   '/api/:session/get-platform-from-message/:messageId',
   verifyToken,
+  statusConnection,
   DeviceController.getPlatformFromMessage
 );
 routes.get(
@@ -93,11 +191,13 @@ routes.post(
 routes.post(
   '/api/:session/subscribe-presence',
   verifyToken,
+  statusConnection,
   SessionController.subscribePresence
 );
 routes.post(
   '/api/:session/set-online-presence',
   verifyToken,
+  statusConnection,
   SessionController.setOnlinePresence
 );
 routes.post(
@@ -105,6 +205,26 @@ routes.post(
   verifyToken,
   statusConnection,
   SessionController.downloadMediaByMessage
+);
+
+// Optional managed Media API adapter. These routes use the WPPConnect Server
+// session token for ingress and a separately configured Media API key upstream.
+routes.post(
+  '/api/:session/media/conversions',
+  verifyToken,
+  upload.single('file'),
+  MediaController.createConversion
+);
+routes.post(
+  '/api/:session/media/transcriptions',
+  verifyToken,
+  upload.single('file'),
+  MediaController.createTranscription
+);
+routes.get(
+  '/api/:session/media/jobs/:jobId',
+  verifyToken,
+  MediaController.getJob
 );
 
 // Messages
@@ -122,22 +242,22 @@ routes.post(
 );
 routes.post(
   '/api/:session/send-image',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
   '/api/:session/send-sticker',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendImageAsSticker
 );
 routes.post(
   '/api/:session/send-sticker-gif',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendImageAsStickerGif
 );
@@ -149,8 +269,8 @@ routes.post(
 );
 routes.post(
   '/api/:session/send-file',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   MessageController.sendFile
 );
@@ -361,8 +481,8 @@ routes.post(
 );
 routes.post(
   '/api/:session/group-pic',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   GroupController.setGroupProfilePic
 );
@@ -598,6 +718,48 @@ routes.post(
   statusConnection,
   DeviceController.rejectCall
 );
+routes.post(
+  '/api/:session/enable-call-interface',
+  verifyToken,
+  statusConnection,
+  DeviceController.enableCallInterface
+);
+routes.post(
+  '/api/:session/accept-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.acceptCall
+);
+routes.post(
+  '/api/:session/end-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.endCall
+);
+routes.post(
+  '/api/:session/offer-call',
+  verifyToken,
+  statusConnection,
+  DeviceController.offerCall
+);
+routes.post(
+  '/api/:session/start-incoming-call-audio',
+  verifyToken,
+  statusConnection,
+  DeviceController.startIncomingCallAudio
+);
+routes.post(
+  '/api/:session/call-media-ticket',
+  verifyToken,
+  statusConnection,
+  DeviceController.createCallMediaTicket
+);
+routes.post(
+  '/api/:session/stop-call-media',
+  verifyToken,
+  statusConnection,
+  DeviceController.stopCallMedia
+);
 
 // Catalog
 routes.get(
@@ -700,15 +862,15 @@ routes.post(
 );
 routes.post(
   '/api/:session/send-image-storie',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   StatusController.sendImageStorie
 );
 routes.post(
   '/api/:session/send-video-storie',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   StatusController.sendVideoStorie
 );
@@ -832,8 +994,8 @@ routes.get(
 // Profile
 routes.post(
   '/api/:session/set-profile-pic',
-  upload.single('file'),
   verifyToken,
+  upload.single('file'),
   statusConnection,
   DeviceController.setProfilePic
 );
@@ -878,9 +1040,29 @@ routes.post(
 routes.get(
   '/api/:session/take-screenshot',
   verifyToken,
+  statusConnection,
   MiscController.takeScreenshot
 );
-routes.post('/api/:session/set-limit', MiscController.setLimit);
+routes.post(
+  '/api/:session/set-limit',
+  verifyToken,
+  statusConnection,
+  MiscController.setLimit
+);
+
+// Community announcement replies
+routes.get(
+  '/api/:session/message-comments/:messageId',
+  verifyToken,
+  statusConnection,
+  CommentsController.getComments
+);
+routes.post(
+  '/api/:session/message-comments/:messageId',
+  verifyToken,
+  statusConnection,
+  CommentsController.sendCommentMessage
+);
 
 //Communitys
 routes.post(
