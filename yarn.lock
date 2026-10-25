@@ -5074,7 +5074,7 @@ __metadata:
     merge-deep: "npm:^3.0.3"
     moment: "npm:^2.31.0"
     mongoose: "npm:^8.24.6"
-    multer: "npm:^2.4.0"
+    multer: "npm:^2.5.0"
     nodemon: "npm:^3.1.14"
     prettier: "npm:^2.8.8"
     pretty-quick: "npm:^4.2.2"
@@ -11807,7 +11807,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multer@npm:^2.4.0":
+"multer@npm:^2.5.0":
   version: 2.5.0
   resolution: "multer@npm:2.5.0"
   dependencies:
