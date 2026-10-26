@@ -43,6 +43,7 @@ export default {
     onPresenceChanged: true,
     onParticipantsChanged: true,
     onReactionMessage: true,
+    onCommentMessage: true,
     onPollResponse: true,
     onRevokedMessage: true,
     onLabelUpdated: true,
@@ -67,6 +68,9 @@ export default {
     logger: ['console', 'file'],
   },
   createOptions: {
+    puppeteerOptions: {
+      ignoreDefaultArgs: ['--mute-audio'],
+    },
     browserArgs: [
       '--disable-web-security',
       '--no-sandbox',
@@ -85,7 +89,10 @@ export default {
       '--disable-translate',
       '--hide-scrollbars',
       '--metrics-recording-only',
-      '--mute-audio',
+      '--use-fake-ui-for-media-stream',
+      '--use-fake-device-for-media-stream',
+      '--use-file-for-fake-audio-capture=/usr/src/wpp-server/silence.wav',
+      '--enable-features=SharedArrayBuffer',
       '--no-first-run',
       '--safebrowsing-disable-auto-update',
       '--ignore-certificate-errors',
@@ -110,6 +117,16 @@ export default {
   mapper: {
     enable: false,
     prefix: 'tagone-',
+  },
+  mediaApi: {
+    baseUrl: env.MEDIA_API_URL || null,
+    apiKey: env.MEDIA_API_KEY || null,
+    timeoutMs: envNumber('MEDIA_API_TIMEOUT_MS', 30000),
+  },
+  resourceMonitor: {
+    enable: false,
+    cacheDuration: 5000,
+    exposeSessionMetrics: true,
   },
   db: {
     mongodbDatabase: env.MONGODB_DATABASE || 'tokens',

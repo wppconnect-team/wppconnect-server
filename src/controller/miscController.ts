@@ -20,6 +20,7 @@ import path from 'path';
 
 import { logger } from '..';
 import config from '../config';
+import { getClient } from '../core/provider/useProvider';
 import { backupSessions, restoreSessions } from '../util/manageSession';
 import { cleanupSession } from '../util/sessionUtil';
 
@@ -128,7 +129,7 @@ export async function takeScreenshot(req: Request, res: Response) {
   */
 
   try {
-    const result = await req.client.takeScreenshot();
+    const result = await getClient(req).takeScreenshot();
     res.status(200).json(result);
   } catch (error: any) {
     res.status(500).json({
@@ -242,7 +243,7 @@ export async function setLimit(req: Request, res: Response) {
     const { type, value } = req.body;
     if (!type || !value) throw new Error('Send de type and value');
 
-    const result = await req.client.setLimit(type, value);
+    const result = await getClient(req).setLimit(type, value);
     res.status(200).json(result);
   } catch (error: any) {
     res.status(500).json({

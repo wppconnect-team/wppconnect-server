@@ -15,6 +15,7 @@
  */
 import Prometheus from 'prom-client';
 
+import * as ResourceController from '../../controller/resourceController';
 import { metrics, prometheusRegister } from '../../middleware/instrumentation';
 
 function createResponse() {
@@ -33,6 +34,10 @@ function createResponse() {
       res.body = body;
       return res;
     },
+    json(body: any) {
+      res.body = body;
+      return res;
+    },
   };
   return res;
 }
@@ -46,6 +51,61 @@ async function scrape() {
 }
 
 describe('metrics endpoint', () => {
+  it('does not collect or disclose session metrics to an unauthenticated scraper', async () => {
+    const monitor = jest.spyOn(ResourceController, 'getResourceMonitor');
+    const res = createResponse();
+    await metrics(
+      {
+        headers: {},
+        serverOptions: {
+          secretKey: 'admin',
+          resourceMonitor: { enable: true },
+        },
+      } as any,
+      res
+    );
+    expect(res.statusCode).toBe(401);
+    expect(monitor).not.toHaveBeenCalled();
+    monitor.mockRestore();
+  });
+
+  it('exposes current session values only with administrator authorization and clears deleted labels', async () => {
+    const monitor = jest
+      .spyOn(ResourceController, 'getResourceMonitor')
+      .mockReturnValue({
+        getAllSessionsUsage: jest.fn().mockResolvedValue({
+          sessions: [
+            {
+              sessionName: 'private-session',
+              chromium: {
+                cpu: { raw: 2 },
+                memory: { bytes: 1024 },
+                processCount: 1,
+              },
+            },
+          ],
+        }),
+      } as any);
+    try {
+      const res = createResponse();
+      await metrics(
+        {
+          headers: { authorization: 'Bearer admin' },
+          serverOptions: {
+            secretKey: 'admin',
+            resourceMonitor: { enable: true },
+          },
+        } as any,
+        res
+      );
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toContain('session="private-session"');
+      const publicScrape = await scrape();
+      expect(publicScrape.body).not.toContain('private-session');
+    } finally {
+      monitor.mockRestore();
+    }
+  });
   it('serves default metrics with the app label', async () => {
     const res = await scrape();
 
