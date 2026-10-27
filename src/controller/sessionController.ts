@@ -298,19 +298,17 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
         .status(400)
         .json({ status: false, message: 'Invalid session name' });
     }
-    const userDataRoot = path.resolve(config.customUserDataDir);
-    const tokenRoot = path.resolve(process.cwd(), 'tokens');
-    const pathUserData = path.resolve(userDataRoot, session);
-    const pathTokens = path.resolve(tokenRoot, `${session}.data.json`);
-    if (
-      !pathUserData.startsWith(path.join(userDataRoot, path.sep)) ||
-      !pathTokens.startsWith(path.join(tokenRoot, path.sep))
-    ) {
-      return res
-        .status(400)
-        .json({ status: false, message: 'Invalid session path' });
-    }
     await cleanupSession(session, async (client) => {
+      const userDataRoot = path.resolve(config.customUserDataDir);
+      const tokenRoot = path.resolve(process.cwd(), 'tokens');
+      const pathUserData = path.resolve(userDataRoot, session);
+      const pathTokens = path.resolve(tokenRoot, `${session}.data.json`);
+      if (
+        !pathUserData.startsWith(path.join(userDataRoot, path.sep)) ||
+        !pathTokens.startsWith(path.join(tokenRoot, path.sep))
+      ) {
+        throw new Error('Invalid session path');
+      }
       if (typeof client?.logout === 'function') {
         await client.logout();
       }
