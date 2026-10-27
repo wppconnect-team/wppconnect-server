@@ -148,6 +148,30 @@ it('deletes only the validated session children after deferred logout', async ()
   expect(res.status).toHaveBeenCalledWith(200);
 });
 
+it('contains cleanup beneath an explicitly configured filesystem root', async () => {
+  jest.useFakeTimers();
+  const originalRoot = config.customUserDataDir;
+  config.customUserDataDir = path.parse(process.cwd()).root;
+  try {
+    const { req, res } = setup();
+    jest
+      .mocked(fs.existsSync)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
+    jest.mocked(fs.promises.rm).mockClear();
+    const cleaning = logOutSession(req as any, res as any);
+    await jest.runAllTimersAsync();
+    await cleaning;
+    expect(fs.promises.rm).toHaveBeenCalledWith(
+      path.join(config.customUserDataDir, 'stale'),
+      expect.objectContaining({ recursive: true })
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+  } finally {
+    config.customUserDataDir = originalRoot;
+  }
+});
+
 it.each(['..', 'C:\\outside', '\\\\server\\share', '/tmp/outside', '%2e%2e'])(
   'rejects filesystem session names before I/O: %s',
   async (session) => {

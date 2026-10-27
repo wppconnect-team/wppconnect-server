@@ -170,9 +170,7 @@ export async function showAllSessions(
      #swagger.operationId = 'showAllSessions'
      #swagger.autoQuery=false
      #swagger.autoHeaders=false
-     #swagger.security = [{
-            "bearerAuth": []
-     }]
+     #swagger.security = []
      #swagger.parameters["x-secret-key"] = {
       in: 'header', required: true, type: 'string'
      }
@@ -305,8 +303,8 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
     const pathUserData = path.resolve(userDataRoot, session);
     const pathTokens = path.resolve(tokenRoot, `${session}.data.json`);
     if (
-      !pathUserData.startsWith(userDataRoot + path.sep) ||
-      !pathTokens.startsWith(tokenRoot + path.sep)
+      !pathUserData.startsWith(path.join(userDataRoot, path.sep)) ||
+      !pathTokens.startsWith(path.join(tokenRoot, path.sep))
     ) {
       return res
         .status(400)
