@@ -20,22 +20,22 @@ import path from 'path';
 
 import { logger } from '..';
 import config from '../config';
+import { hasAdminSecret } from '../util/adminSecret';
 import { backupSessions, restoreSessions } from '../util/manageSession';
 import { cleanupSession } from '../util/sessionUtil';
 
 export async function backupAllSessions(req: Request, res: Response) {
   /**
      * #swagger.tags = ["Misc"]
-     * #swagger.description = 'Please, open the router in your browser, in swagger this not run'
+     * #swagger.description = 'Download a backup using the operator secret header.'
      * #swagger.produces = ['application/octet-stream']
      * #swagger.consumes = ['application/octet-stream']
        #swagger.autoBody=false
-       #swagger.parameters["secretkey"] = {
-          required: true,
-          schema: 'THISISMYSECURETOKEN'
+       #swagger.parameters["x-secret-key"] = {
+          in: 'header', required: true, type: 'string'
        }
        #swagger.responses[200] = {
-        description: 'A ZIP file contaings your backup. Please, open this link in your browser',
+        description: 'A ZIP file containing the session backup',
         content: {
           "application/zip": {
             schema: {}
@@ -43,9 +43,7 @@ export async function backupAllSessions(req: Request, res: Response) {
         },
       }
      */
-  const { secretkey } = req.params;
-
-  if (secretkey !== config.secretKey) {
+  if (!hasAdminSecret(req, req.serverOptions.secretKey)) {
     return res.status(400).json({
       response: 'error',
       message: 'The token is incorrect',

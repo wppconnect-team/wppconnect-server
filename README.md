@@ -188,6 +188,7 @@ The default configuration resolves values in this order: existing process enviro
 | --- | --- |
 | Webhook delivery | `WEBHOOK_RETRY_ATTEMPTS` (total attempts, default 3, range 1-10), `WEBHOOK_RETRY_DELAY` (initial backoff in ms, default 5000, capped at 60000), `WEBHOOK_REQUEST_TIMEOUT` (ms per request, default 30000, range 1-120000) |
 | Session webhook destinations | `WEBHOOK_ALLOWED_URLS` (comma-separated exact URLs; session-specific destinations must equal `WEBHOOK_URL` or an entry in this list) |
+| Chatwoot destinations | `CHATWOOT_ALLOWED_URLS` (comma-separated exact base URLs the operator approves for session configuration) |
 | Server | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL` |
 | Webhook | `WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE` (bytes; media larger than this is sent without inlined base64 and with `autoDownloadSkipped: true`, fetch it via `download-media`; `0` = no limit) |
 | Sessions | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS` |
@@ -206,6 +207,25 @@ When using a session-specific webhook, configure its exact destination in
 `WEBHOOK_ALLOWED_URLS` or `webhook.allowedUrls` first. An unlisted session URL
 is rejected before making a network request. The global `WEBHOOK_URL` remains
 the default destination and is also permitted as an explicit session selection.
+
+Before starting a Chatwoot-enabled session, list its exact `chatWoot.baseURL`
+in `CHATWOOT_ALLOWED_URLS` or `serverOptions.chatwoot.allowedUrls`. Self-hosted
+and private-network destinations are supported when explicitly listed. Session
+requests cannot add destinations. Use an HTTP or HTTPS URL without credentials,
+query parameters or a fragment. Chatwoot requests do not follow redirects;
+configure the final destination URL. Account, inbox, contact and conversation
+identifiers must be numeric.
+
+Session listing and backup now use `POST /api/show-all-sessions` and
+`POST /api/backup-sessions`, respectively. Send the operator `SECRET_KEY` in
+the `x-secret-key` header. The former GET URLs containing a secret return 410
+and do not list sessions or create a backup. Update clients and remove old
+secret-bearing URLs from bookmarks and scripts.
+
+```sh
+curl -X POST -H "x-secret-key: $SECRET_KEY" http://localhost:21465/api/show-all-sessions
+curl -X POST -H "x-secret-key: $SECRET_KEY" http://localhost:21465/api/backup-sessions -o sessions.zip
+```
 
 For Node, both `yarn dev` and the compiled `yarn start` load the optional file automatically. For example, after setting `PORT=21470` in `.env`, the server listens on port 21470. `HOST` supplies the advertised URL; it does not restrict the listener address.
 

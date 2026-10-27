@@ -56,6 +56,15 @@ function splitContact(contact: string) {
   return { local, domain: CONTACT_DOMAINS.includes(domain) ? domain : '' };
 }
 
+function splitDelimited(value: string): string[] {
+  const parts = value.split(/[,;]/);
+  return parts.map((part, index) => {
+    if (index > 0) part = part.trimStart();
+    if (index < parts.length - 1) part = part.trimEnd();
+    return part;
+  });
+}
+
 export function contactToArray(
   number: any,
   isGroup?: boolean,
@@ -63,9 +72,7 @@ export function contactToArray(
   isLid?: boolean
 ) {
   const localArr: any = [];
-  const arrContacts = Array.isArray(number)
-    ? number
-    : number.split(/\s*[,;]\s*/g);
+  const arrContacts = Array.isArray(number) ? number : splitDelimited(number);
 
   for (const contact of arrContacts) {
     const { local, domain } = splitContact(contact);
@@ -98,7 +105,7 @@ export function groupToArray(group: any) {
       if (contact !== '') (localArr as any).push(`${contact}@g.us`);
     }
   } else {
-    const arrContacts = group.split(/\s*[,;]\s*/g);
+    const arrContacts = splitDelimited(group);
     for (let contact of arrContacts) {
       contact = contact.split('@')[0];
       if (contact !== '') (localArr as any).push(`${contact}@g.us`);
@@ -115,7 +122,7 @@ export function groupNameToArray(group: any) {
       if (contact !== '') (localArr as any).push(`${contact}`);
     }
   } else {
-    const arrContacts = group.split(/\s*[,;]\s*/g);
+    const arrContacts = splitDelimited(group);
     for (const contact of arrContacts) {
       if (contact !== '') (localArr as any).push(`${contact}`);
     }

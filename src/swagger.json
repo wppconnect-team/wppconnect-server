@@ -91,39 +91,6 @@
         }
       }
     },
-    "/api/{secretkey}/show-all-sessions": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "",
-        "operationId": "showAllSessions",
-        "parameters": [
-          {
-            "name": "secretkey",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "THISISMYSECURETOKEN"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/api/{secretkey}/start-all": {
       "post": {
         "tags": [
@@ -7872,44 +7839,6 @@
         ]
       }
     },
-    "/api/{secretkey}/backup-sessions": {
-      "get": {
-        "tags": [
-          "Misc"
-        ],
-        "description": "Please, open the router in your browser, in swagger this not run",
-        "produces": [
-          "application/zip"
-        ],
-        "parameters": [
-          {
-            "name": "secretkey",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "THISISMYSECURETOKEN"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A ZIP file contaings your backup. Please, open this link in your browser",
-            "content": {
-              "application/zip": {
-                "schema": {}
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/api/{secretkey}/restore-sessions": {
       "post": {
         "tags": [
@@ -8781,6 +8710,72 @@
             "description": ""
           }
         }
+      }
+    },
+    "/api/show-all-sessions": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Requires the operator secret in the x-secret-key header. Former secret-bearing GET URLs return 410.",
+        "operationId": "showAllSessions",
+        "parameters": [
+          {
+            "name": "x-secret-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/backup-sessions": {
+      "post": {
+        "tags": [
+          "Misc"
+        ],
+        "description": "Requires the operator secret in the x-secret-key header. Former secret-bearing GET URLs return 410.",
+        "produces": [
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "name": "x-secret-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A ZIP file contaings your backup. Please, open this link in your browser",
+            "content": {
+              "application/zip": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": []
       }
     }
   },

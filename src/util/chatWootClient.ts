@@ -31,8 +31,20 @@ export default class chatWootClient {
   declare inbox_id: any;
   declare api: AxiosInstance;
 
-  constructor(config: any, session: string) {
-    this.config = config;
+  constructor(config: any, session: string, allowedUrls: string[] = []) {
+    // Return an operator-configured destination, never a session-supplied URL.
+    const baseURL = allowedUrls.find((url) => url === config.baseURL);
+    if (!baseURL) throw new Error('Chatwoot destination is not allowed');
+    const parsed = new URL(baseURL);
+    if (
+      !['http:', 'https:'].includes(parsed.protocol) ||
+      parsed.username ||
+      parsed.password ||
+      parsed.search ||
+      parsed.hash
+    )
+      throw new Error('Invalid Chatwoot destination');
+    this.config = { ...config, baseURL };
     this.mobile_name = this.config.mobile_name
       ? this.config.mobile_name
       : `WPPConnect`;
@@ -43,10 +55,11 @@ export default class chatWootClient {
       pushname: this.mobile_name,
       id: this.mobile_number,
     };
-    this.account_id = this.config.account_id;
-    this.inbox_id = this.config.inbox_id;
+    this.account_id = this.requireId(this.config.account_id);
+    this.inbox_id = this.requireId(this.config.inbox_id);
     this.api = axios.create({
       baseURL: this.config.baseURL,
+      maxRedirects: 0,
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
         api_access_token: this.config.token,
@@ -85,6 +98,12 @@ export default class chatWootClient {
     eventEmitter.on(`mensagem-${session}`, (client, message) => {
       this.sendMessage(client, message);
     });
+  }
+
+  private requireId(value: unknown): string {
+    const id = String(value);
+    if (!/^\d+$/.test(id)) throw new Error('Invalid Chatwoot identifier');
+    return id;
   }
 
   // async sendMessage(client: any, message: any) {
@@ -223,12 +242,15 @@ export default class chatWootClient {
 
         const configPost: AxiosRequestConfig = {
           baseURL: this.config.baseURL,
+          maxRedirects: 0,
           headers: {
             api_access_token: this.config.token,
             ...data.getHeaders(),
           },
         };
-        const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
+        const endpoint = `api/v1/accounts/${
+          this.account_id
+        }/conversations/${this.requireId(conversation.id)}/messages`;
 
         const result = await axios.post(endpoint, data, configPost);
 
@@ -238,7 +260,9 @@ export default class chatWootClient {
           content: message.body,
           message_type: 'incoming',
         };
-        const endpoint = `api/v1/accounts/${this.account_id}/conversations/${conversation.id}/messages`;
+        const endpoint = `api/v1/accounts/${
+          this.account_id
+        }/conversations/${this.requireId(conversation.id)}/messages`;
 
         const { data } = await this.api.post(endpoint, body);
         return data;
@@ -252,7 +276,8 @@ export default class chatWootClient {
   async findContact(query: string) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/search/?q=${query}`
+        `api/v1/accounts/${this.account_id}/contacts/search/`,
+        { params: { q: query } }
       );
       return data;
     } catch (e) {
@@ -291,7 +316,9 @@ export default class chatWootClient {
   async findConversation(contact: any) {
     try {
       const { data } = await this.api.get(
-        `api/v1/accounts/${this.account_id}/contacts/${contact.id}/conversations`
+        `api/v1/accounts/${this.account_id}/contacts/${this.requireId(
+          contact.id
+        )}/conversations`
       );
       return data.payload.find(
         (e: any) => e.inbox_id == this.inbox_id && e.status != 'resolved'
