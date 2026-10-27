@@ -1,3 +1,10 @@
+## [2.10.69](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.68...v2.10.69) (2026-10-27)
+
+
+### Bug Fixes
+
+* **deps:** patch stable server security dependencies ([#2684](https://github.com/wppconnect-team/wppconnect-server/issues/2684)) ([4ed4f5e](https://github.com/wppconnect-team/wppconnect-server/commit/4ed4f5ea2d5fd7514088c389b944a24e8dc4da5c))
+
 ## [2.10.68](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.67...v2.10.68) (2026-10-25)
 
 ## [2.10.67](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.66...v2.10.67) (2026-10-25)
