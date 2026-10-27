@@ -54,6 +54,10 @@ export default {
     uploadS3: false,
   },
   chatwoot: {
+    allowedUrls: (env.CHATWOOT_ALLOWED_URLS || '')
+      .split(',')
+      .map((url) => url.trim())
+      .filter(Boolean),
     sendQrCode: true,
     sendStatus: true,
   },

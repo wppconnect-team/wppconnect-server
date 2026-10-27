@@ -58,6 +58,9 @@ function createResponse() {
 function createRequest(secretkey: string) {
   return {
     params: { secretkey },
+    method: 'POST',
+    headers: { 'x-secret-key': secretkey },
+    serverOptions: { secretKey: config.secretKey },
     file: { mimetype: 'application/zip', path: 'upload.zip' },
     res: { end: jest.fn() },
     logger: { error: jest.fn() },

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
+import fs, { readFileSync } from 'fs';
 import path from 'path';
 
 import config from '../../config';
@@ -124,6 +124,42 @@ it('logs out an INITIALIZING placeholder and completes deferred cleanup', async 
   expect((clientsArray as any).stale).toBeUndefined();
   expect(res.status).toHaveBeenCalledWith(200);
 });
+
+it('deletes only the validated session children after deferred logout', async () => {
+  jest.useFakeTimers();
+  const { req, res } = setup();
+  jest
+    .mocked(fs.existsSync)
+    .mockReturnValueOnce(true)
+    .mockReturnValueOnce(true);
+  jest.mocked(fs.promises.rm).mockClear();
+  const cleaning = logOutSession(req as any, res as any);
+  await jest.runAllTimersAsync();
+  await cleaning;
+  const deleted = jest
+    .mocked(fs.promises.rm)
+    .mock.calls.map(([target]) => target);
+  expect(deleted).toEqual([
+    path.resolve(config.customUserDataDir, 'stale'),
+    path.resolve(process.cwd(), 'tokens', 'stale.data.json'),
+  ]);
+  expect(deleted).not.toContain(path.resolve(config.customUserDataDir));
+  expect(deleted).not.toContain(path.resolve(process.cwd(), 'tokens'));
+  expect(res.status).toHaveBeenCalledWith(200);
+});
+
+it.each(['..', 'C:\\outside', '\\\\server\\share', '/tmp/outside', '%2e%2e'])(
+  'rejects filesystem session names before I/O: %s',
+  async (session) => {
+    const { req, res } = setup();
+    req.session = session;
+    jest.mocked(fs.promises.rm).mockClear();
+    await logOutSession(req as any, res as any);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(fs.promises.rm).not.toHaveBeenCalled();
+    expect((clientsArray as any).stale).toBe(req.client);
+  }
+);
 
 it('keeps the session reserved until clear-session-data finishes logout', async () => {
   const { req, res } = setup();

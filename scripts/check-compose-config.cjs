@@ -13,6 +13,7 @@ const values = {
   SECRET_KEY: 'compose-test-key',
   WEBHOOK_URL: 'https://hooks.example.test/events',
   WEBHOOK_ALLOWED_URLS: 'https://hooks.example.test/other',
+  CHATWOOT_ALLOWED_URLS: 'https://support.example.test',
   WEBHOOK_RETRY_ATTEMPTS: '4',
   WEBHOOK_RETRY_DELAY: '7000',
   WEBHOOK_REQUEST_TIMEOUT: '45000',

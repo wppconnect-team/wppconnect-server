@@ -23,6 +23,7 @@ import { Logger } from 'winston';
 
 import { version } from '../../package.json';
 import config from '../config';
+import { hasAdminSecret } from '../util/adminSecret';
 import CreateSessionUtil from '../util/createSessionUtil';
 import { callWebHook, contactToArray } from '../util/functions';
 import getAllTokens from '../util/getAllTokens';
@@ -172,33 +173,16 @@ export async function showAllSessions(
      #swagger.security = [{
             "bearerAuth": []
      }]
-     #swagger.parameters["secretkey"] = {
-      schema: 'THISISMYSECURETOKEN'
+     #swagger.parameters["x-secret-key"] = {
+      in: 'header', required: true, type: 'string'
      }
    */
-  const { secretkey } = req.params;
-  const { authorization: token } = req.headers;
-
-  let tokenDecrypt: any = '';
-
-  if (secretkey === undefined) {
-    tokenDecrypt = token?.split(' ')[0];
-  } else {
-    tokenDecrypt = secretkey;
-  }
-
-  const arr: any = [];
-
-  if (tokenDecrypt !== req.serverOptions.secretKey) {
+  if (!hasAdminSecret(req, req.serverOptions.secretKey)) {
     return res.status(400).json({
       response: false,
       message: 'The token is incorrect',
     });
   }
-
-  Object.keys(clientsArray).forEach((item) => {
-    arr.push({ session: item });
-  });
 
   res.status(200).json({ response: await getAllTokens(req) });
 }
@@ -316,17 +300,23 @@ export async function logOutSession(req: Request, res: Response): Promise<any> {
         .status(400)
         .json({ status: false, message: 'Invalid session name' });
     }
+    const userDataRoot = path.resolve(config.customUserDataDir);
+    const tokenRoot = path.resolve(process.cwd(), 'tokens');
+    const pathUserData = path.resolve(userDataRoot, session);
+    const pathTokens = path.resolve(tokenRoot, `${session}.data.json`);
+    if (
+      !pathUserData.startsWith(userDataRoot + path.sep) ||
+      !pathTokens.startsWith(tokenRoot + path.sep)
+    ) {
+      return res
+        .status(400)
+        .json({ status: false, message: 'Invalid session path' });
+    }
     await cleanupSession(session, async (client) => {
       if (typeof client?.logout === 'function') {
         await client.logout();
       }
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const pathUserData = path.resolve(config.customUserDataDir, session);
-      const pathTokens = path.resolve(
-        process.cwd(),
-        'tokens',
-        `${session}.data.json`
-      );
 
       if (fs.existsSync(pathUserData)) {
         await fs.promises.rm(pathUserData, {
