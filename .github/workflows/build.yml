@@ -50,6 +50,14 @@ jobs:
       - name: Test server and Manager contracts
         run: yarn test --runInBand
 
+      - name: Test installed dependency security
+        run: yarn test:security
+
+      - name: Test packed server runtime security
+        run: npm run test:packed-security
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
   lint:
     runs-on: ubuntu-latest
     steps:

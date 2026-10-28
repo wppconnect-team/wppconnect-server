@@ -2,6 +2,7 @@
 .github
 .hust
 *.tgz
+!vendor/deepmerge-4.3.2+wppconnect.1.tgz
 dist
 log
 node_modules
