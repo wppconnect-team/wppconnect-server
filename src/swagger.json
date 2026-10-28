@@ -91,6 +91,54 @@
         }
       }
     },
+    "/api/{secretkey}/show-all-sessions": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "secretkey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "410": {
+            "description": "Gone"
+          }
+        }
+      }
+    },
+    "/api/show-all-sessions": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "operationId": "showAllSessions",
+        "parameters": [
+          {
+            "name": "x-secret-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": []
+      }
+    },
     "/api/{secretkey}/start-all": {
       "post": {
         "tags": [
@@ -7839,6 +7887,63 @@
         ]
       }
     },
+    "/api/{secretkey}/backup-sessions": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "secretkey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "410": {
+            "description": "Gone"
+          }
+        }
+      }
+    },
+    "/api/backup-sessions": {
+      "post": {
+        "tags": [
+          "Misc"
+        ],
+        "description": "Download a backup using the operator secret header.",
+        "produces": [
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "name": "x-secret-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A ZIP file containing the session backup",
+            "content": {
+              "application/zip": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/{secretkey}/restore-sessions": {
       "post": {
         "tags": [
@@ -8710,72 +8815,6 @@
             "description": ""
           }
         }
-      }
-    },
-    "/api/show-all-sessions": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Requires the operator secret in the x-secret-key header. Former secret-bearing GET URLs return 410.",
-        "operationId": "showAllSessions",
-        "parameters": [
-          {
-            "name": "x-secret-key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "security": []
-      }
-    },
-    "/api/backup-sessions": {
-      "post": {
-        "tags": [
-          "Misc"
-        ],
-        "description": "Requires the operator secret in the x-secret-key header. Former secret-bearing GET URLs return 410.",
-        "produces": [
-          "application/zip"
-        ],
-        "parameters": [
-          {
-            "name": "x-secret-key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A ZIP file contaings your backup. Please, open this link in your browser",
-            "content": {
-              "application/zip": {
-                "schema": {}
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": []
       }
     }
   },
