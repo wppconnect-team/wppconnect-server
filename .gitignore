@@ -26,3 +26,4 @@ wppconnect_tokens/*
 .env
 .env.*
 !.env.example
+!vendor/deepmerge-4.3.2+wppconnect.1.tgz

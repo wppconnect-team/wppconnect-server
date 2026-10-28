@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import './security/runtime';
+
 import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';
 import express, { Express, NextFunction, Router } from 'express';
