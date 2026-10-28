@@ -1,3 +1,11 @@
+## [2.10.70](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.69...v2.10.70) (2026-10-28)
+
+
+### Bug Fixes
+
+* **security:** constrain session integrations and sensitive operations ([#2686](https://github.com/wppconnect-team/wppconnect-server/issues/2686)) ([bf0be41](https://github.com/wppconnect-team/wppconnect-server/commit/bf0be4144484a2e0de24858695bec630244ac14d))
+* **security:** validate paths inside deferred session cleanup ([#2687](https://github.com/wppconnect-team/wppconnect-server/issues/2687)) ([7865cfa](https://github.com/wppconnect-team/wppconnect-server/commit/7865cfa981654c160ecf8523433d706bbbb7e909)), closes [#2686](https://github.com/wppconnect-team/wppconnect-server/issues/2686)
+
 ## [2.10.69](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.68...v2.10.69) (2026-10-27)
 
 
