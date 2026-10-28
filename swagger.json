@@ -93,6 +93,26 @@
     },
     "/api/{secretkey}/show-all-sessions": {
       "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "secretkey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "410": {
+            "description": "Gone"
+          }
+        }
+      }
+    },
+    "/api/show-all-sessions": {
+      "post": {
         "tags": [
           "Auth"
         ],
@@ -100,12 +120,11 @@
         "operationId": "showAllSessions",
         "parameters": [
           {
-            "name": "secretkey",
-            "in": "path",
+            "name": "x-secret-key",
+            "in": "header",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "THISISMYSECURETOKEN"
+              "type": "string"
             }
           }
         ],
@@ -117,11 +136,7 @@
             "description": "Bad Request"
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        "security": []
       }
     },
     "/api/{secretkey}/start-all": {
@@ -7874,27 +7889,46 @@
     },
     "/api/{secretkey}/backup-sessions": {
       "get": {
-        "tags": [
-          "Misc"
-        ],
-        "description": "Please, open the router in your browser, in swagger this not run",
-        "produces": [
-          "application/zip"
-        ],
+        "description": "",
         "parameters": [
           {
             "name": "secretkey",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "THISISMYSECURETOKEN"
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "410": {
+            "description": "Gone"
+          }
+        }
+      }
+    },
+    "/api/backup-sessions": {
+      "post": {
+        "tags": [
+          "Misc"
+        ],
+        "description": "Download a backup using the operator secret header.",
+        "produces": [
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "name": "x-secret-key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A ZIP file contaings your backup. Please, open this link in your browser",
+            "description": "A ZIP file containing the session backup",
             "content": {
               "application/zip": {
                 "schema": {}
