@@ -2,23 +2,27 @@
 set -eu
 
 USER_DATA_DIR="${CUSTOM_USER_DATA_DIR:-/usr/src/wpp-server/userDataDir}"
+OWNER_LOCK="$USER_DATA_DIR/.entrypoint.lock"
 
-# Chromium's lock target is hostname-pid. Only remove a verified dead local
-# owner; a different host may still be using a shared browser profile.
+# Chromium's SingletonLock target is hostname-pid, which is meaningless across
+# containers (new hostname, new PID namespace). Hold a kernel flock on the
+# profile directory for the whole life of the server: if we get it, no other
+# live entrypoint uses this directory, so leftover Singleton* files are stale.
 if [ -d "$USER_DATA_DIR" ]; then
-  find "$USER_DATA_DIR" -type l -name SingletonLock -exec sh -c '
-    lock=$1
-    owner=$(readlink "$lock")
-    owner_host=${owner%-*}
-    owner_pid=${owner##*-}
-    case "$owner_pid" in ""|*[!0-9]*) exit 0 ;; esac
-    [ "$owner_host" = "$(hostname)" ] || exit 0
-    # A /proc entry also protects live owners inaccessible to kill -0.
-    [ ! -d "/proc/$owner_pid" ] || exit 0
-    if kill -0 "$owner_pid" 2>/dev/null; then exit 0; fi
-    profile=${lock%/*}
-    rm -f -- "$profile/SingletonLock" "$profile/SingletonSocket" "$profile/SingletonCookie"
-  ' sh {} \;
+  if ! command -v flock >/dev/null 2>&1; then
+    echo "entrypoint: flock not found; skipping stale lock cleanup" >&2
+  elif ! touch "$OWNER_LOCK" 2>/dev/null; then
+    echo "entrypoint: cannot write $OWNER_LOCK; skipping stale lock cleanup" >&2
+  else
+    exec 9>"$OWNER_LOCK"
+    if flock -n 9; then
+      find "$USER_DATA_DIR" -type l \
+        \( -name SingletonLock -o -name SingletonSocket -o -name SingletonCookie \) \
+        -print -delete
+    else
+      echo "entrypoint: $USER_DATA_DIR is in use by another live container; not touching Singleton* files" >&2
+    fi
+  fi
 fi
 
 exec node dist/server.js "$@"
