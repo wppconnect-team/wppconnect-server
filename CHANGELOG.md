@@ -1,3 +1,10 @@
+## [2.10.71](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.70...v2.10.71) (2026-10-30)
+
+
+### Bug Fixes
+
+* secure browser option merging for server consumers ([#2691](https://github.com/wppconnect-team/wppconnect-server/issues/2691)) ([f35d4a4](https://github.com/wppconnect-team/wppconnect-server/commit/f35d4a412a6e4691b00db4bbf2f20b91962eaddf))
+
 ## [2.10.70](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.69...v2.10.70) (2026-10-28)
 
 
