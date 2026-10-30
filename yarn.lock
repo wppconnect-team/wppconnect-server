@@ -5753,10 +5753,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"basic-ftp@npm:6.2.1":
-  version: 6.2.1
-  resolution: "basic-ftp@npm:6.2.1"
-  checksum: 10c0/7b6d8cdf8e9a7ba71697d55554e56a82c2329ffbdc5a8da8143d840105d7b48bc169c1b5d2f1cc340e453ba362b1c151eece811d6fe478f847ebfe57ffc677b2
+"basic-ftp@npm:6.2.4":
+  version: 6.2.4
+  resolution: "basic-ftp@npm:6.2.4"
+  checksum: 10c0/1148922c36a1e8e053ddedfdce9ced6501635b71d1f56d0f8f7370fe3841f27fbf21a778554a5dfdfd97a8b1e38308934d81a19ceeb19062ffe8ec154ca91a2b
   languageName: node
   linkType: hard
 
