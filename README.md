@@ -1,328 +1,113 @@
-<!-- wppconnect-official-brand -->
+**English** | [Português (Brasil)](./README.pt-BR.md)
+
 <p align="center">
-  <a href="https://wppconnect-team.github.io/">
+  <a href="https://wppconnect.io/">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://wppconnect-team.github.io/brand/wppconnect-dark.png" />
       <img src="https://wppconnect-team.github.io/brand/wppconnect-light.png" alt="WPPConnect" width="220" height="121" />
     </picture>
   </a>
 </p>
-<!-- /wppconnect-official-brand -->
 
-# WPPConnect Team
+# WPPConnect Server
 
-## _WPPConnect Server_
+Run a REST API for WhatsApp sessions, messages and webhooks.
 
-### WPPConnect Manager
+A project in the WPPConnect ecosystem, maintained by WPPConnect Team.
 
-The Docker image includes [WPPConnect Manager](https://github.com/wppconnect-team/wppconnect-manager) at **http://localhost:21465/manager/**: server profiles, session management and QR pairing, chat, contacts, groups and media, with Portuguese/English and light/dark themes.
+[Getting started](#getting-started) | [Documentation](#documentation) | [Contributing](#contributing) | [Support WPPConnect](#support-the-project)
 
-Use `SECRET_KEY` for administration, or a session name/token for restricted access. Credentials remain in browser memory. Set `MANAGER_ENABLED=false` to disable serving the UI. The image pins and verifies the Manager bundle during build.
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@wppconnect/server)](https://www.npmjs.com/package/@wppconnect/server) [![CI](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml) [![Open Collective](https://img.shields.io/badge/Open%20Collective-WPPConnect-blue)](https://opencollective.com/wppconnect)
 
-See [configuration, API, authenticated events and rollback](docs/manager.md). Existing APIs and legacy sockets remain compatible. Live WhatsApp send/receive requires separate validation with an authorized account.
+## Overview
 
-[![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
-[![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
-[![Docker Pulls](https://img.shields.io/docker/pulls/wppconnect/wppconnect-server?logo=docker)](https://hub.docker.com/r/wppconnect/wppconnect-server)
-[![Docker Image Version](https://img.shields.io/docker/v/wppconnect/wppconnect-server?sort=semver&logo=docker)](https://hub.docker.com/r/wppconnect/wppconnect-server/tags)
-[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/project/wppconnect-team/wppconnect-server 'Average time to resolve an issue')
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg)](https://isitmaintained.com/badge/open/wppconnect-team/wppconnect-server.svg 'Percentage of issues still open')
-[![Build Status](https://img.shields.io/github/actions/workflow/status/wppconnect-team/wppconnect-server/build.yml)](https://github.com/wppconnect-team/wppconnect-server/actions)
-[![Build](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml/badge.svg)](https://github.com/wppconnect-team/wppconnect-server/actions/workflows/build.yml)
-[![release-it](https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-release--it-e10079.svg)](https://github.com/release-it/release-it)
-
-Welcome to the **WPPConnect Server** repository, developed by the WPPConnect Team. Our mission is to provide a robust and ready-to-use API for seamless communication with WhatsApp. The server is designed to streamline the process of sending and receiving messages, managing contacts, creating groups, and much more, all while leveraging the power of JavaScript ES6, NodeJS, and a RESTful architecture.
-
-- Javascript ES6
-- NodeJS
-- Restfull
-
-## Our online channels
-
-Connect with us across various platforms to stay updated and engage in discussions:
-
-[![Discord](https://img.shields.io/discord/844351092758413353?color=blueviolet&label=Discord&logo=discord&style=flat)](https://discord.gg/JU5JGGKGNG)
-[![Telegram Group](https://img.shields.io/badge/Telegram-Group-32AFED?logo=telegram)](https://t.me/wppconnect)
-[![WhatsApp Group](https://img.shields.io/badge/WhatsApp-Group-25D366?logo=whatsapp)](https://chat.whatsapp.com/LJaQu6ZyNvnBPNAVRbX00K)
-[![YouTube](https://img.shields.io/youtube/channel/subscribers/UCD7J9LG08PmGQrF5IS7Yv9A?label=YouTube)](https://www.youtube.com/c/wppconnect)
-
-## Documentations
-
-Detailed documentation and guides are available for your convenience:
-
-- [Postman](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
-- [Swagger](https://wppconnect.io/swagger/wppconnect-server)
-- Swagger UI can be accessed on your server through the route: "IP:PORT/api-docs"
+For integrators who want an HTTP service around the WPPConnect Node.js library. The Docker image also includes WPPConnect Manager for session and chat administration.
 
 ## Features
 
-|                                      |     |
-| ------------------------------------ | --- |
-| Multiple Sessions                    | ✔   |
-| Send **text, image, video and docs** | ✔   |
-| Get **contacts list**                | ✔   |
-| Manage products                      | ✔   |
-| Receive/Send messages                | ✔   |
-| Open/Close Session                   | ✔   |
-| Change Profile/Username              | ✔   |
-| Create Group                         | ✔   |
-| Join Group by Invite Code            | ✔   |
-| Webhook                              | ✔   |
+- Session pairing, text/media messaging, contacts, groups and product operations.
+- Session tokens, webhooks, authenticated Manager events and Swagger UI.
+- Persistent Docker volumes for credentials, browser data, media and logs.
 
-## Libraries Used
+## Getting started
 
-- WPPConnect
-- Axios
-- Bcrypt
-- Cors
-- Dotenv
-- Express
-- Nodemon
-- SocketIO
-- S3
-
-## Docker (recommended)
-
-The official image is available on
-[Docker Hub](https://hub.docker.com/r/wppconnect/wppconnect-server). It includes
-Node.js, Chromium, and the native dependencies required by WPPConnect.
-
-```sh
-docker run -d \
-  --name wppconnect-server \
-  --restart unless-stopped \
-  -p 21465:21465 \
-  -e SECRET_KEY=change-me \
-  -v wppconnect_tokens:/usr/src/wpp-server/tokens \
-  -v wppconnect_user_data:/usr/src/wpp-server/userDataDir \
-  wppconnect/wppconnect-server:latest
-```
-
-For Docker Compose, clone the repository, copy the example and edit `SECRET_KEY`:
+Use Docker with Compose, or Node.js **22.22.2**, Corepack/Yarn **4.14.1**, Chromium and native dependencies for source development. From the repository root:
 
 ```sh
 cp .env.example .env
-# Edit .env and replace SECRET_KEY. In PowerShell, use Copy-Item .env.example .env.
+```
+
+In PowerShell use `Copy-Item .env.example .env`. Edit `.env` and set a private random `SECRET_KEY` before starting.
+
+```sh
 docker compose up -d
 docker compose ps
-curl http://localhost:21465/healthz
+curl -fsS http://localhost:21465/healthz
 ```
 
-Set `WPP_SERVER_TAG` to pin a release instead of following `latest`:
+Open `http://localhost:21465/manager/` and sign in with the configured `SECRET_KEY` to create/pair a session, or use the API at `http://localhost:21465/api-docs`. Session-restricted Manager access uses a session name and token. For source development: `corepack enable`, `yarn install --immutable`, `yarn build`, then `yarn start`.
 
-```sh
-WPP_SERVER_TAG=2.10.18 docker compose up -d
-```
+## Configuration
 
-Release tags follow the GitHub and npm version: `vX.Y.Z`, `X.Y.Z`, `X.Y`,
-`X`, and `latest`. The `main`, `develop`, and immutable `sha-*` tags are also
-available. See all tags on
-[Docker Hub](https://hub.docker.com/r/wppconnect/wppconnect-server/tags).
+[.env.example](.env.example) lists supported environment variables; [src/config.ts](src/config.ts) contains advanced options. Process environment overrides the optional working-directory `.env`, then built-in defaults apply. Restart after changes. Set exact webhook/Chatwoot destinations in `WEBHOOK_ALLOWED_URLS` and `CHATWOOT_ALLOWED_URLS`. Session inventory and backups use POST with `x-secret-key`; legacy GET URLs containing secrets return 410. `MANAGER_ENABLED=false` disables the UI. Preserve the named volumes and pin `WPP_SERVER_TAG` for repeatable deployments.
 
-The container accepts `PORT`, `HOST`, `SECRET_KEY`, `WEBHOOK_URL`,
-`WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE`, `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS`, and the Redis and
-MongoDB variables listed in the [Configuration](#configuration) section. The
-Compose setup persists tokens, Chromium session data, uploads, received images,
-and logs in named volumes. Change the default secret before exposing the API.
+## Documentation
 
-To upgrade the Compose deployment:
+- [Swagger reference](https://wppconnect.io/swagger/wppconnect-server/)
+- [Manager configuration, access and rollback](./docs/manager.md)
+- [HTTP request examples](./requests.http)
+- [Postman collection](https://documenter.getpostman.com/view/9139457/TzshF4jQ)
+- [Retained technical details and acknowledgments](documentation/readme-reference.md)
 
-```sh
-docker compose pull
-docker compose up -d
-```
+## WPPConnect ecosystem
 
-## Installation from source
+| Project | Purpose | When to use it |
+| --- | --- | --- |
+| [WPPConnect](https://github.com/wppconnect-team/wppconnect) | Control WhatsApp Web from Node.js applications. | Embed automation in a Node.js application. |
+| [WPPConnect Manager](https://github.com/wppconnect-team/wppconnect-manager) | Manage WPPConnect Server sessions and conversations in a self-hosted web workspace. | Operate compatible Server sessions and chats through a UI. |
+| [WPPConnect Server CLI](https://github.com/wppconnect-team/server-cli) | Start WPPConnect Server from the `wppserver` command. | Launch the Node.js Server from a terminal. |
+| [WPPConnect Server Go](https://github.com/wppconnect-team/wppconnect-server-go) | Run a browser-free WhatsApp HTTP API built with Go and whatsmeow. | Evaluate a Go HTTP API and documented migration coverage. |
 
-Install the dependencies, copy `.env.example` to `.env`, and edit `SECRET_KEY`. Node loads `.env` from the directory where you start the server; existing environment variables take precedence. The file is optional.
+## Support the project
 
-```sh
-yarn install --immutable
-cp .env.example .env
-# PowerShell: Copy-Item .env.example .env
-```
+WPPConnect is maintained by an open-source community. Your support helps fund maintenance, infrastructure, documentation, and the people working on the ecosystem.
 
-## Install puppeteer dependencies:
+If WPPConnect helps your project or business, consider making a one-time contribution or becoming a recurring supporter.
 
-```sh
-sudo apt-get install -y libxshmfence-dev libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils libvips-dev
+**[Support WPPConnect on Open Collective](https://opencollective.com/wppconnect)**
 
-```
+Contributions are voluntary. See the official page for current financial information. You can also help with code, tests, documentation, translations and well-described issue reports.
 
-## Install google chrome
+Additional official beneficiaries in [.github/FUNDING.yml](.github/FUNDING.yml): [joaosouz4dev](https://github.com/sponsors/joaosouz4dev), [manfe](https://github.com/sponsors/manfe).
 
-```sh
+## Contributing
 
-wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+Contributions of code, tests, examples, documentation and translations are welcome. For larger changes, discuss the approach in an issue first. Include the project/runtime versions, a minimal reproduction and sanitized logs when reporting a problem. Update both `README.md` and `README.pt-BR.md` in the same change when installation, configuration, features, examples, licensing or funding changes.
 
-sudo apt-get update
-
-sudo apt-get install libappindicator1
-
-sudo dpkg -i google-chrome-stable_current_amd64.deb
-
-```
-
-### Troubleshooting
- If you encounter installation issues, please try the procedures below
- . Error Sharp Runtime
-```sh
-    yarn add sharp
-    npm install --include=optional sharp
-    //or
-    yarn add sharp --ignore-engines
-```
-
-## Run Server
-
-```sh
-yarn dev
-```
-
-## Build Server
+After installing the development dependencies, use the repository checks relevant to your change:
 
 ```sh
 yarn build
+yarn lint
+yarn test
 ```
 
----
+Account-dependent examples and tests require separate validation with an authorized test account. Never attach credentials or session files to an issue.
 
-# Configuration
+## Community and support
 
-Configuration defaults remain in [src/config.ts](src/config.ts). Supported environment variables are documented in [.env.example](.env.example); the file is also included in the npm package.
+Use [repository issues](https://github.com/wppconnect-team/wppconnect-server/issues) for reproducible bugs and feature proposals. For usage questions, join the community through the official channels:
 
-The default configuration resolves values in this order: existing process environment, optional `.env` in the working directory, then built-in defaults. Restart the process or recreate the container after changing a value. Variables are read at runtime, so changing them does not require rebuilding the image.
+- [Discord](https://discord.gg/JU5JGGKGNG)
+- [Telegram](https://t.me/wppconnect)
+- [YouTube](https://www.youtube.com/c/wppconnect)
 
-| Area | Variables |
-| --- | --- |
-| Webhook delivery | `WEBHOOK_RETRY_ATTEMPTS` (total attempts, default 3, range 1-10), `WEBHOOK_RETRY_DELAY` (initial backoff in ms, default 5000, capped at 60000), `WEBHOOK_REQUEST_TIMEOUT` (ms per request, default 30000, range 1-120000) |
-| Session webhook destinations | `WEBHOOK_ALLOWED_URLS` (comma-separated exact URLs; session-specific destinations must equal `WEBHOOK_URL` or an entry in this list) |
-| Chatwoot destinations | `CHATWOOT_ALLOWED_URLS` (comma-separated exact base URLs the operator approves for session configuration) |
-| Server | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL` |
-| Webhook | `WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE` (bytes; media larger than this is sent without inlined base64 and with `autoDownloadSkipped: true`, fetch it via `download-media`; `0` = no limit) |
-| Sessions | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS` |
-| Manager | `MANAGER_ENABLED`, `MANAGER_DIST` |
-| Redis | `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX` |
-| MongoDB | `MONGO_URL_REMOTE`, `MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_HOST`, `MONGODB_PORT` |
-| Compose image | `WPP_SERVER_TAG` (used by Compose, not the Node server) |
+This project is independent and is not affiliated with or endorsed by WhatsApp or Meta. Follow applicable terms and obtain authorization for account and messaging operations.
 
-Webhook delivery retries transient connection failures with exponential backoff
-and the same event payload. HTTP error responses are not retried. The receiver
-should deduplicate message events by session, event and message ID, because a
-timeout or connection reset can happen after the receiver has processed a request.
-Retries are held in memory and do not survive a server restart.
+## License
 
-When using a session-specific webhook, configure its exact destination in
-`WEBHOOK_ALLOWED_URLS` or `webhook.allowedUrls` first. An unlisted session URL
-is rejected before making a network request. The global `WEBHOOK_URL` remains
-the default destination and is also permitted as an explicit session selection.
+[Apache License 2.0 (Apache-2.0)](./LICENSE).
 
-Before starting a Chatwoot-enabled session, list its exact `chatWoot.baseURL`
-in `CHATWOOT_ALLOWED_URLS` or `serverOptions.chatwoot.allowedUrls`. Self-hosted
-and private-network destinations are supported when explicitly listed. Session
-requests cannot add destinations. Use an HTTP or HTTPS URL without credentials,
-query parameters or a fragment. Chatwoot requests do not follow redirects;
-configure the final destination URL. Account, inbox, contact and conversation
-identifiers must be numeric.
+Copyright 2021 WPPConnect Team.
 
-Session listing and backup now use `POST /api/show-all-sessions` and
-`POST /api/backup-sessions`, respectively. Send the operator `SECRET_KEY` in
-the `x-secret-key` header. The former GET URLs containing a secret return 410
-and do not list sessions or create a backup. Update clients and remove old
-secret-bearing URLs from bookmarks and scripts.
-
-```sh
-curl -X POST -H "x-secret-key: $SECRET_KEY" http://localhost:21465/api/show-all-sessions
-curl -X POST -H "x-secret-key: $SECRET_KEY" http://localhost:21465/api/backup-sessions -o sessions.zip
-```
-
-For Node, both `yarn dev` and the compiled `yarn start` load the optional file automatically. For example, after setting `PORT=21470` in `.env`, the server listens on port 21470. `HOST` supplies the advertised URL; it does not restrict the listener address.
-
-Compose reads `.env` for interpolation and explicitly forwards the supported server variables. Setting `PORT=21470` changes both the container listener and the published host port; setting `MANAGER_ENABLED=false` disables `/manager/` while the API remains available. You can select another file with `docker compose --env-file ./.env.production up -d`. Variables defined by the shell take precedence over values in the file.
-
-For plain Docker, pass variables with `-e` or `--env-file`:
-
-```sh
-docker run --rm --env-file .env -p 21465:21465 wppconnect/wppconnect-server:2.10.18
-```
-
-If `PORT` differs from 21465, adjust both sides of `-p` accordingly. Use the persistent volumes shown in the Docker section for regular deployments. Private `.env` files are excluded from image builds and npm packages; `.env.example` remains available. Docker does not need a private file baked into the image.
-
-Paths in containers refer to the container filesystem. Keep `CUSTOM_USER_DATA_DIR` inside the mounted session-data directory (and retain its trailing slash), or change the volume mapping too. `MANAGER_DIST` points to an existing static bundle; leaving it empty uses the default location. The official Docker image supplies that bundle.
-
-Redis and MongoDB services must be provisioned separately; the included Compose file starts only WPPConnect. The default MongoDB remote mode uses `MONGO_URL_REMOTE`. Structured MongoDB host/user/port settings apply when `db.mongoIsRemote` is disabled in the advanced configuration.
-
-Advanced options without an environment mapping, such as browser arguments and webhook event toggles, remain in `src/config.ts` or can be supplied to `initServer(...)` when embedding the server. Changing TypeScript configuration requires rebuilding the compiled server; environment-only changes do not.
-
-# Secret Key
-
-Set `SECRET_KEY` in `.env` or the deployment environment to a private, randomly generated value. The legacy default is retained for compatibility; replace it before exposing the API. Never commit your private `.env`.
-
-<!-- ![Peek 2021-03-25 09-33](https://user-images.githubusercontent.com/40338524/112473515-3b310a80-8d4d-11eb-94bb-ff409c91d9b8.gif) -->
-
-# Generate Token
-
-To generate an access token, you must use your `SECRET_KEY`.
-
-Using the route:
-
-```shell
-  curl -X POST --location "http://localhost:21465/api/mySession/THISISMYSECURETOKEN/generate-token"
-```
-
-### Response:
-
-```json
-{
-  "status": "Success",
-  "session": "mySession",
-  "token": "$2b$10$duQ5YYV6fojn5qFiFv.aEuY32_SnHgcmxdfxohnjG4EHJ5_Z6QWhe",
-  "full": "wppconnect:$2b$10$duQ5YYV6fojn5qFiFv.aEuY32_SnHgcmxdfxohnjG4EHJ5_Z6QWhe"
-}
-```
-
-# Using Token
-
-Save the value of the "full" response. Then use this value to call the routes.
-
-# Examples
-
-```sh
-#Starting Session
-# /api/:session/start-session
-
-curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
-    -H "Accept: application/json" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer \$2b\$10\$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C"
-```
-
-```sh
-#Get QrCode
-# /api/:session/start-session
-# when the session is starting if the method is called again it will return the base64 qrCode
-
-curl -X POST --location "http://localhost:21465/api/mySession/start-session" \
-    -H "Accept: application/json" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer \$2b\$10\$JcHd97xHN6ErBuiLd7Yu4.r6McvOvEZZDQTQwev2MRK_zQObUZZ9C"
-```
-
-```sh
-#Send Message
-# /api/:session/send-message
-curl -X POST --location "http://localhost:21465/api/mySession/send-message" \
-    -H "Content-Type: application/json; charset=utf-8" \
-    -H "Accept: application/json" \
-    -H "Authorization: Bearer \$2b\$10\$8aQFQxnWREtBEMZK_iHMe.u7NeoNkjL7s6NYai_83Pb31Ycss6Igm" \
-    -d "{
-          \"phone\": \"5511900000000\",
-          \"message\": \"*Abner* Rodrigues\"
-        }"
-```
-
-See the `routes` file for all the routes. [here](/src/routes/index.js) and HTTP [file](/requests.http).
-
-# Swagger UI
-
-Swagger ui can be found at `/api-docs`
+The original legal document and existing copyright notices are preserved. Third-party components retain their own terms.
