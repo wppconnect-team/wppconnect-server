@@ -173,6 +173,7 @@ WEBHOOK_ALLOWED_URLS=
 | `PORT`                           | Listener and Compose published port                             | `21465`                                             |
 | `TOKEN_STORE_TYPE`               | `file`, `redis`, `mongodb`                                      | `file`                                              |
 | `CUSTOM_USER_DATA_DIR`           | Browser profile directory                                       | `./userDataDir/`                                    |
+| `FORCE_CLEAN_CHROMIUM_LOCKS`     | Container entrypoint recovery only, after stopping every owner   | `0`                                                |
 | `MAX_LISTENERS`                  | Event listener limit                                            | `15`                                                |
 | `MANAGER_ENABLED`                | Serve the Manager UI                                            | `true`                                              |
 | `MANAGER_DIST`                   | Existing Manager bundle path                                    | `./manager`, or Docker bundle                       |
@@ -443,7 +444,13 @@ Administrators configure release credentials plus `DOCKERHUB_USERNAME` / `DOCKER
 
 Use `/healthz`, logs, and session status to diagnose startup. HTTP health does not establish WhatsApp connectivity. Back up persistent storage before upgrades and retain the previous pinned image for rollback.
 
-Never run two Chromium instances against the same profile. The entrypoint cleans recognized stale singleton files only when it can establish that their local owner exited. Locks from another host require operator verification.
+### Chromium profile ownership and recovery
+
+Never run two Chromium instances against the same profile. The entrypoint creates `CUSTOM_USER_DATA_DIR` before acquiring its exclusive `.entrypoint.lock`. The lock stays held for the server process lifetime. Startup fails without `flock` or when another cooperating entrypoint holds the lock; it does not remove that owner's Chromium singleton symlinks.
+
+After acquiring the lock, the entrypoint removes leftover `SingletonLock`, `SingletonSocket` and `SingletonCookie` symlinks only when `.entrypoint.managed` already exists, or when explicit recovery is enabled. The marker records prior use of this entrypoint protocol. It does not establish ownership of browsers started independently, orphaned browsers or an older image used after rollback. Stop all such owners before reusing the profile, including when rolling back.
+
+For an unmanaged legacy profile, startup refuses cleanup by default. Stop every container and browser using that profile, back up the directory, then pass `FORCE_CLEAN_CHROMIUM_LOCKS=1` explicitly to the container for the recovery start. Remove the override after recovery. The default is `0`; this flag belongs to the container entrypoint and is not a general server setting. Docker Compose forwards only declared variables, so a value in a host `.env` alone does not enable it: declare the variable in the service's `environment` or pass it through the container runtime. Never use this override to bypass a live owner.
 
 ## Community and support
 

@@ -2,23 +2,52 @@
 set -eu
 
 USER_DATA_DIR="${CUSTOM_USER_DATA_DIR:-/usr/src/wpp-server/userDataDir}"
+OWNER_LOCK="$USER_DATA_DIR/.entrypoint.lock"
+MANAGED_MARKER="$USER_DATA_DIR/.entrypoint.managed"
 
-# Chromium's lock target is hostname-pid. Only remove a verified dead local
-# owner; a different host may still be using a shared browser profile.
-if [ -d "$USER_DATA_DIR" ]; then
-  find "$USER_DATA_DIR" -type l -name SingletonLock -exec sh -c '
-    lock=$1
-    owner=$(readlink "$lock")
-    owner_host=${owner%-*}
-    owner_pid=${owner##*-}
-    case "$owner_pid" in ""|*[!0-9]*) exit 0 ;; esac
-    [ "$owner_host" = "$(hostname)" ] || exit 0
-    # A /proc entry also protects live owners inaccessible to kill -0.
-    [ ! -d "/proc/$owner_pid" ] || exit 0
-    if kill -0 "$owner_pid" 2>/dev/null; then exit 0; fi
-    profile=${lock%/*}
-    rm -f -- "$profile/SingletonLock" "$profile/SingletonSocket" "$profile/SingletonCookie"
-  ' sh {} \;
+# 1. Create the profile directory BEFORE anything else, so the lock below
+#    always exists, even on the very first start.
+mkdir -p "$USER_DATA_DIR"
+
+# 2. flock is required. Without it we cannot prove who owns the directory,
+#    so we refuse to start instead of guessing.
+if ! command -v flock >/dev/null 2>&1; then
+  echo "entrypoint: flock not found; refusing to start" >&2
+  exit 1
 fi
+
+# 3. Take exclusive ownership of the profile directory. File descriptor 9 stays
+#    open for the whole life of the server (node and Chromium inherit it).
+#    If another live entrypoint already owns it, stop here.
+exec 9>"$OWNER_LOCK"
+if ! flock -n 9; then
+  echo "entrypoint: $USER_DATA_DIR is in use by another live container; refusing to start" >&2
+  exit 1
+fi
+
+# 4. Look for leftover Chromium Singleton* symlinks.
+STALE="$(find "$USER_DATA_DIR" -type l \
+  \( -name SingletonLock -o -name SingletonSocket -o -name SingletonCookie \) -print)"
+
+if [ -n "$STALE" ]; then
+  # Migration rule: holding the lock only proves that no NEW-style entrypoint
+  # is alive. A browser started by an OLD entrypoint never took this lock.
+  # So we only delete when a previous new-style entrypoint already managed this
+  # directory (marker exists), or when the operator explicitly forces it.
+  if [ -f "$MANAGED_MARKER" ] || [ "${FORCE_CLEAN_CHROMIUM_LOCKS:-0}" = "1" ]; then
+    echo "$STALE" | while IFS= read -r f; do
+      echo "entrypoint: removing stale $f"
+      rm -f "$f"
+    done
+  else
+    echo "entrypoint: found Singleton* files but cannot prove their owner is dead" >&2
+    echo "entrypoint: (directory was not managed by this entrypoint before)." >&2
+    echo "entrypoint: stop any old container using it, or set FORCE_CLEAN_CHROMIUM_LOCKS=1" >&2
+    exit 1
+  fi
+fi
+
+# 5. Mark the directory as managed by this entrypoint.
+touch "$MANAGED_MARKER"
 
 exec node dist/server.js "$@"
