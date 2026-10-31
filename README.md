@@ -1,3 +1,14 @@
+<!-- wppconnect-official-brand -->
+<p align="center">
+  <a href="https://wppconnect-team.github.io/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://wppconnect-team.github.io/brand/wppconnect-dark.png" />
+      <img src="https://wppconnect-team.github.io/brand/wppconnect-light.png" alt="WPPConnect" width="220" height="121" />
+    </picture>
+  </a>
+</p>
+<!-- /wppconnect-official-brand -->
+
 # WPPConnect Team
 
 ## _WPPConnect Server_
@@ -9,8 +20,6 @@ The Docker image includes [WPPConnect Manager](https://github.com/wppconnect-tea
 Use `SECRET_KEY` for administration, or a session name/token for restricted access. Credentials remain in browser memory. Set `MANAGER_ENABLED=false` to disable serving the UI. The image pins and verifies the Manager bundle during build.
 
 See [configuration, API, authenticated events and rollback](docs/manager.md). Existing APIs and legacy sockets remain compatible. Live WhatsApp send/receive requires separate validation with an authorized account.
-
-![WPPConnect-SERVER](https://i.imgur.com/y1ts6RR.png)
 
 [![npm version](https://img.shields.io/npm/v/@wppconnect/server.svg?color=green)](https://www.npmjs.com/package/@wppconnect/server)
 [![Downloads](https://img.shields.io/npm/dm/@wppconnect/server.svg)](https://www.npmjs.com/package/@wppconnect/server)
