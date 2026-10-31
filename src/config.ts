@@ -72,6 +72,7 @@ export default {
       ignoreDefaultArgs: ['--mute-audio'],
     },
     browserArgs: [
+      '--no-proxy-server',
       '--disable-web-security',
       '--no-sandbox',
       '--disable-web-security',
