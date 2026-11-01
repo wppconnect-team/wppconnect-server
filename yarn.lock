@@ -11331,10 +11331,10 @@ __metadata:
 
 "minimatch@file:vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz::locator=%40wppconnect%2Fserver%40workspace%3A.":
   version: 1.0.3
-  resolution: "minimatch@file:vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz#vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz::hash=e9c3dc&locator=%40wppconnect%2Fserver%40workspace%3A."
+  resolution: "minimatch@file:vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz#vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz::hash=2f3397&locator=%40wppconnect%2Fserver%40workspace%3A."
   dependencies:
     minimatch-engine: "npm:minimatch@11.0.3"
-  checksum: 10c0/f653e4dfb97e06d22dbd90bb2dea2a7e5952f15fafde2c82afb06c53ca5daa52aa612b35d480054593d4c0cdf80323e8bfcfe9bf1d4cde7d269757524b6e8a92
+  checksum: 10c0/4d1139fcfb159bf70b7016d49f433a9114b6fc80fb8124232aaf1542eca47cc0bb90791b27f0e078a4e9a7fe224d3689c10bd23d4fd625427dbbc45e03991d95
   languageName: node
   linkType: hard
 
