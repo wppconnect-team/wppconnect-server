@@ -474,3 +474,9 @@ Use a private random secret, HTTPS at the deployment boundary, restricted admini
 Licensed under the [Apache License 2.0](LICENSE).
 
 Thanks to the WPPConnect community and the maintainers of [WPPConnect](https://github.com/wppconnect-team/wppconnect), [WA-JS](https://github.com/wppconnect-team/wa-js), [WPPConnect Manager](https://github.com/wppconnect-team/wppconnect-manager), and the provider runtimes used by this project.
+
+## Chatwoot webhook authentication
+
+`POST /api/:session/chatwoot` requires the token generated for that WPPConnect session. Configure `Authorization: Bearer <session-token>` on the webhook. If the webhook sender cannot set headers, the existing `/api/<session>:<URL-safe-session-token>/chatwoot` URL form is also supported. Generate the URL-safe token by replacing `/` with `_` and `+` with `-` in the session token. Protect such URLs as credentials and redact them from proxy logs.
+
+The Chatwoot `api_access_token` is an outbound Chatwoot credential and does not authorize this endpoint. Requests without a matching WPPConnect session token return 401 before accessing a client; authenticated requests for an unavailable session return 409. Only public outgoing `message_created` events are sent to WhatsApp.

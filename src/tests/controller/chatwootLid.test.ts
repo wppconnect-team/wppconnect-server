@@ -21,6 +21,7 @@ describe('Chatwoot outgoing LID contacts', () => {
     clientsArray.chatwoot = client as any;
     const req = {
       params: { session: 'chatwoot' },
+      client,
       body,
       logger: { error: jest.fn() },
     };
