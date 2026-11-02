@@ -959,7 +959,7 @@ routes.post(
   NewsletterController.muteNewsletter
 );
 
-routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
+routes.post('/api/:session/chatwoot', verifyToken, DeviceController.chatWoot);
 
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve as any);

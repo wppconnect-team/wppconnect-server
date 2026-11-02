@@ -94,6 +94,12 @@ yarn test
 
 Account-dependent examples and tests require separate validation with an authorized test account. Never attach credentials or session files to an issue.
 
+## Chatwoot webhook authentication
+
+`POST /api/:session/chatwoot` requires the token generated for that WPPConnect session. Configure `Authorization: Bearer <session-token>` on the webhook. If the webhook sender cannot set headers, the existing `/api/<session>:<URL-safe-session-token>/chatwoot` URL form is also supported. Generate the URL-safe token by replacing `/` with `_` and `+` with `-` in the session token. Protect such URLs as credentials and redact them from proxy logs.
+
+The Chatwoot `api_access_token` is an outbound Chatwoot credential and does not authorize this endpoint. Requests without a matching WPPConnect session token return 401 before accessing a client; authenticated requests for an unavailable session return 409. Only public outgoing `message_created` events are sent to WhatsApp.
+
 ## Community and support
 
 Use [repository issues](https://github.com/wppconnect-team/wppconnect-server/issues) for reproducible bugs and feature proposals. For usage questions, join the community through the official channels:
