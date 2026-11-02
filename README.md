@@ -173,7 +173,7 @@ WEBHOOK_ALLOWED_URLS=
 | `PORT`                           | Listener and Compose published port                             | `21465`                                             |
 | `TOKEN_STORE_TYPE`               | `file`, `redis`, `mongodb`                                      | `file`                                              |
 | `CUSTOM_USER_DATA_DIR`           | Browser profile directory                                       | `./userDataDir/`                                    |
-| `FORCE_CLEAN_CHROMIUM_LOCKS`     | Container entrypoint recovery only, after stopping every owner   | `0`                                                |
+| `FORCE_CLEAN_CHROMIUM_LOCKS`     | Container entrypoint recovery only, after stopping every owner  | `0`                                                 |
 | `MAX_LISTENERS`                  | Event listener limit                                            | `15`                                                |
 | `MANAGER_ENABLED`                | Serve the Manager UI                                            | `true`                                              |
 | `MANAGER_DIST`                   | Existing Manager bundle path                                    | `./manager`, or Docker bundle                       |
@@ -480,3 +480,9 @@ Thanks to the WPPConnect community and the maintainers of [WPPConnect](https://g
 `POST /api/:session/chatwoot` requires the token generated for that WPPConnect session. Configure `Authorization: Bearer <session-token>` on the webhook. If the webhook sender cannot set headers, the existing `/api/<session>:<URL-safe-session-token>/chatwoot` URL form is also supported. Generate the URL-safe token by replacing `/` with `_` and `+` with `-` in the session token. Protect such URLs as credentials and redact them from proxy logs.
 
 The Chatwoot `api_access_token` is an outbound Chatwoot credential and does not authorize this endpoint. Requests without a matching WPPConnect session token return 401 before accessing a client; authenticated requests for an unavailable session return 409. Only public outgoing `message_created` events are sent to WhatsApp.
+
+## Security configuration migration
+
+The stable security changes are also required by develop. Set exact Chatwoot destinations in `CHATWOOT_ALLOWED_URLS` and webhook destinations in `WEBHOOK_ALLOWED_URLS`. Session inventory and backup operations use POST with `x-secret-key`; legacy GET URLs containing the administrator secret return 410. Per-session Chatwoot callbacks still require their session token as described above.
+
+See the [stable configuration and migration reference](documentation/readme-reference.md) and [dependency security decisions](docs/security-resolutions.md). Provider selection, unsupported-route responses and the asynchronous embedding API continue to follow this README and `CONTRIBUTING.md`.

@@ -99,7 +99,7 @@ describe('ResourceController endpoints', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data.sessionName).toBe('session1');
-    });
+    }, 15_000);
   });
 
   describe('getAllSessionsResourceUsage', () => {

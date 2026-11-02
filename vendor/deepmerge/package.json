@@ -1,0 +1,19 @@
+{
+  "name": "deepmerge",
+  "version": "4.3.2+wppconnect.1",
+  "private": true,
+  "description": "Private unpublished WPPConnect patch of deepmerge4.3.1. This version is local, not an upstream registry release.",
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "files": [
+    "index.cjs",
+    "is-mergeable-object.cjs",
+    "index.d.ts",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

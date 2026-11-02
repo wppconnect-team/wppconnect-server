@@ -27,3 +27,4 @@ e2e/.runtime-qrs/
 .env
 .env.*
 !.env.example
+!vendor/deepmerge-4.3.2+wppconnect.1.tgz

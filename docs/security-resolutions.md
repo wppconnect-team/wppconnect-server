@@ -41,3 +41,9 @@ cross an incompatible API boundary and is intentionally avoided.
 `yarn smoke:browser-protocol` checks the mapper's actual Zod dependency, bounded
 collection validation, and real Chromium navigation through both CDP and BiDi.
 The full OSV scan must also pass before promotion; npm audit alone is insufficient.
+
+## Stable security synchronization
+
+Develop incorporates the stable security fixes with modern glob 14.0.2, minimatch 11.0.3, follow-redirects 1.16.2 and the reviewed private deepmerge backport. Every qs selector, including the optional Express 5 bridge, resolves to 6.16.2.
+
+Legacy glob7 and the Protobuf CLI's glob8 require a callable minimatch facade with traversal metadata. They resolve to the private scoped workspace described in [its README](../vendor/minimatch-legacy-compat/README.md), while all pattern matching delegates to the unmodified registry minimatch 11.0.3 engine. A native major override without that facade breaks the Protobuf CLI's glob8 traversal. Full OSV lock scanning keeps its existing policy; no advisory is ignored to make this update pass.
