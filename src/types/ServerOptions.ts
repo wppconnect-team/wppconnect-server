@@ -36,6 +36,11 @@ export interface ServerOptions {
     autoDownload: boolean;
     uploadS3: boolean;
   };
+  chatwoot?: {
+    allowedUrls?: string[];
+    sendQrCode?: boolean;
+    sendStatus?: boolean;
+  };
   archive: {
     enable: boolean;
     waitTime: number;

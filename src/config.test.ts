@@ -28,6 +28,7 @@ beforeEach(() => {
   delete process.env.SECRET_KEY;
   delete process.env.PORT;
   delete process.env.MAX_LISTENERS;
+  delete process.env.CHATWOOT_ALLOWED_URLS;
   jest.resetModules();
 });
 
@@ -69,4 +70,14 @@ it('starts with legacy defaults when no .env exists', async () => {
   expect(config.secretKey).toBe('THISISMYSECURETOKEN');
   expect(config.port).toBe('21465');
   expect(config.maxListeners).toBe(15);
+});
+
+it('loads Chatwoot destinations only from operator configuration', async () => {
+  process.env.CHATWOOT_ALLOWED_URLS =
+    ' https://support.example.test, http://localhost:3000/ , ';
+  const { default: config } = await import('./config');
+  expect(config.chatwoot?.allowedUrls).toEqual([
+    'https://support.example.test',
+    'http://localhost:3000/',
+  ]);
 });

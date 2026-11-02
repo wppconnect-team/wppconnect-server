@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import './security/runtime';
+
 import expressPlugin from '@fastify/express';
 import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';

@@ -45,6 +45,15 @@ if (config?.websocket?.uploadS3) {
   crypto = config.websocket.uploadS3 ? Crypto : null;
 }
 
+function splitDelimited(value: string): string[] {
+  const parts = value.split(/[,;]/);
+  return parts.map((part, index) => {
+    if (index > 0) part = part.trimStart();
+    if (index < parts.length - 1) part = part.trimEnd();
+    return part;
+  });
+}
+
 export function groupToArray(group: any) {
   const localArr: any = [];
   if (Array.isArray(group)) {
@@ -53,7 +62,7 @@ export function groupToArray(group: any) {
       if (contact !== '') (localArr as any).push(`${contact}@g.us`);
     }
   } else {
-    const arrContacts = group.split(/\s*[,;]\s*/g);
+    const arrContacts = splitDelimited(group);
     for (let contact of arrContacts) {
       contact = contact.split('@')[0];
       if (contact !== '') (localArr as any).push(`${contact}@g.us`);
@@ -70,7 +79,7 @@ export function groupNameToArray(group: any) {
       if (contact !== '') (localArr as any).push(`${contact}`);
     }
   } else {
-    const arrContacts = group.split(/\s*[,;]\s*/g);
+    const arrContacts = splitDelimited(group);
     for (const contact of arrContacts) {
       if (contact !== '') (localArr as any).push(`${contact}`);
     }
