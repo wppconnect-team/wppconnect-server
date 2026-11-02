@@ -289,3 +289,49 @@ for (const method of ['promise', 'stream'])
       cleanup(dir);
     }
   });
+
+test('actual Protobuf CLI glob8 preserves sync, callback and pattern traversal', async () => {
+  const dir = fixture();
+  try {
+    fs.mkdirSync(path.join(dir, 'nested'));
+    for (const name of ['a.proto', 'b.proto', 'c.js', '.hidden.proto'])
+      fs.writeFileSync(path.join(dir, 'nested', name), 'fixture');
+    const protobuf = createRequire(
+      require.resolve('protobufjs-cli/package.json')
+    );
+    const glob = protobuf('glob');
+    const globOwner = createRequire(protobuf.resolve('glob'));
+    assert.equal(protobuf('glob/package.json').version, '8.1.0');
+    assert.equal(typeof globOwner('minimatch'), 'function');
+    assert.equal(
+      createRequire(globOwner.resolve('minimatch'))(
+        'minimatch-engine/package.json'
+      ).version,
+      '11.0.3'
+    );
+    const expected = ['nested/a.proto', 'nested/b.proto'];
+    assert.deepEqual(glob.sync('**/*.proto', { cwd: dir }), expected);
+    assert.deepEqual(
+      glob.sync('**/*.{proto,js}', { cwd: dir, ignore: '**/*.js' }),
+      expected
+    );
+    assert.deepEqual(glob.sync('**/*.proto', { cwd: dir, dot: true }), [
+      'nested/.hidden.proto',
+      ...expected,
+    ]);
+    assert.deepEqual(
+      glob.sync('missing/*.{proto,js}', { cwd: dir, nonull: true }),
+      ['missing/*.js', 'missing/*.proto']
+    );
+    assert.deepEqual(
+      await new Promise((resolve, reject) =>
+        glob('**/*.proto', { cwd: dir }, (error, files) =>
+          error ? reject(error) : resolve(files)
+        )
+      ),
+      expected
+    );
+  } finally {
+    cleanup(dir);
+  }
+});

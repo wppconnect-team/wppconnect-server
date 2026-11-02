@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       increment:
-        description: 'Tipo de incremento: patch, minor, major ou pre*'
+        description: 'Release increment: patch, minor, major, or prerelease'
         required: true
         default: 'patch'
         type: choice
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 0
@@ -54,9 +54,16 @@ jobs:
             increment=patch
             latest_tag="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
 
-            if [[ -n "$latest_tag" ]] && git diff --quiet "$latest_tag..HEAD" -- .; then
-              should_release=false
-              echo "No changes since $latest_tag; skipping duplicate release"
+            if [[ -n "$latest_tag" ]]; then
+              if git diff --quiet "$latest_tag..HEAD" -- .; then
+                should_release=false
+                echo "No changes since $latest_tag; skipping duplicate release"
+              fi
+              # Public embedding API changes must not ship as an automatic patch.
+              git log --format=%B "$latest_tag..HEAD" > "$RUNNER_TEMP/release-commits.txt"
+              if grep -Eq '^[a-z]+(\([^)]*\))?!:|^BREAKING CHANGE:' "$RUNNER_TEMP/release-commits.txt"; then
+                increment=major
+              fi
             fi
           fi
 
@@ -71,9 +78,10 @@ jobs:
 
       - name: Setup Node
         if: steps.release-check.outputs.should_release == 'true'
-        uses: actions/setup-node@v4.4.0
+        uses: actions/setup-node@v6
         with:
           node-version: 22.22.2
+          package-manager-cache: false
 
       - name: Enable Corepack
         if: steps.release-check.outputs.should_release == 'true'
@@ -81,7 +89,7 @@ jobs:
 
       - name: Setup yarn cache
         if: steps.release-check.outputs.should_release == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             .yarn/cache

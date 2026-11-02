@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { forwardMessages, listChats } from '../../controller/deviceController';
+import {
+  forwardMessages,
+  listChats,
+  markUnseenMessage,
+} from '../../controller/deviceController';
 
 jest.mock('../../util/functions', () => ({
   contactToArray: jest.fn(),
@@ -24,6 +28,77 @@ jest.mock('../../util/sessionUtil', () => ({ clientsArray: [] }));
 const { contactToArray: mockContactToArray } = jest.requireMock(
   '../../util/functions'
 ) as { contactToArray: jest.Mock };
+
+describe('markUnseenMessage', () => {
+  function response() {
+    const res = { status: jest.fn(), json: jest.fn() };
+    res.status.mockReturnValue(res);
+    return res;
+  }
+
+  it.each(['5511999999999@c.us', '120363000000000000@g.us'])(
+    'passes the complete chat identifier %s to the provider',
+    async (phone) => {
+      const req = {
+        body: { phone },
+        client: { markUnseenMessage: jest.fn().mockResolvedValue(true) },
+        logger: { error: jest.fn() },
+      };
+      const res = response();
+
+      await markUnseenMessage(req as any, res as any);
+
+      expect(req.client.markUnseenMessage).toHaveBeenCalledTimes(1);
+      expect(req.client.markUnseenMessage).toHaveBeenCalledWith(phone);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        status: 'success',
+        response: { message: 'unseen checked' },
+      });
+    }
+  );
+
+  it('returns an error when the provider rejects the unread action', async () => {
+    const error = new Error('native unread action rejected');
+    const req = {
+      body: { phone: '5511999999999@c.us' },
+      client: { markUnseenMessage: jest.fn().mockRejectedValue(error) },
+      logger: { error: jest.fn() },
+    };
+    const res = response();
+
+    await markUnseenMessage(req as any, res as any);
+
+    expect(req.logger.error).toHaveBeenCalledWith(error);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'error',
+      message: 'Error on mark unseen',
+      error,
+    });
+  });
+
+  it('responds only after the provider completes the unread action', async () => {
+    let complete!: () => void;
+    const action = new Promise<void>((resolve) => {
+      complete = resolve;
+    });
+    const req = {
+      body: { phone: '5511999999999@c.us' },
+      client: { markUnseenMessage: jest.fn().mockReturnValue(action) },
+      logger: { error: jest.fn() },
+    };
+    const res = response();
+
+    const pending = markUnseenMessage(req as any, res as any);
+    await Promise.resolve();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
+    complete();
+    await pending;
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+});
 
 describe('forwardMessages', () => {
   beforeEach(() => {

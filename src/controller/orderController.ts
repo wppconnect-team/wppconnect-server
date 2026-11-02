@@ -15,6 +15,8 @@
  */
 import { Request, Response } from 'express';
 
+import { getClient } from '../core/provider/useProvider';
+
 function returnSucess(
   res: Response,
   session: string,
@@ -70,7 +72,7 @@ export async function getBusinessProfilesProducts(req: Request, res: Response) {
   try {
     const results: any = [];
 
-    const result = await req.client.getBusinessProfilesProducts(phone);
+    const result = await getClient(req).getBusinessProfilesProducts(phone);
     results.push(result);
 
     returnSucess(res, session, phone, results);
@@ -96,7 +98,7 @@ export async function getOrderbyMsg(req: Request, res: Response) {
   const { messageId } = req.params;
 
   try {
-    const result = await (req.client as any).getOrder(messageId);
+    const result = await (getClient(req) as any).getOrder(messageId);
 
     returnSucess(res, session, null, result);
   } catch (error) {

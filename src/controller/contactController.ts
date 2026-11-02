@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { getClient } from '../core/provider/useProvider';
+
 export default class ContactController {
   static async getContactPnLid(req: Request, res: Response) {
     /**
@@ -25,7 +27,7 @@ export default class ContactController {
     }
 
     try {
-      const response = await req.client.getPnLidEntry(pnLid);
+      const response = await getClient(req).getPnLidEntry(pnLid);
       res.status(200).json(response);
     } catch (error) {
       req.logger.error(error);

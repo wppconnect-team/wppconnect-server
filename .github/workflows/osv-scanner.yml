@@ -1,0 +1,26 @@
+name: OSV-Scanner Full Scan
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  schedule:
+    - cron: '30 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.5.0
+    with:
+      scan-args: |-
+        --lockfile=./yarn.lock
+    permissions:
+      actions: read
+      contents: read
+      security-events: write

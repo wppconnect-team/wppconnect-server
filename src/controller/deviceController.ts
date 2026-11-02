@@ -16,7 +16,16 @@
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
 
-import { contactToArray, unlinkAsync } from '../util/functions';
+import { getClient } from '../core/provider/useProvider';
+import {
+  activateCallMedia,
+  createMediaTicket,
+  deactivateCallMedia,
+  emitCallMediaEnded,
+  emitIncomingAudio,
+} from '../util/callMediaUtil';
+import * as CallUtil from '../util/callUtil';
+import { callWebHook, contactToArray, unlinkAsync } from '../util/functions';
 
 function returnSucess(res: any, session: any, phone: any, data: any) {
   res.status(201).json({
@@ -81,7 +90,7 @@ export async function setProfileName(req: Request, res: Response) {
       .json({ status: 'error', message: 'Parameter name is required!' });
 
   try {
-    const result = await req.client.setProfileName(name);
+    const result = await getClient(req).setProfileName(name);
     res.status(200).json({ status: 'success', response: result });
   } catch (error) {
     req.logger.error(error);
@@ -105,7 +114,7 @@ export async function showAllContacts(req: Request, res: Response) {
      }
    */
   try {
-    const contacts = await req.client.getAllContacts();
+    const contacts = await getClient(req).getAllContacts();
     res.status(200).json({ status: 'success', response: contacts });
   } catch (error) {
     req.logger.error(error);
@@ -131,7 +140,7 @@ export async function getAllChats(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllChats();
+    const response = await getClient(req).getAllChats();
     res
       .status(200)
       .json({ status: 'success', response: response, mapper: 'chat' });
@@ -227,7 +236,7 @@ export async function listChats(req: Request, res: Response) {
       withLabels,
     } = req.body;
 
-    const response = await req.client.listChats({
+    const response = await getClient(req).listChats({
       id: id,
       count: count,
       direction: direction,
@@ -264,7 +273,7 @@ export async function getAllChatsWithMessages(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.listChats();
+    const response = await getClient(req).listChats();
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -311,7 +320,7 @@ export async function getAllMessagesInChat(req: Request, res: Response) {
 
     let response;
     for (const contato of contactToArray(phone, isGroup as boolean)) {
-      response = await req.client.getAllMessagesInChat(
+      response = await getClient(req).getAllMessagesInChat(
         contato,
         includeMe as boolean,
         includeNotifications as boolean
@@ -341,7 +350,7 @@ export async function getAllNewMessages(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllNewMessages();
+    const response = await getClient(req).getAllNewMessages();
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -365,7 +374,7 @@ export async function getAllUnreadMessages(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllUnreadMessages();
+    const response = await getClient(req).getAllUnreadMessages();
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -405,7 +414,7 @@ export async function getChatById(req: Request, res: Response) {
       isNewsletter as boolean,
       isLid as boolean
     )) {
-      result = await req.client.getChatById(contato);
+      result = await getClient(req).getChatById(contato);
     }
 
     res.status(200).json(result);
@@ -438,7 +447,7 @@ export async function getMessageById(req: Request, res: Response) {
   const { messageId } = req.params;
 
   try {
-    const result = await req.client.getMessageById(messageId);
+    const result = await getClient(req).getMessageById(messageId);
 
     returnSucess(res, session, (result as any).chatId.user, result);
   } catch (error) {
@@ -458,7 +467,7 @@ export async function getBatteryLevel(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getBatteryLevel();
+    const response = await getClient(req).getBatteryLevel();
     res.status(200).json({ status: 'Success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -482,8 +491,8 @@ export async function getHostDevice(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getHostDevice();
-    const phoneNumber = await req.client.getWid();
+    const response = await getClient(req).getHostDevice();
+    const phoneNumber = await getClient(req).getWid();
     res.status(200).json({
       status: 'success',
       response: { ...response, phoneNumber },
@@ -511,7 +520,7 @@ export async function getPhoneNumber(req: Request, res: Response) {
      }
    */
   try {
-    const phoneNumber = await req.client.getWid();
+    const phoneNumber = await getClient(req).getWid();
     res
       .status(200)
       .json({ status: 'success', response: phoneNumber, mapper: 'device' });
@@ -536,7 +545,7 @@ export async function getBlockList(req: Request, res: Response) {
       schema: 'NERDWHATS_AMERICA'
      }
    */
-  const response = await req.client.getBlockList();
+  const response = await getClient(req).getBlockList();
 
   try {
     const blocked = response.map((contato: any) => {
@@ -593,7 +602,7 @@ export async function deleteChat(req: Request, res: Response) {
   try {
     const results: any = {};
     for (const contato of phone) {
-      results[contato] = await req.client.deleteChat(contato);
+      results[contato] = await getClient(req).deleteChat(contato);
     }
     returnSucess(res, session, phone, results);
   } catch (error) {
@@ -612,9 +621,9 @@ export async function deleteAllChats(req: Request, res: Response) {
      }
    */
   try {
-    const chats = await req.client.getAllChats();
+    const chats = await getClient(req).getAllChats();
     for (const chat of chats) {
-      await req.client.deleteChat((chat as any).chatId);
+      await getClient(req).deleteChat((chat as any).chatId);
     }
     res.status(200).json({ status: 'success' });
   } catch (error) {
@@ -667,7 +676,7 @@ export async function clearChat(req: Request, res: Response) {
   try {
     const results: any = {};
     for (const contato of phone) {
-      results[contato] = await req.client.clearChat(contato);
+      results[contato] = await getClient(req).clearChat(contato);
     }
     returnSucess(res, session, phone, results);
   } catch (error) {
@@ -687,9 +696,9 @@ export async function clearAllChats(req: Request, res: Response) {
      }
    */
   try {
-    const chats = await req.client.getAllChats();
+    const chats = await getClient(req).getAllChats();
     for (const chat of chats) {
-      await req.client.clearChat(`${(chat as any).chatId}`);
+      await getClient(req).clearChat(`${(chat as any).chatId}`);
     }
     res.status(201).json({ status: 'success' });
   } catch (e) {
@@ -739,7 +748,7 @@ export async function archiveChat(req: Request, res: Response) {
   const { phone, value = true } = req.body;
 
   try {
-    const response = await req.client.archiveChat(`${phone}`, value);
+    const response = await getClient(req).archiveChat(`${phone}`, value);
     res.status(201).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -761,9 +770,9 @@ export async function archiveAllChats(req: Request, res: Response) {
      }
    */
   try {
-    const chats = await req.client.getAllChats();
+    const chats = await getClient(req).getAllChats();
     for (const chat of chats) {
-      await req.client.archiveChat(`${(chat as any).chatId}`, true);
+      await getClient(req).archiveChat(`${(chat as any).chatId}`, true);
     }
     res.status(201).json({ status: 'success' });
   } catch (e) {
@@ -789,7 +798,7 @@ export async function getAllChatsArchiveds(req: Request, res: Response) {
      }
    */
   try {
-    const chats = await req.client.getAllChats();
+    const chats = await getClient(req).getAllChats();
     const archived = [] as any;
     for (const chat of chats) {
       if (chat.archive === true) {
@@ -855,7 +864,7 @@ export async function deleteMessage(req: Request, res: Response) {
   const { phone, messageId, deleteMediaInDevice, onlyLocal } = req.body;
 
   try {
-    const result = await req.client.deleteMessage(
+    const result = await getClient(req).deleteMessage(
       `${phone}`,
       messageId,
       onlyLocal,
@@ -913,7 +922,7 @@ export async function reactMessage(req: Request, res: Response) {
   const { msgId, reaction } = req.body;
 
   try {
-    await req.client.sendReactionToMessage(msgId, reaction);
+    await getClient(req).sendReactionToMessage(msgId, reaction);
 
     res
       .status(200)
@@ -969,7 +978,11 @@ export async function reply(req: Request, res: Response) {
   const { phone, text, messageid } = req.body;
 
   try {
-    const response = await req.client.reply(`${phone}@c.us`, text, messageid);
+    const response = await getClient(req).reply(
+      `${phone}@c.us`,
+      text,
+      messageid
+    );
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -1021,7 +1034,7 @@ export async function forwardMessages(req: Request, res: Response) {
     let response;
 
     for (const contact of contacts) {
-      response = await req.client.forwardMessagesV2(contact, messageId);
+      response = await getClient(req).forwardMessagesV2(contact, messageId);
     }
 
     res.status(201).json({ status: 'success', response });
@@ -1069,7 +1082,7 @@ export async function markUnseenMessage(req: Request, res: Response) {
   const { phone } = req.body;
 
   try {
-    await req.client.markUnseenMessage(`${phone}`);
+    await getClient(req).markUnseenMessage(`${phone}`);
     res
       .status(200)
       .json({ status: 'success', response: { message: 'unseen checked' } });
@@ -1117,7 +1130,7 @@ export async function blockContact(req: Request, res: Response) {
   const { phone } = req.body;
 
   try {
-    await req.client.blockContact(`${phone}`);
+    await getClient(req).blockContact(`${phone}`);
     res
       .status(200)
       .json({ status: 'success', response: { message: 'Contact blocked' } });
@@ -1165,7 +1178,7 @@ export async function unblockContact(req: Request, res: Response) {
   const { phone } = req.body;
 
   try {
-    await req.client.unblockContact(`${phone}`);
+    await getClient(req).unblockContact(`${phone}`);
     res
       .status(200)
       .json({ status: 'success', response: { message: 'Contact UnBlocked' } });
@@ -1223,7 +1236,7 @@ export async function pinChat(req: Request, res: Response) {
 
   try {
     for (const contato of phone) {
-      await req.client.pinChat(contato, state === 'true', false);
+      await getClient(req).pinChat(contato, state === 'true', false);
     }
 
     res
@@ -1264,7 +1277,7 @@ export async function setProfilePic(req: Request, res: Response) {
   try {
     const { path: pathFile } = req.file as any;
 
-    await req.client.setProfilePic(pathFile);
+    await getClient(req).setProfilePic(pathFile);
     await unlinkAsync(pathFile);
 
     res.status(200).json({
@@ -1294,7 +1307,7 @@ export async function getUnreadMessages(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getUnreadMessages(false, false, true);
+    const response = await getClient(req).getUnreadMessages(false, false, true);
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -1320,7 +1333,7 @@ export async function getChatIsOnline(req: Request, res: Response) {
    */
   const { phone } = req.params;
   try {
-    const response = await req.client.getChatIsOnline(`${phone}@c.us`);
+    const response = await getClient(req).getChatIsOnline(`${phone}@c.us`);
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
     req.logger.error(e);
@@ -1348,7 +1361,7 @@ export async function getLastSeen(req: Request, res: Response) {
    */
   const { phone } = req.params;
   try {
-    const response = await req.client.getLastSeen(`${phone}@c.us`);
+    const response = await getClient(req).getLastSeen(`${phone}@c.us`);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -1377,7 +1390,7 @@ export async function getListMutes(req: Request, res: Response) {
    */
   const { type = 'all' } = req.params;
   try {
-    const response = await req.client.getListMutes(type);
+    const response = await getClient(req).getListMutes(type);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -1413,7 +1426,7 @@ export async function loadAndGetAllMessagesInChat(req: Request, res: Response) {
    */
   const { phone, includeMe = true, includeNotifications = false } = req.params;
   try {
-    const response = await req.client.loadAndGetAllMessagesInChat(
+    const response = await getClient(req).loadAndGetAllMessagesInChat(
       `${phone}@c.us`,
       includeMe as boolean,
       includeNotifications as boolean
@@ -1453,7 +1466,7 @@ export async function getMessages(req: Request, res: Response) {
   const { phone } = req.params;
   const { count = 20, direction = 'before', id = null } = req.query;
   try {
-    const response = await req.client.getMessages(`${phone}`, {
+    const response = await getClient(req).getMessages(`${phone}`, {
       count: parseInt(count as string),
       direction: direction.toString() as any,
       id: id as string,
@@ -1508,7 +1521,7 @@ export async function sendContactVcard(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.sendContactVcard(
+      response = await getClient(req).sendContactVcard(
         `${contato}`,
         contactsId,
         name
@@ -1568,7 +1581,7 @@ export async function sendMute(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.sendMute(`${contato}`, time, type);
+      response = await getClient(req).sendMute(`${contato}`, time, type);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1619,7 +1632,7 @@ export async function sendSeen(req: Request, res: Response) {
   try {
     const results: any = [];
     for (const contato of phone) {
-      results.push(await req.client.sendSeen(contato));
+      results.push(await getClient(req).sendSeen(contato));
     }
     returnSucess(res, session, phone, results);
   } catch (error) {
@@ -1668,7 +1681,7 @@ export async function setChatState(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.setChatState(`${contato}`, chatstate);
+      response = await getClient(req).setChatState(`${contato}`, chatstate);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1722,7 +1735,7 @@ export async function setTemporaryMessages(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      response = await req.client.setTemporaryMessages(`${contato}`, value);
+      response = await getClient(req).setTemporaryMessages(`${contato}`, value);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1775,8 +1788,8 @@ export async function setTyping(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      if (value) response = await req.client.startTyping(contato);
-      else response = await req.client.stopTyping(contato);
+      if (value) response = await getClient(req).startTyping(contato);
+      else response = await getClient(req).stopTyping(contato);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1830,8 +1843,9 @@ export async function setRecording(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, isGroup)) {
-      if (value) response = await req.client.startRecording(contato, duration);
-      else response = await req.client.stopRecording(contato);
+      if (value)
+        response = await getClient(req).startRecording(contato, duration);
+      else response = await getClient(req).stopRecording(contato);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1863,7 +1877,7 @@ export async function checkNumberStatus(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone, false)) {
-      response = await req.client.checkNumberStatus(`${contato}`);
+      response = await getClient(req).checkNumberStatus(`${contato}`);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1895,7 +1909,7 @@ export async function getContact(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone as string, false)) {
-      response = await req.client.getContact(contato);
+      response = await getClient(req).getContact(contato);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1919,7 +1933,7 @@ export async function getAllContacts(req: Request, res: Response) {
      }
    */
   try {
-    const response = await req.client.getAllContacts();
+    const response = await getClient(req).getAllContacts();
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -1951,7 +1965,7 @@ export async function getNumberProfile(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone as string, false)) {
-      response = await req.client.getNumberProfile(contato);
+      response = await getClient(req).getNumberProfile(contato);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -1984,7 +1998,7 @@ export async function getProfilePicFromServer(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone as string, isGroup as boolean)) {
-      response = await req.client.getProfilePicFromServer(contato);
+      response = await getClient(req).getProfilePicFromServer(contato);
     }
 
     res.status(200).json({ status: 'success', response: response });
@@ -2016,7 +2030,7 @@ export async function getStatus(req: Request, res: Response) {
   try {
     let response;
     for (const contato of contactToArray(phone as string, false)) {
-      response = await req.client.getStatus(contato);
+      response = await getClient(req).getStatus(contato);
     }
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -2067,7 +2081,7 @@ export async function setProfileStatus(req: Request, res: Response) {
    */
   const { status } = req.body;
   try {
-    const response = await req.client.setProfileStatus(status);
+    const response = await getClient(req).setProfileStatus(status);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -2111,7 +2125,7 @@ export async function rejectCall(req: Request, res: Response) {
    */
   const { callId } = req.body;
   try {
-    const response = await req.client.rejectCall(callId);
+    const response = await getClient(req).rejectCall(callId);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (e) {
@@ -2119,6 +2133,269 @@ export async function rejectCall(req: Request, res: Response) {
     res
       .status(500)
       .json({ status: 'error', message: 'Error on rejectCall', error: e });
+  }
+}
+
+export async function enableCallInterface(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Enables the WhatsApp Web call interface for the current session."
+     #swagger.security = [{ "bearerAuth": [] }]
+  */
+  try {
+    await CallUtil.installIncomingCallWatcher(req.client.page, (call) => {
+      req.io.emit('incomingcall', call);
+      void callWebHook(req.client, req, 'incomingcall', call);
+    });
+    await CallUtil.installIncomingAudioCapture(req.client.page);
+    await CallUtil.enableCallInterface(req.client.page);
+    const diagnostics = await CallUtil.getCallInterfaceDiagnostics(
+      req.client.page
+    );
+    res.status(200).json({
+      status: 'success',
+      response: true,
+      mediaInstrumentationReady: true,
+      diagnostics,
+    });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on enableCallInterface',
+    });
+  }
+}
+
+export async function acceptCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: false,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: { callId: { type: "string" } }
+           }
+         }
+       }
+     }
+   */
+  const { callId } = req.body || {};
+  try {
+    const response = await CallUtil.acceptCall(req.client.page, callId);
+    res.status(200).json({ status: 'success', response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on acceptCall' });
+  }
+}
+
+export async function endCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: false,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             properties: { callId: { type: "string" } }
+           }
+         }
+       }
+     }
+   */
+  // Revoke the active room even if the browser has already disappeared.
+  deactivateCallMedia(req.session);
+  try {
+    const response = await CallUtil.endCall(req.client.page);
+    await Promise.allSettled([
+      CallUtil.stopIncomingAudioCapture(req.client.page),
+      CallUtil.stopOutgoingAudio(req.client.page),
+    ]);
+    res.status(200).json({ status: 'success', response });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on endCall' });
+  }
+}
+
+export async function offerCall(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Sends a WhatsApp call signalling offer. This endpoint does not transport audio or video media."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["phone"],
+             properties: {
+               phone: { type: "string" },
+               isVideo: { type: "boolean", default: false }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { phone, isVideo = false } = req.body || {};
+  if (typeof phone !== 'string' || !phone.trim()) {
+    res
+      .status(400)
+      .json({ status: 'error', message: 'Parameter phone is required!' });
+    return;
+  }
+
+  try {
+    const response = await CallUtil.offerCall(req.client.page, phone, {
+      isVideo: Boolean(isVideo),
+    });
+    res.status(200).json({
+      status: 'success',
+      response,
+      mediaTransport: false,
+      message: 'Call offer sent without audio/video media transport',
+    });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({ status: 'error', message: 'Error on offerCall' });
+  }
+}
+
+export async function startIncomingCallAudio(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Experimental: captures incoming WebRTC call audio and emits PCM16 chunks through the authenticated /call-media Socket.IO namespace. Start before accepting the call."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["callId"],
+             properties: {
+               callId: { type: "string" },
+               timesliceMs: { type: "number", minimum: 100, default: 250 }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { callId, timesliceMs = 250 } = req.body || {};
+  if (typeof callId !== 'string' || !callId.trim()) {
+    res.status(400).json({ status: 'error', message: 'callId is required' });
+    return;
+  }
+  const parsedTimeslice = Number(timesliceMs);
+  if (!Number.isFinite(parsedTimeslice) || parsedTimeslice < 100) {
+    res.status(400).json({
+      status: 'error',
+      message: 'timesliceMs must be a number greater than or equal to 100',
+    });
+    return;
+  }
+
+  try {
+    activateCallMedia(req.session, callId);
+    await CallUtil.installIncomingAudioCapture(
+      req.client.page,
+      (chunk) => {
+        emitIncomingAudio(req.session, callId, chunk);
+      },
+      { timesliceMs: parsedTimeslice },
+      () => {
+        emitCallMediaEnded(req.session, callId);
+      }
+    );
+    res.status(200).json({
+      status: 'success',
+      response: true,
+      namespace: '/call-media',
+      event: 'incoming-audio',
+      endedEvent: 'call-media-ended',
+      mediaDirection: 'incoming',
+      experimental: true,
+      callId,
+    });
+  } catch (e) {
+    deactivateCallMedia(req.session, callId);
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on startIncomingCallAudio',
+    });
+  }
+}
+
+export async function createCallMediaTicket(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Creates a short-lived, single-use ticket for the authenticated call media Socket.IO namespace."
+     #swagger.security = [{ "bearerAuth": [] }]
+     #swagger.requestBody = {
+       required: true,
+       "@content": {
+         "application/json": {
+           schema: {
+             type: "object",
+             required: ["callId"],
+             properties: {
+               callId: { type: "string" },
+               ttlMs: { type: "number", minimum: 1000, maximum: 300000, default: 60000 }
+             }
+           }
+         }
+       }
+     }
+   */
+  const { callId, ttlMs = 60_000 } = req.body || {};
+  if (typeof callId !== 'string' || !callId.trim()) {
+    res.status(400).json({ status: 'error', message: 'callId is required' });
+    return;
+  }
+  try {
+    const result = createMediaTicket(req.session, callId, Number(ttlMs));
+    res.status(200).json({
+      status: 'success',
+      response: { ...result, callId, namespace: '/call-media' },
+    });
+  } catch (error) {
+    res.status(409).json({
+      status: 'error',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
+export async function stopCallMedia(req: Request, res: Response) {
+  /**
+     #swagger.tags = ["Calls"]
+     #swagger.description = "Stops incoming and outgoing call audio, invalidates tickets, and disconnects the active media socket for the session."
+     #swagger.security = [{ "bearerAuth": [] }]
+   */
+  deactivateCallMedia(req.session);
+  try {
+    await Promise.all([
+      CallUtil.stopIncomingAudioCapture(req.client.page),
+      CallUtil.stopOutgoingAudio(req.client.page),
+    ]);
+    deactivateCallMedia(req.session);
+    res.status(200).json({ status: 'success', response: true });
+  } catch (e) {
+    req.logger.error(e);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error on stopCallMedia',
+    });
   }
 }
 
@@ -2157,7 +2434,7 @@ export async function starMessage(req: Request, res: Response) {
    */
   const { messageId, star = true } = req.body;
   try {
-    const response = await req.client.starMessage(messageId, star);
+    const response = await getClient(req).starMessage(messageId, star);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -2186,7 +2463,7 @@ export async function getReactions(req: Request, res: Response) {
    */
   const messageId = req.params.id;
   try {
-    const response = await req.client.getReactions(messageId);
+    const response = await getClient(req).getReactions(messageId);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -2215,7 +2492,7 @@ export async function getVotes(req: Request, res: Response) {
    */
   const messageId = req.params.id;
   try {
-    const response = await req.client.getVotes(messageId);
+    const response = await getClient(req).getVotes(messageId);
 
     res.status(200).json({ status: 'success', response: response });
   } catch (error) {
@@ -2260,7 +2537,7 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
      }
    */
   const client: any = req.client;
-  if (!client || client.status !== 'CONNECTED')
+  if (client == null || client.status !== 'CONNECTED')
     return res
       .status(409)
       .json({ status: 'error', message: 'Session is not connected' });
@@ -2282,19 +2559,28 @@ export async function chatWoot(req: Request, res: Response): Promise<any> {
         .json({ status: 'success', message: 'Success on receive chatwoot' });
     }
 
-    const {
-      message_type,
-      phone = req.body.conversation.meta.sender.phone_number.replace('+', ''),
-      message = req.body.conversation.messages[0],
-    } = req.body;
-
-    if (event !== 'message_created' || message_type !== 'outgoing')
+    const { message_type, conversation } = req.body;
+    if (
+      event !== 'message_created' ||
+      message_type !== 'outgoing' ||
+      !conversation
+    ) {
       return res
         .status(200)
         .json({ status: 'success', message: 'Success on receive chatwoot' });
+    }
+    const sender = conversation.meta?.sender;
+    const phone = req.body.phone || sender?.phone_number || sender?.identifier;
+    const message = req.body.message || conversation.messages?.[0];
+    if (typeof phone !== 'string' || !phone || !message) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Chatwoot recipient and message are required',
+      });
+    }
     for (const contato of contactToArray(phone, false)) {
       if (message_type == 'outgoing') {
-        if (message.attachments) {
+        if (message.attachments?.length) {
           const base_url = `${
             client.config.chatWoot.baseURL
           }/${message.attachments[0].data_url.substring(
@@ -2349,7 +2635,7 @@ export async function getPlatformFromMessage(req: Request, res: Response) {
      }
    */
   try {
-    const result = await req.client.getPlatformFromMessage(
+    const result = await getClient(req).getPlatformFromMessage(
       req.params.messageId
     );
     res.status(200).json(result);

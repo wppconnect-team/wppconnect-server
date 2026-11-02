@@ -1,14 +1,22 @@
 .git
 .github
 .hust
+.husky
+.vscode
+.yarn
 *.tgz
+*.png
+*.zip
 !vendor/deepmerge-4.3.2+wppconnect.1.tgz
-!vendor/wppconnect-minimatch-legacy-compat-*.tgz
 dist
 log
 node_modules
 npm-debug.log
 tokens
+uploads
+userDataDir
+WhatsAppImages
+wppconnect_tokens
 graphify-out
 manager
 

@@ -34,7 +34,13 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await fsp.rm(dir, { recursive: true, force: true });
+  await fsp.rm(dir, {
+    recursive: true,
+    force: true,
+    // Windows can briefly retain handles after a completed filesystem call.
+    maxRetries: 3,
+    retryDelay: 100,
+  });
 });
 
 describe('FileTokenStore', () => {

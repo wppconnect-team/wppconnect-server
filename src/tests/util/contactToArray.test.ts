@@ -16,6 +16,16 @@
 import { contactToArray } from '../../util/functions';
 
 describe('contactToArray', () => {
+  it('handles long whitespace-only input without ambiguous delimiter backtracking', () => {
+    expect(contactToArray(' '.repeat(100_000))).toEqual([]);
+  });
+
+  it('trims delimiter padding while preserving explicitly supplied domains', () => {
+    expect(contactToArray(' 5511999999999@c.us , 267000387@lid ; ')).toEqual([
+      '5511999999999@c.us',
+      '267000387@lid',
+    ]);
+  });
   it('keeps an explicit LID suffix instead of rewriting it as a phone number', () => {
     expect(contactToArray('267000387@lid')).toEqual(['267000387@lid']);
     expect(contactToArray('267000000387@lid')).toEqual(['267000000387@lid']);
