@@ -1,3 +1,11 @@
+## [2.10.75](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.74...v2.10.75) (2026-11-04)
+
+
+### Bug Fixes
+
+* **chatwoot:** authenticate session webhook requests ([#2702](https://github.com/wppconnect-team/wppconnect-server/issues/2702)) ([cbc2dfc](https://github.com/wppconnect-team/wppconnect-server/commit/cbc2dfc8583af3ae26a3d37d3b66c8c332ccf1f0))
+* **deps:** patch glob cancellation and minimatch expansion ([#2699](https://github.com/wppconnect-team/wppconnect-server/issues/2699)) ([7e2e816](https://github.com/wppconnect-team/wppconnect-server/commit/7e2e8160c036e7f7b77e899779964134e200c456))
+
 ## [2.10.74](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.73...v2.10.74) (2026-11-01)
 
 ## [2.10.73](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.72...v2.10.73) (2026-10-31)
