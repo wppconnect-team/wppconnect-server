@@ -8,7 +8,8 @@ The Docker image includes the static bundle at `/manager/`. Its release version 
 
 - `MANAGER_ENABLED=false` disables static UI routes. The API continues working.
 - `MANAGER_DIST=/absolute/path/to/bundle` selects a local bundle for non-Docker use. By default the server looks for `manager` in its working directory and mounts no UI routes if absent.
-- `/api/`, `/api-docs`, `/files` and the original socket namespace retain their existing behavior.
+- `/api/`, `/api-docs` and the original socket namespace retain their existing behavior.
+- `WhatsAppImages` is a private local cache. `/files` no longer serves it over HTTP. Read media through `GET /api/:session/get-media-by-message/:messageId` or `POST /api/:session/download-media`, with a valid token for that session.
 - `/manager/` and client navigation paths serve the application; missing asset filenames return 404.
 
 Use HTTPS remotely. A reverse proxy must forward `/manager/`, `/api/` and `/socket.io/`, including WebSocket upgrades. A separate Manager container uses the browser-visible server URL as `MANAGER_SERVER_URL`; Docker-internal hostnames usually are not browser-visible.
