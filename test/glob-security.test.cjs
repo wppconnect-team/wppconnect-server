@@ -219,18 +219,18 @@ test('the real Archiver/readdir-glob ZIP includes matching files and respects ig
 test('modern owners use patched glob and retain synchronous and asynchronous APIs', async () => {
   const dir = fixture();
   try {
-    for (const name of [
-      'archiver-utils',
-      'test-exclude',
-      'rimraf',
-      '@jest/reporters',
-      'jest-config',
-      'jest-runtime',
-      'cacache',
-    ]) {
+    for (const [name, version] of Object.entries({
+      'archiver-utils': '14.0.2',
+      'test-exclude': '14.0.2',
+      rimraf: '14.0.3',
+      '@jest/reporters': '14.0.2',
+      'jest-config': '14.0.2',
+      'jest-runtime': '14.0.2',
+      cacache: '14.0.2',
+    })) {
       const caller = createRequire(require.resolve(name));
       const glob = caller('glob');
-      assert.equal(caller('glob/package.json').version, '14.0.2', name);
+      assert.equal(caller('glob/package.json').version, version, name);
       assert.deepEqual(
         glob.globSync('*.txt', { cwd: dir }),
         ['file.txt'],
@@ -246,6 +246,70 @@ test('modern owners use patched glob and retain synchronous and asynchronous API
     cleanup(dir);
   }
 });
+
+test('the actual rimraf CLI removes a nested build directory and preserves siblings', () => {
+  const dir = fixture();
+  try {
+    const target = path.join(dir, 'build output');
+    fs.mkdirSync(path.join(target, 'nested'), { recursive: true });
+    fs.writeFileSync(path.join(target, 'nested', 'asset.js'), 'fixture');
+    fs.writeFileSync(path.join(target, '.hidden'), 'fixture');
+    const manifest = require.resolve('rimraf/package.json');
+    const bin = path.join(path.dirname(manifest), require(manifest).bin);
+    const result = spawnSync(process.execPath, [bin, target], {
+      cwd: dir,
+      encoding: 'utf8',
+      timeout: 10000,
+    });
+    assert.equal(result.status, 0, result.stderr || result.error?.message);
+    assert.equal(fs.existsSync(target), false);
+    assert.equal(
+      fs.readFileSync(path.join(dir, 'file.txt'), 'utf8'),
+      'fixture'
+    );
+  } finally {
+    cleanup(dir);
+  }
+});
+
+for (const method of ['sync', 'async'])
+  test(`actual rimraf ${method} glob removal preserves unmatched files`, async () => {
+    const dir = fixture();
+    try {
+      const target = path.join(dir, 'selected');
+      fs.mkdirSync(path.join(target, 'nested'), { recursive: true });
+      for (const file of [
+        'a.txt',
+        'nested/b.txt',
+        'nested/.hidden.txt',
+        'nested/keep.js',
+      ])
+        fs.writeFileSync(path.join(target, file), 'fixture');
+      const pattern = path
+        .join(target, '**', '*.txt')
+        .split(path.sep)
+        .join('/');
+      const rimraf = require('rimraf');
+      const options = { glob: { dot: true } };
+      const removed =
+        method === 'sync'
+          ? rimraf.rimrafSync(pattern, options)
+          : await rimraf.rimraf(pattern, options);
+      assert.equal(removed, true);
+      for (const file of ['a.txt', 'nested/b.txt', 'nested/.hidden.txt'])
+        assert.equal(fs.existsSync(path.join(target, file)), false, file);
+      assert.equal(
+        fs.readFileSync(path.join(target, 'nested/keep.js'), 'utf8'),
+        'fixture'
+      );
+      assert.equal(
+        fs.readFileSync(path.join(dir, 'file.txt'), 'utf8'),
+        'fixture'
+      );
+    } finally {
+      cleanup(dir);
+    }
+  });
 
 for (const method of ['promise', 'stream'])
   test(`glob ${method} stops filesystem traversal after cancellation`, async () => {
