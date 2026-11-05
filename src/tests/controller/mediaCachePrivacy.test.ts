@@ -16,7 +16,6 @@
 import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { existsSync, promises as fs } from 'fs';
-import { createServer, Server } from 'http';
 import { AddressInfo } from 'net';
 import path from 'path';
 
@@ -24,11 +23,6 @@ import { initServer } from '../..';
 import { clearVerifiedTokens } from '../../middleware/auth';
 import { clientsArray } from '../../util/sessionUtil';
 
-// Observe the real bootstrap's HTTP server so this test can close it afterward.
-jest.mock('http', () => {
-  const actual = jest.requireActual('http');
-  return { ...actual, createServer: jest.fn(actual.createServer) };
-});
 jest.mock('../../util/logger', () => ({
   createLogger: () => ({ info: jest.fn(), error: jest.fn(), warn: jest.fn() }),
 }));
@@ -44,7 +38,7 @@ const mediaDirectory = path.resolve('WhatsAppImages');
 const sessions = ['media-fixture-alpha', 'media-fixture-beta'];
 const filenames = sessions.map(() => `file${randomUUID()}.webp`);
 const tokens: string[] = [];
-let http: Server;
+let app: Awaited<ReturnType<typeof initServer>>['app'];
 let base: string;
 let ownsDirectory = false;
 const oldPort = process.env.PORT;
@@ -71,20 +65,16 @@ beforeAll(async () => {
   }
   process.env.PORT = '0';
   process.env.MANAGER_ENABLED = 'false';
-  initServer({ port: 0, startAllSession: false, secretKey: secret });
-  http = (createServer as jest.Mock).mock.results[0].value;
-  if (!http.listening)
-    await new Promise<void>((resolve) => http.once('listening', resolve));
-  base = `http://127.0.0.1:${(http.address() as AddressInfo).port}`;
+  ({ app } = await initServer({
+    port: 0,
+    startAllSession: false,
+    secretKey: secret,
+  }));
+  base = `http://127.0.0.1:${(app.server.address() as AddressInfo).port}`;
 });
 
 afterAll(async () => {
-  if (http) {
-    http.closeAllConnections();
-    await new Promise<void>((resolve, reject) =>
-      http.close((error) => (error ? reject(error) : resolve()))
-    );
-  }
+  if (app) await app.close();
   clearVerifiedTokens();
   for (const session of sessions) delete clientsArray[session];
   for (const filename of filenames) {
