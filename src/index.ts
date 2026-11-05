@@ -65,7 +65,6 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
-  app.use('/files', express.static('WhatsAppImages'));
   app.use(boolParser());
 
   if (config?.aws_s3?.access_key_id && config?.aws_s3?.secret_key) {
