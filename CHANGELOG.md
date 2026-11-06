@@ -1,3 +1,10 @@
+## [2.10.77](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.76...v2.10.77) (2026-11-06)
+
+
+### Bug Fixes
+
+* **security:** stop serving the private media cache over HTTP ([#2709](https://github.com/wppconnect-team/wppconnect-server/issues/2709)) ([bf1faac](https://github.com/wppconnect-team/wppconnect-server/commit/bf1faac7a14892207348c3dc5f6e03ed180e09e8))
+
 ## [2.10.76](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.75...v2.10.76) (2026-11-05)
 
 ## [2.10.75](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.74...v2.10.75) (2026-11-04)
