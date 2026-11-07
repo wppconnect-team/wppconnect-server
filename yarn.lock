@@ -5847,10 +5847,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"basic-ftp@npm:6.2.4":
-  version: 6.2.4
-  resolution: "basic-ftp@npm:6.2.4"
-  checksum: 10c0/1148922c36a1e8e053ddedfdce9ced6501635b71d1f56d0f8f7370fe3841f27fbf21a778554a5dfdfd97a8b1e38308934d81a19ceeb19062ffe8ec154ca91a2b
+"basic-ftp@npm:6.2.6":
+  version: 6.2.6
+  resolution: "basic-ftp@npm:6.2.6"
+  checksum: 10c0/4a31db32ba19a93d87e56150084ac5405815f0311f6a4b2cfbfea178da01c4f534860ec1f037958297ef1b527e3b1e26bf60c1e473e6b9518402a5419dc531a6
   languageName: node
   linkType: hard
 
