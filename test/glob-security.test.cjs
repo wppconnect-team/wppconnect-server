@@ -231,13 +231,13 @@ test('modern owners use patched glob and retain synchronous and asynchronous API
   const dir = fixture();
   try {
     for (const [name, version] of Object.entries({
-      'archiver-utils': '14.0.2',
-      'test-exclude': '14.0.2',
+      'archiver-utils': '14.0.4',
+      'test-exclude': '14.0.4',
       rimraf: '14.0.3',
-      '@jest/reporters': '14.0.2',
-      'jest-config': '14.0.2',
-      'jest-runtime': '14.0.2',
-      cacache: '14.0.2',
+      '@jest/reporters': '14.0.4',
+      'jest-config': '14.0.4',
+      'jest-runtime': '14.0.4',
+      cacache: '14.0.4',
     })) {
       const caller = createRequire(require.resolve(name));
       const glob = caller('glob');
