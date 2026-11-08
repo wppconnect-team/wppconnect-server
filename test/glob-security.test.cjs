@@ -47,7 +47,7 @@ test('the installed facade is the reviewed source and delegates to a patched reg
     legacyRequire('minimatch-engine/package.json').version,
     '11.0.3'
   );
-  assert.equal(modern('minimatch/package.json').version, '11.0.3');
+  assert.equal(modern('minimatch/package.json').version, '11.0.5');
   assert.equal(
     fs.readFileSync(owner.resolve('minimatch'), 'utf8').replace(/\r\n/g, '\n'),
     fs
@@ -60,13 +60,17 @@ test('the installed facade is the reviewed source and delegates to a patched reg
 });
 
 test('both registry engines bound first-phase glob amplification', () => {
-  for (const modulePath of [
-    modern.resolve('minimatch'),
-    legacyRequire.resolve('minimatch-engine'),
+  for (const [modulePath, rejectsAmplification] of [
+    [modern.resolve('minimatch'), true],
+    [legacyRequire.resolve('minimatch-engine'), false],
   ]) {
     const code = `
       const assert = require('node:assert/strict');
       const { Minimatch } = require(${JSON.stringify(modulePath)});
+      const options = { optimizationLevel: 2, braceExpandMax: 64 };
+      const normal = new Minimatch('**/*.{txt,bin}', options);
+      assert.equal(normal.match('nested/a.txt'), true);
+      assert.equal(normal.match('nested/a.js'), false);
       let peak = 0;
       class Probe extends Minimatch {
         firstPhasePreProcess(parts) {
@@ -75,9 +79,16 @@ test('both registry engines bound first-phase glob amplification', () => {
           return result;
         }
       }
-      new Probe(Array.from({length:12}, (_, i) => 'p'+i+'/**/../q'+i).join('/'),
-        { optimizationLevel: 2, braceExpandMax: 64 });
-      assert(peak > 1 && peak <= 64, 'first-phase pattern budget exceeded: '+peak);
+      const pattern = Array.from({length:12}, (_, i) => 'p'+i+'/**/../q'+i).join('/');
+      if (${rejectsAmplification}) {
+        assert.throws(() => new Probe(pattern, options), {
+          name: 'RangeError',
+          message: "optimizationLevel 2: too many patterns from '**/..'",
+        });
+      } else {
+        new Probe(pattern, options);
+        assert(peak > 1 && peak <= 64, 'first-phase pattern budget exceeded: '+peak);
+      }
     `;
     const result = spawnSync(
       process.execPath,
