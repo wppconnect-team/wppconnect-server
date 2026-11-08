@@ -143,12 +143,12 @@
     "minimatch@npm:^3.0.5": "file:vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz",
     "minimatch@npm:^3.1.1": "file:vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz",
     "minimatch@npm:^3.1.2": "file:vendor/wppconnect-minimatch-legacy-compat-1.0.3.tgz",
-    "minimatch@npm:^5.1.0": "11.0.3",
-    "minimatch@npm:^9.0.4": "11.0.3",
-    "minimatch@npm:*": "11.0.3",
-    "minimatch@npm:^10.1.1": "11.0.3",
-    "minimatch@npm:^10.2.1": "11.0.3",
-    "minimatch@npm:^10.2.2": "11.0.3",
+    "minimatch@npm:^5.1.0": "11.0.5",
+    "minimatch@npm:^9.0.4": "11.0.5",
+    "minimatch@npm:*": "11.0.5",
+    "minimatch@npm:^10.1.1": "11.0.5",
+    "minimatch@npm:^10.2.1": "11.0.5",
+    "minimatch@npm:^10.2.2": "11.0.5",
     "path-to-regexp@npm:~0.1.12": "0.1.13",
     "picomatch@npm:^2.0.4": "2.3.2",
     "picomatch@npm:^2.2.1": "2.3.2",
@@ -178,7 +178,7 @@
     "glob@npm:^13.0.0": "14.0.2",
     "glob@npm:^13.0.3": "14.0.2",
     "glob@npm:^13.0.6": "14.0.2",
-    "minimatch@npm:^11.0.0": "11.0.3"
+    "minimatch@npm:^11.0.0": "11.0.5"
   },
   "peerDependencies": {
     "crypto-js": "^4.2.0",
