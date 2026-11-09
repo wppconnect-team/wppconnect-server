@@ -38,11 +38,11 @@
   },
   "packageManager": "yarn@4.14.1",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1156.0",
+    "@aws-sdk/client-s3": "3.1164.0",
     "@babel/runtime": "^7.29.13",
     "@wppconnect-team/wppconnect": "^2.3.6",
     "archiver": "^7.0.1",
-    "axios": "^1.20.0",
+    "axios": "1.21.0",
     "bcrypt": "^6.0.0",
     "buffer-to-stream": "1.0.0",
     "cors": "^2.8.6",
@@ -85,7 +85,7 @@
     "@types/merge-deep": "^3.0.3",
     "@types/mime-types": "^3.0.1",
     "@types/multer": "^2.3.0",
-    "@types/node": "^22.19.15",
+    "@types/node": "22.20.5",
     "@types/qrcode": "^1.5.6",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/unzipper": "^0.10.11",
@@ -105,7 +105,7 @@
     "husky": "^9.1.7",
     "jest": "^30.5.2",
     "license-check-and-add": "^4.0.5",
-    "mongoose": "^8.24.7",
+    "mongoose": "8.24.8",
     "nodemon": "^3.1.14",
     "prettier": "^2.8.8",
     "pretty-quick": "^4.2.2",
@@ -182,7 +182,7 @@
   },
   "peerDependencies": {
     "crypto-js": "^4.2.0",
-    "mongoose": "^8.24.7",
+    "mongoose": "^8.24.8",
     "redis": "^4.7.1"
   }
 }
