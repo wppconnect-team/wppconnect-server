@@ -47,7 +47,7 @@ test('the installed facade is the reviewed source and delegates to a patched reg
     legacyRequire('minimatch-engine/package.json').version,
     '11.0.3'
   );
-  assert.equal(modern('minimatch/package.json').version, '11.0.5');
+  assert.equal(modern('minimatch/package.json').version, '11.0.8');
   assert.equal(
     fs.readFileSync(owner.resolve('minimatch'), 'utf8').replace(/\r\n/g, '\n'),
     fs
