@@ -166,7 +166,7 @@
     "brace-expansion@npm:^1.1.7": "1.1.21",
     "brace-expansion@npm:^2.0.2": "2.1.7",
     "brace-expansion@npm:^5.0.8": "5.0.12",
-    "browserslist": "4.28.9",
+    "browserslist": "4.29.5",
     "baseline-browser-mapping": "2.11.35",
     "engine.io": "6.6.11",
     "http-cache-semantics": "4.3.0",
