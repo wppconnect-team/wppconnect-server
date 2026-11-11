@@ -61,12 +61,12 @@ Open `http://localhost:21465/manager/` and sign in with the configured `SECRET_K
 
 ## WPPConnect ecosystem
 
-| Project                                                                         | Purpose                                                                             | When to use it                                             |
-| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [WPPConnect](https://github.com/wppconnect-team/wppconnect)                     | Control WhatsApp Web from Node.js applications.                                     | Embed automation in a Node.js application.                 |
-| [WPPConnect Manager](https://github.com/wppconnect-team/wppconnect-manager)     | Manage WPPConnect Server sessions and conversations in a self-hosted web workspace. | Operate compatible Server sessions and chats through a UI. |
-| [WPPConnect Server CLI](https://github.com/wppconnect-team/server-cli)          | Start WPPConnect Server from the `wppserver` command.                               | Launch the Node.js Server from a terminal.                 |
-| [WPPConnect Server Go](https://github.com/wppconnect-team/wppconnect-server-go) | Run a browser-free WhatsApp HTTP API built with Go and whatsmeow.                   | Evaluate a Go HTTP API and documented migration coverage.  |
+| Project | Purpose | When to use it |
+| --- | --- | --- |
+| [WPPConnect](https://github.com/wppconnect-team/wppconnect) | Control WhatsApp Web from Node.js applications. | Embed automation in a Node.js application. |
+| [WPPConnect Manager](https://github.com/wppconnect-team/wppconnect-manager) | Manage WPPConnect Server sessions and conversations in a self-hosted web workspace. | Operate compatible Server sessions and chats through a UI. |
+| [WPPConnect Server CLI](https://github.com/wppconnect-team/server-cli) | Start WPPConnect Server from the `wppserver` command. | Launch the Node.js Server from a terminal. |
+| [WPPConnect Server Go](https://github.com/wppconnect-team/wppconnect-server-go) | Run a browser-free WhatsApp HTTP API built with Go and whatsmeow. | Evaluate a Go HTTP API and documented migration coverage. |
 
 ## Support the project
 

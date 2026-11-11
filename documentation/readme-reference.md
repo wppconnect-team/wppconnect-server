@@ -172,10 +172,8 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
 ### Troubleshooting
-
-If you encounter installation issues, please try the procedures below
-. Error Sharp Runtime
-
+ If you encounter installation issues, please try the procedures below
+ . Error Sharp Runtime
 ```sh
     yarn add sharp
     npm install --include=optional sharp
@@ -203,18 +201,18 @@ Configuration defaults remain in [src/config.ts](../src/config.ts). Supported en
 
 The default configuration resolves values in this order: existing process environment, optional `.env` in the working directory, then built-in defaults. Restart the process or recreate the container after changing a value. Variables are read at runtime, so changing them does not require rebuilding the image.
 
-| Area                         | Variables                                                                                                                                                                                                                 |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Webhook delivery             | `WEBHOOK_RETRY_ATTEMPTS` (total attempts, default 3, range 1-10), `WEBHOOK_RETRY_DELAY` (initial backoff in ms, default 5000, capped at 60000), `WEBHOOK_REQUEST_TIMEOUT` (ms per request, default 30000, range 1-120000) |
-| Session webhook destinations | `WEBHOOK_ALLOWED_URLS` (comma-separated exact URLs; session-specific destinations must equal `WEBHOOK_URL` or an entry in this list)                                                                                      |
-| Chatwoot destinations        | `CHATWOOT_ALLOWED_URLS` (comma-separated exact base URLs the operator approves for session configuration)                                                                                                                 |
-| Server                       | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL`                                                                                                                                                                               |
-| Webhook                      | `WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE` (bytes; media larger than this is sent without inlined base64 and with `autoDownloadSkipped: true`, fetch it via `download-media`; `0` = no limit)                                       |
-| Sessions                     | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS`                                                                                                                                                               |
-| Manager                      | `MANAGER_ENABLED`, `MANAGER_DIST`                                                                                                                                                                                         |
-| Redis                        | `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX`                                                                                                                                                  |
-| MongoDB                      | `MONGO_URL_REMOTE`, `MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_HOST`, `MONGODB_PORT`                                                                                          |
-| Compose image                | `WPP_SERVER_TAG` (used by Compose, not the Node server)                                                                                                                                                                   |
+| Area | Variables |
+| --- | --- |
+| Webhook delivery | `WEBHOOK_RETRY_ATTEMPTS` (total attempts, default 3, range 1-10), `WEBHOOK_RETRY_DELAY` (initial backoff in ms, default 5000, capped at 60000), `WEBHOOK_REQUEST_TIMEOUT` (ms per request, default 30000, range 1-120000) |
+| Session webhook destinations | `WEBHOOK_ALLOWED_URLS` (comma-separated exact URLs; session-specific destinations must equal `WEBHOOK_URL` or an entry in this list) |
+| Chatwoot destinations | `CHATWOOT_ALLOWED_URLS` (comma-separated exact base URLs the operator approves for session configuration) |
+| Server | `SECRET_KEY`, `HOST`, `PORT`, `WEBHOOK_URL` |
+| Webhook | `WEBHOOK_AUTO_DOWNLOAD_MAX_SIZE` (bytes; media larger than this is sent without inlined base64 and with `autoDownloadSkipped: true`, fetch it via `download-media`; `0` = no limit) |
+| Sessions | `TOKEN_STORE_TYPE`, `CUSTOM_USER_DATA_DIR`, `MAX_LISTENERS` |
+| Manager | `MANAGER_ENABLED`, `MANAGER_DIST` |
+| Redis | `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_DB`, `REDIS_PREFIX` |
+| MongoDB | `MONGO_URL_REMOTE`, `MONGODB_DATABASE`, `MONGODB_COLLECTION`, `MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_HOST`, `MONGODB_PORT` |
+| Compose image | `WPP_SERVER_TAG` (used by Compose, not the Node server) |
 
 Webhook delivery retries transient connection failures with exponential backoff
 and the same event payload. HTTP error responses are not retried. The receiver
