@@ -15,8 +15,8 @@
  */
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
-import { deleteMessageWithResult } from '../util/deleteMessageWithResult';
 
+import { deleteMessageWithResult } from '../util/deleteMessageWithResult';
 import { contactToArray, unlinkAsync } from '../util/functions';
 
 function returnSucess(res: any, session: any, phone: any, data: any) {
@@ -857,9 +857,17 @@ export async function deleteMessage(req: Request, res: Response) {
 
   try {
     if (!Array.isArray(phone) || phone.length !== 1 || !messageId) {
-      return res.status(400).json({ status: 'error', message: 'Provide one phone and messageId' });
+      return res
+        .status(400)
+        .json({ status: 'error', message: 'Provide one phone and messageId' });
     }
-    const result = await deleteMessageWithResult(req.client.page, phone[0], messageId, deleteMediaInDevice, onlyLocal);
+    const result = await deleteMessageWithResult(
+      req.client.page,
+      phone[0],
+      messageId,
+      deleteMediaInDevice,
+      onlyLocal
+    );
     return res.status(200).json({ status: 'success', response: result });
   } catch (e) {
     req.logger.error(e);
