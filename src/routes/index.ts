@@ -209,6 +209,7 @@ routes.post(
   statusConnection,
   MessageController.sendButtons
 );
+routes.post('/api/:session/send-carousel', verifyToken, statusConnection, MessageController.sendCarousel);
 routes.post(
   '/api/:session/send-list-message',
   verifyToken,

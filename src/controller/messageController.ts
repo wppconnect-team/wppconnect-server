@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+import { isValidCarousel } from '../util/carousel';
 
 import { unlinkAsync } from '../util/functions';
 
@@ -507,6 +508,24 @@ export async function sendButtons(req: Request, res: Response) {
     returnSucess(res, phone);
   } catch (error) {
     returnError(req, res, error);
+  }
+}
+
+export async function sendCarousel(req: Request, res: Response) {
+  const { phone, body, cards, footer } = req.body;
+  if (!isValidCarousel(phone, body, cards)) {
+    return res.status(400).json({ status: 'error', message: 'Invalid carousel' });
+  }
+  try {
+    const results: any[] = [];
+    for (const contact of phone) {
+      results.push(await req.client.page.evaluate(async (args: any) => {
+        return await (window as any).WPP.chat.sendCarouselMessage(args.contact, args.options);
+      }, { contact, options: { body, cards, footer } }));
+    }
+    return returnSucess(res, results);
+  } catch (error) {
+    return returnError(req, res, error);
   }
 }
 
