@@ -15,6 +15,7 @@
  */
 
 import { Request, Response } from 'express';
+import { normalizeMixedButtons } from '../util/mixedButtons';
 
 import { unlinkAsync } from '../util/functions';
 
@@ -492,7 +493,8 @@ export async function sendButtons(req: Request, res: Response) {
      }
      #swagger.deprecated=true
    */
-  const { phone, message, options } = req.body;
+  const { phone, message } = req.body;
+  const options = normalizeMixedButtons(req.body.options);
 
   try {
     const results: any = [];
