@@ -96,13 +96,15 @@ async function postDeletion(body: unknown, native: jest.Mock) {
   }
 }
 
-test.each([
-  { id: 'message', isDeleted: true, isRevoked: true },
-  [{ id: 'message', isDeleted: false, isRevoked: false }],
-  false,
-])(
+test.each(
+  [
+    { id: 'message', isDeleted: true, isRevoked: true },
+    [{ id: 'message', isDeleted: false, isRevoked: false }],
+    false,
+  ].map((value) => ({ value }))
+)(
   'preserves the native deletion result in one HTTP response: %j',
-  async (value) => {
+  async ({ value }) => {
     const native = jest.fn().mockResolvedValue(value);
     const { response, evaluate, jsonCalls } = await postDeletion(
       { phone: ['5511999999999@lid'], messageId: 'message' },
