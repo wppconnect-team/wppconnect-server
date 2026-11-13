@@ -15,9 +15,12 @@
  */
 
 import { Request, Response } from 'express';
-import { normalizeMixedButtons } from '../util/mixedButtons';
 
 import { unlinkAsync } from '../util/functions';
+import {
+  InvalidMixedButtonsError,
+  normalizeMixedButtons,
+} from '../util/mixedButtons';
 
 function returnError(req: Request, res: Response, error: any) {
   req.logger.error(error);
@@ -494,9 +497,9 @@ export async function sendButtons(req: Request, res: Response) {
      #swagger.deprecated=true
    */
   const { phone, message } = req.body;
-  const options = normalizeMixedButtons(req.body.options);
 
   try {
+    const options = normalizeMixedButtons(req.body.options);
     const results: any = [];
 
     for (const contact of phone) {
@@ -508,6 +511,9 @@ export async function sendButtons(req: Request, res: Response) {
 
     returnSucess(res, phone);
   } catch (error) {
+    if (error instanceof InvalidMixedButtonsError) {
+      return res.status(400).json({ status: 'Error', message: error.message });
+    }
     returnError(req, res, error);
   }
 }
