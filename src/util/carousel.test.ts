@@ -35,15 +35,17 @@ test('validates carousel card and recipient limits', () => {
   ).toBe(false);
 });
 
-test.each([
-  null,
-  {},
-  [],
-  { id: 'reply' },
-  { text: 'Reply', id: 1 },
-  { id: 'reply', url: 'https://example.com', text: 'Conflict' },
-  { raw: {} },
-])('rejects invalid carousel buttons: %j', (button) => {
+test.each(
+  [
+    null,
+    {},
+    [],
+    { id: 'reply' },
+    { text: 'Reply', id: 1 },
+    { id: 'reply', url: 'https://example.com', text: 'Conflict' },
+    { raw: {} },
+  ].map((button) => ({ button }))
+)('rejects invalid carousel buttons: %j', ({ button }) => {
   const card = {
     image: 'data:image/png;base64,AA==',
     description: 'Card',
