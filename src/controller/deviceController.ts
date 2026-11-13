@@ -15,6 +15,7 @@
  */
 import { Chat } from '@wppconnect-team/wppconnect';
 import { Request, Response } from 'express';
+import { deleteMessageWithResult } from '../util/deleteMessageWithResult';
 
 import { contactToArray, unlinkAsync } from '../util/functions';
 
@@ -855,21 +856,11 @@ export async function deleteMessage(req: Request, res: Response) {
   const { phone, messageId, deleteMediaInDevice, onlyLocal } = req.body;
 
   try {
-    const result = await req.client.deleteMessage(
-      `${phone}`,
-      messageId,
-      onlyLocal,
-      deleteMediaInDevice
-    );
-    if (result) {
-      res
-        .status(200)
-        .json({ status: 'success', response: { message: 'Message deleted' } });
+    if (!Array.isArray(phone) || phone.length !== 1 || !messageId) {
+      return res.status(400).json({ status: 'error', message: 'Provide one phone and messageId' });
     }
-    res.status(401).json({
-      status: 'error',
-      response: { message: 'Error unknown on delete message' },
-    });
+    const result = await deleteMessageWithResult(req.client.page, phone[0], messageId, deleteMediaInDevice, onlyLocal);
+    return res.status(200).json({ status: 'success', response: result });
   } catch (e) {
     req.logger.error(e);
     res
