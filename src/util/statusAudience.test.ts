@@ -1,3 +1,20 @@
+/*
+ * Copyright 2026 WPPConnect Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { runInNewContext } from 'node:vm';
+
 import { parseStatusAudience, sendStatus } from './statusAudience';
 
 const IMAGE = 'data:image/png;base64,iVBORw0KGgo=';
@@ -39,7 +56,10 @@ function setup(options: { failOn?: string; failRestore?: boolean } = {}) {
         active += 1;
         maxActive = Math.max(maxActive, active);
         try {
-          return await fn(args);
+          const evaluate = runInNewContext(`(${fn.toString()})`, {
+            window: (global as any).window,
+          });
+          return await evaluate(args);
         } finally {
           active -= 1;
         }
@@ -119,6 +139,7 @@ test('a failed custom send restores the state, rejects, and lets the next send r
     'audience:111@c.us',
     'send:image:111@c.us:device=true:ack=true',
     'audience:contacts',
+    'audience:contacts',
     'send:text:contacts:device=false:ack=true',
   ]);
   expect(state().audience).toBe('contacts');
@@ -166,3 +187,77 @@ test('parses and normalizes the audience', () => {
     parseStatusAudience({ contacts: ['1'], statusJidList: ['2'] })
   ).toEqual({ error: 'Use contacts OR statusJidList' });
 });
+
+test('a failed audience reset blocks later default sends while recovery also fails', async () => {
+  const { client, status, state, config } = setup({ failRestore: true });
+  await expect(
+    sendStatus(client, 'text', 'custom', { contacts: ['111@c.us'] })
+  ).rejects.toThrow('restore failed');
+  await expect(
+    sendStatus(client, 'text', 'must not use the custom audience')
+  ).rejects.toThrow('restore failed');
+  await expect(sendStatus(client, 'video', VIDEO)).rejects.toThrow(
+    'restore failed'
+  );
+  await expect(
+    sendStatus(client, 'image', IMAGE, { contacts: ['222@c.us'] })
+  ).rejects.toThrow('restore failed');
+  expect(status.sendTextStatus).toHaveBeenCalledTimes(1);
+  expect(status.sendVideoStatus).not.toHaveBeenCalled();
+  expect(status.sendImageStatus).not.toHaveBeenCalled();
+  expect(state().audience).toEqual(['111@c.us']);
+  expect(config.sendStatusToDevice).toBe(false);
+});
+
+test('recovers a failed audience reset before dispatching the next default send', async () => {
+  const options = { failRestore: true };
+  const { client, log, state, status } = setup(options);
+  await expect(
+    sendStatus(client, 'text', 'custom', { contacts: ['111@c.us'] })
+  ).rejects.toThrow('restore failed');
+  options.failRestore = false;
+  await expect(sendStatus(client, 'text', 'default')).resolves.toEqual({
+    id: 'text-id',
+  });
+  expect(log).toEqual([
+    'audience:111@c.us',
+    'send:text:111@c.us:device=true:ack=true',
+    'audience:contacts',
+    'send:text:contacts:device=false:ack=true',
+  ]);
+  expect(status.updateParticipants).toHaveBeenCalledTimes(3);
+  expect(state().audience).toBe('contacts');
+});
+
+test('keeps recovery mandatory after the page context loses its dirty marker', async () => {
+  const { client, status } = setup({ failRestore: true });
+  await expect(
+    sendStatus(client, 'text', 'custom', { contacts: ['111@c.us'] })
+  ).rejects.toThrow('restore failed');
+  const wpp = (global as any).window.WPP;
+  (global as any).window = { WPP: wpp };
+  await expect(sendStatus(client, 'text', 'default')).rejects.toThrow(
+    'restore failed'
+  );
+  expect(status.sendTextStatus).toHaveBeenCalledTimes(1);
+});
+
+test('preserves a send failure and still prevents audience reuse after cleanup fails', async () => {
+  const { client, status } = setup({ failOn: 'image', failRestore: true });
+  await expect(
+    sendStatus(client, 'image', IMAGE, { contacts: ['111@c.us'] })
+  ).rejects.toThrow('image failed');
+  await expect(sendStatus(client, 'text', 'default')).rejects.toThrow(
+    'restore failed'
+  );
+  expect(status.sendTextStatus).not.toHaveBeenCalled();
+});
+
+test.each([{ contacts: null }, { statusJidList: null }])(
+  'rejects an explicit null audience instead of broadcasting by default: %j',
+  (body) => {
+    expect(parseStatusAudience(body)).toEqual({
+      error: 'Invalid status audience',
+    });
+  }
+);

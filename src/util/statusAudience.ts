@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026 WPPConnect Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import {
   base64MimeType,
   downloadFileToBase64,
@@ -35,6 +50,8 @@ const VIDEO_TYPES = [
  * session, whatever its kind.
  */
 const queues = new WeakMap<object, Promise<unknown>>();
+// Survives a page reload when the native audience may remain in storage.
+const audiencesNeedingReset = new WeakSet<object>();
 
 export function runStatusExclusive<T>(
   client: object,
@@ -68,20 +85,23 @@ async function toBase64(
  * Runs inside the page. With a custom audience it sets the audience, sends,
  * and always (on success and on rejection) restores the previous
  * `sendStatusToDevice` value and the default audience (all contacts).
- * Without a custom audience it only sends and does not touch session state.
+ * A failed audience restore blocks subsequent sends until recovery succeeds.
  */
 export async function pageSendStatus({
   kind,
   content,
   options,
+  recoverAudience = false,
 }: {
   kind: StatusKind;
   content: string;
   options: StatusSendOptions;
+  recoverAudience?: boolean;
 }) {
   // Self-contained on purpose: this function is serialized into the page, so
   // it must not rely on transpiler helpers (no object rest/spread here).
-  const wpp = (window as any).WPP;
+  const page = window as any;
+  const wpp = page.WPP;
   const contacts = options.contacts;
   const sendOptions: Record<string, unknown> = { waitForAck: true };
   Object.keys(options).forEach((key) => {
@@ -93,6 +113,12 @@ export async function pageSendStatus({
       return wpp.status.sendImageStatus(content, sendOptions);
     return wpp.status.sendVideoStatus(content, sendOptions);
   };
+  // Keep recovery state in the page, where the shared audience lives, even
+  // after the Node-side queue has removed a rejected task.
+  if (recoverAudience || page.__wppconnectStatusAudienceNeedsReset) {
+    await wpp.status.updateParticipants(null);
+    page.__wppconnectStatusAudienceNeedsReset = false;
+  }
   if (contacts === undefined) return await send();
 
   const previousSendToDevice = wpp.config.sendStatusToDevice;
@@ -100,6 +126,7 @@ export async function pageSendStatus({
   let failure: unknown;
   let failed = false;
   try {
+    page.__wppconnectStatusAudienceNeedsReset = true;
     wpp.config.sendStatusToDevice = true;
     await wpp.status.updateParticipants(contacts);
     result = await send();
@@ -110,6 +137,7 @@ export async function pageSendStatus({
   wpp.config.sendStatusToDevice = previousSendToDevice;
   try {
     await wpp.status.updateParticipants(null);
+    page.__wppconnectStatusAudienceNeedsReset = false;
   } catch (restoreError) {
     if (!failed) throw restoreError;
   }
@@ -130,13 +158,21 @@ export function sendStatus(
       ? Promise.resolve(input)
       : toBase64(input, kind === 'image' ? IMAGE_TYPES : VIDEO_TYPES, kind);
   content.catch(() => undefined);
-  return runStatusExclusive(client, async () =>
-    client.page.evaluate(pageSendStatus, {
+  return runStatusExclusive(client, async () => {
+    const preparedContent = await content;
+    const recoverAudience = audiencesNeedingReset.has(client);
+    if (options.contacts !== undefined) audiencesNeedingReset.add(client);
+    const result = await client.page.evaluate(pageSendStatus, {
       kind,
-      content: await content,
+      content: preparedContent,
       options,
-    })
-  );
+      recoverAudience,
+    });
+    // A rejected evaluation may have lost its page context after changing
+    // participants. Keep the conservative recovery requirement in Node.
+    audiencesNeedingReset.delete(client);
+    return result;
+  });
 }
 
 /**
@@ -151,7 +187,7 @@ export function parseStatusAudience(body: any): {
   const { contacts, statusJidList } = body || {};
   if (contacts !== undefined && statusJidList !== undefined)
     return { error: 'Use contacts OR statusJidList' };
-  const audience = contacts ?? statusJidList;
+  const audience = contacts !== undefined ? contacts : statusJidList;
   if (audience === undefined) return { contacts: undefined };
   if (
     !Array.isArray(audience) ||

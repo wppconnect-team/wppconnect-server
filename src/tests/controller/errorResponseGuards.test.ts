@@ -15,7 +15,11 @@
  */
 import { sendFile, sendOrderMessage } from '../../controller/messageController';
 import { getMediaByMessage } from '../../controller/sessionController';
-import { sendTextStorie } from '../../controller/statusController';
+import {
+  sendImageStorie,
+  sendTextStorie,
+  sendVideoStorie,
+} from '../../controller/statusController';
 
 jest.mock('../..', () => ({ logger: { error: jest.fn() } }));
 jest.mock('../../util/functions', () => ({
@@ -78,6 +82,35 @@ function createRequest(overrides: any = {}) {
 }
 
 describe('error guards stop the handler', () => {
+  it.each([
+    { handler: sendTextStorie, body: { text: 'test' }, field: 'contacts' },
+    { handler: sendImageStorie, body: { path: 'test.png' }, field: 'contacts' },
+    { handler: sendVideoStorie, body: { path: 'test.mp4' }, field: 'contacts' },
+    { handler: sendTextStorie, body: { text: 'test' }, field: 'statusJidList' },
+    {
+      handler: sendImageStorie,
+      body: { path: 'test.png' },
+      field: 'statusJidList',
+    },
+    {
+      handler: sendVideoStorie,
+      body: { path: 'test.mp4' },
+      field: 'statusJidList',
+    },
+  ])(
+    'rejects null $field in $handler.name before browser dispatch',
+    async ({ handler, body, field }) => {
+      const client = { page: { evaluate: jest.fn() } };
+      const req = createRequest({ body: { ...body, [field]: null }, client });
+      const res = createResponse();
+      await handler(req, res);
+      expect(res.sent).toEqual([
+        { status: 400, body: { message: 'Invalid status audience' } },
+      ]);
+      expect(client.page.evaluate).not.toHaveBeenCalled();
+    }
+  );
+
   it('sendFile rejects a request with no file and never calls the client', async () => {
     const client = { sendFile: jest.fn() };
     const req = createRequest({
