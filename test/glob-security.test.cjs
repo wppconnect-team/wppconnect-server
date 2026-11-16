@@ -231,13 +231,13 @@ test('modern owners use patched glob and retain synchronous and asynchronous API
   const dir = fixture();
   try {
     for (const [name, version] of Object.entries({
-      'archiver-utils': '14.0.4',
-      'test-exclude': '14.0.4',
-      rimraf: '14.0.3',
-      '@jest/reporters': '14.0.4',
-      'jest-config': '14.0.4',
-      'jest-runtime': '14.0.4',
-      cacache: '14.0.4',
+      'archiver-utils': '14.0.6',
+      'test-exclude': '14.0.6',
+      rimraf: '14.0.6',
+      '@jest/reporters': '14.0.6',
+      'jest-config': '14.0.6',
+      'jest-runtime': '14.0.6',
+      cacache: '14.0.6',
     })) {
       const caller = createRequire(require.resolve(name));
       const glob = caller('glob');
@@ -257,6 +257,39 @@ test('modern owners use patched glob and retain synchronous and asynchronous API
     cleanup(dir);
   }
 });
+
+for (const name of [
+  'archiver-utils',
+  'test-exclude',
+  'rimraf',
+  '@jest/reporters',
+  'jest-config',
+  'jest-runtime',
+  'cacache',
+]) {
+  test(`${name} bounds amplified glob ignore patterns`, () => {
+    const caller = createRequire(require.resolve(name));
+    const code = `
+      const assert = require('node:assert/strict');
+      const glob = require(${JSON.stringify(caller.resolve('glob'))});
+      const payload = Array.from({ length: 14 }, (_, i) => '**/../x' + i + '/y' + i).join('/');
+      assert.throws(
+        () => glob.globSync('*', { cwd: process.cwd(), platform: 'posix', ignore: [payload] }),
+        { name: 'RangeError', message: "optimizationLevel 2: too many patterns from '**/..'" }
+      );
+    `;
+    const result = spawnSync(
+      process.execPath,
+      ['--max-old-space-size=192', '-e', code],
+      { encoding: 'utf8', timeout: 6000 }
+    );
+    assert.equal(
+      result.status,
+      0,
+      result.stderr + (result.error?.message || '')
+    );
+  });
+}
 
 test('the actual rimraf CLI removes a nested build directory and preserves siblings', () => {
   const dir = fixture();
