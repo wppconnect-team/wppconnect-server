@@ -1,3 +1,10 @@
+## 2.10.82 (2026-11-16)
+
+
+### Features
+
+* load environment diagnostics on server start ([bdddf54](https://github.com/wppconnect-team/wppconnect-server/commit/bdddf54ca86019c853ba68c2eeca45c2ac8128d6))
+
 ## [2.10.81](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.80...v2.10.81) (2026-11-13)
 
 ## [2.10.80](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.79...v2.10.80) (2026-11-11)
