@@ -355,9 +355,12 @@ export async function checkConnectionSession(
      }
    */
   try {
-    await req.client.isConnected();
+    const connected = await req.client.isConnected();
 
-    res.status(200).json({ status: true, message: 'Connected' });
+    res.status(200).json({
+      status: connected,
+      message: connected ? 'Connected' : 'Disconnected',
+    });
   } catch (error) {
     res.status(200).json({ status: false, message: 'Disconnected' });
   }
