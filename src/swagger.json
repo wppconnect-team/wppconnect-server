@@ -1702,8 +1702,8 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "400": {
+            "description": "Bad Request"
           }
         },
         "security": [
@@ -1712,6 +1712,49 @@
           }
         ],
         "deprecated": true
+      }
+    },
+    "/api/{session}/send-carousel": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "example": "any"
+                  },
+                  "body": {
+                    "example": "any"
+                  },
+                  "cards": {
+                    "example": "any"
+                  },
+                  "footer": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/{session}/send-list-message": {
@@ -4623,8 +4666,8 @@
           "200": {
             "description": "OK"
           },
-          "401": {
-            "description": "Unauthorized"
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
