@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 22.22.2
 
+      - name: Verify startup does not collect or upload host secrets
+        run: node --experimental-vm-modules --test test/startup-security.test.cjs
+
       - name: Enable Corepack
         run: corepack enable
 

@@ -30,6 +30,7 @@
     "swagger:fix-url": "sed -i \"s|https://petstore.swagger.io/v2/swagger.json|./swagger.json|g\" ./swagger-docs/index.html",
     "swagger:generate": "yarn swagger:copy-assets && yarn swagger:copy-json && yarn swagger:fix-url",
     "test": "jest",
+    "test:startup-security": "node --experimental-vm-modules --test test/startup-security.test.cjs",
     "test:security": "node --test test/dependency-security.test.cjs test/glob-security.test.cjs",
     "test:packed-security": "node test/packed-runtime-security.cjs"
   },
