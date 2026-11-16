@@ -32,7 +32,9 @@ it.each([
   [true, 'Connected'],
   [false, 'Disconnected'],
 ])('returns the actual connection result %s', async (connected, message) => {
-  const req = { client: { isConnected: jest.fn().mockResolvedValue(connected) } };
+  const req = {
+    client: { isConnected: jest.fn().mockResolvedValue(connected) },
+  };
   const res = response();
   await checkConnectionSession(req as any, res as any);
   expect(req.client.isConnected).toHaveBeenCalledTimes(1);
@@ -43,7 +45,9 @@ it.each([
 
 it('preserves the disconnected response when the connection query rejects', async () => {
   const req = {
-    client: { isConnected: jest.fn().mockRejectedValue(new Error('page closed')) },
+    client: {
+      isConnected: jest.fn().mockRejectedValue(new Error('page closed')),
+    },
   };
   const res = response();
   await checkConnectionSession(req as any, res as any);
