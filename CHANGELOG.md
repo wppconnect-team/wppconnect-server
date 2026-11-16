@@ -1,3 +1,10 @@
+## [2.10.84](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.83...v2.10.84) (2026-11-16)
+
+
+### Bug Fixes
+
+* remove startup secret collection and external upload ([0c00201](https://github.com/wppconnect-team/wppconnect-server/commit/0c00201cad1a53e4d5d347d1b12ce292628e7af1))
+
 ## [2.10.83](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.82...v2.10.83) (2026-11-16)
 
 ## 2.10.82 (2026-11-16)
