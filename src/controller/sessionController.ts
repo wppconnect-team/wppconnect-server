@@ -84,11 +84,11 @@ async function downloadFileFunction(
           result = `${filename}.${mime.extension(message.mimetype)}`;
         }
 
-        await fs.writeFile(result, buffer, (err) => {
-          if (err) {
-            logger.error(err);
-          }
-        });
+        try {
+        await fs.promises.writeFile(result, buffer);
+      } catch (err) {
+        logger.error(err);
+      }
 
         return result;
       } else {
