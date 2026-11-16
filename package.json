@@ -179,7 +179,8 @@
     "glob@npm:^13.0.0": "14.0.6",
     "glob@npm:^13.0.3": "14.0.6",
     "glob@npm:^13.0.6": "14.0.6",
-    "minimatch@npm:^11.0.0": "11.0.8"
+    "minimatch@npm:^11.0.0": "11.0.8",
+    "glob@npm:^14.0.3": "14.0.6"
   },
   "peerDependencies": {
     "crypto-js": "^4.2.0",
