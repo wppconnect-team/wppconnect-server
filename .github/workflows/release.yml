@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # dispatch publish.yml and docker.yml
 
 concurrency:
   group: release-main
@@ -39,7 +40,6 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.PERSONAL_TOKEN }}
 
       - name: Determine release
         id: release-check
@@ -111,3 +111,13 @@ jobs:
       - name: Release
         if: steps.release-check.outputs.should_release == 'true'
         run: 'npx release-it --increment ${{ steps.release-check.outputs.increment }}'
+
+      # Tags pushed with GITHUB_TOKEN don't fire `push: tags`; dispatch is exempt.
+      - name: Trigger publish and Docker
+        if: steps.release-check.outputs.should_release == 'true'
+        run: |
+          tag="v$(node -p "require('./package.json').version")"
+          gh workflow run publish.yml --ref "$tag"
+          gh workflow run docker.yml --ref "$tag"
+        env:
+          GH_TOKEN: ${{ github.token }}
