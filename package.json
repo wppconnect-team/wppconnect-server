@@ -3,6 +3,13 @@
   "version": "2.10.85",
   "description": "Projeto feito para autenticar a automomacao do WhatsappWeb com multi-clientes de forma dinamica. Backend feito em Nodejs(express, socketio), FrontEnd (ReactJS)",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "!dist/**/*.test.js",
+    "vendor",
+    "!vendor/*.tgz",
+    ".env.example"
+  ],
   "author": "kingaspx",
   "license": "Apache-2.0",
   "repository": {
