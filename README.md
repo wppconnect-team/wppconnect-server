@@ -47,6 +47,10 @@ curl -fsS http://localhost:21465/healthz
 
 Open `http://localhost:21465/manager/` and sign in with the configured `SECRET_KEY` to create/pair a session, or use the API at `http://localhost:21465/api-docs`. Session-restricted Manager access uses a session name and token. For source development: `corepack enable`, `yarn install --immutable`, `yarn build`, then `yarn start`.
 
+## One-Click Deploy
+
+[![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploylobe.svg)](https://repocloud.io/details/WPPConnect%20Server/)
+
 ## Configuration
 
 [.env.example](.env.example) lists supported environment variables; [src/config.ts](src/config.ts) contains advanced options. Process environment overrides the optional working-directory `.env`, then built-in defaults apply. Restart after changes. Set exact webhook/Chatwoot destinations in `WEBHOOK_ALLOWED_URLS` and `CHATWOOT_ALLOWED_URLS`. Session inventory and backups use POST with `x-secret-key`; legacy GET URLs containing secrets return 410. `MANAGER_ENABLED=false` disables the UI. Preserve the named volumes and pin `WPP_SERVER_TAG` for repeatable deployments.
