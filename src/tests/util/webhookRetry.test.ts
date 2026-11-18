@@ -48,6 +48,47 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
+it.each([true, false])(
+  'delivers an outgoing media event when browser download succeeds=%s',
+  async (available) => {
+    const { client, req } = setup({ autoDownload: true });
+    const body = Buffer.from('file content').toString('base64');
+    const unavailable = new Error('Media is no longer available');
+    const downloadMedia = available
+      ? jest.fn().mockResolvedValue(`data:application/pdf;base64,${body}`)
+      : jest.fn().mockRejectedValue(unavailable);
+    post.mockResolvedValue({});
+
+    await callWebHook(
+      { ...client, downloadMedia },
+      req as any,
+      'onselfmessage',
+      {
+        id: 'media-message-id',
+        fromMe: true,
+        mimetype: 'application/pdf',
+        body: 'preview',
+      }
+    );
+
+    expect(downloadMedia).toHaveBeenCalledWith('media-message-id');
+    expect(post).toHaveBeenCalledWith(
+      'https://example.com/hook',
+      expect.objectContaining({
+        event: 'onselfmessage',
+        id: 'media-message-id',
+        body: available ? body : 'preview',
+      }),
+      { timeout: 30000 }
+    );
+    if (available) {
+      expect(req.logger.error).not.toHaveBeenCalled();
+    } else {
+      expect(req.logger.error).toHaveBeenCalledWith(unavailable);
+    }
+  }
+);
+
 it('retries refused connections with backoff and reads once after delivery', async () => {
   const { client, req } = setup();
   post
