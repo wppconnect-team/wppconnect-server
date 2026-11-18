@@ -244,7 +244,23 @@ export async function autoDownload(client: any, req: any, message: any) {
         message.autoDownloadSkipped = true;
         return;
       }
-      const buffer = await client.decryptFile(message);
+      const mediaUrl = message.clientUrl || message.deprecatedMms3Url;
+      let buffer: Buffer;
+      if (mediaUrl) {
+        buffer = await client.decryptFile(message);
+      } else {
+        if (typeof message.id !== 'string' || !message.id) {
+          throw new Error('Cannot download media without a URL or message ID.');
+        }
+        const media = await client.downloadMedia(message.id);
+        buffer = Buffer.from(
+          media.replace(/^data:[^,]*;base64,/, ''),
+          'base64'
+        );
+        if (!buffer.length) {
+          throw new Error('The WhatsApp session returned no media data.');
+        }
+      }
       if (uploadS3) {
         const hashName = crypto.randomBytes(24).toString('hex');
 
