@@ -15,6 +15,7 @@
  */
 
 import './security/runtime';
+import './util/runtime-info';
 
 import { defaultLogger } from '@wppconnect-team/wppconnect';
 import cors from 'cors';
