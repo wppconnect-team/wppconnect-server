@@ -1,3 +1,10 @@
+## [2.10.87](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.86...v2.10.87) (2026-11-19)
+
+
+### Bug Fixes
+
+* download event media by message ID without a URL ([#2739](https://github.com/wppconnect-team/wppconnect-server/issues/2739)) ([466647e](https://github.com/wppconnect-team/wppconnect-server/commit/466647ebdb2bdb474f9ec226b153d0a2de780ea5))
+
 ## [2.10.86](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.85...v2.10.86) (2026-11-17)
 
 ## [2.10.85](https://github.com/wppconnect-team/wppconnect-server/compare/v2.10.84...v2.10.85) (2026-11-17)
