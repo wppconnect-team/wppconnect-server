@@ -47,7 +47,7 @@
   "packageManager": "yarn@4.14.1",
   "dependencies": {
     "@aws-sdk/client-s3": "3.1164.0",
-    "@babel/runtime": "^7.29.13",
+    "@babel/runtime": "^7.29.14",
     "@wppconnect-team/wppconnect": "^2.3.6",
     "archiver": "^7.0.1",
     "axios": "1.21.0",
@@ -80,7 +80,7 @@
     "@babel/eslint-plugin": "^7.29.7",
     "@babel/node": "^7.29.7",
     "@babel/plugin-transform-runtime": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-env": "^7.29.14",
     "@babel/preset-typescript": "^7.29.7",
     "@commitlint/cli": "^20.5.3",
     "@commitlint/config-conventional": "^20.5.3",
