@@ -40,6 +40,7 @@ import {
   startAllSessions,
 } from './util/functions';
 import { createLogger } from './util/logger';
+import { enableSupportReport } from './util/runtime-report';
 
 export const logger = createLogger(config.log);
 
@@ -58,6 +59,10 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
     : 'silly';
 
   setMaxListners(serverOptions as ServerOptions);
+
+  if (process.env.SUPPORT_REPORT === 'true') {
+    enableSupportReport();
+  }
 
   const app = express();
   const PORT = process.env.PORT || serverOptions.port;
