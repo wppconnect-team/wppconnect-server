@@ -47,7 +47,7 @@
   "packageManager": "yarn@4.14.1",
   "dependencies": {
     "@aws-sdk/client-s3": "3.1164.0",
-    "@babel/runtime": "^7.29.14",
+    "@babel/runtime": "^7.29.15",
     "@wppconnect-team/wppconnect": "^2.3.6",
     "archiver": "^7.0.1",
     "axios": "1.21.1",
@@ -130,7 +130,7 @@
     "webpack-cli": "^6.0.1"
   },
   "resolutions": {
-    "@babel/plugin-transform-modules-systemjs": "7.29.8",
+    "@babel/plugin-transform-modules-systemjs": "7.29.15",
     "@conventional-changelog/git-client": "2.7.0",
     "@isaacs/brace-expansion": "5.0.1",
     "@ungap/structured-clone": "1.4.0",
