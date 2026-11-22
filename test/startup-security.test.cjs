@@ -118,6 +118,7 @@ test('the package entrypoint only references reviewed modules', () => {
       './types/ServerOptions',
       './util/functions',
       './util/logger',
+      './util/runtime-report',
       '@wppconnect-team/wppconnect',
       'cors',
       'express',
