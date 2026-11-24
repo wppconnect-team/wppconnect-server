@@ -8,7 +8,8 @@
     "!dist/**/*.test.js",
     "vendor",
     "!vendor/*.tgz",
-    ".env.example"
+    ".env.example",
+    "CHANGELOG.md"
   ],
   "author": "kingaspx",
   "license": "Apache-2.0",
