@@ -16,6 +16,8 @@ jobs:
     # Manual dispatch from a branch must not publish
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    # npm trusted publishing only accepts OIDC tokens from this environment
+    environment: npm-publish
     steps:
       - name: Checkout
         uses: actions/checkout@v4
