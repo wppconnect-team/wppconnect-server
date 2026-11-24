@@ -7732,9 +7732,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"engine.io@npm:6.6.11":
-  version: 6.6.11
-  resolution: "engine.io@npm:6.6.11"
+"engine.io@npm:6.6.13":
+  version: 6.6.13
+  resolution: "engine.io@npm:6.6.13"
   dependencies:
     "@types/cors": "npm:^2.8.12"
     "@types/node": "npm:>=10.0.0"
@@ -7744,8 +7744,8 @@ __metadata:
     cors: "npm:~2.8.5"
     debug: "npm:~4.4.1"
     engine.io-parser: "npm:~5.2.1"
-    ws: "npm:~8.21.0"
-  checksum: 10c0/b15b395dbbb8ea98942786f738794d2c2a38b9aa79d2d0eb861e26e20a9ac27beaf178e5bcf9b725bc85625748f7eb66158407932c25b89ef41e783bdbf22bc6
+    ws: "npm:^8.23.0"
+  checksum: 10c0/8a04236f1f2925f3bc32844f75585912fa2d4ce1784e40647419c0517ded83a43bda0473f84f55df354d154c9927df13634ce9632b3ec49ed6fe9eec30d61685
   languageName: node
   linkType: hard
 
@@ -15654,7 +15654,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.23.0":
+"ws@npm:8.23.0, ws@npm:^8.23.0":
   version: 8.23.0
   resolution: "ws@npm:8.23.0"
   peerDependencies:
