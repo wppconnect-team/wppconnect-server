@@ -58,7 +58,7 @@ jobs:
       # The trusted publisher only allows staging; a maintainer approves with
       # 2FA (npm stage approve). yarn has no stage command, so use npm here.
       - name: Stage in NPM
-        run: npm stage publish --access public
+        run: npm stage publish --access public --provenance
 
       - name: Generate Changelog
         id: generate_changelog
