@@ -150,6 +150,20 @@ export class ZapoAdapter implements ProviderAdapter {
     );
     if (!active()) return;
 
+    // WhatsApp can reject the version bundled with an older runtime before
+    // pairing. Use the runtime's bounded version fetcher when available, with
+    // its bundled default as a fallback if the version endpoint is unavailable.
+    let version: string | undefined;
+    if (typeof zapo.fetchLatestWaWebVersion === 'function') {
+      try {
+        version = (await zapo.fetchLatestWaWebVersion({ timeoutMs: 10_000 }))
+          .version;
+      } catch {
+        // Keep offline/restricted-network startup compatible with older runtimes.
+      }
+    }
+    if (!active()) return;
+
     fs.mkdirSync('./userDataDir/zapo', { recursive: true });
     const store = zapo.createStore({
       backends: {
@@ -174,7 +188,7 @@ export class ZapoAdapter implements ProviderAdapter {
     });
 
     this.client = new zapo.WaClient(
-      { store, sessionId: this.sessionName },
+      { store, sessionId: this.sessionName, ...(version ? { version } : {}) },
       undefined
     );
     this.compat = null;
