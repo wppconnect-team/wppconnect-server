@@ -82,7 +82,10 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
 
     res.send = async function (data: any) {
       const content = req.headers['content-type'];
-      if (content == 'application/json') {
+      // res.json(undefined) reaches here with data undefined (e.g. listChats when
+      // puppeteer returns undefined); JSON.parse would throw inside this async
+      // function, the rejection is lost and the request never gets a response
+      if (content == 'application/json' && typeof data === 'string') {
         data = JSON.parse(data);
         if (!data.session) data.session = req.client ? req.client.session : '';
         if (data.mapper && req.serverOptions.mapper.enable) {
