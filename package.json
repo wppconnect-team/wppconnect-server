@@ -177,7 +177,7 @@
     "brace-expansion@npm:^5.0.8": "5.0.12",
     "browserslist": "4.29.5",
     "baseline-browser-mapping": "2.11.39",
-    "engine.io": "6.6.11",
+    "engine.io": "6.6.13",
     "http-cache-semantics": "4.3.0",
     "ip-address": "10.7.6",
     "puppeteer": "25.13.0",
