@@ -5262,15 +5262,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wppconnect-team/wppconnect@npm:^2.4.6":
-  version: 2.4.6
-  resolution: "@wppconnect-team/wppconnect@npm:2.4.6"
+"@wppconnect-team/wppconnect@npm:^2.4.7":
+  version: 2.4.7
+  resolution: "@wppconnect-team/wppconnect@npm:2.4.7"
   dependencies:
     "@img/sharp-win32-x64": "npm:^0.35.5"
-    "@wppconnect/wa-js": "npm:^4.8.2"
+    "@wppconnect/wa-js": "npm:^4.8.5"
     "@wppconnect/wa-version": "npm:^1.5.4472"
     atob: "npm:^2.1.2"
-    axios: "npm:^1.21.0"
+    axios: "npm:^1.21.1"
     boxen: "npm:^5.1.2"
     catch-exit: "npm:^2.0.0"
     chalk: "npm:~4.1.2"
@@ -5289,7 +5289,7 @@ __metadata:
     qrcode-terminal: "npm:^0.12.0"
     reflect-metadata: "npm:^0.2.1"
     rimraf: "npm:^3.0.2"
-    sanitize-filename: "npm:^1.6.4"
+    sanitize-filename: "npm:^1.6.5"
     sharp: "npm:0.35.5"
     tmp: "npm:^0.2.7"
     tree-kill: "npm:^1.2.2"
@@ -5300,7 +5300,7 @@ __metadata:
       optional: true
     fsevents:
       optional: true
-  checksum: 10c0/815ba073520c383b0c667bb71d6601c865af241ebedb1a29e3e474b69d0b483d80079d3cf82847d643b24bc584f2f19f97badadb78b0351072ec58c7d63b71bd
+  checksum: 10c0/9635b71c682b39a7e9f32af061016fb58afff8199b83fb2c77805783c81e19d77fe9ec09224d24e516dc76909e2ce93a552d62f3431f1e8f298afdc29eb8780a
   languageName: node
   linkType: hard
 
@@ -5335,7 +5335,7 @@ __metadata:
     "@types/unzipper": "npm:^0.10.11"
     "@typescript-eslint/eslint-plugin": "npm:^7.18.0"
     "@typescript-eslint/parser": "npm:^8.73.0"
-    "@wppconnect-team/wppconnect": "npm:^2.4.6"
+    "@wppconnect-team/wppconnect": "npm:^2.4.7"
     archiver: "npm:^7.0.1"
     axios: "npm:1.21.1"
     bcrypt: "npm:^6.0.0"
@@ -5395,10 +5395,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@wppconnect/wa-js@npm:^4.8.2":
-  version: 4.8.2
-  resolution: "@wppconnect/wa-js@npm:4.8.2"
-  checksum: 10c0/9a0f9bbfc3e018d17ea53d7e5e94a555c99190b93a7fd464ac7ffe140221bef4ddf5a49cc81adaa6ded01152ec1edce097b35defa6192170716a49f92139e586
+"@wppconnect/wa-js@npm:^4.8.5":
+  version: 4.8.5
+  resolution: "@wppconnect/wa-js@npm:4.8.5"
+  checksum: 10c0/2844c51e020fea45f40a7116967efe3e107458e5bea59d32fefa5d4d920ad638ab7b059cda0814fba1b35fa5d41655118f6e5b90d04a3b2a2638d27b80e7d188
   languageName: node
   linkType: hard
 
@@ -5834,7 +5834,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.21.1, axios@npm:^1.21.0":
+"axios@npm:1.21.1, axios@npm:^1.21.1":
   version: 1.21.1
   resolution: "axios@npm:1.21.1"
   dependencies:
@@ -13614,12 +13614,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sanitize-filename@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "sanitize-filename@npm:1.6.4"
+"sanitize-filename@npm:^1.6.5":
+  version: 1.6.5
+  resolution: "sanitize-filename@npm:1.6.5"
   dependencies:
     truncate-utf8-bytes: "npm:^1.0.0"
-  checksum: 10c0/b56415a95e4f90dc992cd126b5f45c7b39d178662fbd0dc48f03203e35c58ab8e9eb3f5cebfaabc46f1438093d65a3a3cc96875e2b036a1474e19593bee9a540
+  checksum: 10c0/20479a6bb6e550a99b25e1e590cf985fe7e41363a363e7f27c0dd783fd91587846901763570d5e2ebdd53b3c63d37f8807671d654d87f1afd52b6a54819215f8
   languageName: node
   linkType: hard
 
