@@ -35,7 +35,7 @@ jest.mock('../../util/functions', () => ({
 }));
 jest.mock('../../routes', () => {
   const router = jest.requireActual('express').Router();
-  router.get('/response-fixture/:kind', (req: Request, res: Response) => {
+  router.post('/response-fixture/:kind', (req: Request, res: Response) => {
     const values: Record<string, unknown> = {
       empty: undefined,
       null: null,
@@ -45,6 +45,7 @@ jest.mock('../../routes', () => {
       array: [{ id: 1 }],
     };
     const { kind } = req.params;
+    req.client = { session: 'fixture-session' } as Request['client'];
     if (kind === 'plain') return res.send('ok');
     return res.json(values[kind]);
   });
@@ -85,11 +86,13 @@ it.each([
   ['number', '42'],
   ['text', '"ok"'],
   ['plain', 'ok'],
-  ['object', '{"result":true,"session":""}'],
+  ['object', '{"result":true,"session":"fixture-session"}'],
   ['array', '[{"id":1}]'],
 ])('sends the %s response for a JSON request', async (kind, body) => {
   const response = await fetch(`${base}/response-fixture/${kind}`, {
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    body: '{}',
     signal: AbortSignal.timeout(3000),
   });
   expect(response.status).toBe(200);
