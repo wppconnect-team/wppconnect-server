@@ -82,16 +82,28 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
 
     res.send = async function (data: any) {
       const content = req.headers['content-type'];
-      if (content == 'application/json') {
-        data = JSON.parse(data);
-        if (!data.session) data.session = req.client ? req.client.session : '';
-        if (data.mapper && req.serverOptions.mapper.enable) {
-          data.response = await convert(
-            req.serverOptions.mapper.prefix,
-            data.response,
-            data.mapper
-          );
-          delete data.mapper;
+      // Express also sends empty, plain-text and primitive JSON responses.
+      // Enrich only parsed JSON containers, preserving the original body in
+      // every other case (including numeric strings).
+      if (content === 'application/json' && typeof data === 'string') {
+        let json: any;
+        try {
+          json = JSON.parse(data);
+        } catch {
+          // A string response does not have to contain JSON.
+        }
+        if (json !== null && typeof json === 'object') {
+          if (!json.session)
+            json.session = req.client ? req.client.session : '';
+          if (json.mapper && req.serverOptions.mapper.enable) {
+            json.response = await convert(
+              req.serverOptions.mapper.prefix,
+              json.response,
+              json.mapper
+            );
+            delete json.mapper;
+          }
+          data = json;
         }
       }
       res.send = oldSend;
